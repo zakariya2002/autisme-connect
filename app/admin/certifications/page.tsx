@@ -431,7 +431,7 @@ export default function AdminCertificationsPage() {
                         <p className="font-medium">{cert.issuing_organization}</p>
                       </div>
                       <div>
-                        <p className="text-gray-500">Date d'obtention</p>
+                        <p className="text-gray-500">Date d&apos;obtention</p>
                         <p className="font-medium">
                           {new Date(cert.issue_date).toLocaleDateString('fr-FR')}
                         </p>
