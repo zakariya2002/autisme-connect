@@ -37,11 +37,14 @@ export default function RegisterPage() {
 
   useEffect(() => {
     const roleParam = searchParams.get('role');
-    if (roleParam === 'educator' || roleParam === 'family') {
-      setRole(roleParam);
-      setRoleFromUrl(true);
+    if (roleParam === 'educator') {
+      // Rediriger directement vers la page d'inscription éducateur fusionnée
+      router.push('/auth/register-educator');
+    } else if (roleParam === 'family') {
+      // Rediriger directement vers la page d'inscription famille fusionnée
+      router.push('/auth/register-family');
     }
-  }, [searchParams]);
+  }, [searchParams, router]);
 
   const validatePassword = (pwd: string) => {
     const criteria = {
