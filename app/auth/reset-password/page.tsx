@@ -1,17 +1,17 @@
-&apos;use client&apos;;
+'use client';
 
-import { useState, useEffect } from &apos;react&apos;;
-import { useRouter } from &apos;next/navigation&apos;;
-import Link from &apos;next/link&apos;;
-import { updatePassword } from &apos;@/lib/auth&apos;;
-import { supabase } from &apos;@/lib/supabase&apos;;
+import { useState, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
+import Link from 'next/link';
+import { updatePassword } from '@/lib/auth';
+import { supabase } from '@/lib/supabase';
 
 export default function ResetPasswordPage() {
-  const [password, setPassword] = useState(&apos;&apos;);
-  const [confirmPassword, setConfirmPassword] = useState(&apos;&apos;);
+  const [password, setPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-  const [error, setError] = useState(&apos;&apos;);
+  const [error, setError] = useState('');
   const [success, setSuccess] = useState(false);
   const [loading, setLoading] = useState(false);
   const [isValidToken, setIsValidToken] = useState(false);
@@ -19,17 +19,17 @@ export default function ResetPasswordPage() {
   const router = useRouter();
 
   useEffect(() => {
-    // Vérifier si l&apos;utilisateur a un token de récupération valide
+    // Vérifier si l'utilisateur a un token de récupération valide
     const checkSession = async () => {
       try {
         const { data: { session } } = await supabase.auth.getSession();
         if (session) {
           setIsValidToken(true);
         } else {
-          setError(&apos;Le lien de réinitialisation est invalide ou a expiré&apos;);
+          setError('Le lien de réinitialisation est invalide ou a expiré');
         }
       } catch (err) {
-        setError(&apos;Erreur lors de la vérification du lien&apos;);
+        setError('Erreur lors de la vérification du lien');
       } finally {
         setChecking(false);
       }
@@ -40,23 +40,23 @@ export default function ResetPasswordPage() {
 
   const validatePassword = (pass: string) => {
     if (pass.length < 8) {
-      return &apos;Le mot de passe doit contenir au moins 8 caractères&apos;;
+      return 'Le mot de passe doit contenir au moins 8 caractères';
     }
     if (!/[A-Z]/.test(pass)) {
-      return &apos;Le mot de passe doit contenir au moins une majuscule&apos;;
+      return 'Le mot de passe doit contenir au moins une majuscule';
     }
     if (!/[a-z]/.test(pass)) {
-      return &apos;Le mot de passe doit contenir au moins une minuscule&apos;;
+      return 'Le mot de passe doit contenir au moins une minuscule';
     }
     if (!/[0-9]/.test(pass)) {
-      return &apos;Le mot de passe doit contenir au moins un chiffre&apos;;
+      return 'Le mot de passe doit contenir au moins un chiffre';
     }
     return null;
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setError(&apos;&apos;);
+    setError('');
 
     // Validation
     const passwordError = validatePassword(password);
@@ -66,7 +66,7 @@ export default function ResetPasswordPage() {
     }
 
     if (password !== confirmPassword) {
-      setError(&apos;Les mots de passe ne correspondent pas&apos;);
+      setError('Les mots de passe ne correspondent pas');
       return;
     }
 
@@ -78,10 +78,10 @@ export default function ResetPasswordPage() {
 
       // Rediriger vers la page de connexion après 3 secondes
       setTimeout(() => {
-        router.push(&apos;/auth/login&apos;);
+        router.push('/auth/login');
       }, 3000);
     } catch (err: any) {
-      setError(err.message || &apos;Une erreur est survenue lors de la réinitialisation du mot de passe&apos;);
+      setError(err.message || 'Une erreur est survenue lors de la réinitialisation du mot de passe');
     } finally {
       setLoading(false);
     }
@@ -126,7 +126,7 @@ export default function ResetPasswordPage() {
                 Lien invalide ou expiré
               </h3>
               <p className="text-sm text-gray-600 mb-6">
-                {error || &apos;Le lien de réinitialisation est invalide ou a expiré. Veuillez en demander un nouveau.&apos;}
+                {error || 'Le lien de réinitialisation est invalide ou a expiré. Veuillez en demander un nouveau.'}
               </p>
               <Link
                 href="/auth/forgot-password"
@@ -212,7 +212,7 @@ export default function ResetPasswordPage() {
                   <input
                     id="password"
                     name="password"
-                    type={showPassword ? &apos;text&apos; : &apos;password&apos;}
+                    type={showPassword ? 'text' : 'password'}
                     required
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
@@ -247,17 +247,17 @@ export default function ResetPasswordPage() {
                           className={`h-1 flex-1 rounded ${
                             i < passwordStrength
                               ? passwordStrength <= 2
-                                ? &apos;bg-red-500&apos;
+                                ? 'bg-red-500'
                                 : passwordStrength <= 4
-                                ? &apos;bg-yellow-500&apos;
-                                : &apos;bg-green-500&apos;
-                              : &apos;bg-gray-200&apos;
+                                ? 'bg-yellow-500'
+                                : 'bg-green-500'
+                              : 'bg-gray-200'
                           }`}
                         />
                       ))}
                     </div>
                     <p className="text-xs text-gray-600">
-                      Force : {passwordStrength <= 2 ? &apos;Faible&apos; : passwordStrength <= 4 ? &apos;Moyen&apos; : &apos;Fort&apos;}
+                      Force : {passwordStrength <= 2 ? 'Faible' : passwordStrength <= 4 ? 'Moyen' : 'Fort'}
                     </p>
                   </div>
                 )}
@@ -276,7 +276,7 @@ export default function ResetPasswordPage() {
                   <input
                     id="confirmPassword"
                     name="confirmPassword"
-                    type={showConfirmPassword ? &apos;text&apos; : &apos;password&apos;}
+                    type={showConfirmPassword ? 'text' : 'password'}
                     required
                     value={confirmPassword}
                     onChange={(e) => setConfirmPassword(e.target.value)}
@@ -317,26 +317,26 @@ export default function ResetPasswordPage() {
                 <p className="text-xs font-semibold text-blue-900 mb-2">Votre mot de passe doit contenir :</p>
                 <ul className="text-xs text-blue-800 space-y-1">
                   <li className="flex items-center">
-                    <span className={password.length >= 8 ? &apos;text-green-600&apos; : &apos;text-gray-500&apos;}>
-                      {password.length >= 8 ? &apos;✓&apos; : &apos;○&apos;}
+                    <span className={password.length >= 8 ? 'text-green-600' : 'text-gray-500'}>
+                      {password.length >= 8 ? '✓' : '○'}
                     </span>
                     <span className="ml-2">Au moins 8 caractères</span>
                   </li>
                   <li className="flex items-center">
-                    <span className={/[A-Z]/.test(password) ? &apos;text-green-600&apos; : &apos;text-gray-500&apos;}>
-                      {/[A-Z]/.test(password) ? &apos;✓&apos; : &apos;○&apos;}
+                    <span className={/[A-Z]/.test(password) ? 'text-green-600' : 'text-gray-500'}>
+                      {/[A-Z]/.test(password) ? '✓' : '○'}
                     </span>
                     <span className="ml-2">Une lettre majuscule</span>
                   </li>
                   <li className="flex items-center">
-                    <span className={/[a-z]/.test(password) ? &apos;text-green-600&apos; : &apos;text-gray-500&apos;}>
-                      {/[a-z]/.test(password) ? &apos;✓&apos; : &apos;○&apos;}
+                    <span className={/[a-z]/.test(password) ? 'text-green-600' : 'text-gray-500'}>
+                      {/[a-z]/.test(password) ? '✓' : '○'}
                     </span>
                     <span className="ml-2">Une lettre minuscule</span>
                   </li>
                   <li className="flex items-center">
-                    <span className={/[0-9]/.test(password) ? &apos;text-green-600&apos; : &apos;text-gray-500&apos;}>
-                      {/[0-9]/.test(password) ? &apos;✓&apos; : &apos;○&apos;}
+                    <span className={/[0-9]/.test(password) ? 'text-green-600' : 'text-gray-500'}>
+                      {/[0-9]/.test(password) ? '✓' : '○'}
                     </span>
                     <span className="ml-2">Un chiffre</span>
                   </li>

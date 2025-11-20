@@ -276,7 +276,7 @@ export default function AvailabilityPage() {
         {/* En-tête */}
         <div className="mb-8">
           <h1 className="text-3xl font-bold text-gray-900">Mes disponibilités</h1>
-          <p className="text-gray-600 mt-1">Gérez vos horaires de travail et vos périodes d&apos;indisponibilité</p>
+          <p className="text-gray-600 mt-1">Gérez vos horaires de travail et vos périodes d'indisponibilité</p>
         </div>
 
         {/* Messages */}
@@ -473,7 +473,7 @@ export default function AvailabilityPage() {
                   type="submit"
                   className="w-full bg-primary-600 text-white px-4 py-2 rounded-md hover:bg-primary-700"
                 >
-                  Ajouter l&apos;exception
+                  Ajouter l'exception
                 </button>
               </div>
             </form>

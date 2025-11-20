@@ -1,10 +1,10 @@
-&apos;use client&apos;;
+'use client';
 
-import { useState, useEffect } from &apos;react&apos;;
-import Link from &apos;next/link&apos;;
-import { supabase } from &apos;@/lib/supabase&apos;;
-import { EducatorProfile, CertificationType } from &apos;@/types&apos;;
-import { getCurrentPosition, geocodeAddress, calculateDistance } from &apos;@/lib/geolocation&apos;;
+import { useState, useEffect } from 'react';
+import Link from 'next/link';
+import { supabase } from '@/lib/supabase';
+import { EducatorProfile, CertificationType } from '@/types';
+import { getCurrentPosition, geocodeAddress, calculateDistance } from '@/lib/geolocation';
 
 type EducatorWithDistance = EducatorProfile & { distance?: number };
 
@@ -14,11 +14,11 @@ export default function SearchPage() {
   const [geolocating, setGeolocating] = useState(false);
   const [userPosition, setUserPosition] = useState<{ latitude: number; longitude: number } | null>(null);
   const [filters, setFilters] = useState({
-    location: &apos;&apos;,
+    location: '',
     certifications: [] as CertificationType[],
-    minExperience: &apos;&apos;,
-    maxRate: &apos;&apos;,
-    minRating: &apos;&apos;,
+    minExperience: '',
+    maxRate: '',
+    minRating: '',
     nearMe: false,
   });
 
@@ -30,25 +30,25 @@ export default function SearchPage() {
     setLoading(true);
     try {
       let query = supabase
-        .from(&apos;educator_profiles&apos;)
+        .from('educator_profiles')
         .select(`
           *,
           certifications (*)
         `)
-        .order(&apos;rating&apos;, { ascending: false });
+        .order('rating', { ascending: false });
 
       // Appliquer les filtres
       if (filters.location && !filters.nearMe) {
-        query = query.ilike(&apos;location&apos;, `%${filters.location}%`);
+        query = query.ilike('location', `%${filters.location}%`);
       }
       if (filters.minExperience) {
-        query = query.gte(&apos;years_of_experience&apos;, parseInt(filters.minExperience));
+        query = query.gte('years_of_experience', parseInt(filters.minExperience));
       }
       if (filters.maxRate) {
-        query = query.lte(&apos;hourly_rate&apos;, parseFloat(filters.maxRate));
+        query = query.lte('hourly_rate', parseFloat(filters.maxRate));
       }
       if (filters.minRating) {
-        query = query.gte(&apos;rating&apos;, parseFloat(filters.minRating));
+        query = query.gte('rating', parseFloat(filters.minRating));
       }
 
       const { data, error } = await query;
@@ -97,7 +97,7 @@ export default function SearchPage() {
         setEducators(filtered as any);
       }
     } catch (error) {
-      console.error(&apos;Erreur lors de la récupération des éducateurs:&apos;, error);
+      console.error('Erreur lors de la récupération des éducateurs:', error);
     } finally {
       setLoading(false);
     }
@@ -130,7 +130,7 @@ export default function SearchPage() {
       setFilters({
         ...filters,
         nearMe: true,
-        location: &apos;&apos;, // Vider le champ localisation
+        location: '', // Vider le champ localisation
       });
 
       // Attendre que les filtres soient mis à jour puis rechercher
@@ -138,8 +138,8 @@ export default function SearchPage() {
         fetchEducators();
       }, 100);
     } catch (error: any) {
-      alert(error.message || &apos;Impossible d\&apos;obtenir votre position&apos;);
-      console.error(&apos;Erreur de géolocalisation:&apos;, error);
+      alert(error.message || 'Impossible d\'obtenir votre position');
+      console.error('Erreur de géolocalisation:', error);
     } finally {
       setGeolocating(false);
     }
@@ -147,11 +147,11 @@ export default function SearchPage() {
 
   const resetFilters = () => {
     setFilters({
-      location: &apos;&apos;,
+      location: '',
       certifications: [],
-      minExperience: &apos;&apos;,
-      maxRate: &apos;&apos;,
-      minRating: &apos;&apos;,
+      minExperience: '',
+      maxRate: '',
+      minRating: '',
       nearMe: false,
     });
     setUserPosition(null);
@@ -218,7 +218,7 @@ export default function SearchPage() {
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
                         </svg>
-                        {filters.nearMe ? &apos;📍 Recherche activée&apos; : &apos;Autour de moi&apos;}
+                        {filters.nearMe ? '📍 Recherche activée' : 'Autour de moi'}
                       </>
                     )}
                   </button>
@@ -234,7 +234,7 @@ export default function SearchPage() {
                     Certifications
                   </label>
                   <div className="space-y-2">
-                    {([&apos;ABA&apos;, &apos;TEACCH&apos;, &apos;PECS&apos;] as CertificationType[]).map(cert => (
+                    {(['ABA', 'TEACCH', 'PECS'] as CertificationType[]).map(cert => (
                       <label key={cert} className="flex items-center">
                         <input
                           type="checkbox"
@@ -322,7 +322,7 @@ export default function SearchPage() {
               <div className="space-y-4">
                 <p className="text-sm text-gray-600 mb-4">
                   {educators.length} éducateur(s) trouvé(s)
-                  {filters.nearMe && &apos; près de vous (triés par distance)&apos;}
+                  {filters.nearMe && ' près de vous (triés par distance)'}
                 </p>
                 {educators.map((educator) => (
                   <div key={educator.id} className="bg-white rounded-lg shadow p-6 hover:shadow-lg transition">
@@ -358,8 +358,8 @@ export default function SearchPage() {
                                   key={i}
                                   className={`w-5 h-5 ${
                                     i < Math.round(educator.rating)
-                                      ? &apos;text-yellow-400 fill-current&apos;
-                                      : &apos;text-gray-300&apos;
+                                      ? 'text-yellow-400 fill-current'
+                                      : 'text-gray-300'
                                   }`}
                                   fill="none"
                                   stroke="currentColor"
@@ -397,7 +397,7 @@ export default function SearchPage() {
                               📍 {educator.distance} km
                             </span>
                           )}
-                          <span>📅 {educator.years_of_experience} ans d&apos;expérience</span>
+                          <span>📅 {educator.years_of_experience} ans d'expérience</span>
                           {educator.hourly_rate && (
                             <span>💰 {educator.hourly_rate}€/h</span>
                           )}
@@ -406,7 +406,7 @@ export default function SearchPage() {
                         {educator.specializations && educator.specializations.length > 0 && (
                           <div className="mt-3">
                             <span className="text-sm text-gray-600">
-                              Spécialisations: {educator.specializations.join(&apos;, &apos;)}
+                              Spécialisations: {educator.specializations.join(', ')}
                             </span>
                           </div>
                         )}
@@ -414,7 +414,7 @@ export default function SearchPage() {
                         {educator.languages && educator.languages.length > 0 && (
                           <div className="mt-2">
                             <span className="text-sm text-gray-600">
-                              Langues: {educator.languages.join(&apos;, &apos;)}
+                              Langues: {educator.languages.join(', ')}
                             </span>
                           </div>
                         )}

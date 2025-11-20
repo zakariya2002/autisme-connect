@@ -1,15 +1,15 @@
-&apos;use client&apos;;
+'use client';
 
-import { useState, useEffect } from &apos;react&apos;;
-import Link from &apos;next/link&apos;;
-import { useRouter } from &apos;next/navigation&apos;;
-import { supabase } from &apos;@/lib/supabase&apos;;
+import { useState, useEffect } from 'react';
+import Link from 'next/link';
+import { useRouter } from 'next/navigation';
+import { supabase } from '@/lib/supabase';
 
 export default function Home() {
   const router = useRouter();
   const [educators, setEducators] = useState<any[]>([]);
   const [filteredEducators, setFilteredEducators] = useState<any[]>([]);
-  const [searchTerm, setSearchTerm] = useState(&apos;&apos;);
+  const [searchTerm, setSearchTerm] = useState('');
   const [loading, setLoading] = useState(true);
   const [userLocation, setUserLocation] = useState<{ lat: number; lng: number } | null>(null);
   const [locationLoading, setLocationLoading] = useState(false);
@@ -19,7 +19,7 @@ export default function Home() {
   }, []);
 
   useEffect(() => {
-    if (searchTerm.trim() === &apos;&apos;) {
+    if (searchTerm.trim() === '') {
       setFilteredEducators(educators);
     } else {
       const filtered = educators.filter((educator) => {
@@ -40,28 +40,28 @@ export default function Home() {
     setLoading(true);
     try {
       const { data, error } = await supabase
-        .from(&apos;educator_profiles&apos;)
-        .select(&apos;*&apos;)
-        .order(&apos;created_at&apos;, { ascending: false });
+        .from('educator_profiles')
+        .select('*')
+        .order('created_at', { ascending: false });
 
       if (error) throw error;
 
       setEducators(data || []);
       setFilteredEducators(data || []);
     } catch (error) {
-      console.error(&apos;Erreur:&apos;, error);
+      console.error('Erreur:', error);
     } finally {
       setLoading(false);
     }
   };
 
   const capitalizeFirstName = (name: string) => {
-    if (!name) return &apos;&apos;;
+    if (!name) return '';
     return name.charAt(0).toUpperCase() + name.slice(1).toLowerCase();
   };
 
   const formatLastName = (name: string) => {
-    if (!name) return &apos;&apos;;
+    if (!name) return '';
     return name.toUpperCase();
   };
 
@@ -78,11 +78,11 @@ export default function Home() {
     return R * c; // Distance en km
   };
 
-  // Obtenir la position de l&apos;utilisateur
+  // Obtenir la position de l'utilisateur
   const getUserLocation = () => {
     setLocationLoading(true);
     if (!navigator.geolocation) {
-      alert(&apos;La géolocalisation n\&apos;est pas supportée par votre navigateur&apos;);
+      alert('La géolocalisation n\'est pas supportée par votre navigateur');
       setLocationLoading(false);
       return;
     }
@@ -111,8 +111,8 @@ export default function Home() {
         setLocationLoading(false);
       },
       (error) => {
-        console.error(&apos;Erreur de géolocalisation:&apos;, error);
-        alert(&apos;Impossible d\&apos;obtenir votre position. Veuillez autoriser l\&apos;accès à votre localisation.&apos;);
+        console.error('Erreur de géolocalisation:', error);
+        alert('Impossible d\'obtenir votre position. Veuillez autoriser l\'accès à votre localisation.');
         setLocationLoading(false);
       }
     );
@@ -143,7 +143,7 @@ export default function Home() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <div className="text-center mb-8">
           <h2 className="text-4xl font-extrabold text-gray-900 sm:text-5xl">
-            Trouvez le bon éducateur{&apos; &apos;}
+            Trouvez le bon éducateur{' '}
             <span className="text-primary-600">près de chez vous</span>
           </h2>
           <p className="mt-3 max-w-md mx-auto text-base text-gray-500 sm:text-lg md:mt-5 md:text-xl md:max-w-3xl">
@@ -188,7 +188,7 @@ export default function Home() {
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
             </svg>
-            {locationLoading ? &apos;Localisation en cours...&apos; : userLocation ? &apos;Actualiser ma position&apos; : &apos;Utiliser ma position&apos;}
+            {locationLoading ? 'Localisation en cours...' : userLocation ? 'Actualiser ma position' : 'Utiliser ma position'}
           </button>
           {userLocation && (
             <p className="mt-2 text-sm text-green-600">
@@ -239,7 +239,7 @@ export default function Home() {
                       <h3 className="text-xl font-bold text-gray-900 mb-1">
                         {educator.first_name?.trim() && (
                           <span className="text-primary-600">
-                            {capitalizeFirstName(educator.first_name)}{&apos; &apos;}
+                            {capitalizeFirstName(educator.first_name)}{' '}
                           </span>
                         )}
                         <span className="text-gray-900">
@@ -256,8 +256,8 @@ export default function Home() {
                                 key={i}
                                 className={`w-4 h-4 ${
                                   i < Math.round(educator.rating)
-                                    ? &apos;text-yellow-400 fill-current&apos;
-                                    : &apos;text-gray-300&apos;
+                                    ? 'text-yellow-400 fill-current'
+                                    : 'text-gray-300'
                                 }`}
                                 fill="none"
                                 stroke="currentColor"
@@ -299,7 +299,7 @@ export default function Home() {
                     </div>
                   )}
 
-                  <p className="text-gray-600 mb-4">{educator.location || &apos;Localisation non renseignée&apos;}</p>
+                  <p className="text-gray-600 mb-4">{educator.location || 'Localisation non renseignée'}</p>
                   {educator.bio && (
                     <p className="text-gray-700 mt-3 mb-4 line-clamp-3">{educator.bio}</p>
                   )}

@@ -29,6 +29,7 @@ export interface EducatorProfile {
   last_name: string;
   bio: string;
   profile_image_url?: string;
+  avatar_url?: string;
   phone?: string;
   location: string;
   years_of_experience: number;

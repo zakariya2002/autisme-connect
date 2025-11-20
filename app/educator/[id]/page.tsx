@@ -384,7 +384,7 @@ export default function EducatorPublicProfile({ params }: { params: { id: string
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
                       </svg>
                       <span className="font-medium text-gray-700">
-                        {educator.years_of_experience} {educator.years_of_experience > 1 ? 'ans' : 'an'} d&apos;expérience
+                        {educator.years_of_experience} {educator.years_of_experience > 1 ? 'ans' : 'an'} d'expérience
                       </span>
                     </div>
                   )}
@@ -590,7 +590,7 @@ export default function EducatorPublicProfile({ params }: { params: { id: string
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
                       </svg>
                       <p className="text-gray-600 font-medium">Aucune disponibilité régulière définie</p>
-                      <p className="text-sm text-gray-500 mt-2">L&apos;éducateur n&apos;a pas encore configuré ses horaires.</p>
+                      <p className="text-sm text-gray-500 mt-2">L'éducateur n'a pas encore configuré ses horaires.</p>
                     </div>
                   ) : (
                     <div className="grid grid-cols-1 gap-3">
@@ -684,7 +684,7 @@ export default function EducatorPublicProfile({ params }: { params: { id: string
                         </svg>
                         <p className="text-sm text-blue-700">
                           <strong>Info :</strong> Ces périodes sont des exceptions aux horaires habituels.
-                          Contactez l&apos;éducateur pour confirmer les disponibilités.
+                          Contactez l'éducateur pour confirmer les disponibilités.
                         </p>
                       </div>
                     </div>
@@ -699,7 +699,7 @@ export default function EducatorPublicProfile({ params }: { params: { id: string
                     </svg>
                     <h3 className="text-xl font-bold text-gray-900 mb-2">Disponibilités non configurées</h3>
                     <p className="text-gray-600">
-                      Cet éducateur n&apos;a pas encore défini ses disponibilités.
+                      Cet éducateur n'a pas encore défini ses disponibilités.
                       <br />
                       Contactez-le directement pour connaître ses horaires.
                     </p>

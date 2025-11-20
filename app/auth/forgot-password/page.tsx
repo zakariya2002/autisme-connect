@@ -1,18 +1,18 @@
-&apos;use client&apos;;
+'use client';
 
-import { useState } from &apos;react&apos;;
-import Link from &apos;next/link&apos;;
-import { resetPassword } from &apos;@/lib/auth&apos;;
+import { useState } from 'react';
+import Link from 'next/link';
+import { resetPassword } from '@/lib/auth';
 
 export default function ForgotPasswordPage() {
-  const [email, setEmail] = useState(&apos;&apos;);
-  const [error, setError] = useState(&apos;&apos;);
+  const [email, setEmail] = useState('');
+  const [error, setError] = useState('');
   const [success, setSuccess] = useState(false);
   const [loading, setLoading] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setError(&apos;&apos;);
+    setError('');
     setSuccess(false);
     setLoading(true);
 
@@ -20,7 +20,7 @@ export default function ForgotPasswordPage() {
       await resetPassword(email);
       setSuccess(true);
     } catch (err: any) {
-      setError(err.message || &apos;Une erreur est survenue lors de l\&apos;envoi de l\&apos;email&apos;);
+      setError(err.message || 'Une erreur est survenue lors de l\'envoi de l\'email');
     } finally {
       setLoading(false);
     }
@@ -75,7 +75,7 @@ export default function ForgotPasswordPage() {
                 <button
                   onClick={() => {
                     setSuccess(false);
-                    setEmail(&apos;&apos;);
+                    setEmail('');
                   }}
                   className="block w-full py-3 px-4 border border-gray-300 rounded-lg text-sm font-semibold text-gray-700 bg-white hover:bg-gray-50 text-center transition-all"
                 >

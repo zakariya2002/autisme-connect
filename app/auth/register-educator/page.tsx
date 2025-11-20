@@ -1,12 +1,12 @@
-&apos;use client&apos;;
+'use client';
 
-export const dynamic = &apos;force-dynamic&apos;;
+export const dynamic = 'force-dynamic';
 
-import { useState } from &apos;react&apos;;
-import { useRouter } from &apos;next/navigation&apos;;
-import Link from &apos;next/link&apos;;
-import { supabase } from &apos;@/lib/supabase&apos;;
-import { getCurrentPosition, reverseGeocode } from &apos;@/lib/geolocation&apos;;
+import { useState } from 'react';
+import { useRouter } from 'next/navigation';
+import Link from 'next/link';
+import { supabase } from '@/lib/supabase';
+import { getCurrentPosition, reverseGeocode } from '@/lib/geolocation';
 
 interface PasswordCriteria {
   minLength: boolean;
@@ -20,27 +20,27 @@ export default function RegisterEducatorPage() {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
   const [geolocating, setGeolocating] = useState(false);
-  const [error, setError] = useState(&apos;&apos;);
+  const [error, setError] = useState('');
   const [showPasswordStrength, setShowPasswordStrength] = useState(false);
 
-  // Données d&apos;authentification
+  // Données d'authentification
   const [authData, setAuthData] = useState({
-    email: &apos;&apos;,
-    password: &apos;&apos;,
-    confirmPassword: &apos;&apos;,
+    email: '',
+    password: '',
+    confirmPassword: '',
   });
 
   // Données de profil éducateur
   const [educatorData, setEducatorData] = useState({
-    first_name: &apos;&apos;,
-    last_name: &apos;&apos;,
-    bio: &apos;&apos;,
-    phone: &apos;&apos;,
-    location: &apos;&apos;,
+    first_name: '',
+    last_name: '',
+    bio: '',
+    phone: '',
+    location: '',
     years_of_experience: 0,
-    hourly_rate: &apos;&apos;,
-    specializations: &apos;&apos;,
-    languages: &apos;&apos;,
+    hourly_rate: '',
+    specializations: '',
+    languages: '',
   });
 
   const [passwordCriteria, setPasswordCriteria] = useState<PasswordCriteria>({
@@ -57,7 +57,7 @@ export default function RegisterEducatorPage() {
       hasUppercase: /[A-Z]/.test(pwd),
       hasLowercase: /[a-z]/.test(pwd),
       hasNumber: /[0-9]/.test(pwd),
-      hasSpecialChar: /[!@#$%^&*()_+\-=\[\]{};&apos;:"\\|,.<>\/?]/.test(pwd),
+      hasSpecialChar: /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/.test(pwd),
     };
     setPasswordCriteria(criteria);
     return Object.values(criteria).every(Boolean);
@@ -74,15 +74,15 @@ export default function RegisterEducatorPage() {
     const validCount = Object.values(passwordCriteria).filter(Boolean).length;
 
     if (validCount === 5) {
-      return { label: &apos;Très fort&apos;, color: &apos;bg-green-500&apos;, percentage: 100 };
+      return { label: 'Très fort', color: 'bg-green-500', percentage: 100 };
     } else if (validCount === 4) {
-      return { label: &apos;Fort&apos;, color: &apos;bg-green-400&apos;, percentage: 80 };
+      return { label: 'Fort', color: 'bg-green-400', percentage: 80 };
     } else if (validCount === 3) {
-      return { label: &apos;Moyen&apos;, color: &apos;bg-yellow-500&apos;, percentage: 60 };
+      return { label: 'Moyen', color: 'bg-yellow-500', percentage: 60 };
     } else if (validCount >= 1) {
-      return { label: &apos;Faible&apos;, color: &apos;bg-orange-500&apos;, percentage: 40 };
+      return { label: 'Faible', color: 'bg-orange-500', percentage: 40 };
     } else {
-      return { label: &apos;Très faible&apos;, color: &apos;bg-red-500&apos;, percentage: 20 };
+      return { label: 'Très faible', color: 'bg-red-500', percentage: 20 };
     }
   };
 
@@ -95,10 +95,10 @@ export default function RegisterEducatorPage() {
       if (address) {
         setEducatorData({ ...educatorData, location: address });
       } else {
-        alert(&apos;Impossible de déterminer votre adresse. Veuillez la saisir manuellement.&apos;);
+        alert('Impossible de déterminer votre adresse. Veuillez la saisir manuellement.');
       }
     } catch (error: any) {
-      alert(error.message || &apos;Erreur lors de la géolocalisation&apos;);
+      alert(error.message || 'Erreur lors de la géolocalisation');
     } finally {
       setGeolocating(false);
     }
@@ -106,16 +106,16 @@ export default function RegisterEducatorPage() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setError(&apos;&apos;);
+    setError('');
 
     // Validation du mot de passe
     if (authData.password !== authData.confirmPassword) {
-      setError(&apos;Les mots de passe ne correspondent pas&apos;);
+      setError('Les mots de passe ne correspondent pas');
       return;
     }
 
     if (!validatePassword(authData.password)) {
-      setError(&apos;Le mot de passe ne respecte pas tous les critères de sécurité&apos;);
+      setError('Le mot de passe ne respecte pas tous les critères de sécurité');
       return;
     }
 
@@ -128,30 +128,30 @@ export default function RegisterEducatorPage() {
         password: authData.password,
         options: {
           data: {
-            role: &apos;educator&apos;,
+            role: 'educator',
           },
         },
       });
 
       if (authError) {
-        if (authError.message.includes(&apos;already been registered&apos;)) {
-          throw new Error(&apos;Cet email est déjà utilisé. Essayez de vous connecter ou utilisez un autre email.&apos;);
+        if (authError.message.includes('already been registered')) {
+          throw new Error('Cet email est déjà utilisé. Essayez de vous connecter ou utilisez un autre email.');
         }
         throw new Error(authError.message);
       }
 
       if (!authResult.user) {
-        throw new Error(&apos;Erreur lors de la création du compte&apos;);
+        throw new Error('Erreur lors de la création du compte');
       }
 
-      // Si l&apos;email nécessite une confirmation et n&apos;est pas confirmé
+      // Si l'email nécessite une confirmation et n'est pas confirmé
       if (authResult.user.email_confirmed_at === null) {
-        setError(&apos;Un email de confirmation a été envoyé. Veuillez vérifier votre boîte mail.&apos;);
+        setError('Un email de confirmation a été envoyé. Veuillez vérifier votre boîte mail.');
         setLoading(false);
         return;
       }
 
-      // 2. Créer le profil via l&apos;API
+      // 2. Créer le profil via l'API
       const profileData = {
         first_name: educatorData.first_name,
         last_name: educatorData.last_name,
@@ -160,18 +160,18 @@ export default function RegisterEducatorPage() {
         location: educatorData.location,
         years_of_experience: educatorData.years_of_experience,
         hourly_rate: educatorData.hourly_rate ? parseFloat(educatorData.hourly_rate) : null,
-        specializations: educatorData.specializations.split(&apos;,&apos;).map(s => s.trim()).filter(Boolean),
-        languages: educatorData.languages.split(&apos;,&apos;).map(l => l.trim()).filter(Boolean),
+        specializations: educatorData.specializations.split(',').map(s => s.trim()).filter(Boolean),
+        languages: educatorData.languages.split(',').map(l => l.trim()).filter(Boolean),
       };
 
-      const response = await fetch(&apos;/api/create-profile-simple&apos;, {
-        method: &apos;POST&apos;,
+      const response = await fetch('/api/create-profile-simple', {
+        method: 'POST',
         headers: {
-          &apos;Content-Type&apos;: &apos;application/json&apos;,
+          'Content-Type': 'application/json',
         },
         body: JSON.stringify({
           userId: authResult.user.id,
-          role: &apos;educator&apos;,
+          role: 'educator',
           profileData,
         }),
       });
@@ -179,13 +179,13 @@ export default function RegisterEducatorPage() {
       const result = await response.json();
 
       if (!response.ok || !result.success) {
-        throw new Error(result.error || &apos;Erreur lors de la création du profil&apos;);
+        throw new Error(result.error || 'Erreur lors de la création du profil');
       }
 
       // 3. Rediriger vers le dashboard
-      router.push(&apos;/dashboard/educator&apos;);
+      router.push('/dashboard/educator');
     } catch (err: any) {
-      setError(err.message || &apos;Une erreur est survenue&apos;);
+      setError(err.message || 'Une erreur est survenue');
     } finally {
       setLoading(false);
     }
@@ -203,7 +203,7 @@ export default function RegisterEducatorPage() {
             Inscription Éducateur
           </h2>
           <p className="mt-2 text-sm text-gray-600">
-            Ou{&apos; &apos;}
+            Ou{' '}
             <Link href="/auth/login" className="font-medium text-primary-600 hover:text-primary-500">
               connectez-vous à votre compte existant
             </Link>
@@ -267,9 +267,9 @@ export default function RegisterEducatorPage() {
                       Force du mot de passe :
                     </span>
                     <span className={`text-xs font-semibold ${
-                      getPasswordStrength().percentage === 100 ? &apos;text-green-600&apos; :
-                      getPasswordStrength().percentage >= 60 ? &apos;text-yellow-600&apos; :
-                      &apos;text-red-600&apos;
+                      getPasswordStrength().percentage === 100 ? 'text-green-600' :
+                      getPasswordStrength().percentage >= 60 ? 'text-yellow-600' :
+                      'text-red-600'
                     }`}>
                       {getPasswordStrength().label}
                     </span>
@@ -293,7 +293,7 @@ export default function RegisterEducatorPage() {
                           <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd" />
                         </svg>
                       )}
-                      <span className={passwordCriteria.minLength ? &apos;text-green-700&apos; : &apos;text-gray-600&apos;}>
+                      <span className={passwordCriteria.minLength ? 'text-green-700' : 'text-gray-600'}>
                         Au moins 8 caractères
                       </span>
                     </div>
@@ -308,7 +308,7 @@ export default function RegisterEducatorPage() {
                           <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd" />
                         </svg>
                       )}
-                      <span className={passwordCriteria.hasUppercase ? &apos;text-green-700&apos; : &apos;text-gray-600&apos;}>
+                      <span className={passwordCriteria.hasUppercase ? 'text-green-700' : 'text-gray-600'}>
                         Une lettre majuscule
                       </span>
                     </div>
@@ -323,7 +323,7 @@ export default function RegisterEducatorPage() {
                           <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd" />
                         </svg>
                       )}
-                      <span className={passwordCriteria.hasLowercase ? &apos;text-green-700&apos; : &apos;text-gray-600&apos;}>
+                      <span className={passwordCriteria.hasLowercase ? 'text-green-700' : 'text-gray-600'}>
                         Une lettre minuscule
                       </span>
                     </div>
@@ -338,7 +338,7 @@ export default function RegisterEducatorPage() {
                           <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd" />
                         </svg>
                       )}
-                      <span className={passwordCriteria.hasNumber ? &apos;text-green-700&apos; : &apos;text-gray-600&apos;}>
+                      <span className={passwordCriteria.hasNumber ? 'text-green-700' : 'text-gray-600'}>
                         Un chiffre
                       </span>
                     </div>
@@ -353,7 +353,7 @@ export default function RegisterEducatorPage() {
                           <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd" />
                         </svg>
                       )}
-                      <span className={passwordCriteria.hasSpecialChar ? &apos;text-green-700&apos; : &apos;text-gray-600&apos;}>
+                      <span className={passwordCriteria.hasSpecialChar ? 'text-green-700' : 'text-gray-600'}>
                         Un caractère spécial (!@#$%^&*...)
                       </span>
                     </div>
@@ -458,7 +458,7 @@ export default function RegisterEducatorPage() {
 
             <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
               <div>
-                <label className="block text-sm font-medium text-gray-700">Années d&apos;expérience *</label>
+                <label className="block text-sm font-medium text-gray-700">Années d'expérience *</label>
                 <input
                   type="number"
                   required
@@ -508,7 +508,7 @@ export default function RegisterEducatorPage() {
               disabled={loading}
               className="w-full py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-primary-600 hover:bg-primary-700 disabled:opacity-50"
             >
-              {loading ? &apos;Création...&apos; : &apos;Créer mon compte&apos;}
+              {loading ? 'Création...' : 'Créer mon compte'}
             </button>
           </form>
         </div>

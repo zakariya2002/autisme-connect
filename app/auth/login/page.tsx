@@ -1,21 +1,21 @@
-&apos;use client&apos;;
+'use client';
 
-import { useState } from &apos;react&apos;;
-import { useRouter } from &apos;next/navigation&apos;;
-import Link from &apos;next/link&apos;;
-import { signIn } from &apos;@/lib/auth&apos;;
+import { useState } from 'react';
+import { useRouter } from 'next/navigation';
+import Link from 'next/link';
+import { signIn } from '@/lib/auth';
 
 export default function LoginPage() {
-  const [email, setEmail] = useState(&apos;&apos;);
-  const [password, setPassword] = useState(&apos;&apos;);
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
-  const [error, setError] = useState(&apos;&apos;);
+  const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
   const router = useRouter();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setError(&apos;&apos;);
+    setError('');
     setLoading(true);
 
     try {
@@ -23,15 +23,15 @@ export default function LoginPage() {
       const role = user?.user_metadata?.role;
 
       // Rediriger selon le rôle
-      if (role === &apos;educator&apos;) {
-        router.push(&apos;/dashboard/educator&apos;);
-      } else if (role === &apos;family&apos;) {
-        router.push(&apos;/dashboard/family&apos;);
+      if (role === 'educator') {
+        router.push('/dashboard/educator');
+      } else if (role === 'family') {
+        router.push('/dashboard/family');
       } else {
-        router.push(&apos;/dashboard&apos;);
+        router.push('/dashboard');
       }
     } catch (err: any) {
-      setError(err.message || &apos;Une erreur est survenue lors de la connexion&apos;);
+      setError(err.message || 'Une erreur est survenue lors de la connexion');
     } finally {
       setLoading(false);
     }
@@ -55,7 +55,7 @@ export default function LoginPage() {
           Connexion
         </h2>
         <p className="text-center text-sm text-gray-600">
-          Pas encore de compte ?{&apos; &apos;}
+          Pas encore de compte ?{' '}
           <Link href="/auth/signup" className="font-semibold text-primary-600 hover:text-primary-500 transition-colors">
             Inscrivez-vous gratuitement
           </Link>
@@ -114,7 +114,7 @@ export default function LoginPage() {
                 <input
                   id="password"
                   name="password"
-                  type={showPassword ? &apos;text&apos; : &apos;password&apos;}
+                  type={showPassword ? 'text' : 'password'}
                   autoComplete="current-password"
                   required
                   value={password}
@@ -187,7 +187,7 @@ export default function LoginPage() {
             </div>
           </form>
 
-          {/* Retour à l&apos;accueil */}
+          {/* Retour à l'accueil */}
           <div className="mt-6">
             <Link href="/" className="flex items-center justify-center text-sm text-gray-600 hover:text-primary-600 transition-colors">
               <svg className="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
