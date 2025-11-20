@@ -7,7 +7,12 @@ export default function SignupChoicePage() {
   const router = useRouter();
 
   const handleRoleSelection = (role: 'family' | 'educator') => {
-    router.push(`/auth/register?role=${role}`);
+    // Redirection directe vers les pages fusionnées
+    if (role === 'educator') {
+      router.push('/auth/register-educator');
+    } else {
+      router.push('/auth/register-family');
+    }
   };
 
   return (
