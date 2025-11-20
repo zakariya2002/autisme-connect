@@ -1,7 +1,9 @@
 'use client';
 
-import { useState } from 'react';
-import { useRouter } from 'next/navigation';
+export const dynamic = 'force-dynamic';
+
+import { useState, useEffect } from 'react';
+import { useRouter, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import { supabase } from '@/lib/supabase';
 import { UserRole, CertificationType } from '@/types';
@@ -9,6 +11,7 @@ import { getCurrentPosition, reverseGeocode } from '@/lib/geolocation';
 
 export default function SignupPage() {
   const router = useRouter();
+  const searchParams = useSearchParams();
   const [step, setStep] = useState(1);
   const [loading, setLoading] = useState(false);
   const [geolocating, setGeolocating] = useState(false);
@@ -21,6 +24,25 @@ export default function SignupPage() {
     confirmPassword: '',
     role: 'family' as UserRole,
   });
+
+  // Détecter si l'utilisateur est déjà connecté et a un rôle dans l'URL
+  useEffect(() => {
+    const checkSession = async () => {
+      const { data: { session } } = await supabase.auth.getSession();
+      const roleParam = searchParams.get('role');
+
+      if (session && roleParam) {
+        // L'utilisateur est déjà connecté, on passe directement au formulaire de profil
+        setAuthData(prev => ({ ...prev, role: roleParam as UserRole }));
+        setStep(2);
+      } else if (roleParam) {
+        // Pas encore connecté mais role défini dans l'URL
+        setAuthData(prev => ({ ...prev, role: roleParam as UserRole }));
+      }
+    };
+
+    checkSession();
+  }, [searchParams]);
 
   // Données de profil éducateur
   const [educatorData, setEducatorData] = useState({

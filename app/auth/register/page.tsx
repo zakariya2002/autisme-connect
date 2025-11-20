@@ -97,12 +97,8 @@ export default function RegisterPage() {
     try {
       await signUp(email, password, role);
 
-      // Rediriger vers la page de création de profil
-      if (role === 'educator') {
-        router.push('/profile/educator/create');
-      } else {
-        router.push('/profile/family/create');
-      }
+      // Rediriger vers la page de création de profil avec le rôle
+      router.push(`/signup?role=${role}`);
     } catch (err: any) {
       setError(err.message || 'Une erreur est survenue lors de l\'inscription');
     } finally {
