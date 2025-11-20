@@ -1,10 +1,10 @@
-'use client';
+&apos;use client&apos;;
 
-import { useState, useEffect } from 'react';
-import Link from 'next/link';
-import { supabase } from '@/lib/supabase';
-import { EducatorProfile, CertificationType } from '@/types';
-import { getCurrentPosition, geocodeAddress, calculateDistance } from '@/lib/geolocation';
+import { useState, useEffect } from &apos;react&apos;;
+import Link from &apos;next/link&apos;;
+import { supabase } from &apos;@/lib/supabase&apos;;
+import { EducatorProfile, CertificationType } from &apos;@/types&apos;;
+import { getCurrentPosition, geocodeAddress, calculateDistance } from &apos;@/lib/geolocation&apos;;
 
 type EducatorWithDistance = EducatorProfile & { distance?: number };
 
@@ -14,11 +14,11 @@ export default function SearchPage() {
   const [geolocating, setGeolocating] = useState(false);
   const [userPosition, setUserPosition] = useState<{ latitude: number; longitude: number } | null>(null);
   const [filters, setFilters] = useState({
-    location: '',
+    location: &apos;&apos;,
     certifications: [] as CertificationType[],
-    minExperience: '',
-    maxRate: '',
-    minRating: '',
+    minExperience: &apos;&apos;,
+    maxRate: &apos;&apos;,
+    minRating: &apos;&apos;,
     nearMe: false,
   });
 
@@ -30,25 +30,25 @@ export default function SearchPage() {
     setLoading(true);
     try {
       let query = supabase
-        .from('educator_profiles')
+        .from(&apos;educator_profiles&apos;)
         .select(`
           *,
           certifications (*)
         `)
-        .order('rating', { ascending: false });
+        .order(&apos;rating&apos;, { ascending: false });
 
       // Appliquer les filtres
       if (filters.location && !filters.nearMe) {
-        query = query.ilike('location', `%${filters.location}%`);
+        query = query.ilike(&apos;location&apos;, `%${filters.location}%`);
       }
       if (filters.minExperience) {
-        query = query.gte('years_of_experience', parseInt(filters.minExperience));
+        query = query.gte(&apos;years_of_experience&apos;, parseInt(filters.minExperience));
       }
       if (filters.maxRate) {
-        query = query.lte('hourly_rate', parseFloat(filters.maxRate));
+        query = query.lte(&apos;hourly_rate&apos;, parseFloat(filters.maxRate));
       }
       if (filters.minRating) {
-        query = query.gte('rating', parseFloat(filters.minRating));
+        query = query.gte(&apos;rating&apos;, parseFloat(filters.minRating));
       }
 
       const { data, error } = await query;
@@ -97,7 +97,7 @@ export default function SearchPage() {
         setEducators(filtered as any);
       }
     } catch (error) {
-      console.error('Erreur lors de la récupération des éducateurs:', error);
+      console.error(&apos;Erreur lors de la récupération des éducateurs:&apos;, error);
     } finally {
       setLoading(false);
     }
@@ -130,7 +130,7 @@ export default function SearchPage() {
       setFilters({
         ...filters,
         nearMe: true,
-        location: '', // Vider le champ localisation
+        location: &apos;&apos;, // Vider le champ localisation
       });
 
       // Attendre que les filtres soient mis à jour puis rechercher
@@ -138,8 +138,8 @@ export default function SearchPage() {
         fetchEducators();
       }, 100);
     } catch (error: any) {
-      alert(error.message || 'Impossible d\'obtenir votre position');
-      console.error('Erreur de géolocalisation:', error);
+      alert(error.message || &apos;Impossible d\&apos;obtenir votre position&apos;);
+      console.error(&apos;Erreur de géolocalisation:&apos;, error);
     } finally {
       setGeolocating(false);
     }
@@ -147,11 +147,11 @@ export default function SearchPage() {
 
   const resetFilters = () => {
     setFilters({
-      location: '',
+      location: &apos;&apos;,
       certifications: [],
-      minExperience: '',
-      maxRate: '',
-      minRating: '',
+      minExperience: &apos;&apos;,
+      maxRate: &apos;&apos;,
+      minRating: &apos;&apos;,
       nearMe: false,
     });
     setUserPosition(null);
@@ -218,7 +218,7 @@ export default function SearchPage() {
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
                         </svg>
-                        {filters.nearMe ? '📍 Recherche activée' : 'Autour de moi'}
+                        {filters.nearMe ? &apos;📍 Recherche activée&apos; : &apos;Autour de moi&apos;}
                       </>
                     )}
                   </button>
@@ -234,7 +234,7 @@ export default function SearchPage() {
                     Certifications
                   </label>
                   <div className="space-y-2">
-                    {(['ABA', 'TEACCH', 'PECS'] as CertificationType[]).map(cert => (
+                    {([&apos;ABA&apos;, &apos;TEACCH&apos;, &apos;PECS&apos;] as CertificationType[]).map(cert => (
                       <label key={cert} className="flex items-center">
                         <input
                           type="checkbox"
@@ -322,31 +322,74 @@ export default function SearchPage() {
               <div className="space-y-4">
                 <p className="text-sm text-gray-600 mb-4">
                   {educators.length} éducateur(s) trouvé(s)
-                  {filters.nearMe && ' près de vous (triés par distance)'}
+                  {filters.nearMe && &apos; près de vous (triés par distance)&apos;}
                 </p>
                 {educators.map((educator) => (
                   <div key={educator.id} className="bg-white rounded-lg shadow p-6 hover:shadow-lg transition">
-                    <div className="flex justify-between items-start">
-                      <div className="flex-1">
+                    <div className="flex justify-between items-start gap-4">
+                      {/* Photo de profil */}
+                      <div className="flex-shrink-0">
+                        {educator.avatar_url ? (
+                          <img
+                            src={educator.avatar_url}
+                            alt={`${educator.first_name} ${educator.last_name}`}
+                            className="w-24 h-24 rounded-full object-cover border-2 border-primary-200"
+                          />
+                        ) : (
+                          <div className="w-24 h-24 rounded-full bg-primary-100 flex items-center justify-center border-2 border-primary-200">
+                            <svg className="w-12 h-12 text-primary-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                            </svg>
+                          </div>
+                        )}
+                      </div>
+
+                      <div className="flex-1 min-w-0">
                         <h3 className="text-xl font-semibold text-gray-900">
                           {educator.first_name} {educator.last_name}
                         </h3>
-                        <p className="text-gray-600 mt-1">{educator.location}</p>
 
-                        {educator.bio && (
-                          <p className="text-gray-700 mt-3 line-clamp-2">{educator.bio}</p>
+                        {/* Note moyenne avec étoiles */}
+                        {educator.rating > 0 ? (
+                          <div className="flex items-center gap-1 mt-2 mb-2">
+                            <div className="flex items-center">
+                              {[...Array(5)].map((_, i) => (
+                                <svg
+                                  key={i}
+                                  className={`w-5 h-5 ${
+                                    i < Math.round(educator.rating)
+                                      ? &apos;text-yellow-400 fill-current&apos;
+                                      : &apos;text-gray-300&apos;
+                                  }`}
+                                  fill="none"
+                                  stroke="currentColor"
+                                  viewBox="0 0 24 24"
+                                >
+                                  <path
+                                    strokeLinecap="round"
+                                    strokeLinejoin="round"
+                                    strokeWidth={2}
+                                    d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z"
+                                  />
+                                </svg>
+                              ))}
+                            </div>
+                            <span className="text-base font-bold text-gray-800">
+                              {educator.rating.toFixed(1)}
+                            </span>
+                            <span className="text-sm text-gray-500">
+                              ({educator.total_reviews} avis)
+                            </span>
+                          </div>
+                        ) : (
+                          <p className="text-sm text-gray-500 mt-2 mb-2">Aucun avis pour le moment</p>
                         )}
 
-                        <div className="mt-4 flex flex-wrap gap-2">
-                          {educator.certifications?.map((cert: any) => (
-                            <span
-                              key={cert.id}
-                              className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-primary-100 text-primary-800"
-                            >
-                              {cert.type}
-                            </span>
-                          ))}
-                        </div>
+                        <p className="text-gray-600">{educator.location}</p>
+
+                        {educator.bio && (
+                          <p className="text-gray-700 mt-3 line-clamp-3">{educator.bio}</p>
+                        )}
 
                         <div className="mt-4 flex items-center gap-6 text-sm text-gray-600 flex-wrap">
                           {educator.distance !== undefined && (
@@ -358,15 +401,12 @@ export default function SearchPage() {
                           {educator.hourly_rate && (
                             <span>💰 {educator.hourly_rate}€/h</span>
                           )}
-                          {educator.rating > 0 && (
-                            <span>⭐ {educator.rating.toFixed(1)} ({educator.total_reviews} avis)</span>
-                          )}
                         </div>
 
                         {educator.specializations && educator.specializations.length > 0 && (
                           <div className="mt-3">
                             <span className="text-sm text-gray-600">
-                              Spécialisations: {educator.specializations.join(', ')}
+                              Spécialisations: {educator.specializations.join(&apos;, &apos;)}
                             </span>
                           </div>
                         )}
@@ -374,7 +414,7 @@ export default function SearchPage() {
                         {educator.languages && educator.languages.length > 0 && (
                           <div className="mt-2">
                             <span className="text-sm text-gray-600">
-                              Langues: {educator.languages.join(', ')}
+                              Langues: {educator.languages.join(&apos;, &apos;)}
                             </span>
                           </div>
                         )}

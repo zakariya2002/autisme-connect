@@ -1,17 +1,17 @@
-'use client';
+&apos;use client&apos;;
 
-import { useRouter } from 'next/navigation';
-import Link from 'next/link';
+import { useRouter } from &apos;next/navigation&apos;;
+import Link from &apos;next/link&apos;;
 
 export default function SignupChoicePage() {
   const router = useRouter();
 
-  const handleRoleSelection = (role: 'family' | 'educator') => {
+  const handleRoleSelection = (role: &apos;family&apos; | &apos;educator&apos;) => {
     // Redirection directe vers les pages fusionnées
-    if (role === 'educator') {
-      router.push('/auth/register-educator');
+    if (role === &apos;educator&apos;) {
+      router.push(&apos;/auth/register-educator&apos;);
     } else {
-      router.push('/auth/register-family');
+      router.push(&apos;/auth/register-family&apos;);
     }
   };
 
@@ -32,7 +32,7 @@ export default function SignupChoicePage() {
             Choisissez le type de compte que vous souhaitez créer
           </p>
           <p className="mt-4 text-sm text-gray-600">
-            Vous avez déjà un compte ?{' '}
+            Vous avez déjà un compte ?{&apos; &apos;}
             <Link href="/auth/login" className="font-medium text-primary-600 hover:text-primary-500">
               Connectez-vous
             </Link>
@@ -43,7 +43,7 @@ export default function SignupChoicePage() {
         <div className="grid md:grid-cols-2 gap-8 max-w-5xl mx-auto px-4">
           {/* Carte Famille */}
           <button
-            onClick={() => handleRoleSelection('family')}
+            onClick={() => handleRoleSelection(&apos;family&apos;)}
             className="group relative bg-white rounded-2xl shadow-xl hover:shadow-2xl transition-all duration-300 overflow-hidden border-2 border-transparent hover:border-primary-500 transform hover:-translate-y-1"
           >
             <div className="p-8 text-center">
@@ -101,7 +101,7 @@ export default function SignupChoicePage() {
 
           {/* Carte Éducateur */}
           <button
-            onClick={() => handleRoleSelection('educator')}
+            onClick={() => handleRoleSelection(&apos;educator&apos;)}
             className="group relative bg-white rounded-2xl shadow-xl hover:shadow-2xl transition-all duration-300 overflow-hidden border-2 border-transparent hover:border-primary-500 transform hover:-translate-y-1"
           >
             <div className="p-8 text-center">

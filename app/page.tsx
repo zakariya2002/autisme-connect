@@ -1,15 +1,15 @@
-'use client';
+&apos;use client&apos;;
 
-import { useState, useEffect } from 'react';
-import Link from 'next/link';
-import { useRouter } from 'next/navigation';
-import { supabase } from '@/lib/supabase';
+import { useState, useEffect } from &apos;react&apos;;
+import Link from &apos;next/link&apos;;
+import { useRouter } from &apos;next/navigation&apos;;
+import { supabase } from &apos;@/lib/supabase&apos;;
 
 export default function Home() {
   const router = useRouter();
   const [educators, setEducators] = useState<any[]>([]);
   const [filteredEducators, setFilteredEducators] = useState<any[]>([]);
-  const [searchTerm, setSearchTerm] = useState('');
+  const [searchTerm, setSearchTerm] = useState(&apos;&apos;);
   const [loading, setLoading] = useState(true);
   const [userLocation, setUserLocation] = useState<{ lat: number; lng: number } | null>(null);
   const [locationLoading, setLocationLoading] = useState(false);
@@ -19,7 +19,7 @@ export default function Home() {
   }, []);
 
   useEffect(() => {
-    if (searchTerm.trim() === '') {
+    if (searchTerm.trim() === &apos;&apos;) {
       setFilteredEducators(educators);
     } else {
       const filtered = educators.filter((educator) => {
@@ -40,28 +40,28 @@ export default function Home() {
     setLoading(true);
     try {
       const { data, error } = await supabase
-        .from('educator_profiles')
-        .select('*')
-        .order('created_at', { ascending: false });
+        .from(&apos;educator_profiles&apos;)
+        .select(&apos;*&apos;)
+        .order(&apos;created_at&apos;, { ascending: false });
 
       if (error) throw error;
 
       setEducators(data || []);
       setFilteredEducators(data || []);
     } catch (error) {
-      console.error('Erreur:', error);
+      console.error(&apos;Erreur:&apos;, error);
     } finally {
       setLoading(false);
     }
   };
 
   const capitalizeFirstName = (name: string) => {
-    if (!name) return '';
+    if (!name) return &apos;&apos;;
     return name.charAt(0).toUpperCase() + name.slice(1).toLowerCase();
   };
 
   const formatLastName = (name: string) => {
-    if (!name) return '';
+    if (!name) return &apos;&apos;;
     return name.toUpperCase();
   };
 
@@ -78,11 +78,11 @@ export default function Home() {
     return R * c; // Distance en km
   };
 
-  // Obtenir la position de l'utilisateur
+  // Obtenir la position de l&apos;utilisateur
   const getUserLocation = () => {
     setLocationLoading(true);
     if (!navigator.geolocation) {
-      alert('La géolocalisation n\'est pas supportée par votre navigateur');
+      alert(&apos;La géolocalisation n\&apos;est pas supportée par votre navigateur&apos;);
       setLocationLoading(false);
       return;
     }
@@ -111,8 +111,8 @@ export default function Home() {
         setLocationLoading(false);
       },
       (error) => {
-        console.error('Erreur de géolocalisation:', error);
-        alert('Impossible d\'obtenir votre position. Veuillez autoriser l\'accès à votre localisation.');
+        console.error(&apos;Erreur de géolocalisation:&apos;, error);
+        alert(&apos;Impossible d\&apos;obtenir votre position. Veuillez autoriser l\&apos;accès à votre localisation.&apos;);
         setLocationLoading(false);
       }
     );
@@ -143,7 +143,7 @@ export default function Home() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <div className="text-center mb-8">
           <h2 className="text-4xl font-extrabold text-gray-900 sm:text-5xl">
-            Trouvez le bon éducateur{' '}
+            Trouvez le bon éducateur{&apos; &apos;}
             <span className="text-primary-600">près de chez vous</span>
           </h2>
           <p className="mt-3 max-w-md mx-auto text-base text-gray-500 sm:text-lg md:mt-5 md:text-xl md:max-w-3xl">
@@ -188,7 +188,7 @@ export default function Home() {
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
             </svg>
-            {locationLoading ? 'Localisation en cours...' : userLocation ? 'Actualiser ma position' : 'Utiliser ma position'}
+            {locationLoading ? &apos;Localisation en cours...&apos; : userLocation ? &apos;Actualiser ma position&apos; : &apos;Utiliser ma position&apos;}
           </button>
           {userLocation && (
             <p className="mt-2 text-sm text-green-600">
@@ -215,7 +215,77 @@ export default function Home() {
                 onClick={() => router.push(`/educator/${educator.id}`)}
               >
                 <div className="p-6">
-                  {/* Badge de distance si géolocalisation activée */}
+                  {/* Photo de profil et badge de distance */}
+                  <div className="flex items-start gap-4 mb-4">
+                    {/* Photo de profil */}
+                    <div className="flex-shrink-0">
+                      {educator.avatar_url ? (
+                        <img
+                          src={educator.avatar_url}
+                          alt={`${educator.first_name} ${educator.last_name}`}
+                          className="w-20 h-20 rounded-full object-cover border-2 border-primary-200"
+                        />
+                      ) : (
+                        <div className="w-20 h-20 rounded-full bg-primary-100 flex items-center justify-center border-2 border-primary-200">
+                          <svg className="w-10 h-10 text-primary-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                          </svg>
+                        </div>
+                      )}
+                    </div>
+
+                    {/* Nom et note */}
+                    <div className="flex-1 min-w-0">
+                      <h3 className="text-xl font-bold text-gray-900 mb-1">
+                        {educator.first_name?.trim() && (
+                          <span className="text-primary-600">
+                            {capitalizeFirstName(educator.first_name)}{&apos; &apos;}
+                          </span>
+                        )}
+                        <span className="text-gray-900">
+                          {formatLastName(educator.last_name)}
+                        </span>
+                      </h3>
+
+                      {/* Note moyenne */}
+                      {educator.rating > 0 ? (
+                        <div className="flex items-center gap-1 mb-2">
+                          <div className="flex items-center">
+                            {[...Array(5)].map((_, i) => (
+                              <svg
+                                key={i}
+                                className={`w-4 h-4 ${
+                                  i < Math.round(educator.rating)
+                                    ? &apos;text-yellow-400 fill-current&apos;
+                                    : &apos;text-gray-300&apos;
+                                }`}
+                                fill="none"
+                                stroke="currentColor"
+                                viewBox="0 0 24 24"
+                              >
+                                <path
+                                  strokeLinecap="round"
+                                  strokeLinejoin="round"
+                                  strokeWidth={2}
+                                  d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z"
+                                />
+                              </svg>
+                            ))}
+                          </div>
+                          <span className="text-sm font-semibold text-gray-700">
+                            {educator.rating.toFixed(1)}
+                          </span>
+                          <span className="text-sm text-gray-500">
+                            ({educator.total_reviews || 0} avis)
+                          </span>
+                        </div>
+                      ) : (
+                        <p className="text-sm text-gray-500 mb-2">Aucun avis pour le moment</p>
+                      )}
+                    </div>
+                  </div>
+
+                  {/* Badge de distance */}
                   {userLocation && educator.distance !== undefined && educator.distance !== Infinity && (
                     <div className="mb-3">
                       <span className="inline-flex items-center gap-1 px-3 py-1 bg-primary-100 text-primary-700 rounded-full text-sm font-medium">
@@ -229,28 +299,9 @@ export default function Home() {
                     </div>
                   )}
 
-                  <h3 className="text-xl font-bold text-gray-900 mb-2">
-                    {educator.first_name?.trim() && (
-                      <span className="text-primary-600">
-                        {capitalizeFirstName(educator.first_name)}{' '}
-                      </span>
-                    )}
-                    <span className="text-gray-900">
-                      {formatLastName(educator.last_name)}
-                    </span>
-                  </h3>
-                  <p className="text-gray-600 mb-4">{educator.location || 'Localisation non renseignée'}</p>
-                  {educator.specialties && (
-                    <div className="mb-3">
-                      <p className="text-sm font-medium text-gray-700">Spécialités :</p>
-                      <p className="text-sm text-gray-600">{educator.specialties}</p>
-                    </div>
-                  )}
-                  {educator.certifications && (
-                    <div className="mb-3">
-                      <p className="text-sm font-medium text-gray-700">Certifications :</p>
-                      <p className="text-sm text-gray-600">{educator.certifications}</p>
-                    </div>
+                  <p className="text-gray-600 mb-4">{educator.location || &apos;Localisation non renseignée&apos;}</p>
+                  {educator.bio && (
+                    <p className="text-gray-700 mt-3 mb-4 line-clamp-3">{educator.bio}</p>
                   )}
                   <Link
                     href={`/educator/${educator.id}`}
