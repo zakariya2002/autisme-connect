@@ -165,18 +165,6 @@ export default function EducatorDashboard() {
             </Link>
 
             <Link
-              href="/bookings"
-              className="block p-6 bg-primary-50 rounded-lg hover:bg-primary-100 transition"
-            >
-              <div className="flex items-center">
-                <svg className="h-8 w-8 text-primary-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                </svg>
-                <span className="ml-3 text-lg font-medium text-gray-900">Mes réservations</span>
-              </div>
-            </Link>
-
-            <Link
               href="/messages"
               className="block p-6 bg-primary-50 rounded-lg hover:bg-primary-100 transition"
             >
