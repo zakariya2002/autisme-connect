@@ -336,7 +336,7 @@ export default function CertificationDocumentUpload({
                     <svg className="-ml-1 mr-2 h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                     </svg>
-                    Valider l'upload
+                    Valider l&apos;upload
                   </>
                 )}
               </button>
@@ -363,7 +363,7 @@ export default function CertificationDocumentUpload({
             <div className="mt-4">
               <label htmlFor={`file-upload-${certificationId}`} className="cursor-pointer">
                 <span className="mt-2 block text-sm font-medium text-gray-900">
-                  Uploader le diplôme ou l'attestation
+                  Uploader le diplôme ou l&apos;attestation
                 </span>
                 <span className="mt-1 block text-xs text-gray-500">
                   PDF, JPG ou PNG jusqu'à 10MB

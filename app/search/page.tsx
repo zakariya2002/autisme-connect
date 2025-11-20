@@ -354,7 +354,7 @@ export default function SearchPage() {
                               📍 {educator.distance} km
                             </span>
                           )}
-                          <span>📅 {educator.years_of_experience} ans d'expérience</span>
+                          <span>📅 {educator.years_of_experience} ans d&apos;expérience</span>
                           {educator.hourly_rate && (
                             <span>💰 {educator.hourly_rate}€/h</span>
                           )}

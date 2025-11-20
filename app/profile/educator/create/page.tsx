@@ -189,7 +189,7 @@ export default function CreateEducatorProfile() {
             <h3 className="text-lg font-medium text-gray-900 mb-4">Expérience et tarifs</h3>
             <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
               <div>
-                <label className="block text-sm font-medium text-gray-700">Années d'expérience *</label>
+                <label className="block text-sm font-medium text-gray-700">Années d&apos;expérience *</label>
                 <input
                   type="number"
                   required
@@ -293,7 +293,7 @@ export default function CreateEducatorProfile() {
                     />
                   </div>
                   <div>
-                    <label className="block text-sm font-medium text-gray-700">Date d'obtention</label>
+                    <label className="block text-sm font-medium text-gray-700">Date d&apos;obtention</label>
                     <input
                       type="date"
                       value={cert.issue_date}

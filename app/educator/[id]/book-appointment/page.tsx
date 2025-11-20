@@ -543,7 +543,7 @@ export default function BookAppointmentPage({ params }: { params: { id: string }
                       />
                       <div>
                         <div className="font-medium">À domicile</div>
-                        <div className="text-sm text-gray-500">L'éducateur se déplace</div>
+                        <div className="text-sm text-gray-500">L&apos;éducateur se déplace</div>
                       </div>
                     </label>
                     <label className="flex items-center p-3 border-2 border-gray-200 rounded-lg cursor-pointer hover:border-primary-300">

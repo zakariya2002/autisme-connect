@@ -540,7 +540,7 @@ export default function EducatorProfilePage() {
 
             <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">Années d'expérience *</label>
+                <label className="block text-sm font-medium text-gray-700 mb-2">Années d&apos;expérience *</label>
                 <input
                   type="number"
                   required
@@ -661,8 +661,8 @@ export default function EducatorProfilePage() {
                         <option value="TEACCH">TEACCH</option>
                         <option value="PECS">PECS (Picture Exchange Communication)</option>
                         <option value="Makaton">Makaton</option>
-                        <option value="DEES">DEES (Diplôme d'État Éducateur Spécialisé)</option>
-                        <option value="DEME">DEME (Diplôme d'État Moniteur Éducateur)</option>
+                        <option value="DEES">DEES (Diplôme d&apos;État Éducateur Spécialisé)</option>
+                        <option value="DEME">DEME (Diplôme d&apos;État Moniteur Éducateur)</option>
                         <option value="OTHER">Autre</option>
                       </select>
                     </div>
@@ -687,7 +687,7 @@ export default function EducatorProfilePage() {
                       />
                     </div>
                     <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-2">Date d'obtention *</label>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">Date d&apos;obtention *</label>
                       <input
                         type="date"
                         value={cert.issue_date}
@@ -724,7 +724,7 @@ export default function EducatorProfilePage() {
                       )}
                     </div>
                     <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-2">Région d'obtention</label>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">Région d&apos;obtention</label>
                       <select
                         value={cert.issuing_region || ''}
                         onChange={(e) => updateCertification(index, 'issuing_region', e.target.value)}
@@ -733,7 +733,7 @@ export default function EducatorProfilePage() {
                         <option value="">Sélectionnez une région</option>
                         <option value="Île-de-France">Île-de-France</option>
                         <option value="Auvergne-Rhône-Alpes">Auvergne-Rhône-Alpes</option>
-                        <option value="PACA">Provence-Alpes-Côte d'Azur</option>
+                        <option value="PACA">Provence-Alpes-Côte d&apos;Azur</option>
                         <option value="Occitanie">Occitanie</option>
                         <option value="Hauts-de-France">Hauts-de-France</option>
                         <option value="Nouvelle-Aquitaine">Nouvelle-Aquitaine</option>
