@@ -10,7 +10,7 @@ export interface User {
 }
 
 // Types pour les profils éducateurs
-export type CertificationType = 'ABA' | 'TEACCH' | 'PECS' | 'OTHER';
+export type CertificationType = 'ABA' | 'TEACCH' | 'PECS' | 'DEES' | 'DEME' | 'OTHER';
 
 export interface Certification {
   id: string;

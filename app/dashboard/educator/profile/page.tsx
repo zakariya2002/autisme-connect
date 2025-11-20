@@ -329,7 +329,7 @@ export default function EducatorProfilePage() {
           const { data: duplicateCheck } = await supabase.rpc('check_diploma_number_duplicate', {
             diploma_number: cert.diploma_number,
             current_certification_id: cert.id
-          }).single();
+          }).single() as { data: { is_duplicate: boolean; duplicate_count: number } | null };
 
           if (duplicateCheck?.is_duplicate) {
             duplicateWarning += `\n⚠️ ALERTE: Le numéro ${cert.diploma_number} est utilisé par ${duplicateCheck.duplicate_count} autre(s) personne(s).`;
@@ -614,7 +614,7 @@ export default function EducatorProfilePage() {
           <div className="p-6 space-y-4">
             {certifications.length === 0 ? (
               <p className="text-gray-500 text-center py-8">
-                Aucune certification ajoutée. Cliquez sur "Ajouter une certification" pour commencer.
+                Aucune certification ajoutée. Cliquez sur &quot;Ajouter une certification&quot; pour commencer.
               </p>
             ) : (
               certifications.map((cert, index) => (
@@ -761,7 +761,7 @@ export default function EducatorProfilePage() {
                       />
                     ) : (
                       <div className="bg-yellow-50 border border-yellow-200 text-yellow-700 px-3 py-2 rounded text-sm">
-                        ⚠️ Enregistrez d'abord cette certification pour pouvoir uploader un document
+                        ⚠️ Enregistrez d&apos;abord cette certification pour pouvoir uploader un document
                       </div>
                     )}
                   </div>

@@ -339,7 +339,7 @@ export default function EducatorPublicProfile({ params }: { params: { id: string
                 <div className="w-36 h-36 rounded-full bg-white p-2 shadow-xl ring-4 ring-gray-100">
                   {showAvatar ? (
                     <img
-                      src={educator.avatar_url}
+                      src={educator.avatar_url || undefined}
                       alt={`${educator.first_name} ${educator.last_name}`}
                       className="w-full h-full rounded-full object-cover"
                     />
@@ -378,13 +378,13 @@ export default function EducatorPublicProfile({ params }: { params: { id: string
                     </svg>
                     <span className="font-medium text-gray-700">{educator.location}</span>
                   </div>
-                  {(educator.experience_years || educator.years_of_experience) && (
+                  {educator.years_of_experience && (
                     <div className="flex items-center bg-gray-50 px-3 py-2 rounded-lg">
                       <svg className="h-5 w-5 mr-2 text-primary-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
                       </svg>
                       <span className="font-medium text-gray-700">
-                        {educator.experience_years || educator.years_of_experience} {(educator.experience_years || educator.years_of_experience) > 1 ? 'ans' : 'an'} d'expérience
+                        {educator.years_of_experience} {educator.years_of_experience > 1 ? 'ans' : 'an'} d&apos;expérience
                       </span>
                     </div>
                   )}
@@ -473,7 +473,7 @@ export default function EducatorPublicProfile({ params }: { params: { id: string
             )}
 
             {/* Spécialités */}
-            {educator.specialties && (
+            {educator.specializations && educator.specializations.length > 0 && (
               <div className="bg-white rounded-xl shadow-lg p-8 border border-gray-100 hover:shadow-xl transition-shadow duration-300">
                 <div className="flex items-center mb-6">
                   <div className="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center mr-3">
@@ -484,7 +484,7 @@ export default function EducatorPublicProfile({ params }: { params: { id: string
                   <h2 className="text-2xl font-bold text-gray-900">Spécialités</h2>
                 </div>
                 <div className="flex flex-wrap gap-2">
-                  {educator.specialties.split(',').map((spec: string, index: number) => (
+                  {educator.specializations.map((spec: string, index: number) => (
                     <span
                       key={index}
                       className="inline-flex items-center px-4 py-2 bg-gradient-to-r from-blue-50 to-blue-100 text-blue-700 rounded-lg text-sm font-semibold border border-blue-200 hover:shadow-md transition-all duration-200"
@@ -684,7 +684,7 @@ export default function EducatorPublicProfile({ params }: { params: { id: string
                         </svg>
                         <p className="text-sm text-blue-700">
                           <strong>Info :</strong> Ces périodes sont des exceptions aux horaires habituels.
-                          Contactez l'éducateur pour confirmer les disponibilités.
+                          Contactez l&apos;éducateur pour confirmer les disponibilités.
                         </p>
                       </div>
                     </div>
@@ -712,7 +712,7 @@ export default function EducatorPublicProfile({ params }: { params: { id: string
           {/* Barre latérale */}
           <div className="space-y-6">
             {/* Contact Info */}
-            {((educator.phone && educator.show_phone) || (educator.email && educator.show_email)) && (
+            {educator.phone && (
               <div className="bg-white rounded-xl shadow-lg p-6 border border-gray-100 hover:shadow-xl transition-shadow duration-300">
                 <div className="flex items-center mb-4">
                   <div className="w-8 h-8 bg-purple-100 rounded-lg flex items-center justify-center mr-2">
@@ -723,22 +723,12 @@ export default function EducatorPublicProfile({ params }: { params: { id: string
                   <h2 className="text-lg font-bold text-gray-900">Contact</h2>
                 </div>
                 <div className="space-y-3">
-                  {educator.phone && educator.show_phone && (
-                    <div className="flex items-center text-gray-700">
-                      <svg className="w-5 h-5 mr-3 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
-                      </svg>
-                      <span className="font-medium">{educator.phone}</span>
-                    </div>
-                  )}
-                  {educator.email && educator.show_email && (
-                    <div className="flex items-center text-gray-700">
-                      <svg className="w-5 h-5 mr-3 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 12a4 4 0 10-8 0 4 4 0 008 0zm0 0v1.5a2.5 2.5 0 005 0V12a9 9 0 10-9 9m4.5-1.206a8.959 8.959 0 01-4.5 1.207" />
-                      </svg>
-                      <span className="font-medium text-sm">{educator.email}</span>
-                    </div>
-                  )}
+                  <div className="flex items-center text-gray-700">
+                    <svg className="w-5 h-5 mr-3 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
+                    </svg>
+                    <span className="font-medium">{educator.phone}</span>
+                  </div>
                 </div>
               </div>
             )}

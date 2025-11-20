@@ -310,7 +310,7 @@ export default function BookAppointmentPage({ params }: { params: { id: string }
         <div className="text-center">
           <p className="text-red-600 mb-4">Éducateur introuvable</p>
           <Link href="/" className="text-primary-600 hover:underline">
-            Retour à l'accueil
+            Retour à l&apos;accueil
           </Link>
         </div>
       </div>
@@ -373,7 +373,7 @@ export default function BookAppointmentPage({ params }: { params: { id: string }
               Aucune disponibilité configurée
             </h3>
             <p className="text-gray-600 mb-6">
-              Cet éducateur n'a pas encore défini ses disponibilités.
+              Cet éducateur n&apos;a pas encore défini ses disponibilités.
               <br />
               Contactez-le directement par message.
             </p>

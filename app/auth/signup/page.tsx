@@ -156,7 +156,7 @@ export default function SignupChoicePage() {
         {/* Message informatif */}
         <div className="mt-12 text-center">
           <p className="text-sm text-gray-500 max-w-2xl mx-auto">
-            En créant un compte, vous acceptez nos conditions d'utilisation et notre politique de confidentialité.
+            En créant un compte, vous acceptez nos conditions d&apos;utilisation et notre politique de confidentialité.
             Toutes les certifications des éducateurs sont vérifiées par notre équipe.
           </p>
         </div>

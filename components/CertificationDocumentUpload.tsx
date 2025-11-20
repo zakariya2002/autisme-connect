@@ -366,7 +366,7 @@ export default function CertificationDocumentUpload({
                   Uploader le diplôme ou l&apos;attestation
                 </span>
                 <span className="mt-1 block text-xs text-gray-500">
-                  PDF, JPG ou PNG jusqu'à 10MB
+                  PDF, JPG ou PNG jusqu&apos;à 10MB
                 </span>
                 <input
                   id={`file-upload-${certificationId}`}
