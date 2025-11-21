@@ -55,7 +55,8 @@ export default function EducatorDashboard() {
         .select('*')
         .eq('educator_id', data.id)
         .in('status', ['active', 'trialing'])
-        .single();
+        .limit(1)
+        .maybeSingle();
 
       setSubscription(subscriptionData);
     }
