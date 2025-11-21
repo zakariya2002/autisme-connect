@@ -2,6 +2,7 @@
 
 import Link from 'next/link';
 import Logo from '@/components/Logo';
+import MobileMenu from '@/components/MobileMenu';
 
 export default function Home() {
   return (
@@ -10,18 +11,23 @@ export default function Home() {
       <nav className="bg-white shadow-sm border-b border-gray-200">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between h-16 items-center">
-            <Logo />
-            <div className="flex items-center gap-1 sm:gap-2">
-              <Link href="/search" className="hidden md:block text-gray-700 hover:text-primary-600 px-3 lg:px-4 py-2 rounded-md font-medium transition-colors text-sm lg:text-base">
+            <div className="hidden md:block">
+              <Logo />
+            </div>
+            <div className="md:hidden">
+              <MobileMenu />
+            </div>
+            <div className="hidden md:flex items-center gap-2">
+              <Link href="/search" className="text-gray-700 hover:text-primary-600 px-3 lg:px-4 py-2 rounded-md font-medium transition-colors text-sm lg:text-base">
                 Trouver un éducateur
               </Link>
-              <Link href="/pricing" className="hidden sm:block text-gray-700 hover:text-primary-600 px-2 lg:px-4 py-2 rounded-md font-medium transition-colors text-sm lg:text-base">
+              <Link href="/pricing" className="text-gray-700 hover:text-primary-600 px-2 lg:px-4 py-2 rounded-md font-medium transition-colors text-sm lg:text-base">
                 Tarifs
               </Link>
-              <Link href="/auth/login" className="text-gray-700 hover:text-primary-600 px-2 sm:px-4 py-2 rounded-md font-medium transition-colors text-sm lg:text-base">
+              <Link href="/auth/login" className="text-gray-700 hover:text-primary-600 px-2 lg:px-4 py-2 rounded-md font-medium transition-colors text-sm lg:text-base">
                 Connexion
               </Link>
-              <Link href="/auth/signup" className="bg-primary-600 text-white px-3 sm:px-5 py-2 sm:py-2.5 rounded-md hover:bg-primary-700 font-medium transition-colors shadow-sm text-sm lg:text-base">
+              <Link href="/auth/signup" className="bg-primary-600 text-white px-5 py-2.5 rounded-md hover:bg-primary-700 font-medium transition-colors shadow-sm text-sm lg:text-base">
                 Inscription
               </Link>
             </div>
