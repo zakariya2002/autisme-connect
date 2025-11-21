@@ -1,12 +1,80 @@
 'use client';
 
 import Link from 'next/link';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
+import { supabase } from '@/lib/supabase';
 import Logo from '@/components/Logo';
 import MobileMenu from '@/components/MobileMenu';
 
 export default function PricingPage() {
+  const router = useRouter();
   const [billingCycle, setBillingCycle] = useState<'monthly' | 'annual'>('monthly');
+  const [loading, setLoading] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+  useEffect(() => {
+    checkAuth();
+  }, []);
+
+  const checkAuth = async () => {
+    const { data: { session } } = await supabase.auth.getSession();
+    setIsLoggedIn(!!session);
+  };
+
+  const handleStartTrial = async () => {
+    setLoading(true);
+
+    // Vérifier si l'utilisateur est connecté
+    const { data: { session } } = await supabase.auth.getSession();
+
+    if (!session) {
+      // Pas connecté → rediriger vers signup avec retour vers pricing
+      router.push(`/auth/signup?redirect=/pricing&plan=${billingCycle}`);
+      return;
+    }
+
+    // Connecté → récupérer le profil éducateur
+    const { data: educatorProfile } = await supabase
+      .from('educator_profiles')
+      .select('id')
+      .eq('user_id', session.user.id)
+      .single();
+
+    if (!educatorProfile) {
+      // Pas de profil éducateur → créer d'abord le profil
+      router.push(`/signup?role=educator&redirect=/pricing&plan=${billingCycle}`);
+      return;
+    }
+
+    // Créer la session Stripe Checkout
+    try {
+      const response = await fetch('/api/create-checkout-session', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          educatorId: educatorProfile.id,
+          planType: billingCycle,
+        }),
+      });
+
+      const data = await response.json();
+
+      if (data.url) {
+        // Rediriger vers Stripe Checkout
+        window.location.href = data.url;
+      } else {
+        alert('Erreur lors de la création de la session de paiement');
+        setLoading(false);
+      }
+    } catch (error) {
+      console.error('Erreur:', error);
+      alert('Une erreur est survenue');
+      setLoading(false);
+    }
+  };
 
   const features = [
     {
@@ -196,14 +264,25 @@ export default function PricingPage() {
 
               {/* CTA Button */}
               <div className="text-center">
-                <Link
-                  href="/auth/signup"
-                  className="inline-block w-full sm:w-auto px-8 sm:px-12 py-3 sm:py-4 bg-gradient-to-r from-primary-600 to-primary-700 text-white rounded-xl hover:from-primary-700 hover:to-primary-800 font-bold text-base sm:text-lg shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-1"
+                <button
+                  onClick={handleStartTrial}
+                  disabled={loading}
+                  className="inline-block w-full sm:w-auto px-8 sm:px-12 py-3 sm:py-4 bg-gradient-to-r from-primary-600 to-primary-700 text-white rounded-xl hover:from-primary-700 hover:to-primary-800 font-bold text-base sm:text-lg shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-1 disabled:opacity-50 disabled:cursor-not-allowed"
                 >
-                  Commencer gratuitement
-                </Link>
+                  {loading ? (
+                    <span className="flex items-center justify-center gap-2">
+                      <svg className="animate-spin h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                        <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                        <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                      </svg>
+                      Chargement...
+                    </span>
+                  ) : (
+                    'Commencer gratuitement'
+                  )}
+                </button>
                 <p className="text-xs sm:text-sm text-gray-500 mt-3 sm:mt-4">
-                  Carte bancaire requise • Aucun prélèvement pendant le mois d'essai
+                  Carte bancaire requise • Aucun prélèvement pendant 30 jours
                 </p>
               </div>
             </div>
@@ -336,14 +415,15 @@ export default function PricingPage() {
           <p className="text-base sm:text-xl mb-6 sm:mb-8 opacity-90">
             Rejoignez les éducateurs qui font confiance à Autisme Connect
           </p>
-          <Link
-            href="/auth/signup"
-            className="inline-block w-full sm:w-auto px-8 sm:px-12 py-3 sm:py-4 bg-white text-primary-600 rounded-xl hover:bg-gray-100 font-bold text-base sm:text-lg shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-1"
+          <button
+            onClick={handleStartTrial}
+            disabled={loading}
+            className="inline-block w-full sm:w-auto px-8 sm:px-12 py-3 sm:py-4 bg-white text-primary-600 rounded-xl hover:bg-gray-100 font-bold text-base sm:text-lg shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-1 disabled:opacity-50 disabled:cursor-not-allowed"
           >
-            Essayer gratuitement pendant 30 jours
-          </Link>
+            {loading ? 'Chargement...' : 'Essayer gratuitement pendant 30 jours'}
+          </button>
           <p className="text-xs sm:text-sm mt-3 sm:mt-4 opacity-75">
-            Aucune carte bancaire requise pour l'essai
+            Carte bancaire requise • Prélèvement après 30 jours d'essai
           </p>
         </div>
       </div>
