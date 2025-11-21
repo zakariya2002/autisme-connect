@@ -90,6 +90,11 @@ export async function POST(request: Request) {
     console.log('✅ Abonnement trouvé:', subscription.id, 'Status:', subscription.status);
 
     // Insérer ou mettre à jour dans Supabase
+    // @ts-ignore - Stripe subscription has these properties at runtime
+    const currentPeriodStart = subscription.current_period_start;
+    // @ts-ignore - Stripe subscription has these properties at runtime
+    const currentPeriodEnd = subscription.current_period_end;
+
     const { error: upsertError } = await supabase
       .from('subscriptions')
       .upsert({
@@ -104,8 +109,8 @@ export async function POST(request: Request) {
         trial_end: subscription.trial_end
           ? new Date(subscription.trial_end * 1000).toISOString()
           : null,
-        current_period_start: new Date(subscription.current_period_start * 1000).toISOString(),
-        current_period_end: new Date(subscription.current_period_end * 1000).toISOString(),
+        current_period_start: new Date(currentPeriodStart * 1000).toISOString(),
+        current_period_end: new Date(currentPeriodEnd * 1000).toISOString(),
         plan_type: subscription.items.data[0].price.recurring?.interval === 'year' ? 'annual' : 'monthly',
         price_amount: (subscription.items.data[0].price.unit_amount || 0) / 100,
         currency: 'eur',
