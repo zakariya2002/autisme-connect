@@ -17,6 +17,7 @@ export default function EducatorDashboard() {
     bookings: 0,
     rating: 0,
     reviews: 0,
+    profileViews: 0,
   });
   const [usageStats, setUsageStats] = useState<any>(null);
   const [syncingSubscription, setSyncingSubscription] = useState(false);
@@ -44,10 +45,11 @@ export default function EducatorDashboard() {
         bookings: 0,
         rating: data.rating || 0,
         reviews: data.total_reviews || 0,
+        profileViews: data.total_views || 0, // Ajouter les vues du profil
       });
 
       const { count } = await supabase
-        .from('bookings')
+        .from('appointments')
         .select('*', { count: 'exact', head: true })
         .eq('educator_id', data.id);
 
@@ -197,14 +199,20 @@ export default function EducatorDashboard() {
         <div className="grid grid-cols-1 gap-6 sm:grid-cols-3 mb-8">
           <div className="bg-white rounded-lg shadow p-6">
             <div className="flex items-center">
-              <div className="flex-shrink-0 bg-primary-100 rounded-md p-3">
-                <svg className="h-6 w-6 text-primary-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+              <div className="flex-shrink-0 bg-blue-100 rounded-md p-3">
+                <svg className="h-6 w-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
                 </svg>
               </div>
               <div className="ml-4">
-                <p className="text-sm font-medium text-gray-500">Réservations</p>
-                <p className="text-2xl font-semibold text-gray-900">{stats.bookings}</p>
+                <p className="text-sm font-medium text-gray-500">Vues du profil</p>
+                <p className="text-2xl font-semibold text-gray-900">{stats.profileViews}</p>
+                {!isPremium && stats.profileViews > 0 && (
+                  <p className="text-xs text-blue-600 mt-1">
+                    {stats.profileViews >= 10 ? '🔥 Profil très consulté !' : '👀 Votre profil attire l\'attention'}
+                  </p>
+                )}
               </div>
             </div>
           </div>

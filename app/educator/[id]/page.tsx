@@ -191,6 +191,13 @@ export default function EducatorPublicProfile({ params }: { params: { id: string
 
       setEducator(profile);
 
+      // Tracker la vue du profil (en arrière-plan, ne pas bloquer l'affichage)
+      fetch('/api/track-profile-view', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ educatorId: params.id }),
+      }).catch(error => console.error('Erreur tracking vue:', error));
+
       // Récupérer les certifications
       const { data: certs, error: certsError } = await supabase
         .from('certifications')
