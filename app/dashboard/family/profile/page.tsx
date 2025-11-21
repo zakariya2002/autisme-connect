@@ -4,9 +4,11 @@ import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { supabase } from '@/lib/supabase';
+import { signOut } from '@/lib/auth';
 import { getCurrentPosition, reverseGeocode } from '@/lib/geolocation';
 import AvatarUpload from '@/components/AvatarUpload';
 import Logo from '@/components/Logo';
+import FamilyMobileMenu from '@/components/FamilyMobileMenu';
 
 export default function FamilyProfilePage() {
   const router = useRouter();
@@ -19,6 +21,7 @@ export default function FamilyProfilePage() {
   const [avatarUrl, setAvatarUrl] = useState<string | null>(null);
   const [avatarModerationStatus, setAvatarModerationStatus] = useState<'pending' | 'approved' | 'rejected' | null>(null);
   const [avatarModerationReason, setAvatarModerationReason] = useState<string | null>(null);
+  const [profile, setProfile] = useState<any>(null);
 
   const [profileData, setProfileData] = useState({
     first_name: '',
@@ -59,6 +62,7 @@ export default function FamilyProfilePage() {
         .single();
 
       if (profile) {
+        setProfile(profile);
         setProfileData({
           first_name: profile.first_name || '',
           last_name: profile.last_name || '',
@@ -183,16 +187,29 @@ export default function FamilyProfilePage() {
     );
   }
 
+  const handleLogout = async () => {
+    await signOut();
+    router.push('/');
+  };
+
   return (
     <div className="min-h-screen bg-gray-50">
       <nav className="bg-white shadow-sm">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between h-16 items-center">
-            <div className="flex items-center">
-              <Logo href="/dashboard/family" />
+            <div className="flex items-center gap-3">
+              {/* Menu mobile (hamburger) */}
+              <div className="md:hidden">
+                <FamilyMobileMenu profile={profile} onLogout={handleLogout} />
+              </div>
+              {/* Logo */}
+              <div className="hidden md:block">
+                <Logo href="/dashboard/family" />
+              </div>
             </div>
-            <div>
-              <Link href="/dashboard/family" className="text-gray-700 hover:text-primary-600 px-3 py-2">
+            {/* Menu desktop - caché sur mobile */}
+            <div className="hidden md:block">
+              <Link href="/dashboard/family" className="text-gray-700 hover:text-primary-600 px-3 py-2 font-medium transition">
                 Retour au dashboard
               </Link>
             </div>

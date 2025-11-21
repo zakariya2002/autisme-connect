@@ -4,7 +4,9 @@ import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { supabase } from '@/lib/supabase';
+import { signOut } from '@/lib/auth';
 import Logo from '@/components/Logo';
+import EducatorMobileMenu from '@/components/EducatorMobileMenu';
 
 interface WeeklySlot {
   id: string;
@@ -36,6 +38,8 @@ const DAYS = [
 export default function AvailabilityPage() {
   const router = useRouter();
   const [educatorId, setEducatorId] = useState<string | null>(null);
+  const [profile, setProfile] = useState<any>(null);
+  const [subscription, setSubscription] = useState<any>(null);
   const [weeklySlots, setWeeklySlots] = useState<WeeklySlot[]>([]);
   const [exceptions, setExceptions] = useState<Exception[]>([]);
   const [loading, setLoading] = useState(true);
@@ -78,12 +82,24 @@ export default function AvailabilityPage() {
 
     const { data: profile } = await supabase
       .from('educator_profiles')
-      .select('id')
+      .select('*')
       .eq('user_id', session.user.id)
       .single();
 
     if (profile) {
       setEducatorId(profile.id);
+      setProfile(profile);
+
+      // Récupérer l'abonnement
+      const { data: subscriptionData } = await supabase
+        .from('subscriptions')
+        .select('*')
+        .eq('educator_id', profile.id)
+        .in('status', ['active', 'trialing'])
+        .limit(1)
+        .maybeSingle();
+
+      setSubscription(subscriptionData);
     }
   };
 
@@ -242,6 +258,13 @@ export default function AvailabilityPage() {
     return colors[type as keyof typeof colors] || 'bg-gray-100 text-gray-700';
   };
 
+  const handleLogout = async () => {
+    await signOut();
+    router.push('/');
+  };
+
+  const isPremium = subscription && ['active', 'trialing'].includes(subscription.status);
+
   if (loading && !educatorId) {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
@@ -256,14 +279,22 @@ export default function AvailabilityPage() {
       <nav className="bg-white shadow-sm">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between h-16 items-center">
-            <div className="flex items-center">
-              <Logo href="/dashboard/educator" />
+            <div className="flex items-center gap-3">
+              {/* Menu mobile (hamburger) */}
+              <div className="md:hidden">
+                <EducatorMobileMenu profile={profile} isPremium={isPremium} onLogout={handleLogout} />
+              </div>
+              {/* Logo */}
+              <div className="hidden md:block">
+                <Logo href="/dashboard/educator" />
+              </div>
             </div>
-            <div className="flex space-x-4">
-              <Link href="/dashboard/educator" className="text-gray-700 hover:text-primary-600 px-3 py-2">
+            {/* Menu desktop - caché sur mobile */}
+            <div className="hidden md:flex space-x-4">
+              <Link href="/dashboard/educator" className="text-gray-700 hover:text-primary-600 px-3 py-2 font-medium transition">
                 Tableau de bord
               </Link>
-              <Link href="/dashboard/educator/profile" className="text-gray-700 hover:text-primary-600 px-3 py-2">
+              <Link href="/dashboard/educator/profile" className="text-gray-700 hover:text-primary-600 px-3 py-2 font-medium transition">
                 Mon profil
               </Link>
             </div>

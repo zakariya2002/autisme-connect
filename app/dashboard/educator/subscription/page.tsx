@@ -6,6 +6,7 @@ import Link from 'next/link';
 import { supabase } from '@/lib/supabase';
 import { signOut } from '@/lib/auth';
 import Logo from '@/components/Logo';
+import EducatorMobileMenu from '@/components/EducatorMobileMenu';
 
 interface Subscription {
   id: string;
@@ -135,6 +136,8 @@ export default function SubscriptionManagementPage() {
     router.push('/');
   };
 
+  const isPremium = subscription && ['active', 'trialing'].includes(subscription.status);
+
   const formatDate = (dateString: string) => {
     return new Date(dateString).toLocaleDateString('fr-FR', {
       day: 'numeric',
@@ -184,10 +187,22 @@ export default function SubscriptionManagementPage() {
         <nav className="bg-white shadow-sm">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="flex justify-between h-16 items-center">
-              <Logo href="/dashboard/educator" />
-              <button onClick={handleLogout} className="text-gray-700 hover:text-primary-600 px-3 py-2 font-medium transition">
-                Déconnexion
-              </button>
+              <div className="flex items-center gap-3">
+                {/* Menu mobile (hamburger) */}
+                <div className="md:hidden">
+                  <EducatorMobileMenu profile={profile} isPremium={isPremium} onLogout={handleLogout} />
+                </div>
+                {/* Logo */}
+                <div className="hidden md:block">
+                  <Logo href="/dashboard/educator" />
+                </div>
+              </div>
+              {/* Button desktop */}
+              <div className="hidden md:block">
+                <button onClick={handleLogout} className="text-gray-700 hover:text-primary-600 px-3 py-2 font-medium transition">
+                  Déconnexion
+                </button>
+              </div>
             </div>
           </div>
         </nav>
@@ -219,8 +234,18 @@ export default function SubscriptionManagementPage() {
       <nav className="bg-white shadow-sm">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between h-16 items-center">
-            <Logo href="/dashboard/educator" />
-            <div className="flex items-center space-x-4">
+            <div className="flex items-center gap-3">
+              {/* Menu mobile (hamburger) */}
+              <div className="md:hidden">
+                <EducatorMobileMenu profile={profile} isPremium={isPremium} onLogout={handleLogout} />
+              </div>
+              {/* Logo */}
+              <div className="hidden md:block">
+                <Logo href="/dashboard/educator" />
+              </div>
+            </div>
+            {/* Menu desktop - caché sur mobile */}
+            <div className="hidden md:flex items-center space-x-4">
               <Link href="/dashboard/educator" className="text-gray-700 hover:text-primary-600 px-3 py-2 font-medium transition">
                 Tableau de bord
               </Link>

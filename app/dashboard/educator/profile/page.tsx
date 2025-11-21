@@ -4,11 +4,13 @@ import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { supabase } from '@/lib/supabase';
+import { signOut } from '@/lib/auth';
 import { CertificationType } from '@/types';
 import { getCurrentPosition, reverseGeocode } from '@/lib/geolocation';
 import AvatarUpload from '@/components/AvatarUpload';
 import CertificationDocumentUpload from '@/components/CertificationDocumentUpload';
 import Logo from '@/components/Logo';
+import EducatorMobileMenu from '@/components/EducatorMobileMenu';
 
 export default function EducatorProfilePage() {
   const router = useRouter();
@@ -21,6 +23,8 @@ export default function EducatorProfilePage() {
   const [avatarUrl, setAvatarUrl] = useState<string | null>(null);
   const [avatarModerationStatus, setAvatarModerationStatus] = useState<'pending' | 'approved' | 'rejected' | null>(null);
   const [avatarModerationReason, setAvatarModerationReason] = useState<string | null>(null);
+  const [profile, setProfile] = useState<any>(null);
+  const [subscription, setSubscription] = useState<any>(null);
 
   const [profileData, setProfileData] = useState({
     first_name: '',
@@ -90,6 +94,7 @@ export default function EducatorProfilePage() {
         .single();
 
       if (profile) {
+        setProfile(profile);
         setProfileData({
           first_name: profile.first_name || '',
           last_name: profile.last_name || '',
@@ -108,6 +113,17 @@ export default function EducatorProfilePage() {
         setAvatarUrl(profile.avatar_url || null);
         setAvatarModerationStatus(profile.avatar_moderation_status || null);
         setAvatarModerationReason(profile.avatar_moderation_reason || null);
+
+        // Récupérer l'abonnement
+        const { data: subscriptionData } = await supabase
+          .from('subscriptions')
+          .select('*')
+          .eq('educator_id', profile.id)
+          .in('status', ['active', 'trialing'])
+          .limit(1)
+          .maybeSingle();
+
+        setSubscription(subscriptionData);
       }
 
       // Récupérer les certifications
@@ -370,6 +386,13 @@ export default function EducatorProfilePage() {
     }
   };
 
+  const handleLogout = async () => {
+    await signOut();
+    router.push('/');
+  };
+
+  const isPremium = subscription && ['active', 'trialing'].includes(subscription.status);
+
   if (loading) {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
@@ -386,11 +409,19 @@ export default function EducatorProfilePage() {
       <nav className="bg-white shadow-sm">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between h-16 items-center">
-            <div className="flex items-center">
-              <Logo href="/dashboard/educator" />
+            <div className="flex items-center gap-3">
+              {/* Menu mobile (hamburger) */}
+              <div className="md:hidden">
+                <EducatorMobileMenu profile={profile} isPremium={isPremium} onLogout={handleLogout} />
+              </div>
+              {/* Logo */}
+              <div className="hidden md:block">
+                <Logo href="/dashboard/educator" />
+              </div>
             </div>
-            <div>
-              <Link href="/dashboard/educator" className="text-gray-700 hover:text-primary-600 px-3 py-2">
+            {/* Menu desktop - caché sur mobile */}
+            <div className="hidden md:block">
+              <Link href="/dashboard/educator" className="text-gray-700 hover:text-primary-600 px-3 py-2 font-medium transition">
                 Retour au dashboard
               </Link>
             </div>
