@@ -29,8 +29,9 @@ export default function PricingPage() {
     const { data: { session } } = await supabase.auth.getSession();
 
     if (!session) {
-      // Pas connecté → rediriger vers signup avec retour vers pricing
-      router.push(`/auth/signup?redirect=/pricing&plan=${billingCycle}`);
+      // Pas connecté → rediriger vers inscription ÉDUCATEUR directement
+      // Car seuls les éducateurs paient, les familles c'est gratuit
+      router.push(`/signup?role=educator&plan=${billingCycle}`);
       return;
     }
 
@@ -43,7 +44,7 @@ export default function PricingPage() {
 
     if (!educatorProfile) {
       // Pas de profil éducateur → créer d'abord le profil
-      router.push(`/signup?role=educator&redirect=/pricing&plan=${billingCycle}`);
+      router.push(`/signup?role=educator&plan=${billingCycle}`);
       return;
     }
 

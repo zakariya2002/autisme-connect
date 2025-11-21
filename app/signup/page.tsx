@@ -176,7 +176,31 @@ export default function SignupPage() {
         throw new Error(result.error || 'Erreur lors de la création du profil');
       }
 
-      // 3. Rediriger vers le dashboard
+      // 3. Si éducateur venant de /pricing, rediriger vers Stripe Checkout
+      const planParam = searchParams.get('plan');
+      if (authData.role === 'educator' && planParam && result.data?.id) {
+        // Créer la session Stripe
+        const checkoutResponse = await fetch('/api/create-checkout-session', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            educatorId: result.data.id,
+            planType: planParam,
+          }),
+        });
+
+        const checkoutData = await checkoutResponse.json();
+
+        if (checkoutData.url) {
+          // Rediriger vers Stripe Checkout
+          window.location.href = checkoutData.url;
+          return;
+        }
+      }
+
+      // 4. Sinon, rediriger vers le dashboard
       if (authData.role === 'educator') {
         router.push('/dashboard/educator');
       } else {
