@@ -85,12 +85,29 @@ async function handleCheckoutSessionCompleted(session: Stripe.Checkout.Session) 
   // Créer ou mettre à jour l'abonnement dans la base de données
   const subscription = await stripe.subscriptions.retrieve(session.subscription as string);
 
+  // DEBUG: Afficher TOUTES les clés de l'objet subscription
+  console.log('🔍 [WEBHOOK] Clés disponibles dans subscription:', Object.keys(subscription));
+
+  // DEBUG: Afficher l'objet complet
+  console.log('🔍 [WEBHOOK] Subscription complet:', JSON.stringify(subscription, null, 2));
+
   // Accéder aux propriétés Stripe (snake_case)
   const subscriptionData = subscription as any;
   const currentPeriodStart = subscriptionData.current_period_start;
   const currentPeriodEnd = subscriptionData.current_period_end;
 
-  console.log('📅 Dates webhook:', { currentPeriodStart, currentPeriodEnd });
+  console.log('📅 [WEBHOOK] Dates (snake_case):', {
+    current_period_start: currentPeriodStart,
+    current_period_end: currentPeriodEnd,
+    trial_start: subscription.trial_start,
+    trial_end: subscription.trial_end
+  });
+
+  // Essayer aussi en camelCase
+  console.log('📅 [WEBHOOK] Dates (camelCase):', {
+    currentPeriodStart: (subscription as any).currentPeriodStart,
+    currentPeriodEnd: (subscription as any).currentPeriodEnd,
+  });
 
   const { error } = await supabase
     .from('subscriptions')
