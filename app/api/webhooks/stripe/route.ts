@@ -91,22 +91,16 @@ async function handleCheckoutSessionCompleted(session: Stripe.Checkout.Session) 
   // DEBUG: Afficher l'objet complet
   console.log('🔍 [WEBHOOK] Subscription complet:', JSON.stringify(subscription, null, 2));
 
-  // Accéder aux propriétés Stripe (snake_case)
-  const subscriptionData = subscription as any;
-  const currentPeriodStart = subscriptionData.current_period_start;
-  const currentPeriodEnd = subscriptionData.current_period_end;
+  // Les dates current_period_start/end sont dans subscription.items.data[0]
+  const subscriptionItem = subscription.items.data[0];
+  const currentPeriodStart = subscriptionItem.current_period_start;
+  const currentPeriodEnd = subscriptionItem.current_period_end;
 
-  console.log('📅 [WEBHOOK] Dates (snake_case):', {
+  console.log('📅 [WEBHOOK] Dates trouvées dans subscription.items.data[0]:', {
     current_period_start: currentPeriodStart,
     current_period_end: currentPeriodEnd,
     trial_start: subscription.trial_start,
     trial_end: subscription.trial_end
-  });
-
-  // Essayer aussi en camelCase
-  console.log('📅 [WEBHOOK] Dates (camelCase):', {
-    currentPeriodStart: (subscription as any).currentPeriodStart,
-    currentPeriodEnd: (subscription as any).currentPeriodEnd,
   });
 
   const { error } = await supabase
@@ -136,10 +130,10 @@ async function handleCheckoutSessionCompleted(session: Stripe.Checkout.Session) 
 }
 
 async function handleSubscriptionUpdate(subscription: Stripe.Subscription) {
-  // Accéder aux propriétés Stripe (snake_case)
-  const subscriptionData = subscription as any;
-  const currentPeriodStart = subscriptionData.current_period_start;
-  const currentPeriodEnd = subscriptionData.current_period_end;
+  // Les dates current_period_start/end sont dans subscription.items.data[0]
+  const subscriptionItem = subscription.items.data[0];
+  const currentPeriodStart = subscriptionItem.current_period_start;
+  const currentPeriodEnd = subscriptionItem.current_period_end;
 
   const { error } = await supabase
     .from('subscriptions')

@@ -98,27 +98,20 @@ export async function POST(request: Request) {
     // DEBUG: Afficher l'objet complet (stringifié pour voir la structure)
     console.log('🔍 Subscription complet:', JSON.stringify(subscription, null, 2));
 
-    // Insérer ou mettre à jour dans Supabase
-    // Les propriétés Stripe sont en snake_case, pas camelCase
-    const subscriptionData = subscription as any;
-    const currentPeriodStart = subscriptionData.current_period_start;
-    const currentPeriodEnd = subscriptionData.current_period_end;
+    // Les dates current_period_start/end sont dans subscription.items.data[0]
+    const subscriptionItem = subscription.items.data[0];
+    const currentPeriodStart = subscriptionItem.current_period_start;
+    const currentPeriodEnd = subscriptionItem.current_period_end;
 
-    console.log('📅 Dates (snake_case):', {
+    console.log('📅 Dates trouvées dans subscription.items.data[0]:', {
       current_period_start: currentPeriodStart,
       current_period_end: currentPeriodEnd,
       trial_start: subscription.trial_start,
       trial_end: subscription.trial_end
     });
 
-    // Essayer aussi en camelCase au cas où
-    console.log('📅 Dates (camelCase):', {
-      currentPeriodStart: (subscription as any).currentPeriodStart,
-      currentPeriodEnd: (subscription as any).currentPeriodEnd,
-    });
-
     if (!currentPeriodStart || !currentPeriodEnd) {
-      console.error('❌ Dates manquantes dans l\'abonnement');
+      console.error('❌ Dates manquantes dans subscription.items.data[0]');
       return NextResponse.json(
         { error: 'Dates d\'abonnement manquantes' },
         { status: 400 }
