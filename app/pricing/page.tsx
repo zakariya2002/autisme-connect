@@ -3,6 +3,7 @@
 import Link from 'next/link';
 import { useState } from 'react';
 import Logo from '@/components/Logo';
+import MobileMenu from '@/components/MobileMenu';
 
 export default function PricingPage() {
   const [billingCycle, setBillingCycle] = useState<'monthly' | 'annual'>('monthly');
@@ -73,8 +74,13 @@ export default function PricingPage() {
       <nav className="bg-white shadow-sm border-b border-gray-200">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between h-16 items-center">
-            <Logo />
-            <div className="flex gap-2">
+            <div className="hidden md:block">
+              <Logo />
+            </div>
+            <div className="md:hidden">
+              <MobileMenu />
+            </div>
+            <div className="hidden md:flex gap-2">
               <Link
                 href="/auth/login"
                 className="text-gray-700 hover:text-primary-600 px-4 py-2 rounded-md font-medium transition"
@@ -93,33 +99,33 @@ export default function PricingPage() {
       </nav>
 
       {/* Hero Section */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 lg:py-20">
-        <div className="text-center mb-16">
-          <h1 className="text-5xl lg:text-6xl font-bold text-gray-900 mb-6">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-12 lg:py-20">
+        <div className="text-center mb-8 sm:mb-16">
+          <h1 className="text-3xl sm:text-5xl lg:text-6xl font-bold text-gray-900 mb-4 sm:mb-6">
             Développez votre activité d'
             <span className="text-primary-600">éducateur spécialisé</span>
           </h1>
-          <p className="text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed">
+          <p className="text-base sm:text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed">
             Rejoignez la plateforme de référence pour les professionnels de l'accompagnement TSA
             et connectez-vous avec des familles motivées
           </p>
         </div>
 
         {/* Pricing Card */}
-        <div className="max-w-4xl mx-auto mb-20">
-          <div className="bg-white rounded-3xl shadow-2xl overflow-hidden border-2 border-primary-200">
+        <div className="max-w-4xl mx-auto mb-12 sm:mb-20">
+          <div className="bg-white rounded-2xl sm:rounded-3xl shadow-2xl overflow-hidden border-2 border-primary-200">
             {/* Badge "Offre de lancement" */}
-            <div className="bg-gradient-to-r from-green-500 to-green-600 text-white text-center py-3 font-bold">
+            <div className="bg-gradient-to-r from-green-500 to-green-600 text-white text-center py-2 sm:py-3 font-bold text-sm sm:text-base">
               🎁 OFFRE DE BIENVENUE : 1er MOIS GRATUIT
             </div>
 
-            <div className="p-8 lg:p-12">
+            <div className="p-4 sm:p-8 lg:p-12">
               {/* Toggle Monthly/Annual */}
-              <div className="flex justify-center mb-8">
+              <div className="flex justify-center mb-6 sm:mb-8">
                 <div className="bg-gray-100 p-1 rounded-xl inline-flex">
                   <button
                     onClick={() => setBillingCycle('monthly')}
-                    className={`px-6 py-3 rounded-lg font-semibold transition ${
+                    className={`px-4 sm:px-6 py-2 sm:py-3 rounded-lg font-semibold transition text-sm sm:text-base ${
                       billingCycle === 'monthly'
                         ? 'bg-white text-primary-600 shadow-md'
                         : 'text-gray-600 hover:text-gray-900'
@@ -129,7 +135,7 @@ export default function PricingPage() {
                   </button>
                   <button
                     onClick={() => setBillingCycle('annual')}
-                    className={`px-6 py-3 rounded-lg font-semibold transition relative ${
+                    className={`px-4 sm:px-6 py-2 sm:py-3 rounded-lg font-semibold transition relative text-sm sm:text-base ${
                       billingCycle === 'annual'
                         ? 'bg-white text-primary-600 shadow-md'
                         : 'text-gray-600 hover:text-gray-900'
@@ -144,10 +150,10 @@ export default function PricingPage() {
               </div>
 
               {/* Price */}
-              <div className="text-center mb-8">
+              <div className="text-center mb-6 sm:mb-8">
                 <div className="mb-2">
-                  <span className="text-6xl font-bold text-gray-900">{currentPrice.price}€</span>
-                  <span className="text-2xl text-gray-600">{currentPrice.period}</span>
+                  <span className="text-4xl sm:text-6xl font-bold text-gray-900">{currentPrice.price}€</span>
+                  <span className="text-lg sm:text-2xl text-gray-600">{currentPrice.period}</span>
                 </div>
                 {currentPrice.savings && (
                   <p className="text-green-600 font-semibold">{currentPrice.savings}</p>
@@ -164,13 +170,13 @@ export default function PricingPage() {
               </div>
 
               {/* ROI Calculation */}
-              <div className="bg-gradient-to-r from-primary-50 to-blue-50 rounded-2xl p-6 mb-8">
-                <h3 className="text-lg font-bold text-gray-900 mb-3 text-center">💰 Rentabilité immédiate</h3>
-                <p className="text-gray-700 text-center mb-4">
+              <div className="bg-gradient-to-r from-primary-50 to-blue-50 rounded-xl sm:rounded-2xl p-4 sm:p-6 mb-6 sm:mb-8">
+                <h3 className="text-base sm:text-lg font-bold text-gray-900 mb-2 sm:mb-3 text-center">💰 Rentabilité immédiate</h3>
+                <p className="text-sm sm:text-base text-gray-700 text-center mb-3 sm:mb-4">
                   Il vous suffit de <strong className="text-primary-600">3-4 interventions par mois</strong> via la plateforme
                   pour rentabiliser votre abonnement
                 </p>
-                <div className="bg-white rounded-lg p-4 text-sm">
+                <div className="bg-white rounded-lg p-3 sm:p-4 text-xs sm:text-sm">
                   <div className="flex justify-between mb-2">
                     <span className="text-gray-600">2 interventions × 2h × 30€/h</span>
                     <span className="font-bold text-green-600">+120€</span>
@@ -182,7 +188,7 @@ export default function PricingPage() {
                   <div className="border-t border-gray-200 pt-2 mt-2">
                     <div className="flex justify-between">
                       <span className="font-bold text-gray-900">Bénéfice net</span>
-                      <span className="font-bold text-primary-600 text-lg">+30€</span>
+                      <span className="font-bold text-primary-600 text-base sm:text-lg">+30€</span>
                     </div>
                   </div>
                 </div>
@@ -192,11 +198,11 @@ export default function PricingPage() {
               <div className="text-center">
                 <Link
                   href="/auth/signup"
-                  className="inline-block w-full sm:w-auto px-12 py-4 bg-gradient-to-r from-primary-600 to-primary-700 text-white rounded-xl hover:from-primary-700 hover:to-primary-800 font-bold text-lg shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-1"
+                  className="inline-block w-full sm:w-auto px-8 sm:px-12 py-3 sm:py-4 bg-gradient-to-r from-primary-600 to-primary-700 text-white rounded-xl hover:from-primary-700 hover:to-primary-800 font-bold text-base sm:text-lg shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-1"
                 >
                   Commencer gratuitement
                 </Link>
-                <p className="text-sm text-gray-500 mt-4">
+                <p className="text-xs sm:text-sm text-gray-500 mt-3 sm:mt-4">
                   Carte bancaire requise • Aucun prélèvement pendant le mois d'essai
                 </p>
               </div>
@@ -205,36 +211,36 @@ export default function PricingPage() {
         </div>
 
         {/* Features Grid */}
-        <div className="mb-20">
-          <h2 className="text-3xl font-bold text-center text-gray-900 mb-12">
+        <div className="mb-12 sm:mb-20">
+          <h2 className="text-2xl sm:text-3xl font-bold text-center text-gray-900 mb-8 sm:mb-12">
             Tout ce dont vous avez besoin pour réussir
           </h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
             {features.map((feature, index) => (
               <div
                 key={index}
-                className="bg-white rounded-xl shadow-lg p-6 border border-gray-100 hover:shadow-xl transition-all duration-300 hover:-translate-y-1"
+                className="bg-white rounded-xl shadow-lg p-4 sm:p-6 border border-gray-100 hover:shadow-xl transition-all duration-300 hover:-translate-y-1"
               >
-                <div className="text-4xl mb-4">{feature.icon}</div>
-                <h3 className="text-lg font-bold text-gray-900 mb-2">{feature.title}</h3>
-                <p className="text-gray-600 text-sm leading-relaxed">{feature.description}</p>
+                <div className="text-3xl sm:text-4xl mb-3 sm:mb-4">{feature.icon}</div>
+                <h3 className="text-base sm:text-lg font-bold text-gray-900 mb-2">{feature.title}</h3>
+                <p className="text-gray-600 text-xs sm:text-sm leading-relaxed">{feature.description}</p>
               </div>
             ))}
           </div>
         </div>
 
         {/* Comparison Table */}
-        <div className="max-w-4xl mx-auto mb-20">
-          <h2 className="text-3xl font-bold text-center text-gray-900 mb-12">
+        <div className="max-w-4xl mx-auto mb-12 sm:mb-20">
+          <h2 className="text-2xl sm:text-3xl font-bold text-center text-gray-900 mb-8 sm:mb-12">
             Pourquoi choisir Autisme Connect ?
           </h2>
-          <div className="bg-white rounded-2xl shadow-xl overflow-hidden">
+          <div className="bg-white rounded-xl sm:rounded-2xl shadow-xl overflow-x-auto">
             <table className="w-full">
               <thead className="bg-gradient-to-r from-primary-600 to-primary-700 text-white">
                 <tr>
-                  <th className="py-4 px-6 text-left">Fonctionnalité</th>
-                  <th className="py-4 px-6 text-center">Sans abonnement</th>
-                  <th className="py-4 px-6 text-center bg-primary-800">Avec abonnement</th>
+                  <th className="py-3 sm:py-4 px-3 sm:px-6 text-left text-xs sm:text-base">Fonctionnalité</th>
+                  <th className="py-3 sm:py-4 px-2 sm:px-6 text-center text-xs sm:text-base">Sans abonnement</th>
+                  <th className="py-3 sm:py-4 px-2 sm:px-6 text-center bg-primary-800 text-xs sm:text-base">Avec abonnement</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-gray-200">
@@ -249,27 +255,27 @@ export default function PricingPage() {
                   { feature: 'Commission sur réservations', free: '25%', premium: '0%' },
                 ].map((row, index) => (
                   <tr key={index} className="hover:bg-gray-50">
-                    <td className="py-4 px-6 font-medium text-gray-900">{row.feature}</td>
-                    <td className="py-4 px-6 text-center">
+                    <td className="py-3 sm:py-4 px-3 sm:px-6 font-medium text-gray-900 text-xs sm:text-base">{row.feature}</td>
+                    <td className="py-3 sm:py-4 px-2 sm:px-6 text-center">
                       {typeof row.free === 'boolean' ? (
                         row.free ? (
-                          <span className="text-green-600 text-2xl">✓</span>
+                          <span className="text-green-600 text-xl sm:text-2xl">✓</span>
                         ) : (
-                          <span className="text-red-600 text-2xl">✗</span>
+                          <span className="text-red-600 text-xl sm:text-2xl">✗</span>
                         )
                       ) : (
-                        <span className="text-gray-600">{row.free}</span>
+                        <span className="text-gray-600 text-xs sm:text-base">{row.free}</span>
                       )}
                     </td>
-                    <td className="py-4 px-6 text-center bg-primary-50">
+                    <td className="py-3 sm:py-4 px-2 sm:px-6 text-center bg-primary-50">
                       {typeof row.premium === 'boolean' ? (
                         row.premium ? (
-                          <span className="text-green-600 text-2xl font-bold">✓</span>
+                          <span className="text-green-600 text-xl sm:text-2xl font-bold">✓</span>
                         ) : (
-                          <span className="text-red-600 text-2xl">✗</span>
+                          <span className="text-red-600 text-xl sm:text-2xl">✗</span>
                         )
                       ) : (
-                        <span className="text-primary-600 font-bold">{row.premium}</span>
+                        <span className="text-primary-600 font-bold text-xs sm:text-base">{row.premium}</span>
                       )}
                     </td>
                   </tr>
@@ -280,11 +286,11 @@ export default function PricingPage() {
         </div>
 
         {/* FAQ */}
-        <div className="max-w-3xl mx-auto mb-20">
-          <h2 className="text-3xl font-bold text-center text-gray-900 mb-12">
+        <div className="max-w-3xl mx-auto mb-12 sm:mb-20">
+          <h2 className="text-2xl sm:text-3xl font-bold text-center text-gray-900 mb-8 sm:mb-12">
             Questions fréquentes
           </h2>
-          <div className="space-y-4">
+          <div className="space-y-3 sm:space-y-4">
             {[
               {
                 q: "Comment fonctionne le mois gratuit ?",
@@ -308,13 +314,13 @@ export default function PricingPage() {
               },
             ].map((faq, index) => (
               <details key={index} className="bg-white rounded-lg shadow-md overflow-hidden group">
-                <summary className="px-6 py-4 cursor-pointer font-semibold text-gray-900 hover:bg-gray-50 transition flex items-center justify-between">
+                <summary className="px-4 sm:px-6 py-3 sm:py-4 cursor-pointer font-semibold text-gray-900 hover:bg-gray-50 transition flex items-center justify-between text-sm sm:text-base">
                   {faq.q}
-                  <svg className="w-5 h-5 text-primary-600 group-open:rotate-180 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <svg className="w-4 h-4 sm:w-5 sm:h-5 text-primary-600 group-open:rotate-180 transition-transform flex-shrink-0 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
                   </svg>
                 </summary>
-                <div className="px-6 py-4 bg-gray-50 text-gray-700 leading-relaxed border-t border-gray-200">
+                <div className="px-4 sm:px-6 py-3 sm:py-4 bg-gray-50 text-gray-700 leading-relaxed border-t border-gray-200 text-sm sm:text-base">
                   {faq.a}
                 </div>
               </details>
@@ -323,20 +329,20 @@ export default function PricingPage() {
         </div>
 
         {/* Final CTA */}
-        <div className="bg-gradient-to-r from-primary-600 to-primary-700 rounded-3xl shadow-2xl p-12 text-center text-white">
-          <h2 className="text-4xl font-bold mb-4">
+        <div className="bg-gradient-to-r from-primary-600 to-primary-700 rounded-2xl sm:rounded-3xl shadow-2xl p-6 sm:p-12 text-center text-white">
+          <h2 className="text-2xl sm:text-4xl font-bold mb-3 sm:mb-4">
             Prêt à développer votre activité ?
           </h2>
-          <p className="text-xl mb-8 opacity-90">
+          <p className="text-base sm:text-xl mb-6 sm:mb-8 opacity-90">
             Rejoignez les éducateurs qui font confiance à Autisme Connect
           </p>
           <Link
             href="/auth/signup"
-            className="inline-block px-12 py-4 bg-white text-primary-600 rounded-xl hover:bg-gray-100 font-bold text-lg shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-1"
+            className="inline-block w-full sm:w-auto px-8 sm:px-12 py-3 sm:py-4 bg-white text-primary-600 rounded-xl hover:bg-gray-100 font-bold text-base sm:text-lg shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-1"
           >
             Essayer gratuitement pendant 30 jours
           </Link>
-          <p className="text-sm mt-4 opacity-75">
+          <p className="text-xs sm:text-sm mt-3 sm:mt-4 opacity-75">
             Aucune carte bancaire requise pour l'essai
           </p>
         </div>
