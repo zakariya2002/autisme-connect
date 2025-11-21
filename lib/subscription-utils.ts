@@ -42,11 +42,11 @@ export async function getEducatorMonthlyBookings(educatorId: string): Promise<nu
     const endOfMonth = new Date(now.getFullYear(), now.getMonth() + 1, 0);
 
     const { count, error } = await supabase
-      .from('bookings')
+      .from('appointments')
       .select('*', { count: 'exact', head: true })
       .eq('educator_id', educatorId)
-      .gte('booking_date', startOfMonth.toISOString())
-      .lte('booking_date', endOfMonth.toISOString());
+      .gte('appointment_date', startOfMonth.toISOString().split('T')[0])
+      .lte('appointment_date', endOfMonth.toISOString().split('T')[0]);
 
     if (error) {
       console.error('Erreur comptage réservations:', error);

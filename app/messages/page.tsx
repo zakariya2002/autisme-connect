@@ -7,6 +7,7 @@ import { useRouter, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import { supabase } from '@/lib/supabase';
 import { Conversation, Message } from '@/types';
+import { canEducatorCreateConversation } from '@/lib/subscription-utils';
 
 export default function MessagesPage() {
   const router = useRouter();
@@ -127,6 +128,13 @@ export default function MessagesPage() {
         .single();
 
       if (error && error.code === 'PGRST116') {
+        // Vérifier si l'éducateur peut accepter une nouvelle conversation
+        const conversationCheck = await canEducatorCreateConversation(educatorId);
+        if (!conversationCheck.canCreate) {
+          alert(`Cet éducateur a atteint sa limite de conversations actives (${conversationCheck.limit}). Il doit passer Premium pour accepter plus de conversations.`);
+          return;
+        }
+
         // Créer la conversation
         const { data: newConv, error: insertError } = await supabase
           .from('conversations')

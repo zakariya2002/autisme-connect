@@ -6,6 +6,7 @@ import Link from 'next/link';
 import { supabase } from '@/lib/supabase';
 import Calendar from '@/components/Calendar';
 import Logo from '@/components/Logo';
+import { canEducatorCreateBooking } from '@/lib/subscription-utils';
 
 interface Educator {
   id: string;
@@ -258,6 +259,14 @@ export default function BookAppointmentPage({ params }: { params: { id: string }
     setSubmitting(true);
 
     try {
+      // Vérifier si l'éducateur peut accepter une nouvelle réservation
+      const bookingCheck = await canEducatorCreateBooking(params.id);
+      if (!bookingCheck.canCreate) {
+        setError(`Cet éducateur a atteint sa limite de réservations mensuelles (${bookingCheck.limit}/mois). Il doit passer Premium pour accepter plus de réservations.`);
+        setSubmitting(false);
+        return;
+      }
+
       const { error: insertError } = await supabase
         .from('appointments')
         .insert({

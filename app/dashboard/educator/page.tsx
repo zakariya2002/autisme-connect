@@ -193,25 +193,6 @@ export default function EducatorDashboard() {
           </div>
         </div>
 
-        {/* Bouton de synchronisation manuel (debug) */}
-        {!isPremium && profile?.id && (
-          <div className="mb-6 bg-yellow-50 border border-yellow-200 rounded-lg p-4">
-            <div className="flex items-center justify-between">
-              <div>
-                <h3 className="text-sm font-semibold text-yellow-800">Abonnement non détecté ?</h3>
-                <p className="text-xs text-yellow-700 mt-1">Si vous venez de vous abonner, cliquez ici pour synchroniser.</p>
-              </div>
-              <button
-                onClick={() => syncSubscription(profile.id)}
-                disabled={syncingSubscription}
-                className="px-4 py-2 bg-yellow-600 text-white rounded-md hover:bg-yellow-700 disabled:opacity-50 text-sm font-medium"
-              >
-                {syncingSubscription ? 'Synchronisation...' : 'Synchroniser'}
-              </button>
-            </div>
-          </div>
-        )}
-
         {/* Stats */}
         <div className="grid grid-cols-1 gap-6 sm:grid-cols-3 mb-8">
           <div className="bg-white rounded-lg shadow p-6">
