@@ -5,22 +5,30 @@
  * pour vérifier l'authenticité du diplôme d'un éducateur.
  */
 
-// Emails des DREETS par région (à compléter selon vos besoins)
+// Emails des DREETS par région (emails officiels)
+// Source: DREETS_CONTACTS.md pour plus d'informations et contacts spécifiques
 const DREETS_EMAILS: { [region: string]: string } = {
-  'Île-de-France': 'dreets-idf-diplomes@travail.gouv.fr',
-  'Auvergne-Rhône-Alpes': 'dreets-ara-diplomes@travail.gouv.fr',
-  'Provence-Alpes-Côte d\'Azur': 'dreets-paca-diplomes@travail.gouv.fr',
-  'Nouvelle-Aquitaine': 'dreets-na-diplomes@travail.gouv.fr',
-  'Occitanie': 'dreets-occitanie-diplomes@travail.gouv.fr',
-  'Hauts-de-France': 'dreets-hdf-diplomes@travail.gouv.fr',
-  'Grand Est': 'dreets-grandest-diplomes@travail.gouv.fr',
-  'Bretagne': 'dreets-bretagne-diplomes@travail.gouv.fr',
-  'Pays de la Loire': 'dreets-pdl-diplomes@travail.gouv.fr',
-  'Normandie': 'dreets-normandie-diplomes@travail.gouv.fr',
-  'Bourgogne-Franche-Comté': 'dreets-bfc-diplomes@travail.gouv.fr',
-  'Centre-Val de Loire': 'dreets-cvl-diplomes@travail.gouv.fr',
-  // Email générique si région non trouvée
-  'default': 'dreets-verification@travail.gouv.fr'
+  'Île-de-France': 'drieets-idf@drieets.gouv.fr', // Note: DRIEETS en IDF
+  'Auvergne-Rhône-Alpes': 'dreets-ara@dreets.gouv.fr',
+  'Provence-Alpes-Côte d\'Azur': 'dreets-paca@dreets.gouv.fr',
+  'Nouvelle-Aquitaine': 'dreets-na@dreets.gouv.fr',
+  'Occitanie': 'dreets-occitanie@dreets.gouv.fr',
+  'Hauts-de-France': 'dreets-hdf@dreets.gouv.fr',
+  'Grand Est': 'dreets-ge@dreets.gouv.fr',
+  'Bretagne': 'dreets-bretagne@dreets.gouv.fr',
+  'Pays de la Loire': 'dreets-pdl@dreets.gouv.fr',
+  'Normandie': 'dreets-normandie@dreets.gouv.fr',
+  'Bourgogne-Franche-Comté': 'dreets-bfc@dreets.gouv.fr',
+  'Centre-Val de Loire': 'dreets-cvl@dreets.gouv.fr',
+  'Corse': 'dreets-corse@dreets.gouv.fr',
+  // Outre-mer (DEETS)
+  'Guadeloupe': 'deets-guadeloupe@deets.gouv.fr',
+  'Guyane': 'deets-guyane@deets.gouv.fr',
+  'La Réunion': 'deets-reunion@deets.gouv.fr',
+  'Martinique': 'deets-martinique@deets.gouv.fr',
+  'Mayotte': 'deets-mayotte@deets.gouv.fr',
+  // Email par défaut si région non trouvée
+  'default': 'contact@autismeconnect.fr' // Email de votre plateforme pour traitement manuel
 };
 
 export interface DREETSVerificationRequest {
@@ -50,9 +58,6 @@ export async function sendDREETSVerificationRequest(
 
     console.log('📧 Envoi de la demande de vérification à la DREETS:', dreetsEmail);
 
-    // TODO: Implémenter avec votre service d'email
-    // Pour l'instant, on log juste les informations
-
     const emailData = {
       to: dreetsEmail,
       cc: process.env.ADMIN_EMAIL || 'admin@autismeconnect.fr',
@@ -66,42 +71,32 @@ export async function sendDREETSVerificationRequest(
       ]
     };
 
-    console.log('📧 Email DREETS à envoyer:', emailData);
+    // Envoi avec Resend
+    if (process.env.RESEND_API_KEY) {
+      try {
+        const { Resend } = await import('resend');
+        const resend = new Resend(process.env.RESEND_API_KEY);
 
-    // Exemple avec Resend (décommenter et configurer)
-    /*
-    import { Resend } from 'resend';
-    const resend = new Resend(process.env.RESEND_API_KEY);
+        await resend.emails.send({
+          from: process.env.RESEND_FROM_EMAIL || 'Autisme Connect <verification@autismeconnect.fr>',
+          to: dreetsEmail,
+          cc: process.env.ADMIN_EMAIL,
+          subject: emailData.subject,
+          html: emailData.html,
+          // Note: Les pièces jointes avec Resend nécessitent un traitement spécial
+          // Pour l'instant on log l'URL du diplôme dans le corps de l'email
+        });
 
-    await resend.emails.send({
-      from: 'Autisme Connect <verification@autismeconnect.fr>',
-      to: dreetsEmail,
-      cc: process.env.ADMIN_EMAIL,
-      subject: emailData.subject,
-      html: emailData.html,
-      attachments: emailData.attachments
-    });
-    */
-
-    // Exemple avec SendGrid (décommenter et configurer)
-    /*
-    import sgMail from '@sendgrid/mail';
-    sgMail.setApiKey(process.env.SENDGRID_API_KEY!);
-
-    await sgMail.send({
-      to: dreetsEmail,
-      cc: process.env.ADMIN_EMAIL,
-      from: 'verification@autismeconnect.fr',
-      subject: emailData.subject,
-      html: emailData.html,
-      attachments: [{
-        content: await fetchFileAsBase64(request.diplomaUrl),
-        filename: emailData.attachments[0].filename,
-        type: 'application/pdf',
-        disposition: 'attachment'
-      }]
-    });
-    */
+        console.log('✅ Email DREETS envoyé avec succès via Resend');
+      } catch (error) {
+        console.error('❌ Erreur envoi Resend:', error);
+        throw error;
+      }
+    } else {
+      // Mode développement: on log juste
+      console.log('📧 [DEV MODE] Email DREETS à envoyer:', emailData);
+      console.log('⚠️ RESEND_API_KEY non configurée. Ajoutez-la dans .env.local pour envoyer les emails.');
+    }
 
     return {
       success: true,
@@ -203,10 +198,18 @@ function generateDREETSEmailTemplate(request: DREETSVerificationRequest): string
           ` : ''}
 
           <div class="important">
-            <h3>⚠️ Document joint</h3>
+            <h3>📎 Document à vérifier</h3>
             <p>
-              Le diplôme est joint en pièce jointe de cet email au format PDF/Image.
-              <br>
+              <strong>Lien sécurisé vers le diplôme :</strong><br>
+              <a href="${request.diplomaUrl}" target="_blank" style="display: inline-block; padding: 12px 24px; background: #1e3a8a; color: white; text-decoration: none; border-radius: 5px; margin: 10px 0;">
+                🔗 Télécharger le diplôme
+              </a>
+            </p>
+            <p style="font-size: 12px; color: #666;">
+              Ce lien est sécurisé et permet de télécharger le diplôme au format PDF/Image.
+            </p>
+            <br>
+            <p>
               <strong>Merci de vérifier son authenticité et de nous confirmer :</strong>
             </p>
             <ul>
