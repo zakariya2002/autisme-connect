@@ -134,7 +134,7 @@ export async function POST(request: Request) {
         id: subscription.id,
         status: subscription.status,
         trial_end: subscription.trial_end,
-        current_period_end: subscription.current_period_end,
+        current_period_end: currentPeriodEnd,
       }
     });
 
