@@ -6,6 +6,9 @@ import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { supabase } from '@/lib/supabase';
+import { signOut } from '@/lib/auth';
+import EducatorMobileMenu from '@/components/EducatorMobileMenu';
+import FamilyMobileMenu from '@/components/FamilyMobileMenu';
 
 type AppointmentStatus = 'pending' | 'accepted' | 'rejected' | 'completed' | 'cancelled';
 
@@ -14,6 +17,7 @@ export default function AppointmentsPage() {
   const [appointments, setAppointments] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [userProfile, setUserProfile] = useState<any>(null);
+  const [subscription, setSubscription] = useState<any>(null);
   const [filter, setFilter] = useState<'all' | AppointmentStatus>('all');
 
   useEffect(() => {
@@ -44,6 +48,19 @@ export default function AppointmentsPage() {
         .single();
 
       setUserProfile({ ...profile, role });
+
+      // Récupérer l'abonnement pour les éducateurs
+      if (role === 'educator' && profile) {
+        const { data: subscriptionData } = await supabase
+          .from('subscriptions')
+          .select('*')
+          .eq('educator_id', profile.id)
+          .in('status', ['active', 'trialing'])
+          .limit(1)
+          .maybeSingle();
+
+        setSubscription(subscriptionData);
+      }
     } catch (error) {
       console.error('Erreur:', error);
     }
@@ -103,6 +120,13 @@ export default function AppointmentsPage() {
     }
   };
 
+  const handleLogout = async () => {
+    await signOut();
+    router.push('/');
+  };
+
+  const isPremium = !!(subscription && ['active', 'trialing'].includes(subscription.status));
+
   const getStatusBadgeColor = (status: AppointmentStatus) => {
     switch (status) {
       case 'pending':
@@ -154,17 +178,28 @@ export default function AppointmentsPage() {
       <nav className="bg-white shadow-sm border-b border-gray-200">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between h-16 items-center">
-            <div className="flex items-center">
+            <div className="flex items-center gap-3">
+              {/* Menu mobile (hamburger) */}
+              <div className="md:hidden">
+                {userProfile?.role === 'educator' ? (
+                  <EducatorMobileMenu profile={userProfile} isPremium={isPremium} onLogout={handleLogout} />
+                ) : (
+                  <FamilyMobileMenu profile={userProfile} onLogout={handleLogout} />
+                )}
+              </div>
+              {/* Logo */}
               <Link href="/" className="text-2xl font-bold text-primary-600 flex items-center">
-                <div className="w-10 h-10 bg-gradient-to-br from-primary-500 to-primary-600 rounded-lg flex items-center justify-center mr-2">
+                <div className="w-10 h-10 bg-gradient-to-br from-primary-500 to-primary-600 rounded-lg items-center justify-center mr-2 hidden md:flex">
                   <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
                   </svg>
                 </div>
-                Autisme Connect
+                <span className="hidden md:inline">Autisme Connect</span>
+                <span className="md:hidden">AC</span>
               </Link>
             </div>
-            <div className="flex space-x-4">
+            {/* Menu desktop - caché sur mobile */}
+            <div className="hidden md:flex space-x-4">
               <Link
                 href={userProfile?.role === 'educator' ? '/dashboard/educator' : '/dashboard/family'}
                 className="text-gray-700 hover:text-primary-600 px-3 py-2 rounded-md font-medium transition"

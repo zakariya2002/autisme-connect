@@ -6,8 +6,11 @@ import { useState, useEffect, useRef } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import { supabase } from '@/lib/supabase';
+import { signOut } from '@/lib/auth';
 import { Conversation, Message } from '@/types';
 import { canEducatorCreateConversation } from '@/lib/subscription-utils';
+import EducatorMobileMenu from '@/components/EducatorMobileMenu';
+import FamilyMobileMenu from '@/components/FamilyMobileMenu';
 
 export default function MessagesPage() {
   const router = useRouter();
@@ -21,6 +24,7 @@ export default function MessagesPage() {
   const [loading, setLoading] = useState(true);
   const [currentUser, setCurrentUser] = useState<any>(null);
   const [userProfile, setUserProfile] = useState<any>(null);
+  const [subscription, setSubscription] = useState<any>(null);
 
   useEffect(() => {
     fetchCurrentUser();
@@ -92,6 +96,17 @@ export default function MessagesPage() {
 
       if (educatorProfile) {
         setUserProfile({ ...educatorProfile, role: 'educator' });
+
+        // Récupérer l'abonnement pour les éducateurs
+        const { data: subscriptionData } = await supabase
+          .from('subscriptions')
+          .select('*')
+          .eq('educator_id', educatorProfile.id)
+          .in('status', ['active', 'trialing'])
+          .limit(1)
+          .maybeSingle();
+
+        setSubscription(subscriptionData);
         return;
       }
 
@@ -268,6 +283,13 @@ export default function MessagesPage() {
       : conversation.educator_profiles;
   };
 
+  const handleLogout = async () => {
+    await signOut();
+    router.push('/');
+  };
+
+  const isPremium = !!(subscription && ['active', 'trialing'].includes(subscription.status));
+
   // Composant pour afficher l'avatar
   const Avatar = ({ participant, size = 'md' }: { participant: any; size?: 'sm' | 'md' | 'lg' }) => {
     const sizeClasses = {
@@ -310,7 +332,16 @@ export default function MessagesPage() {
       <nav className="bg-white shadow-sm">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between h-16 items-center">
-            <div className="flex items-center">
+            <div className="flex items-center gap-3">
+              {/* Menu mobile (hamburger) */}
+              <div className="md:hidden">
+                {userProfile?.role === 'educator' ? (
+                  <EducatorMobileMenu profile={userProfile} isPremium={isPremium} onLogout={handleLogout} />
+                ) : (
+                  <FamilyMobileMenu profile={userProfile} onLogout={handleLogout} />
+                )}
+              </div>
+              {/* Logo */}
               <Link
                 href={userProfile?.role === 'educator' ? '/dashboard/educator' : '/dashboard/family'}
                 className="text-2xl font-bold text-primary-600"
@@ -318,7 +349,8 @@ export default function MessagesPage() {
                 Autisme Connect
               </Link>
             </div>
-            <div className="flex space-x-4">
+            {/* Menu desktop - caché sur mobile */}
+            <div className="hidden md:flex space-x-4">
               <Link
                 href={userProfile?.role === 'educator' ? '/dashboard/educator' : '/dashboard/family'}
                 className="text-gray-700 hover:text-primary-600 px-3 py-2"
