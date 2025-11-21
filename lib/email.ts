@@ -1,0 +1,72 @@
+import { Resend } from 'resend';
+import { getEducatorWelcomeEmail } from './email-templates/educator-welcome';
+import { getFamilyWelcomeEmail } from './email-templates/family-welcome';
+import { getPremiumWelcomeEmail } from './email-templates/premium-welcome';
+
+const resend = new Resend(process.env.RESEND_API_KEY);
+
+export async function sendEducatorWelcomeEmail(email: string, firstName: string) {
+  try {
+    const { data, error } = await resend.emails.send({
+      from: 'Autisme Connect <admin@autismeconnect.fr>',
+      to: [email],
+      subject: `Bienvenue sur Autisme Connect, ${firstName} !`,
+      html: getEducatorWelcomeEmail(firstName),
+    });
+
+    if (error) {
+      console.error('❌ Erreur envoi email éducateur:', error);
+      return { success: false, error };
+    }
+
+    console.log('✅ Email de bienvenue éducateur envoyé à:', email);
+    return { success: true, data };
+  } catch (error) {
+    console.error('❌ Erreur envoi email éducateur:', error);
+    return { success: false, error };
+  }
+}
+
+export async function sendFamilyWelcomeEmail(email: string, firstName: string) {
+  try {
+    const { data, error } = await resend.emails.send({
+      from: 'Autisme Connect <admin@autismeconnect.fr>',
+      to: [email],
+      subject: `Bienvenue sur Autisme Connect, ${firstName} !`,
+      html: getFamilyWelcomeEmail(firstName),
+    });
+
+    if (error) {
+      console.error('❌ Erreur envoi email famille:', error);
+      return { success: false, error };
+    }
+
+    console.log('✅ Email de bienvenue famille envoyé à:', email);
+    return { success: true, data };
+  } catch (error) {
+    console.error('❌ Erreur envoi email famille:', error);
+    return { success: false, error };
+  }
+}
+
+export async function sendPremiumWelcomeEmail(email: string, firstName: string) {
+  try {
+    const { data, error } = await resend.emails.send({
+      from: 'Autisme Connect <admin@autismeconnect.fr>',
+      to: [email],
+      subject: `🌟 Bienvenue dans la famille Premium, ${firstName} !`,
+      html: getPremiumWelcomeEmail(firstName),
+    });
+
+    if (error) {
+      console.error('❌ Erreur envoi email Premium:', error);
+      return { success: false, error };
+    }
+
+    console.log('✅ Email de bienvenue Premium envoyé à:', email);
+    return { success: true, data };
+  } catch (error) {
+    console.error('❌ Erreur envoi email Premium:', error);
+    return { success: false, error };
+  }
+}

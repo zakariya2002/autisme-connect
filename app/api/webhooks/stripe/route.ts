@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import Stripe from 'stripe';
 import { createClient } from '@supabase/supabase-js';
+import { sendPremiumWelcomeEmail } from '@/lib/email';
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY || 'sk_test_placeholder');
 
@@ -126,6 +127,28 @@ async function handleCheckoutSessionCompleted(session: Stripe.Checkout.Session) 
 
   if (error) {
     console.error('Erreur création abonnement:', error);
+  } else {
+    // Envoyer l'email de bienvenue Premium
+    try {
+      // Récupérer l'éducateur et son email
+      const { data: educator } = await supabase
+        .from('educator_profiles')
+        .select('first_name, user_id')
+        .eq('id', educatorId)
+        .single();
+
+      if (educator) {
+        const { data: userData } = await supabase.auth.admin.getUserById(educator.user_id);
+        const userEmail = userData?.user?.email;
+
+        if (userEmail) {
+          await sendPremiumWelcomeEmail(userEmail, educator.first_name);
+        }
+      }
+    } catch (emailError) {
+      console.error('Erreur envoi email Premium:', emailError);
+      // On ne fait pas échouer le webhook si l'email échoue
+    }
   }
 }
 

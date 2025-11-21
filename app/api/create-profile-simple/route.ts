@@ -1,5 +1,6 @@
 import { createClient } from '@supabase/supabase-js';
 import { NextResponse } from 'next/server';
+import { sendEducatorWelcomeEmail, sendFamilyWelcomeEmail } from '@/lib/email';
 
 // Alternative approach: Using service_role key to bypass RLS
 // If you don't have service_role key, you must disable RLS on the tables
@@ -28,6 +29,10 @@ export async function POST(request: Request) {
 
     console.log('Création profil pour userId:', userId);
 
+    // Récupérer l'email de l'utilisateur
+    const { data: userData } = await supabaseAdmin.auth.admin.getUserById(userId);
+    const userEmail = userData?.user?.email;
+
     // Créer le profil selon le rôle
     if (role === 'educator') {
       const { data, error } = await supabaseAdmin
@@ -53,6 +58,11 @@ export async function POST(request: Request) {
           { error: error.message, details: error },
           { status: 500 }
         );
+      }
+
+      // Envoyer l'email de bienvenue éducateur
+      if (userEmail) {
+        await sendEducatorWelcomeEmail(userEmail, profileData.first_name);
       }
 
       return NextResponse.json({ success: true, data });
@@ -82,6 +92,11 @@ export async function POST(request: Request) {
           { error: error.message, details: error },
           { status: 500 }
         );
+      }
+
+      // Envoyer l'email de bienvenue famille
+      if (userEmail) {
+        await sendFamilyWelcomeEmail(userEmail, profileData.first_name);
       }
 
       return NextResponse.json({ success: true, data });
