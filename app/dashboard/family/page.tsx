@@ -6,6 +6,7 @@ import Link from 'next/link';
 import { supabase } from '@/lib/supabase';
 import { signOut } from '@/lib/auth';
 import Logo from '@/components/Logo';
+import FamilyMobileMenu from '@/components/FamilyMobileMenu';
 
 export default function FamilyDashboard() {
   const router = useRouter();
@@ -105,14 +106,22 @@ export default function FamilyDashboard() {
       <nav className="bg-white shadow-sm">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between h-16 items-center">
-            <div className="flex items-center">
-              <Logo href="/dashboard/family" />
+            <div className="flex items-center gap-3">
+              {/* Menu mobile (hamburger) */}
+              <div className="md:hidden">
+                <FamilyMobileMenu profile={profile} onLogout={handleLogout} />
+              </div>
+              {/* Logo */}
+              <div className="hidden md:block">
+                <Logo href="/dashboard/family" />
+              </div>
             </div>
-            <div className="flex space-x-4">
-              <Link href="/dashboard/family/profile" className="text-gray-700 hover:text-primary-600 px-3 py-2">
+            {/* Menu desktop - caché sur mobile */}
+            <div className="hidden md:flex space-x-4">
+              <Link href="/dashboard/family/profile" className="text-gray-700 hover:text-primary-600 px-3 py-2 font-medium transition">
                 Mon profil
               </Link>
-              <button onClick={handleLogout} className="text-gray-700 hover:text-primary-600 px-3 py-2">
+              <button onClick={handleLogout} className="text-gray-700 hover:text-primary-600 px-3 py-2 font-medium transition">
                 Déconnexion
               </button>
             </div>
