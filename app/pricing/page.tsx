@@ -31,7 +31,7 @@ export default function PricingPage() {
     if (!session) {
       // Pas connecté → rediriger vers inscription ÉDUCATEUR directement
       // Car seuls les éducateurs paient, les familles c'est gratuit
-      router.push(`/signup?role=educator&plan=${billingCycle}`);
+      router.push(`/auth/register-educator?plan=${billingCycle}`);
       return;
     }
 
@@ -44,7 +44,7 @@ export default function PricingPage() {
 
     if (!educatorProfile) {
       // Pas de profil éducateur → créer d'abord le profil
-      router.push(`/signup?role=educator&plan=${billingCycle}`);
+      router.push(`/auth/register-educator?plan=${billingCycle}`);
       return;
     }
 

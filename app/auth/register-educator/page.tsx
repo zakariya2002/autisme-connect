@@ -3,7 +3,7 @@
 export const dynamic = 'force-dynamic';
 
 import { useState } from 'react';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import { supabase } from '@/lib/supabase';
 import { getCurrentPosition, reverseGeocode } from '@/lib/geolocation';
@@ -18,6 +18,8 @@ interface PasswordCriteria {
 
 export default function RegisterEducatorPage() {
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const planParam = searchParams.get('plan'); // Récupérer le paramètre plan de l'URL
   const [loading, setLoading] = useState(false);
   const [geolocating, setGeolocating] = useState(false);
   const [error, setError] = useState('');
@@ -182,7 +184,30 @@ export default function RegisterEducatorPage() {
         throw new Error(result.error || 'Erreur lors de la création du profil');
       }
 
-      // 3. Rediriger vers le dashboard
+      // 3. Si éducateur venant de /pricing, rediriger vers Stripe Checkout
+      if (planParam && result.data?.id) {
+        // Créer la session Stripe
+        const checkoutResponse = await fetch('/api/create-checkout-session', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            educatorId: result.data.id,
+            planType: planParam,
+          }),
+        });
+
+        const checkoutData = await checkoutResponse.json();
+
+        if (checkoutData.url) {
+          // Rediriger vers Stripe Checkout
+          window.location.href = checkoutData.url;
+          return;
+        }
+      }
+
+      // 4. Sinon, rediriger vers le dashboard
       router.push('/dashboard/educator');
     } catch (err: any) {
       setError(err.message || 'Une erreur est survenue');
