@@ -136,7 +136,7 @@ export default function SubscriptionManagementPage() {
     router.push('/');
   };
 
-  const isPremium = subscription && ['active', 'trialing'].includes(subscription.status);
+  const isPremium = !!(subscription && ['active', 'trialing'].includes(subscription.status));
 
   const formatDate = (dateString: string) => {
     return new Date(dateString).toLocaleDateString('fr-FR', {
