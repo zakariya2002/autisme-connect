@@ -95,6 +95,21 @@ export async function POST(request: Request) {
     // @ts-ignore - Stripe subscription has these properties at runtime
     const currentPeriodEnd = subscription.current_period_end;
 
+    console.log('📅 Dates:', {
+      currentPeriodStart,
+      currentPeriodEnd,
+      trial_start: subscription.trial_start,
+      trial_end: subscription.trial_end
+    });
+
+    if (!currentPeriodStart || !currentPeriodEnd) {
+      console.error('❌ Dates manquantes dans l\'abonnement');
+      return NextResponse.json(
+        { error: 'Dates d\'abonnement manquantes' },
+        { status: 400 }
+      );
+    }
+
     const { error: upsertError } = await supabase
       .from('subscriptions')
       .upsert({
