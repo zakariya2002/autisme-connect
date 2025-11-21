@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import { supabase } from '@/lib/supabase';
 import { signOut } from '@/lib/auth';
@@ -9,6 +9,7 @@ import Logo from '@/components/Logo';
 
 export default function EducatorDashboard() {
   const router = useRouter();
+  const searchParams = useSearchParams();
   const [profile, setProfile] = useState<any>(null);
   const [subscription, setSubscription] = useState<any>(null);
   const [stats, setStats] = useState({
@@ -16,6 +17,7 @@ export default function EducatorDashboard() {
     rating: 0,
     reviews: 0,
   });
+  const [syncingSubscription, setSyncingSubscription] = useState(false);
 
   useEffect(() => {
     fetchProfile();
@@ -59,6 +61,42 @@ export default function EducatorDashboard() {
         .maybeSingle();
 
       setSubscription(subscriptionData);
+
+      // Si retour de Stripe avec succès mais pas d'abonnement, synchroniser
+      if (searchParams.get('subscription') === 'success' && !subscriptionData && data?.id) {
+        syncSubscription(data.id);
+      }
+    }
+  };
+
+  const syncSubscription = async (educatorId: string) => {
+    if (syncingSubscription) return;
+
+    setSyncingSubscription(true);
+    console.log('🔄 Synchronisation de l\'abonnement...');
+
+    try {
+      const response = await fetch('/api/sync-subscription', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ educatorId }),
+      });
+
+      const data = await response.json();
+
+      if (response.ok && data.success) {
+        console.log('✅ Abonnement synchronisé, rechargement...');
+        // Rafraîchir la page pour afficher le badge
+        window.location.href = '/dashboard/educator';
+      } else {
+        console.error('❌ Erreur de synchronisation:', data.error);
+      }
+    } catch (error) {
+      console.error('❌ Erreur:', error);
+    } finally {
+      setSyncingSubscription(false);
     }
   };
 
@@ -96,6 +134,16 @@ export default function EducatorDashboard() {
       </nav>
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        {/* Message de synchronisation */}
+        {syncingSubscription && (
+          <div className="mb-6 bg-blue-50 border border-blue-200 rounded-lg p-4 flex items-center gap-3">
+            <div className="animate-spin h-5 w-5 border-2 border-blue-600 border-t-transparent rounded-full"></div>
+            <p className="text-blue-800 font-medium">
+              Synchronisation de votre abonnement en cours...
+            </p>
+          </div>
+        )}
+
         <div className="mb-8 flex items-center gap-4">
           {/* Photo de profil */}
           {profile?.avatar_url ? (

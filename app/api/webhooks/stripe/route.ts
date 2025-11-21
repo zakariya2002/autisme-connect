@@ -12,10 +12,12 @@ const supabase = createClient(supabaseUrl, supabaseServiceKey);
 
 export async function POST(request: Request) {
   try {
+    console.log('🔔 Webhook Stripe reçu');
     const body = await request.text();
     const signature = request.headers.get('stripe-signature');
 
     if (!signature) {
+      console.error('❌ Signature manquante');
       return NextResponse.json(
         { error: 'Signature manquante' },
         { status: 400 }
