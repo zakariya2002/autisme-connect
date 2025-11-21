@@ -203,9 +203,9 @@ CREATE TRIGGER on_dreets_response
 COMMENT ON COLUMN educator_profiles.diploma_number IS 'Numéro du diplôme extrait par OCR ou saisi manuellement';
 COMMENT ON COLUMN educator_profiles.diploma_delivery_date IS 'Date de délivrance du diplôme';
 COMMENT ON COLUMN educator_profiles.diploma_ocr_text IS 'Texte complet extrait du diplôme par OCR';
-COMMENT ON COLUMN educator_profiles.diploma_ocr_confidence IS 'Score de confiance de l\'OCR (0-100)';
-COMMENT ON COLUMN educator_profiles.diploma_ocr_analysis IS 'Rapport d\'analyse OCR automatique';
-COMMENT ON COLUMN educator_profiles.dreets_verification_sent_at IS 'Date d\'envoi de la demande de vérification à la DREETS';
+COMMENT ON COLUMN educator_profiles.diploma_ocr_confidence IS 'Score de confiance de l''OCR (0-100)';
+COMMENT ON COLUMN educator_profiles.diploma_ocr_analysis IS 'Rapport d''analyse OCR automatique';
+COMMENT ON COLUMN educator_profiles.dreets_verification_sent_at IS 'Date d''envoi de la demande de vérification à la DREETS';
 COMMENT ON COLUMN educator_profiles.dreets_verification_response IS 'Réponse de la DREETS à notre demande';
 COMMENT ON COLUMN educator_profiles.dreets_verified IS 'Diplôme vérifié et validé par la DREETS';
 COMMENT ON COLUMN educator_profiles.dreets_response_date IS 'Date de réponse de la DREETS';
