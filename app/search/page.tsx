@@ -6,6 +6,7 @@ import { supabase } from '@/lib/supabase';
 import { EducatorProfile, CertificationType } from '@/types';
 import { getCurrentPosition, geocodeAddress, calculateDistance, reverseGeocode } from '@/lib/geolocation';
 import Logo from '@/components/Logo';
+import MobileMenu from '@/components/MobileMenu';
 
 type EducatorWithDistance = EducatorProfile & { distance?: number };
 
@@ -174,8 +175,13 @@ export default function SearchPage() {
       <nav className="bg-white shadow-sm border-b border-gray-200">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between h-16 items-center">
-            <Logo />
-            <div className="flex items-center space-x-1">
+            <div className="hidden md:block">
+              <Logo />
+            </div>
+            <div className="md:hidden">
+              <MobileMenu />
+            </div>
+            <div className="hidden md:flex items-center space-x-1">
               <Link href="/search" className="text-gray-700 hover:text-primary-600 px-4 py-2 rounded-md font-medium transition-colors">
                 Trouver un éducateur
               </Link>
@@ -193,16 +199,16 @@ export default function SearchPage() {
         </div>
       </nav>
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <h1 className="text-3xl font-bold text-gray-900 mb-8">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-8">
+        <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-4 sm:mb-8">
           Trouver un éducateur spécialisé
         </h1>
 
-        <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
+        <div className="grid grid-cols-1 lg:grid-cols-4 gap-4 sm:gap-8">
           {/* Filtres */}
           <div className="lg:col-span-1">
-            <div className="bg-white rounded-lg shadow p-6 sticky top-8">
-              <h2 className="text-lg font-semibold text-gray-900 mb-4">Filtres</h2>
+            <div className="bg-white rounded-lg shadow p-4 sm:p-6 lg:sticky lg:top-8">
+              <h2 className="text-base sm:text-lg font-semibold text-gray-900 mb-3 sm:mb-4">Filtres</h2>
 
               <div className="space-y-4">
                 <div>
@@ -334,117 +340,119 @@ export default function SearchPage() {
                 <p className="text-gray-500">Aucun éducateur trouvé avec ces critères.</p>
               </div>
             ) : (
-              <div className="space-y-4">
-                <p className="text-sm text-gray-600 mb-4">
+              <div className="space-y-3 sm:space-y-4">
+                <p className="text-xs sm:text-sm text-gray-600 mb-3 sm:mb-4">
                   {educators.length} éducateur(s) trouvé(s)
                   {filters.nearMe && ' près de vous (triés par distance)'}
                 </p>
                 {educators.map((educator) => (
-                  <div key={educator.id} className="bg-white rounded-lg shadow p-6 hover:shadow-lg transition">
-                    <div className="flex justify-between items-start gap-4">
-                      {/* Photo de profil */}
-                      <div className="flex-shrink-0">
-                        {educator.avatar_url ? (
-                          <img
-                            src={educator.avatar_url}
-                            alt={`${educator.first_name} ${educator.last_name}`}
-                            className="w-24 h-24 rounded-full object-cover border-2 border-primary-200"
-                          />
-                        ) : (
-                          <div className="w-24 h-24 rounded-full bg-primary-100 flex items-center justify-center border-2 border-primary-200">
-                            <svg className="w-12 h-12 text-primary-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-                            </svg>
-                          </div>
-                        )}
-                      </div>
-
-                      <div className="flex-1 min-w-0">
-                        <h3 className="text-xl font-semibold text-gray-900">
-                          {educator.first_name} {educator.last_name}
-                        </h3>
-
-                        {/* Note moyenne avec étoiles */}
-                        {educator.rating > 0 ? (
-                          <div className="flex items-center gap-1 mt-2 mb-2">
-                            <div className="flex items-center">
-                              {[...Array(5)].map((_, i) => (
-                                <svg
-                                  key={i}
-                                  className={`w-5 h-5 ${
-                                    i < Math.round(educator.rating)
-                                      ? 'text-yellow-400 fill-current'
-                                      : 'text-gray-300'
-                                  }`}
-                                  fill="none"
-                                  stroke="currentColor"
-                                  viewBox="0 0 24 24"
-                                >
-                                  <path
-                                    strokeLinecap="round"
-                                    strokeLinejoin="round"
-                                    strokeWidth={2}
-                                    d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z"
-                                  />
-                                </svg>
-                              ))}
+                  <div key={educator.id} className="bg-white rounded-lg shadow p-4 sm:p-6 hover:shadow-lg transition">
+                    <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-4">
+                      <div className="flex gap-3 sm:gap-4">
+                        {/* Photo de profil */}
+                        <div className="flex-shrink-0">
+                          {educator.avatar_url ? (
+                            <img
+                              src={educator.avatar_url}
+                              alt={`${educator.first_name} ${educator.last_name}`}
+                              className="w-16 h-16 sm:w-24 sm:h-24 rounded-full object-cover border-2 border-primary-200"
+                            />
+                          ) : (
+                            <div className="w-16 h-16 sm:w-24 sm:h-24 rounded-full bg-primary-100 flex items-center justify-center border-2 border-primary-200">
+                              <svg className="w-8 h-8 sm:w-12 sm:h-12 text-primary-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                              </svg>
                             </div>
-                            <span className="text-base font-bold text-gray-800">
-                              {educator.rating.toFixed(1)}
-                            </span>
-                            <span className="text-sm text-gray-500">
-                              ({educator.total_reviews} avis)
-                            </span>
-                          </div>
-                        ) : (
-                          <p className="text-sm text-gray-500 mt-2 mb-2">Aucun avis pour le moment</p>
-                        )}
-
-                        <p className="text-gray-600">{educator.location}</p>
-
-                        {educator.bio && (
-                          <p className="text-gray-700 mt-3 line-clamp-3">{educator.bio}</p>
-                        )}
-
-                        <div className="mt-4 flex items-center gap-6 text-sm text-gray-600 flex-wrap">
-                          {educator.distance !== undefined && (
-                            <span className="font-semibold text-green-600">
-                              📍 {educator.distance} km
-                            </span>
-                          )}
-                          <span>📅 {educator.years_of_experience} ans d'expérience</span>
-                          {educator.hourly_rate && (
-                            <span>💰 {educator.hourly_rate}€/h</span>
                           )}
                         </div>
 
-                        {educator.specializations && educator.specializations.length > 0 && (
-                          <div className="mt-3">
-                            <span className="text-sm text-gray-600">
-                              Spécialisations: {educator.specializations.join(', ')}
-                            </span>
-                          </div>
-                        )}
+                        <div className="flex-1 min-w-0">
+                          <h3 className="text-lg sm:text-xl font-semibold text-gray-900">
+                            {educator.first_name} {educator.last_name}
+                          </h3>
 
-                        {educator.languages && educator.languages.length > 0 && (
-                          <div className="mt-2">
-                            <span className="text-sm text-gray-600">
-                              Langues: {educator.languages.join(', ')}
-                            </span>
+                          {/* Note moyenne avec étoiles */}
+                          {educator.rating > 0 ? (
+                            <div className="flex items-center gap-1 mt-2 mb-2">
+                              <div className="flex items-center">
+                                {[...Array(5)].map((_, i) => (
+                                  <svg
+                                    key={i}
+                                    className={`w-4 h-4 sm:w-5 sm:h-5 ${
+                                      i < Math.round(educator.rating)
+                                        ? 'text-yellow-400 fill-current'
+                                        : 'text-gray-300'
+                                    }`}
+                                    fill="none"
+                                    stroke="currentColor"
+                                    viewBox="0 0 24 24"
+                                  >
+                                    <path
+                                      strokeLinecap="round"
+                                      strokeLinejoin="round"
+                                      strokeWidth={2}
+                                      d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z"
+                                    />
+                                  </svg>
+                                ))}
+                              </div>
+                              <span className="text-sm sm:text-base font-bold text-gray-800">
+                                {educator.rating.toFixed(1)}
+                              </span>
+                              <span className="text-xs sm:text-sm text-gray-500">
+                                ({educator.total_reviews} avis)
+                              </span>
+                            </div>
+                          ) : (
+                            <p className="text-xs sm:text-sm text-gray-500 mt-2 mb-2">Aucun avis pour le moment</p>
+                          )}
+
+                          <p className="text-sm sm:text-base text-gray-600">{educator.location}</p>
+
+                          {educator.bio && (
+                            <p className="text-sm sm:text-base text-gray-700 mt-2 sm:mt-3 line-clamp-2 sm:line-clamp-3">{educator.bio}</p>
+                          )}
+
+                          <div className="mt-3 sm:mt-4 flex items-center gap-3 sm:gap-6 text-xs sm:text-sm text-gray-600 flex-wrap">
+                            {educator.distance !== undefined && (
+                              <span className="font-semibold text-green-600">
+                                📍 {educator.distance} km
+                              </span>
+                            )}
+                            <span>📅 {educator.years_of_experience} ans</span>
+                            {educator.hourly_rate && (
+                              <span>💰 {educator.hourly_rate}€/h</span>
+                            )}
                           </div>
-                        )}
+
+                          {educator.specializations && educator.specializations.length > 0 && (
+                            <div className="mt-2 sm:mt-3">
+                              <span className="text-xs sm:text-sm text-gray-600">
+                                Spécialisations: {educator.specializations.join(', ')}
+                              </span>
+                            </div>
+                          )}
+
+                          {educator.languages && educator.languages.length > 0 && (
+                            <div className="mt-1 sm:mt-2">
+                              <span className="text-xs sm:text-sm text-gray-600">
+                                Langues: {educator.languages.join(', ')}
+                              </span>
+                            </div>
+                          )}
+                        </div>
                       </div>
 
-                      <div className="ml-4 flex flex-col gap-2">
+                      <div className="flex sm:flex-col gap-2 w-full sm:w-auto sm:ml-4">
                         <Link
                           href={`/educator/${educator.id}`}
-                          className="px-4 py-2 bg-primary-600 text-white rounded-md hover:bg-primary-700 text-center whitespace-nowrap"
+                          className="flex-1 sm:flex-none px-3 sm:px-4 py-2 bg-primary-600 text-white rounded-md hover:bg-primary-700 text-center text-sm sm:text-base whitespace-nowrap"
                         >
                           Voir le profil
                         </Link>
                         <Link
                           href={`/messages?educator=${educator.id}`}
-                          className="px-4 py-2 bg-white text-primary-600 border border-primary-600 rounded-md hover:bg-primary-50 text-center whitespace-nowrap"
+                          className="flex-1 sm:flex-none px-3 sm:px-4 py-2 bg-white text-primary-600 border border-primary-600 rounded-md hover:bg-primary-50 text-center text-sm sm:text-base whitespace-nowrap"
                         >
                           Contacter
                         </Link>
