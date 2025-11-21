@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { supabase } from '@/lib/supabase';
+import Logo from '@/components/Logo';
 
 interface EducatorProfile {
   id: string;
@@ -299,9 +300,7 @@ export default function EducatorPublicProfile({ params }: { params: { id: string
       <nav className="bg-white border-b border-gray-200 sticky top-0 z-50 shadow-sm">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between h-16 items-center">
-            <Link href="/" className="text-2xl font-bold text-primary-600 hover:text-primary-700 transition-colors">
-              Autisme Connect
-            </Link>
+            <Logo />
             <div className="flex gap-2">
               <Link
                 href="/search"

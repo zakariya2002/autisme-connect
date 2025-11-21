@@ -4,6 +4,8 @@ import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { supabase } from '@/lib/supabase';
+import Calendar from '@/components/Calendar';
+import Logo from '@/components/Logo';
 
 interface Educator {
   id: string;
@@ -284,16 +286,13 @@ export default function BookAppointmentPage({ params }: { params: { id: string }
     }
   };
 
-  // Générer les 30 prochains jours
-  const getNextDays = (count: number) => {
-    const days = [];
-    const today = new Date();
-    for (let i = 0; i < count; i++) {
-      const date = new Date(today);
-      date.setDate(date.getDate() + i);
-      days.push(date.toISOString().split('T')[0]);
-    }
-    return days;
+  // Obtenir les jours de la semaine disponibles
+  const getAvailableDaysOfWeek = () => {
+    const uniqueDays = new Set<number>();
+    weeklySlots.forEach(slot => {
+      uniqueDays.add(slot.day_of_week);
+    });
+    return Array.from(uniqueDays);
   };
 
   if (loading) {
@@ -323,9 +322,7 @@ export default function BookAppointmentPage({ params }: { params: { id: string }
       <nav className="bg-white shadow-sm">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between h-16 items-center">
-            <Link href="/dashboard/family" className="text-2xl font-bold text-primary-600">
-              Autisme Connect
-            </Link>
+            <Logo href="/dashboard/family" />
             <Link
               href={`/educator/${params.id}`}
               className="text-gray-700 hover:text-primary-600"
@@ -388,38 +385,30 @@ export default function BookAppointmentPage({ params }: { params: { id: string }
           <form onSubmit={handleSubmit} className="bg-white rounded-lg shadow p-8">
             {/* Sélection de la date */}
             <div className="mb-6">
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+              <label className="block text-sm font-medium text-gray-700 mb-3">
                 1. Sélectionnez une date
               </label>
-              <select
-                value={selectedDate}
-                onChange={(e) => {
-                  setSelectedDate(e.target.value);
+              <Calendar
+                selectedDate={selectedDate}
+                onDateSelect={(date) => {
+                  setSelectedDate(date);
                   setSelectedSlots([]);
                 }}
-                className="w-full border border-gray-300 rounded-md px-3 py-2"
-                required
-              >
-                <option value="">-- Choisir une date --</option>
-                {getNextDays(30).map((date) => {
-                  const d = new Date(date + 'T00:00:00');
-                  const dayOfWeek = d.getDay();
-                  const hasSlots = weeklySlots.some(slot => slot.day_of_week === dayOfWeek);
-
-                  if (!hasSlots) return null;
-
-                  return (
-                    <option key={date} value={date}>
-                      {d.toLocaleDateString('fr-FR', {
-                        weekday: 'long',
-                        year: 'numeric',
-                        month: 'long',
-                        day: 'numeric'
-                      })}
-                    </option>
-                  );
-                })}
-              </select>
+                availableDays={getAvailableDaysOfWeek()}
+              />
+              {selectedDate && (
+                <div className="mt-3 p-3 bg-blue-50 border border-blue-200 rounded-lg">
+                  <p className="text-sm text-blue-800">
+                    📅 <strong>Date sélectionnée :</strong>{' '}
+                    {new Date(selectedDate + 'T00:00:00').toLocaleDateString('fr-FR', {
+                      weekday: 'long',
+                      year: 'numeric',
+                      month: 'long',
+                      day: 'numeric'
+                    })}
+                  </p>
+                </div>
+              )}
             </div>
 
             {/* Sélection du créneau */}

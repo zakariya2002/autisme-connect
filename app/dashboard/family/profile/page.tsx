@@ -6,6 +6,7 @@ import Link from 'next/link';
 import { supabase } from '@/lib/supabase';
 import { getCurrentPosition, reverseGeocode } from '@/lib/geolocation';
 import AvatarUpload from '@/components/AvatarUpload';
+import Logo from '@/components/Logo';
 
 export default function FamilyProfilePage() {
   const router = useRouter();
@@ -188,9 +189,7 @@ export default function FamilyProfilePage() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between h-16 items-center">
             <div className="flex items-center">
-              <Link href="/dashboard/family" className="text-2xl font-bold text-primary-600">
-                Autisme Connect
-              </Link>
+              <Logo href="/dashboard/family" />
             </div>
             <div>
               <Link href="/dashboard/family" className="text-gray-700 hover:text-primary-600 px-3 py-2">

@@ -8,6 +8,7 @@ import { CertificationType } from '@/types';
 import { getCurrentPosition, reverseGeocode } from '@/lib/geolocation';
 import AvatarUpload from '@/components/AvatarUpload';
 import CertificationDocumentUpload from '@/components/CertificationDocumentUpload';
+import Logo from '@/components/Logo';
 
 export default function EducatorProfilePage() {
   const router = useRouter();
@@ -386,9 +387,7 @@ export default function EducatorProfilePage() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between h-16 items-center">
             <div className="flex items-center">
-              <Link href="/dashboard/educator" className="text-2xl font-bold text-primary-600">
-                Autisme Connect
-              </Link>
+              <Logo href="/dashboard/educator" />
             </div>
             <div>
               <Link href="/dashboard/educator" className="text-gray-700 hover:text-primary-600 px-3 py-2">

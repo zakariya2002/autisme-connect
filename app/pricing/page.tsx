@@ -2,6 +2,7 @@
 
 import Link from 'next/link';
 import { useState } from 'react';
+import Logo from '@/components/Logo';
 
 export default function PricingPage() {
   const [billingCycle, setBillingCycle] = useState<'monthly' | 'annual'>('monthly');
@@ -10,7 +11,7 @@ export default function PricingPage() {
     {
       icon: '🎯',
       title: 'Visibilité Maximum',
-      description: 'Profil professionnel visible par toutes les familles recherchant un éducateur spécialisé TSA'
+      description: 'Profil professionnel visible par toutes les familles recherchant un éducateur spécialisé'
     },
     {
       icon: '📅',
@@ -51,15 +52,15 @@ export default function PricingPage() {
 
   const pricing = {
     monthly: {
-      price: 89.90,
+      price: 90,
       period: '/mois',
-      total: '89,90€',
+      total: '90€',
       savings: null
     },
     annual: {
-      price: 79.90,
+      price: 80,
       period: '/mois',
-      total: '958,80€',
+      total: '960€',
       savings: 'Économisez 120€ par an'
     }
   };
@@ -72,14 +73,7 @@ export default function PricingPage() {
       <nav className="bg-white shadow-sm border-b border-gray-200">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between h-16 items-center">
-            <Link href="/" className="text-2xl font-bold text-primary-600 flex items-center">
-              <div className="w-10 h-10 bg-gradient-to-br from-primary-500 to-primary-600 rounded-lg flex items-center justify-center mr-2">
-                <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
-                </svg>
-              </div>
-              Autisme Connect
-            </Link>
+            <Logo />
             <div className="flex gap-2">
               <Link
                 href="/auth/login"
@@ -173,22 +167,22 @@ export default function PricingPage() {
               <div className="bg-gradient-to-r from-primary-50 to-blue-50 rounded-2xl p-6 mb-8">
                 <h3 className="text-lg font-bold text-gray-900 mb-3 text-center">💰 Rentabilité immédiate</h3>
                 <p className="text-gray-700 text-center mb-4">
-                  Il vous suffit de <strong className="text-primary-600">2-3 interventions par mois</strong> via la plateforme
+                  Il vous suffit de <strong className="text-primary-600">3-4 interventions par mois</strong> via la plateforme
                   pour rentabiliser votre abonnement
                 </p>
                 <div className="bg-white rounded-lg p-4 text-sm">
                   <div className="flex justify-between mb-2">
-                    <span className="text-gray-600">2 interventions × 2h × 45€/h</span>
-                    <span className="font-bold text-green-600">+180€</span>
+                    <span className="text-gray-600">2 interventions × 2h × 30€/h</span>
+                    <span className="font-bold text-green-600">+120€</span>
                   </div>
                   <div className="flex justify-between mb-2">
                     <span className="text-gray-600">Abonnement mensuel</span>
-                    <span className="font-bold text-gray-900">-89,90€</span>
+                    <span className="font-bold text-gray-900">-90€</span>
                   </div>
                   <div className="border-t border-gray-200 pt-2 mt-2">
                     <div className="flex justify-between">
                       <span className="font-bold text-gray-900">Bénéfice net</span>
-                      <span className="font-bold text-primary-600 text-lg">+90€</span>
+                      <span className="font-bold text-primary-600 text-lg">+30€</span>
                     </div>
                   </div>
                 </div>

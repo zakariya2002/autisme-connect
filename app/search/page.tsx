@@ -4,7 +4,8 @@ import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { supabase } from '@/lib/supabase';
 import { EducatorProfile, CertificationType } from '@/types';
-import { getCurrentPosition, geocodeAddress, calculateDistance } from '@/lib/geolocation';
+import { getCurrentPosition, geocodeAddress, calculateDistance, reverseGeocode } from '@/lib/geolocation';
+import Logo from '@/components/Logo';
 
 type EducatorWithDistance = EducatorProfile & { distance?: number };
 
@@ -13,6 +14,7 @@ export default function SearchPage() {
   const [loading, setLoading] = useState(true);
   const [geolocating, setGeolocating] = useState(false);
   const [userPosition, setUserPosition] = useState<{ latitude: number; longitude: number } | null>(null);
+  const [userCity, setUserCity] = useState<string>('');
   const [filters, setFilters] = useState({
     location: '',
     certifications: [] as CertificationType[],
@@ -127,6 +129,13 @@ export default function SearchPage() {
     try {
       const position = await getCurrentPosition();
       setUserPosition(position);
+
+      // Récupérer le nom de la ville
+      const address = await reverseGeocode(position.latitude, position.longitude);
+      if (address) {
+        setUserCity(address);
+      }
+
       setFilters({
         ...filters,
         nearMe: true,
@@ -155,23 +164,29 @@ export default function SearchPage() {
       nearMe: false,
     });
     setUserPosition(null);
+    setUserCity('');
     setTimeout(fetchEducators, 100);
   };
 
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Navigation */}
-      <nav className="bg-white shadow-sm">
+      <nav className="bg-white shadow-sm border-b border-gray-200">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between h-16 items-center">
-            <div className="flex items-center">
-              <Link href="/search" className="text-2xl font-bold text-primary-600">
-                Autisme Connect
+            <Logo />
+            <div className="flex items-center space-x-1">
+              <Link href="/search" className="text-gray-700 hover:text-primary-600 px-4 py-2 rounded-md font-medium transition-colors">
+                Trouver un éducateur
               </Link>
-            </div>
-            <div className="flex space-x-4">
-              <Link href="/dashboard/family" className="text-gray-700 hover:text-primary-600 px-3 py-2">
-                Mon tableau de bord
+              <Link href="/pricing" className="text-gray-700 hover:text-primary-600 px-4 py-2 rounded-md font-medium transition-colors">
+                Tarifs
+              </Link>
+              <Link href="/auth/login" className="text-gray-700 hover:text-primary-600 px-4 py-2 rounded-md font-medium transition-colors">
+                Connexion
+              </Link>
+              <Link href="/auth/signup" className="bg-primary-600 text-white px-5 py-2.5 rounded-md hover:bg-primary-700 font-medium transition-colors shadow-sm">
+                Inscription
               </Link>
             </div>
           </div>
@@ -218,7 +233,7 @@ export default function SearchPage() {
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
                         </svg>
-                        {filters.nearMe ? '📍 Recherche activée' : 'Autour de moi'}
+                        {filters.nearMe && userCity ? `📍 ${userCity}` : filters.nearMe ? '📍 Recherche activée' : 'Ma position'}
                       </>
                     )}
                   </button>

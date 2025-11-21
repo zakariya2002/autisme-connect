@@ -8,6 +8,7 @@ import Link from 'next/link';
 import { supabase } from '@/lib/supabase';
 import { UserRole, CertificationType } from '@/types';
 import { getCurrentPosition, reverseGeocode } from '@/lib/geolocation';
+import Logo from '@/components/Logo';
 
 export default function SignupPage() {
   const router = useRouter();
@@ -249,9 +250,9 @@ export default function SignupPage() {
       <div className="max-w-3xl mx-auto">
         {/* Header */}
         <div className="text-center mb-8">
-          <Link href="/" className="text-3xl font-bold text-primary-600">
-            Autisme Connect
-          </Link>
+          <div className="flex justify-center">
+            <Logo iconSize="lg" />
+          </div>
           <h2 className="mt-4 text-2xl font-extrabold text-gray-900">
             Créer votre compte
           </h2>

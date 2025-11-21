@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { updatePassword } from '@/lib/auth';
 import { supabase } from '@/lib/supabase';
+import Logo from '@/components/Logo';
 
 export default function ResetPasswordPage() {
   const [password, setPassword] = useState('');
@@ -152,9 +153,9 @@ export default function ResetPasswordPage() {
             </svg>
           </div>
         </Link>
-        <h1 className="text-center text-4xl font-bold text-primary-600 mb-2">
-          Autisme Connect
-        </h1>
+        <div className="flex justify-center mb-2">
+          <Logo iconSize="lg" />
+        </div>
         <h2 className="text-center text-3xl font-extrabold text-gray-900 mb-2">
           Nouveau mot de passe
         </h2>

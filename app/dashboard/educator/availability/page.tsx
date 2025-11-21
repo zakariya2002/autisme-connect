@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { supabase } from '@/lib/supabase';
+import Logo from '@/components/Logo';
 
 interface WeeklySlot {
   id: string;
@@ -256,9 +257,7 @@ export default function AvailabilityPage() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between h-16 items-center">
             <div className="flex items-center">
-              <Link href="/dashboard/educator" className="text-2xl font-bold text-primary-600">
-                Autisme Connect
-              </Link>
+              <Logo href="/dashboard/educator" />
             </div>
             <div className="flex space-x-4">
               <Link href="/dashboard/educator" className="text-gray-700 hover:text-primary-600 px-3 py-2">

@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { supabase } from '@/lib/supabase';
 import { signOut } from '@/lib/auth';
+import Logo from '@/components/Logo';
 
 export default function FamilyDashboard() {
   const router = useRouter();
@@ -105,9 +106,7 @@ export default function FamilyDashboard() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between h-16 items-center">
             <div className="flex items-center">
-              <Link href="/dashboard/family" className="text-2xl font-bold text-primary-600">
-                Autisme Connect
-              </Link>
+              <Logo href="/dashboard/family" />
             </div>
             <div className="flex space-x-4">
               <Link href="/dashboard/family/profile" className="text-gray-700 hover:text-primary-600 px-3 py-2">
