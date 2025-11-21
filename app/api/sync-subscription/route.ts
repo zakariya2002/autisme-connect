@@ -83,9 +83,12 @@ export async function POST(request: Request) {
     }
 
     // Prendre le premier abonnement actif ou en trial
-    const subscription = subscriptions.data.find(
+    const subscriptionSummary = subscriptions.data.find(
       sub => sub.status === 'active' || sub.status === 'trialing'
     ) || subscriptions.data[0];
+
+    // Récupérer l'abonnement complet avec toutes les propriétés
+    const subscription = await stripe.subscriptions.retrieve(subscriptionSummary.id);
 
     console.log('✅ Abonnement trouvé:', subscription.id, 'Status:', subscription.status);
 

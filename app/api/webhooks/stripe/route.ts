@@ -85,10 +85,12 @@ async function handleCheckoutSessionCompleted(session: Stripe.Checkout.Session) 
   // Créer ou mettre à jour l'abonnement dans la base de données
   const subscription = await stripe.subscriptions.retrieve(session.subscription as string);
 
-  // @ts-ignore - Stripe subscription has these properties at runtime
-  const currentPeriodStart = subscription.current_period_start;
-  // @ts-ignore - Stripe subscription has these properties at runtime
-  const currentPeriodEnd = subscription.current_period_end;
+  // Accéder aux propriétés Stripe (snake_case)
+  const subscriptionData = subscription as any;
+  const currentPeriodStart = subscriptionData.current_period_start;
+  const currentPeriodEnd = subscriptionData.current_period_end;
+
+  console.log('📅 Dates webhook:', { currentPeriodStart, currentPeriodEnd });
 
   const { error } = await supabase
     .from('subscriptions')
@@ -117,10 +119,10 @@ async function handleCheckoutSessionCompleted(session: Stripe.Checkout.Session) 
 }
 
 async function handleSubscriptionUpdate(subscription: Stripe.Subscription) {
-  // @ts-ignore - Stripe subscription has these properties at runtime
-  const currentPeriodStart = subscription.current_period_start;
-  // @ts-ignore - Stripe subscription has these properties at runtime
-  const currentPeriodEnd = subscription.current_period_end;
+  // Accéder aux propriétés Stripe (snake_case)
+  const subscriptionData = subscription as any;
+  const currentPeriodStart = subscriptionData.current_period_start;
+  const currentPeriodEnd = subscriptionData.current_period_end;
 
   const { error } = await supabase
     .from('subscriptions')
