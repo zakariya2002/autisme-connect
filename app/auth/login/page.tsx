@@ -23,12 +23,14 @@ export default function LoginPage() {
       const role = user?.user_metadata?.role;
 
       // Rediriger selon le rôle
-      if (role === 'educator') {
+      if (role === 'admin') {
+        router.push('/admin/verify-diplomas');
+      } else if (role === 'educator') {
         router.push('/dashboard/educator');
       } else if (role === 'family') {
         router.push('/dashboard/family');
       } else {
-        router.push('/dashboard');
+        router.push('/dashboard/educator');
       }
     } catch (err: any) {
       setError(err.message || 'Une erreur est survenue lors de la connexion');
