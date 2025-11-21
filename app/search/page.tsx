@@ -41,6 +41,7 @@ export default function SearchPage() {
             status
           )
         `)
+        .eq('diploma_verification_status', 'verified') // IMPORTANT: Seuls les diplômes vérifiés
         .order('rating', { ascending: false });
 
       // Appliquer les filtres
