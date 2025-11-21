@@ -90,10 +90,10 @@ export async function POST(request: Request) {
     console.log('✅ Abonnement trouvé:', subscription.id, 'Status:', subscription.status);
 
     // Insérer ou mettre à jour dans Supabase
-    // @ts-ignore - Stripe subscription has these properties at runtime
-    const currentPeriodStart = subscription.current_period_start;
-    // @ts-ignore - Stripe subscription has these properties at runtime
-    const currentPeriodEnd = subscription.current_period_end;
+    // Les propriétés Stripe sont en snake_case, pas camelCase
+    const subscriptionData = subscription as any;
+    const currentPeriodStart = subscriptionData.current_period_start;
+    const currentPeriodEnd = subscriptionData.current_period_end;
 
     console.log('📅 Dates:', {
       currentPeriodStart,
