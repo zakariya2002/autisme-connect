@@ -11,17 +11,17 @@ export default function Home() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between h-16 items-center">
             <Logo />
-            <div className="flex items-center space-x-1">
-              <Link href="/search" className="text-gray-700 hover:text-primary-600 px-4 py-2 rounded-md font-medium transition-colors">
+            <div className="flex items-center gap-1 sm:gap-2">
+              <Link href="/search" className="hidden md:block text-gray-700 hover:text-primary-600 px-3 lg:px-4 py-2 rounded-md font-medium transition-colors text-sm lg:text-base">
                 Trouver un éducateur
               </Link>
-              <Link href="/pricing" className="text-gray-700 hover:text-primary-600 px-4 py-2 rounded-md font-medium transition-colors">
+              <Link href="/pricing" className="hidden sm:block text-gray-700 hover:text-primary-600 px-2 lg:px-4 py-2 rounded-md font-medium transition-colors text-sm lg:text-base">
                 Tarifs
               </Link>
-              <Link href="/auth/login" className="text-gray-700 hover:text-primary-600 px-4 py-2 rounded-md font-medium transition-colors">
+              <Link href="/auth/login" className="text-gray-700 hover:text-primary-600 px-2 sm:px-4 py-2 rounded-md font-medium transition-colors text-sm lg:text-base">
                 Connexion
               </Link>
-              <Link href="/auth/signup" className="bg-primary-600 text-white px-5 py-2.5 rounded-md hover:bg-primary-700 font-medium transition-colors shadow-sm">
+              <Link href="/auth/signup" className="bg-primary-600 text-white px-3 sm:px-5 py-2 sm:py-2.5 rounded-md hover:bg-primary-700 font-medium transition-colors shadow-sm text-sm lg:text-base">
                 Inscription
               </Link>
             </div>
@@ -30,13 +30,13 @@ export default function Home() {
       </nav>
 
       {/* Hero Section */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 lg:py-32">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-20 lg:py-32">
         <div className="text-center max-w-4xl mx-auto">
-          <h1 className="text-5xl lg:text-7xl font-bold text-gray-900 mb-6 leading-tight">
+          <h1 className="text-3xl sm:text-5xl lg:text-7xl font-bold text-gray-900 mb-4 sm:mb-6 leading-tight">
             Connectez-vous avec les meilleurs
             <span className="text-primary-600 block mt-2">éducateurs spécialisés</span>
           </h1>
-          <p className="text-xl lg:text-2xl text-gray-600 mb-10 leading-relaxed max-w-3xl mx-auto">
+          <p className="text-base sm:text-xl lg:text-2xl text-gray-600 mb-6 sm:mb-10 leading-relaxed max-w-3xl mx-auto">
             Autisme Connect est la plateforme qui simplifie la recherche et la mise en relation
             entre les familles et les éducateurs spécialisés qualifiés.
           </p>

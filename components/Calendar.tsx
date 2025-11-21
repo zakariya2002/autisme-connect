@@ -99,45 +99,45 @@ export default function Calendar({ selectedDate, onDateSelect, availableDays, mi
   return (
     <div className="bg-gradient-to-br from-white to-primary-50/30 border-2 border-primary-200 rounded-xl shadow-lg overflow-hidden">
       {/* En-tête du calendrier */}
-      <div className="bg-gradient-to-r from-primary-600 to-primary-700 px-6 py-4">
+      <div className="bg-gradient-to-r from-primary-600 to-primary-700 px-3 sm:px-6 py-3 sm:py-4">
         <div className="flex items-center justify-between">
           <button
             type="button"
             onClick={goToPreviousMonth}
             disabled={isPreviousMonthDisabled()}
-            className="p-2 hover:bg-white/20 rounded-lg transition-all disabled:opacity-30 disabled:cursor-not-allowed text-white"
+            className="p-1.5 sm:p-2 hover:bg-white/20 rounded-lg transition-all disabled:opacity-30 disabled:cursor-not-allowed text-white"
           >
-            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <svg className="w-4 h-4 sm:w-5 sm:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
             </svg>
           </button>
-          <h3 className="text-xl font-bold text-white">
+          <h3 className="text-base sm:text-xl font-bold text-white">
             {monthNames[currentMonth.getMonth()]} {currentMonth.getFullYear()}
           </h3>
           <button
             type="button"
             onClick={goToNextMonth}
-            className="p-2 hover:bg-white/20 rounded-lg transition-all text-white"
+            className="p-1.5 sm:p-2 hover:bg-white/20 rounded-lg transition-all text-white"
           >
-            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <svg className="w-4 h-4 sm:w-5 sm:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
             </svg>
           </button>
         </div>
       </div>
 
-      <div className="p-6">
+      <div className="p-3 sm:p-6">
         {/* Jours de la semaine */}
-        <div className="grid grid-cols-7 gap-2 mb-3">
+        <div className="grid grid-cols-7 gap-1 sm:gap-2 mb-2 sm:mb-3">
           {dayNames.map((day) => (
-            <div key={day} className="text-center text-xs font-bold text-primary-700 py-2">
+            <div key={day} className="text-center text-[10px] sm:text-xs font-bold text-primary-700 py-1 sm:py-2">
               {day}
             </div>
           ))}
         </div>
 
         {/* Grille du calendrier */}
-        <div className="grid grid-cols-7 gap-2">
+        <div className="grid grid-cols-7 gap-1 sm:gap-2">
           {calendarDays.map((date, index) => {
             if (!date) {
               return <div key={`empty-${index}`} className="aspect-square" />;
@@ -154,13 +154,13 @@ export default function Calendar({ selectedDate, onDateSelect, availableDays, mi
                 onClick={() => handleDateClick(date)}
                 disabled={!selectable}
                 className={`
-                  aspect-square p-2 rounded-lg text-sm font-semibold transition-all duration-200 relative
+                  aspect-square p-1 sm:p-2 rounded-lg text-xs sm:text-sm font-semibold transition-all duration-200 relative
                   ${selected
-                    ? 'bg-primary-600 text-white shadow-lg scale-105 ring-4 ring-primary-200'
+                    ? 'bg-primary-600 text-white shadow-lg scale-105 ring-2 sm:ring-4 ring-primary-200'
                     : today && selectable
                     ? 'bg-primary-100 text-primary-800 border-2 border-primary-400 hover:bg-primary-200'
                     : selectable
-                    ? 'bg-white text-gray-900 border-2 border-gray-200 hover:border-primary-400 hover:bg-primary-50 hover:scale-105 hover:shadow-md'
+                    ? 'bg-white text-gray-900 border-2 border-gray-200 hover:border-primary-400 hover:bg-primary-50 sm:hover:scale-105 hover:shadow-md'
                     : 'bg-gray-50 text-gray-300 cursor-not-allowed'
                   }
                 `}
@@ -175,23 +175,23 @@ export default function Calendar({ selectedDate, onDateSelect, availableDays, mi
         </div>
 
         {/* Légende */}
-        <div className="mt-6 pt-4 border-t-2 border-primary-100">
-          <div className="flex flex-wrap items-center justify-center gap-4 text-xs">
-            <div className="flex items-center gap-2">
-              <div className="w-4 h-4 rounded-md bg-primary-600 shadow-sm"></div>
+        <div className="mt-4 sm:mt-6 pt-3 sm:pt-4 border-t-2 border-primary-100">
+          <div className="grid grid-cols-2 sm:flex sm:flex-wrap items-center justify-center gap-2 sm:gap-4 text-[10px] sm:text-xs">
+            <div className="flex items-center gap-1 sm:gap-2">
+              <div className="w-3 h-3 sm:w-4 sm:h-4 rounded-md bg-primary-600 shadow-sm"></div>
               <span className="font-medium text-gray-700">Sélectionné</span>
             </div>
-            <div className="flex items-center gap-2">
-              <div className="w-4 h-4 rounded-md bg-primary-100 border-2 border-primary-400"></div>
+            <div className="flex items-center gap-1 sm:gap-2">
+              <div className="w-3 h-3 sm:w-4 sm:h-4 rounded-md bg-primary-100 border-2 border-primary-400"></div>
               <span className="font-medium text-gray-700">Aujourd'hui</span>
             </div>
-            <div className="flex items-center gap-2">
-              <div className="w-4 h-4 rounded-md bg-white border-2 border-gray-200"></div>
+            <div className="flex items-center gap-1 sm:gap-2">
+              <div className="w-3 h-3 sm:w-4 sm:h-4 rounded-md bg-white border-2 border-gray-200"></div>
               <span className="font-medium text-gray-700">Disponible</span>
             </div>
-            <div className="flex items-center gap-2">
-              <div className="w-4 h-4 rounded-md bg-gray-50"></div>
-              <span className="font-medium text-gray-700">Non disponible</span>
+            <div className="flex items-center gap-1 sm:gap-2">
+              <div className="w-3 h-3 sm:w-4 sm:h-4 rounded-md bg-gray-50"></div>
+              <span className="font-medium text-gray-700">Non dispo</span>
             </div>
           </div>
         </div>
