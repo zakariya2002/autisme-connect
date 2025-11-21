@@ -415,6 +415,21 @@ export default function EducatorPublicProfile({ params }: { params: { id: string
           </div>
         </div>
 
+        {/* Bouton Demander un rendez-vous - Mis en avant */}
+        {isAuthenticated && userRole === 'family' && weeklySlots.length > 0 && (
+          <div className="mb-8">
+            <Link
+              href={`/educator/${params.id}/book-appointment`}
+              className="block w-full sm:w-auto sm:inline-flex items-center justify-center px-8 py-4 bg-gradient-to-r from-green-600 to-green-700 text-white rounded-2xl hover:from-green-700 hover:to-green-800 font-bold text-lg shadow-2xl hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1"
+            >
+              <svg className="w-6 h-6 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+              </svg>
+              Demander un rendez-vous
+            </Link>
+          </div>
+        )}
+
         {/* Onglets */}
         <div className="mb-6">
           <div className="bg-white rounded-lg shadow-md p-2 inline-flex gap-2">
@@ -790,20 +805,6 @@ export default function EducatorPublicProfile({ params }: { params: { id: string
                         Envoyer un message
                       </span>
                     </button>
-                    {/* Bouton Demander un rendez-vous - uniquement pour les familles */}
-                    {userRole === 'family' && weeklySlots.length > 0 && (
-                      <Link
-                        href={`/educator/${params.id}/book-appointment`}
-                        className="block w-full text-center px-6 py-3.5 bg-green-600 text-white rounded-xl hover:bg-green-700 font-bold shadow-lg hover:shadow-xl transition-all duration-200 transform hover:-translate-y-0.5"
-                      >
-                        <span className="inline-flex items-center">
-                          <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                          </svg>
-                          Demander un rendez-vous
-                        </span>
-                      </Link>
-                    )}
                     {userRole && (
                       <Link
                         href={userRole === 'educator' ? '/dashboard/educator' : '/dashboard/family'}
