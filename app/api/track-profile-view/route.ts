@@ -34,7 +34,7 @@ export async function POST(request: Request) {
       }
     }
 
-    // Enregistrer la vue (la contrainte UNIQUE empêchera les doublons du même jour)
+    // Enregistrer la vue (l'index unique empêchera les doublons du même jour)
     const { error } = await supabase
       .from('profile_views')
       .insert({
@@ -44,7 +44,7 @@ export async function POST(request: Request) {
       });
 
     // Ignorer l'erreur de contrainte unique (vue déjà enregistrée aujourd'hui)
-    if (error && !error.message.includes('unique_view_per_day')) {
+    if (error && !error.message.includes('unique_view_per_day') && !error.message.includes('duplicate key')) {
       console.error('Erreur enregistrement vue:', error);
     }
 
