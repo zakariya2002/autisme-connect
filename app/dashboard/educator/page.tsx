@@ -6,6 +6,7 @@ import Link from 'next/link';
 import { supabase } from '@/lib/supabase';
 import { signOut } from '@/lib/auth';
 import Logo from '@/components/Logo';
+import { getEducatorUsageStats, FREE_PLAN_LIMITS } from '@/lib/subscription-utils';
 
 export default function EducatorDashboard() {
   const router = useRouter();
@@ -17,6 +18,7 @@ export default function EducatorDashboard() {
     rating: 0,
     reviews: 0,
   });
+  const [usageStats, setUsageStats] = useState<any>(null);
   const [syncingSubscription, setSyncingSubscription] = useState(false);
 
   useEffect(() => {
@@ -61,6 +63,10 @@ export default function EducatorDashboard() {
         .maybeSingle();
 
       setSubscription(subscriptionData);
+
+      // Récupérer les statistiques d'usage
+      const usage = await getEducatorUsageStats(data.id);
+      setUsageStats(usage);
 
       // Si retour de Stripe avec succès mais pas d'abonnement, synchroniser
       if (searchParams.get('subscription') === 'success' && !subscriptionData && data?.id) {
@@ -250,6 +256,104 @@ export default function EducatorDashboard() {
             </div>
           </div>
         </div>
+
+        {/* Limites d'usage (pour les comptes gratuits) */}
+        {usageStats && !usageStats.isPremium && (
+          <div className="bg-gradient-to-r from-blue-50 to-indigo-50 border border-blue-200 rounded-lg p-6 mb-8">
+            <div className="flex items-start justify-between mb-4">
+              <div>
+                <h3 className="text-lg font-semibold text-gray-900 mb-1">
+                  Votre utilisation ce mois-ci
+                </h3>
+                <p className="text-sm text-gray-600">
+                  Passez Premium pour des réservations et conversations illimitées
+                </p>
+              </div>
+              <Link
+                href="/pricing"
+                className="px-4 py-2 bg-gradient-to-r from-yellow-400 to-yellow-500 text-white text-sm font-bold rounded-lg hover:from-yellow-500 hover:to-yellow-600 shadow-md transition"
+              >
+                ⭐ Passer Premium
+              </Link>
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              {/* Compteur réservations */}
+              <div className="bg-white rounded-lg p-4 shadow-sm">
+                <div className="flex items-center justify-between mb-2">
+                  <span className="text-sm font-medium text-gray-700">
+                    Réservations mensuelles
+                  </span>
+                  <span className={`text-xs font-semibold px-2 py-1 rounded-full ${
+                    usageStats.bookings.current >= usageStats.bookings.limit
+                      ? 'bg-red-100 text-red-700'
+                      : usageStats.bookings.current >= usageStats.bookings.limit * 0.7
+                      ? 'bg-yellow-100 text-yellow-700'
+                      : 'bg-green-100 text-green-700'
+                  }`}>
+                    {usageStats.bookings.current}/{usageStats.bookings.limit}
+                  </span>
+                </div>
+                <div className="w-full bg-gray-200 rounded-full h-2">
+                  <div
+                    className={`h-2 rounded-full transition-all ${
+                      usageStats.bookings.current >= usageStats.bookings.limit
+                        ? 'bg-red-500'
+                        : usageStats.bookings.current >= usageStats.bookings.limit * 0.7
+                        ? 'bg-yellow-500'
+                        : 'bg-green-500'
+                    }`}
+                    style={{
+                      width: `${Math.min((usageStats.bookings.current / usageStats.bookings.limit) * 100, 100)}%`
+                    }}
+                  ></div>
+                </div>
+                {usageStats.bookings.current >= usageStats.bookings.limit && (
+                  <p className="text-xs text-red-600 mt-2 font-medium">
+                    ⚠️ Limite atteinte ! Passez Premium pour continuer
+                  </p>
+                )}
+              </div>
+
+              {/* Compteur conversations */}
+              <div className="bg-white rounded-lg p-4 shadow-sm">
+                <div className="flex items-center justify-between mb-2">
+                  <span className="text-sm font-medium text-gray-700">
+                    Conversations actives
+                  </span>
+                  <span className={`text-xs font-semibold px-2 py-1 rounded-full ${
+                    usageStats.conversations.current >= usageStats.conversations.limit
+                      ? 'bg-red-100 text-red-700'
+                      : usageStats.conversations.current >= usageStats.conversations.limit * 0.7
+                      ? 'bg-yellow-100 text-yellow-700'
+                      : 'bg-green-100 text-green-700'
+                  }`}>
+                    {usageStats.conversations.current}/{usageStats.conversations.limit}
+                  </span>
+                </div>
+                <div className="w-full bg-gray-200 rounded-full h-2">
+                  <div
+                    className={`h-2 rounded-full transition-all ${
+                      usageStats.conversations.current >= usageStats.conversations.limit
+                        ? 'bg-red-500'
+                        : usageStats.conversations.current >= usageStats.conversations.limit * 0.7
+                        ? 'bg-yellow-500'
+                        : 'bg-green-500'
+                    }`}
+                    style={{
+                      width: `${Math.min((usageStats.conversations.current / usageStats.conversations.limit) * 100, 100)}%`
+                    }}
+                  ></div>
+                </div>
+                {usageStats.conversations.current >= usageStats.conversations.limit && (
+                  <p className="text-xs text-red-600 mt-2 font-medium">
+                    ⚠️ Limite atteinte ! Passez Premium pour continuer
+                  </p>
+                )}
+              </div>
+            </div>
+          </div>
+        )}
 
         {/* Actions rapides */}
         <div className="bg-white rounded-lg shadow">

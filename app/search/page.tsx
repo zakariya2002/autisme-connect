@@ -36,7 +36,10 @@ export default function SearchPage() {
         .from('educator_profiles')
         .select(`
           *,
-          certifications (*)
+          certifications (*),
+          subscriptions!educator_id (
+            status
+          )
         `)
         .order('rating', { ascending: false });
 
@@ -88,8 +91,20 @@ export default function SearchPage() {
           })
         );
 
-        // Trier par distance (les plus proches en premier)
+        // Trier d'abord par statut Premium, puis par distance
         educatorsWithDistance.sort((a, b) => {
+          const aIsPremium = (a as any).subscriptions?.some((sub: any) =>
+            ['active', 'trialing'].includes(sub.status)
+          ) || false;
+          const bIsPremium = (b as any).subscriptions?.some((sub: any) =>
+            ['active', 'trialing'].includes(sub.status)
+          ) || false;
+
+          // Premium d'abord
+          if (aIsPremium && !bIsPremium) return -1;
+          if (!aIsPremium && bIsPremium) return 1;
+
+          // Ensuite par distance
           if (a.distance === undefined) return 1;
           if (b.distance === undefined) return -1;
           return a.distance - b.distance;
@@ -97,7 +112,24 @@ export default function SearchPage() {
 
         setEducators(educatorsWithDistance as any);
       } else {
-        setEducators(filtered as any);
+        // Trier d'abord par statut Premium, puis par rating
+        const sortedFiltered = [...filtered].sort((a, b) => {
+          const aIsPremium = (a as any).subscriptions?.some((sub: any) =>
+            ['active', 'trialing'].includes(sub.status)
+          ) || false;
+          const bIsPremium = (b as any).subscriptions?.some((sub: any) =>
+            ['active', 'trialing'].includes(sub.status)
+          ) || false;
+
+          // Premium d'abord
+          if (aIsPremium && !bIsPremium) return -1;
+          if (!aIsPremium && bIsPremium) return 1;
+
+          // Ensuite par rating
+          return (b.rating || 0) - (a.rating || 0);
+        });
+
+        setEducators(sortedFiltered as any);
       }
     } catch (error) {
       console.error('Erreur lors de la récupération des éducateurs:', error);
@@ -367,9 +399,21 @@ export default function SearchPage() {
                         </div>
 
                         <div className="flex-1 min-w-0">
-                          <h3 className="text-lg sm:text-xl font-semibold text-gray-900">
-                            {educator.first_name} {educator.last_name}
-                          </h3>
+                          <div className="flex items-center gap-2 flex-wrap">
+                            <h3 className="text-lg sm:text-xl font-semibold text-gray-900">
+                              {educator.first_name} {educator.last_name}
+                            </h3>
+                            {((educator as any).subscriptions?.some((sub: any) =>
+                              ['active', 'trialing'].includes(sub.status)
+                            )) && (
+                              <span className="inline-flex items-center gap-1 px-2 py-0.5 bg-gradient-to-r from-yellow-400 to-yellow-500 text-white text-xs font-bold rounded-full shadow-md">
+                                <svg className="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
+                                  <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                                </svg>
+                                Premium
+                              </span>
+                            )}
+                          </div>
 
                           {/* Note moyenne avec étoiles */}
                           {educator.rating > 0 ? (
