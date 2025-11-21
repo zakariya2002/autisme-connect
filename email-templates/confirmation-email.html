@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Confirmez votre adresse email - Autisme Connect</title>
+</head>
+<body style="margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif; background-color: #f3f4f6;">
+    <table role="presentation" cellpadding="0" cellspacing="0" width="100%" style="background-color: #f3f4f6; padding: 40px 20px;">
+        <tr>
+            <td align="center">
+                <!-- Container principal -->
+                <table role="presentation" cellpadding="0" cellspacing="0" width="600" style="max-width: 600px; background-color: #ffffff; border-radius: 16px; overflow: hidden; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);">
+
+                    <!-- En-tête avec dégradé -->
+                    <tr>
+                        <td style="background: linear-gradient(135deg, #0284c7 0%, #0369a1 100%); padding: 40px 30px; text-align: center;">
+                            <div style="width: 60px; height: 60px; background-color: rgba(255, 255, 255, 0.2); border-radius: 12px; display: inline-flex; align-items: center; justify-content: center; margin-bottom: 20px;">
+                                <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2">
+                                    <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                                    <circle cx="9" cy="7" r="4"></circle>
+                                    <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+                                    <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+                                </svg>
+                            </div>
+                            <h1 style="margin: 0; color: #ffffff; font-size: 28px; font-weight: 700;">Autisme Connect</h1>
+                            <p style="margin: 10px 0 0 0; color: rgba(255, 255, 255, 0.9); font-size: 16px;">Plateforme de connexion éducateurs TSA</p>
+                        </td>
+                    </tr>
+
+                    <!-- Contenu principal -->
+                    <tr>
+                        <td style="padding: 40px 30px;">
+                            <h2 style="margin: 0 0 20px 0; color: #111827; font-size: 24px; font-weight: 600;">
+                                Bienvenue sur Autisme Connect ! 👋
+                            </h2>
+
+                            <p style="margin: 0 0 20px 0; color: #4b5563; font-size: 16px; line-height: 1.6;">
+                                Nous sommes ravis de vous accueillir dans notre communauté. Pour commencer à utiliser votre compte, veuillez confirmer votre adresse email en cliquant sur le bouton ci-dessous.
+                            </p>
+
+                            <!-- Bouton de confirmation -->
+                            <table role="presentation" cellpadding="0" cellspacing="0" width="100%" style="margin: 30px 0;">
+                                <tr>
+                                    <td align="center">
+                                        <a href="{{ .ConfirmationURL }}" style="display: inline-block; background: linear-gradient(135deg, #0284c7 0%, #0369a1 100%); color: #ffffff; text-decoration: none; padding: 16px 40px; border-radius: 8px; font-weight: 600; font-size: 16px; box-shadow: 0 4px 6px rgba(2, 132, 199, 0.3); transition: all 0.3s ease;">
+                                            ✓ Confirmer mon adresse email
+                                        </a>
+                                    </td>
+                                </tr>
+                            </table>
+
+                            <!-- Lien alternatif -->
+                            <div style="margin: 30px 0; padding: 20px; background-color: #f9fafb; border-radius: 8px; border-left: 4px solid #0284c7;">
+                                <p style="margin: 0 0 10px 0; color: #6b7280; font-size: 14px; font-weight: 600;">
+                                    Le bouton ne fonctionne pas ?
+                                </p>
+                                <p style="margin: 0; color: #6b7280; font-size: 14px; line-height: 1.5;">
+                                    Copiez et collez ce lien dans votre navigateur :
+                                </p>
+                                <p style="margin: 10px 0 0 0; word-break: break-all;">
+                                    <a href="{{ .ConfirmationURL }}" style="color: #0284c7; text-decoration: none; font-size: 13px;">{{ .ConfirmationURL }}</a>
+                                </p>
+                            </div>
+
+                            <!-- Informations de sécurité -->
+                            <div style="margin: 30px 0; padding: 16px; background-color: #fef3c7; border-radius: 8px; border-left: 4px solid #f59e0b;">
+                                <p style="margin: 0; color: #92400e; font-size: 14px; line-height: 1.5;">
+                                    <strong>⚠️ Sécurité :</strong> Si vous n'avez pas créé de compte sur Autisme Connect, vous pouvez ignorer cet email en toute sécurité.
+                                </p>
+                            </div>
+
+                            <!-- Expiration -->
+                            <p style="margin: 20px 0 0 0; color: #6b7280; font-size: 14px; line-height: 1.5;">
+                                Ce lien de confirmation expirera dans <strong>24 heures</strong>.
+                            </p>
+                        </td>
+                    </tr>
+
+                    <!-- Pied de page -->
+                    <tr>
+                        <td style="background-color: #f9fafb; padding: 30px; text-align: center; border-top: 1px solid #e5e7eb;">
+                            <p style="margin: 0 0 10px 0; color: #6b7280; font-size: 14px;">
+                                Des questions ? Contactez-nous :
+                            </p>
+                            <p style="margin: 0 0 20px 0;">
+                                <a href="mailto:admin@autismeconnect.fr" style="color: #0284c7; text-decoration: none; font-weight: 600;">admin@autismeconnect.fr</a>
+                            </p>
+
+                            <div style="margin: 20px 0; padding-top: 20px; border-top: 1px solid #e5e7eb;">
+                                <p style="margin: 0 0 10px 0; color: #9ca3af; font-size: 12px;">
+                                    © 2025 Autisme Connect - Tous droits réservés
+                                </p>
+                                <p style="margin: 0; color: #9ca3af; font-size: 12px;">
+                                    <a href="https://www.autismeconnect.fr" style="color: #0284c7; text-decoration: none;">www.autismeconnect.fr</a>
+                                </p>
+                            </div>
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+    </table>
+</body>
+</html>
