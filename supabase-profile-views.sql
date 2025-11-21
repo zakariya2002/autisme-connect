@@ -5,12 +5,13 @@ CREATE TABLE IF NOT EXISTS profile_views (
   viewer_ip TEXT, -- IP du visiteur (optionnel pour éviter les doubles comptages)
   viewer_user_id UUID REFERENCES auth.users(id) ON DELETE SET NULL, -- Si l'utilisateur est connecté
   viewed_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
-  view_date DATE GENERATED ALWAYS AS (DATE(viewed_at)) STORED -- Colonne générée pour la date
+  view_date DATE DEFAULT CURRENT_DATE -- Date de la vue (pour dédupliquer)
 );
 
 -- Index unique pour éviter les doublons (1 vue par IP par jour)
 CREATE UNIQUE INDEX IF NOT EXISTS unique_view_per_day
-ON profile_views(educator_id, viewer_ip, view_date);
+ON profile_views(educator_id, viewer_ip, view_date)
+WHERE viewer_ip IS NOT NULL;
 
 -- Index pour améliorer les performances
 CREATE INDEX IF NOT EXISTS idx_profile_views_educator ON profile_views(educator_id);
