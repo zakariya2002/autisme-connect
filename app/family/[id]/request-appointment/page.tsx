@@ -161,6 +161,8 @@ export default function RequestAppointmentPage({ params }: { params: { id: strin
 
     // Générer tous les créneaux de 30 minutes
     const slots: { start: string; end: string }[] = [];
+    const allSlots: { start: string; end: string; booked: boolean }[] = [];
+
     daySlots.forEach(slot => {
       const [startHour, startMinute] = slot.start_time.split(':').map(Number);
       const [endHour, endMinute] = slot.end_time.split(':').map(Number);
@@ -186,6 +188,8 @@ export default function RequestAppointmentPage({ params }: { params: { id: strin
                  apt.start_time === startTime;
         });
 
+        allSlots.push({ start: startTime, end: endTime, booked: isBooked });
+
         if (!isBooked) {
           slots.push({ start: startTime, end: endTime });
         }
@@ -194,6 +198,16 @@ export default function RequestAppointmentPage({ params }: { params: { id: strin
         currentHour = nextHour;
       }
     });
+
+    // Log pour debug
+    if (allSlots.length > 0 && slots.length === 0) {
+      console.log(`Date ${dateStr} est COMPLÈTE - Total: ${allSlots.length}, Disponibles: ${slots.length}`, {
+        date: dateStr,
+        dayOfWeek,
+        allSlots,
+        appointments: appointments.filter(apt => apt.appointment_date === dateStr)
+      });
+    }
 
     return slots;
   };
@@ -206,6 +220,10 @@ export default function RequestAppointmentPage({ params }: { params: { id: strin
 
   // Calculer les dates complètes pour le calendrier
   const calculateFullyBookedDates = () => {
+    console.log('=== DÉBUT CALCUL DATES COMPLÈTES ===');
+    console.log('WeeklySlots:', weeklySlots);
+    console.log('Appointments:', appointments);
+
     const fullyBooked: string[] = [];
     const today = new Date();
     today.setHours(0, 0, 0, 0);
@@ -228,7 +246,8 @@ export default function RequestAppointmentPage({ params }: { params: { id: strin
       }
     }
 
-    console.log('Dates complètes calculées:', fullyBooked);
+    console.log('=== DATES COMPLÈTES CALCULÉES ===', fullyBooked);
+    console.log('Nombre de dates complètes:', fullyBooked.length);
     setFullyBookedDates(fullyBooked);
   };
 
