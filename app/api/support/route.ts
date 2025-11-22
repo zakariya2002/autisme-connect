@@ -160,7 +160,7 @@ export async function POST(request: NextRequest) {
     });
 
     return NextResponse.json(
-      { success: true, messageId: emailData.id },
+      { success: true, messageId: emailData.data?.id },
       { status: 200 }
     );
 

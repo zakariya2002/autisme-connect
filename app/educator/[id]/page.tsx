@@ -566,58 +566,6 @@ export default function EducatorPublicProfile({ params }: { params: { id: string
             {/* Onglet Certifications */}
             {activeTab === 'certifications' && (
               <>
-            {/* Diplôme ME/ES vérifié */}
-            {educator.diploma_verification_status === 'verified' && (
-              <div className="bg-gradient-to-r from-green-50 to-emerald-50 rounded-xl shadow-lg p-8 border-2 border-green-200 mb-6">
-                <div className="flex items-center mb-6">
-                  <div className="w-12 h-12 bg-green-500 rounded-lg flex items-center justify-center mr-4 shadow-md">
-                    <svg className="w-7 h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
-                    </svg>
-                  </div>
-                  <div>
-                    <h2 className="text-2xl font-bold text-green-900">Diplôme Vérifié</h2>
-                    <p className="text-sm text-green-700">Validé par la DREETS</p>
-                  </div>
-                </div>
-
-                <div className="bg-white rounded-lg p-6 border border-green-200">
-                  <div className="flex items-start justify-between mb-4">
-                    <div className="flex-1">
-                      <div className="flex items-center gap-2 mb-2">
-                        <h3 className="text-xl font-bold text-gray-900">Diplôme Moniteur-Éducateur (ME) / Éducateur Spécialisé (ES)</h3>
-                        <span className="inline-flex items-center px-3 py-1 bg-green-500 text-white text-xs font-bold rounded-full">
-                          <svg className="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 20 20">
-                            <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
-                          </svg>
-                          Diplôme vérifié
-                        </span>
-                      </div>
-
-                      {/* Afficher uniquement la date de vérification */}
-                      {educator.dreets_response_date && (
-                        <div className="flex items-center mt-4">
-                          <svg className="w-5 h-5 mr-2 text-green-600" fill="currentColor" viewBox="0 0 20 20">
-                            <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
-                          </svg>
-                          <span className="text-green-700 text-sm"><strong>Vérifié le:</strong> {new Date(educator.dreets_response_date).toLocaleDateString('fr-FR')}</span>
-                        </div>
-                      )}
-                    </div>
-                  </div>
-
-                  <div className="mt-4 p-3 bg-green-50 rounded-lg border border-green-200">
-                    <p className="text-sm text-green-800 flex items-start">
-                      <svg className="w-5 h-5 mr-2 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
-                        <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd" />
-                      </svg>
-                      <span>Ce diplôme a été vérifié et validé par la DREETS (Direction Régionale de l'Économie, de l'Emploi, du Travail et des Solidarités). Il garantit que cet éducateur possède les qualifications officielles requises.</span>
-                    </p>
-                  </div>
-                </div>
-              </div>
-            )}
-
             {/* Certifications */}
             {certifications && certifications.length > 0 && (
               <div className="bg-white rounded-xl shadow-lg p-8 border border-gray-100 hover:shadow-xl transition-shadow duration-300">

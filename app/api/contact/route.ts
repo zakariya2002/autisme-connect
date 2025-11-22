@@ -25,12 +25,13 @@ export async function POST(request: NextRequest) {
     }
 
     // Déterminer le type d'utilisateur en français
-    const userTypeLabel = {
+    const userTypeMap: Record<string, string> = {
       family: 'Famille',
       educator: 'Éducateur spécialisé',
       institution: 'Institution',
       other: 'Autre'
-    }[userType] || 'Non spécifié';
+    };
+    const userTypeLabel = userTypeMap[userType as string] || 'Non spécifié';
 
     // Envoyer l'email via Resend
     const emailData = await resend.emails.send({
@@ -146,7 +147,7 @@ export async function POST(request: NextRequest) {
     });
 
     return NextResponse.json(
-      { success: true, messageId: emailData.id },
+      { success: true, messageId: emailData.data?.id },
       { status: 200 }
     );
 

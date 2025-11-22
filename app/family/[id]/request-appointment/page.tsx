@@ -433,7 +433,7 @@ export default function RequestAppointmentPage({ params }: { params: { id: strin
               </label>
               <Calendar
                 selectedDate={selectedDate}
-                onSelectDate={setSelectedDate}
+                onDateSelect={setSelectedDate}
                 availableDays={[...new Set(weeklySlots.map(slot => slot.day_of_week))]}
                 fullyBookedDates={fullyBookedDates}
                 minDate={new Date()}

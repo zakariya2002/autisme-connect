@@ -56,7 +56,7 @@ export default function FamilyPublicProfile({ params }: { params: { id: string }
   const [loading, setLoading] = useState(true);
   const [family, setFamily] = useState<FamilyProfile | null>(null);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [userRole, setUserRole] = useState<string | null>(null);
+  const [userRole, setUserRole] = useState<'educator' | 'family' | null>(null);
   const [educatorProfileId, setEducatorProfileId] = useState<string | null>(null);
   const [hasConversation, setHasConversation] = useState(false);
 
@@ -68,7 +68,8 @@ export default function FamilyPublicProfile({ params }: { params: { id: string }
   const checkAuth = async () => {
     const { data: { session } } = await supabase.auth.getSession();
     setIsAuthenticated(!!session);
-    setUserRole(session?.user?.user_metadata?.role || null);
+    const role = session?.user?.user_metadata?.role;
+    setUserRole(role === 'educator' || role === 'family' ? role : null);
 
     // Si c'est un éducateur, récupérer son profil et vérifier s'il a une conversation
     if (session?.user && session.user.user_metadata?.role === 'educator') {

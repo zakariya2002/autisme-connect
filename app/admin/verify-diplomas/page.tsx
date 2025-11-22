@@ -29,7 +29,6 @@ export default function VerifyDiplomasPage() {
   const [selectedEducator, setSelectedEducator] = useState<PendingEducator | null>(null);
   const [rejectReason, setRejectReason] = useState('');
   const [processing, setProcessing] = useState(false);
-  const [markingDREETS, setMarkingDREETS] = useState(false);
   const [stats, setStats] = useState({
     pending: 0,
     verified: 0,
@@ -172,37 +171,6 @@ export default function VerifyDiplomasPage() {
       alert('Erreur: ' + error.message);
     } finally {
       setProcessing(false);
-    }
-  };
-
-  const handleMarkDREETSResponse = async (educatorId: string) => {
-    if (!confirm('Confirmer que DREETS a répondu pour ce dossier ?')) {
-      return;
-    }
-
-    setMarkingDREETS(true);
-
-    try {
-      const { error } = await supabase
-        .from('educator_profiles')
-        .update({
-          dreets_response_date: new Date().toISOString(),
-          dreets_verified: true
-        })
-        .eq('id', educatorId);
-
-      if (error) throw error;
-
-      alert('✅ Réponse DREETS enregistrée !');
-
-      // Rafraîchir
-      await fetchEducators();
-      setSelectedEducator(null);
-    } catch (error: any) {
-      console.error('Erreur:', error);
-      alert('Erreur: ' + error.message);
-    } finally {
-      setMarkingDREETS(false);
     }
   };
 
@@ -487,7 +455,7 @@ export default function VerifyDiplomasPage() {
               </div>
 
               {/* Informations de suivi */}
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+              <div className="mb-6">
                 <div className="bg-gray-50 p-4 rounded-lg">
                   <h3 className="font-semibold text-gray-900 mb-2">📋 Informations du diplôme</h3>
                   <div className="space-y-1 text-sm">
@@ -496,60 +464,6 @@ export default function VerifyDiplomasPage() {
                       : 'N/A'}</p>
                   </div>
                 </div>
-
-                <div className="bg-blue-50 p-4 rounded-lg border border-blue-200">
-                  <h3 className="font-semibold text-blue-900 mb-2">📧 Statut DREETS</h3>
-                  <div className="space-y-2 text-sm">
-                    {selectedEducator.dreets_verification_sent_at ? (
-                      <>
-                        <p className="text-green-700">
-                          <strong>✅ Email envoyé le:</strong><br/>
-                          {new Date(selectedEducator.dreets_verification_sent_at).toLocaleString('fr-FR')}
-                        </p>
-                        {selectedEducator.dreets_verified && selectedEducator.dreets_response_date ? (
-                          <p className="text-green-700 font-semibold">
-                            ✓ DREETS a répondu le:<br/>
-                            {new Date(selectedEducator.dreets_response_date).toLocaleString('fr-FR')}
-                          </p>
-                        ) : selectedEducator.dreets_verified ? (
-                          <p className="text-green-700 font-semibold">✓ DREETS a validé le diplôme</p>
-                        ) : (
-                          <>
-                            <p className="text-orange-700">⏳ En attente de réponse DREETS</p>
-                            <button
-                              onClick={() => handleMarkDREETSResponse(selectedEducator.id)}
-                              disabled={markingDREETS}
-                              className="mt-2 px-3 py-1 bg-blue-600 text-white rounded text-xs hover:bg-blue-700 disabled:opacity-50"
-                            >
-                              {markingDREETS ? 'Enregistrement...' : '✓ Marquer comme répondu'}
-                            </button>
-                          </>
-                        )}
-                      </>
-                    ) : (
-                      <p className="text-orange-700">⚠️ Email DREETS non envoyé</p>
-                    )}
-                  </div>
-                </div>
-
-                {selectedEducator.diploma_ocr_text && (
-                  <div className="md:col-span-2 bg-green-50 p-4 rounded-lg border border-green-200">
-                    <h3 className="font-semibold text-green-900 mb-2">🔍 Analyse OCR</h3>
-                    <p className="text-sm text-green-800 mb-2">
-                      <strong>Confiance:</strong> {selectedEducator.diploma_ocr_confidence?.toFixed(0) || 'N/A'}%
-                    </p>
-                    <details className="text-sm">
-                      <summary className="cursor-pointer font-medium text-green-900 hover:text-green-700">
-                        Voir le texte extrait
-                      </summary>
-                      <div className="mt-2 p-3 bg-white rounded border border-green-200">
-                        <pre className="whitespace-pre-wrap text-xs text-gray-700">
-                          {selectedEducator.diploma_ocr_analysis || selectedEducator.diploma_ocr_text}
-                        </pre>
-                      </div>
-                    </details>
-                  </div>
-                )}
               </div>
 
               {/* Affichage du diplôme */}
