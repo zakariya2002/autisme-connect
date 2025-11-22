@@ -55,6 +55,7 @@ export default function BookAppointmentPage({ params }: { params: { id: string }
   const [familyNotes, setFamilyNotes] = useState('');
 
   const [availableSlots, setAvailableSlots] = useState<{ start: string; end: string }[]>([]);
+  const [fullyBookedDates, setFullyBookedDates] = useState<string[]>([]);
   const [success, setSuccess] = useState('');
   const [error, setError] = useState('');
   const [submitting, setSubmitting] = useState(false);
@@ -74,6 +75,12 @@ export default function BookAppointmentPage({ params }: { params: { id: string }
       calculateAvailableSlots();
     }
   }, [selectedDate, weeklySlots, appointments]);
+
+  useEffect(() => {
+    if (weeklySlots.length > 0) {
+      calculateFullyBookedDates();
+    }
+  }, [weeklySlots, appointments]);
 
   const checkAuth = async () => {
     const { data: { session } } = await supabase.auth.getSession();
@@ -136,21 +143,20 @@ export default function BookAppointmentPage({ params }: { params: { id: string }
     }
   };
 
-  const calculateAvailableSlots = () => {
-    const date = new Date(selectedDate + 'T00:00:00');
+  const calculateAvailableSlotsForDate = (dateStr: string) => {
+    const date = new Date(dateStr + 'T00:00:00');
     const dayOfWeek = date.getDay();
 
     // Trouver les créneaux pour ce jour
     const daySlotsTemplate = weeklySlots.filter(slot => slot.day_of_week === dayOfWeek);
 
     if (daySlotsTemplate.length === 0) {
-      setAvailableSlots([]);
-      return;
+      return [];
     }
 
     // Filtrer les créneaux déjà pris
     const dayAppointments = appointments.filter(
-      appt => appt.appointment_date === selectedDate
+      appt => appt.appointment_date === dateStr
     );
 
     const available: { start: string; end: string }[] = [];
@@ -179,7 +185,39 @@ export default function BookAppointmentPage({ params }: { params: { id: string }
       }
     });
 
-    setAvailableSlots(available);
+    return available;
+  };
+
+  const calculateAvailableSlots = () => {
+    if (!selectedDate) return;
+    const slots = calculateAvailableSlotsForDate(selectedDate);
+    setAvailableSlots(slots);
+  };
+
+  const calculateFullyBookedDates = () => {
+    const fullyBooked: string[] = [];
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+
+    // Vérifier les 90 prochains jours
+    for (let i = 0; i < 90; i++) {
+      const checkDate = new Date(today);
+      checkDate.setDate(today.getDate() + i);
+      const dateStr = checkDate.toISOString().split('T')[0];
+      const dayOfWeek = checkDate.getDay();
+
+      // Vérifier si ce jour a des créneaux disponibles
+      const hasSlots = weeklySlots.some(slot => slot.day_of_week === dayOfWeek);
+
+      if (hasSlots) {
+        const slots = calculateAvailableSlotsForDate(dateStr);
+        if (slots.length === 0) {
+          fullyBooked.push(dateStr);
+        }
+      }
+    }
+
+    setFullyBookedDates(fullyBooked);
   };
 
   // Gérer la sélection/désélection des créneaux avec remplissage automatique
@@ -417,6 +455,7 @@ export default function BookAppointmentPage({ params }: { params: { id: string }
                   setSelectedSlots([]);
                 }}
                 availableDays={getAvailableDaysOfWeek()}
+                fullyBookedDates={fullyBookedDates}
               />
               {selectedDate && (
                 <div className="mt-3 p-3 bg-blue-50 border border-blue-200 rounded-lg">
