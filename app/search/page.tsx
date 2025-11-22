@@ -212,7 +212,7 @@ export default function SearchPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-gradient-to-br from-primary-50 via-white to-blue-50">
       {/* Navigation */}
       <nav className="bg-white shadow-sm border-b border-gray-200 sticky top-0 z-50 backdrop-blur-sm bg-white/95">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -223,31 +223,43 @@ export default function SearchPage() {
             <div className="md:hidden">
               <MobileMenu />
             </div>
-            <div className="hidden md:flex items-center space-x-1">
+            <div className="hidden md:flex items-center gap-2">
               {isAuthenticated ? (
                 <>
                   <Link
                     href={userRole === 'educator' ? '/dashboard/educator' : '/dashboard/family'}
-                    className="text-gray-700 hover:text-primary-600 px-4 py-2 rounded-md font-medium transition-colors"
+                    className="text-gray-700 hover:text-primary-600 px-3 lg:px-4 py-2 rounded-md font-medium transition-colors text-sm lg:text-base"
                   >
                     Tableau de bord
                   </Link>
-                  <Link href="/messages" className="text-gray-700 hover:text-primary-600 px-4 py-2 rounded-md font-medium transition-colors">
+                  <Link href="/messages" className="text-gray-700 hover:text-primary-600 px-3 lg:px-4 py-2 rounded-md font-medium transition-colors text-sm lg:text-base">
                     Messages
                   </Link>
                 </>
               ) : (
                 <>
-                  <Link href="/search" className="text-gray-700 hover:text-primary-600 px-4 py-2 rounded-md font-medium transition-colors">
+                  <Link href="/about" className="text-gray-700 hover:text-primary-600 px-3 lg:px-4 py-2 rounded-md font-medium transition-colors text-sm lg:text-base">
+                    Qui sommes-nous ?
+                  </Link>
+                  <Link href="/search" className="text-gray-700 hover:text-primary-600 px-3 lg:px-4 py-2 rounded-md font-medium transition-colors text-sm lg:text-base inline-flex items-center gap-1.5">
+                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                    </svg>
                     Trouver un éducateur
                   </Link>
-                  <Link href="/pricing" className="text-gray-700 hover:text-primary-600 px-4 py-2 rounded-md font-medium transition-colors">
+                  <Link href="/pricing" className="text-gray-700 hover:text-primary-600 px-2 lg:px-4 py-2 rounded-md font-medium transition-colors text-sm lg:text-base inline-flex items-center gap-1.5">
+                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
                     Tarifs
                   </Link>
-                  <Link href="/auth/login" className="text-gray-700 hover:text-primary-600 px-4 py-2 rounded-md font-medium transition-colors">
+                  <Link href="/contact" className="text-gray-700 hover:text-primary-600 px-2 lg:px-4 py-2 rounded-md font-medium transition-colors text-sm lg:text-base">
+                    Contact
+                  </Link>
+                  <Link href="/auth/login" className="text-gray-700 hover:text-primary-600 px-2 lg:px-4 py-2 rounded-md font-medium transition-colors text-sm lg:text-base">
                     Connexion
                   </Link>
-                  <Link href="/auth/signup" className="bg-primary-600 text-white px-5 py-2.5 rounded-md hover:bg-primary-700 font-medium transition-colors shadow-sm">
+                  <Link href="/auth/signup" className="bg-primary-600 text-white px-5 py-2.5 rounded-md hover:bg-primary-700 font-medium transition-colors shadow-sm text-sm lg:text-base">
                     Inscription
                   </Link>
                 </>
@@ -257,20 +269,43 @@ export default function SearchPage() {
         </div>
       </nav>
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-8">
-        <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-4 sm:mb-8">
-          Trouver un éducateur spécialisé
-        </h1>
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-10 lg:py-12">
+        {/* Header Section Amélioré */}
+        <div className="text-center mb-8 sm:mb-12">
+          <div className="inline-flex items-center gap-2 bg-white shadow-lg text-primary-700 px-4 sm:px-6 py-2.5 sm:py-3 rounded-full text-xs sm:text-sm font-bold mb-4 sm:mb-6 border-2 border-primary-200">
+            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+            </svg>
+            <span>Recherche d'éducateurs qualifiés</span>
+          </div>
+          <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-gray-900 mb-3 sm:mb-4">
+            Trouvez l'éducateur
+            <span className="text-primary-600 block mt-1 sm:mt-2">qui correspond à vos besoins</span>
+          </h1>
+          <p className="text-sm sm:text-base lg:text-lg text-gray-600 max-w-2xl mx-auto">
+            Parcourez notre réseau de professionnels vérifiés et trouvez celui qui saura accompagner votre famille avec expertise et bienveillance.
+          </p>
+        </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-4 gap-4 sm:gap-8">
+        <div className="grid grid-cols-1 lg:grid-cols-4 gap-6 sm:gap-8">
           {/* Filtres */}
           <div className="lg:col-span-1">
-            <div className="bg-white rounded-lg shadow p-4 sm:p-6 lg:sticky lg:top-8">
-              <h2 className="text-base sm:text-lg font-semibold text-gray-900 mb-3 sm:mb-4">Filtres</h2>
+            <div className="bg-white rounded-xl shadow-lg p-5 sm:p-6 lg:sticky lg:top-24 border border-gray-100">
+              <div className="flex items-center gap-2 mb-4 sm:mb-5">
+                <svg className="w-5 h-5 text-primary-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4" />
+                </svg>
+                <h2 className="text-base sm:text-lg font-bold text-gray-900">Affiner ma recherche</h2>
+              </div>
 
-              <div className="space-y-4">
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
+              <div className="space-y-5">
+                {/* Localisation */}
+                <div className="space-y-2">
+                  <label className="flex items-center gap-2 text-sm font-semibold text-gray-700">
+                    <svg className="w-4 h-4 text-primary-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                    </svg>
                     Localisation
                   </label>
                   <input
@@ -279,12 +314,12 @@ export default function SearchPage() {
                     value={filters.location}
                     onChange={(e) => setFilters({ ...filters, location: e.target.value, nearMe: false })}
                     disabled={filters.nearMe}
-                    className="w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:ring-primary-500 focus:border-primary-500 disabled:bg-gray-100 disabled:cursor-not-allowed"
+                    className="w-full border border-gray-300 rounded-lg shadow-sm py-2.5 px-3 focus:ring-2 focus:ring-primary-500 focus:border-primary-500 disabled:bg-gray-100 disabled:cursor-not-allowed transition-all"
                   />
                   <button
                     onClick={handleNearMe}
                     disabled={geolocating}
-                    className="mt-2 w-full flex items-center justify-center gap-2 bg-green-600 text-white py-2 px-4 rounded-md hover:bg-green-700 disabled:opacity-50 disabled:cursor-not-allowed"
+                    className="mt-2 w-full flex items-center justify-center gap-2 bg-gradient-to-r from-green-600 to-green-700 text-white py-2.5 px-4 rounded-lg hover:from-green-700 hover:to-green-800 disabled:opacity-50 disabled:cursor-not-allowed transition-all shadow-md font-medium"
                   >
                     {geolocating ? (
                       <>
@@ -302,84 +337,114 @@ export default function SearchPage() {
                     )}
                   </button>
                   {filters.nearMe && (
-                    <p className="mt-1 text-xs text-green-600">
+                    <p className="mt-1 text-xs text-green-600 font-medium">
                       ✓ Recherche par proximité activée
                     </p>
                   )}
                 </div>
 
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                {/* Certifications */}
+                <div className="space-y-2">
+                  <label className="flex items-center gap-2 text-sm font-semibold text-gray-700">
+                    <svg className="w-4 h-4 text-primary-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z" />
+                    </svg>
                     Certifications
                   </label>
-                  <div className="space-y-2">
+                  <div className="space-y-2.5">
                     {(['ABA', 'TEACCH', 'PECS'] as CertificationType[]).map(cert => (
-                      <label key={cert} className="flex items-center">
+                      <label key={cert} className="flex items-center cursor-pointer group">
                         <input
                           type="checkbox"
                           checked={filters.certifications.includes(cert)}
                           onChange={() => handleCertificationToggle(cert)}
-                          className="h-4 w-4 text-primary-600 focus:ring-primary-500 border-gray-300 rounded"
+                          className="h-4 w-4 text-primary-600 focus:ring-primary-500 border-gray-300 rounded cursor-pointer"
                         />
-                        <span className="ml-2 text-sm text-gray-700">{cert}</span>
+                        <span className="ml-2.5 text-sm text-gray-700 group-hover:text-primary-600 transition-colors">{cert}</span>
                       </label>
                     ))}
                   </div>
                 </div>
 
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Expérience minimum (années)
+                {/* Expérience */}
+                <div className="space-y-2">
+                  <label className="flex items-center gap-2 text-sm font-semibold text-gray-700">
+                    <svg className="w-4 h-4 text-primary-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                    </svg>
+                    Expérience minimum
                   </label>
-                  <input
-                    type="number"
-                    min="0"
-                    value={filters.minExperience}
-                    onChange={(e) => setFilters({ ...filters, minExperience: e.target.value })}
-                    className="w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:ring-primary-500 focus:border-primary-500"
-                  />
+                  <div className="relative">
+                    <input
+                      type="number"
+                      min="0"
+                      placeholder="Nombre d'années"
+                      value={filters.minExperience}
+                      onChange={(e) => setFilters({ ...filters, minExperience: e.target.value })}
+                      className="w-full border border-gray-300 rounded-lg shadow-sm py-2.5 px-3 focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-all"
+                    />
+                    <span className="absolute right-3 top-1/2 -translate-y-1/2 text-sm text-gray-400">ans</span>
+                  </div>
                 </div>
 
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Tarif maximum (€/h)
+                {/* Tarif */}
+                <div className="space-y-2">
+                  <label className="flex items-center gap-2 text-sm font-semibold text-gray-700">
+                    <svg className="w-4 h-4 text-primary-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                    Tarif maximum
                   </label>
-                  <input
-                    type="number"
-                    min="0"
-                    step="0.01"
-                    value={filters.maxRate}
-                    onChange={(e) => setFilters({ ...filters, maxRate: e.target.value })}
-                    className="w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:ring-primary-500 focus:border-primary-500"
-                  />
+                  <div className="relative">
+                    <input
+                      type="number"
+                      min="0"
+                      step="0.01"
+                      placeholder="Tarif horaire max"
+                      value={filters.maxRate}
+                      onChange={(e) => setFilters({ ...filters, maxRate: e.target.value })}
+                      className="w-full border border-gray-300 rounded-lg shadow-sm py-2.5 px-3 focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-all"
+                    />
+                    <span className="absolute right-3 top-1/2 -translate-y-1/2 text-sm text-gray-400">€/h</span>
+                  </div>
                 </div>
 
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                {/* Note */}
+                <div className="space-y-2">
+                  <label className="flex items-center gap-2 text-sm font-semibold text-gray-700">
+                    <svg className="w-4 h-4 text-primary-600" fill="currentColor" viewBox="0 0 20 20">
+                      <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                    </svg>
                     Note minimum
                   </label>
                   <select
                     value={filters.minRating}
                     onChange={(e) => setFilters({ ...filters, minRating: e.target.value })}
-                    className="w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:ring-primary-500 focus:border-primary-500"
+                    className="w-full border border-gray-300 rounded-lg shadow-sm py-2.5 px-3 focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-all cursor-pointer"
                   >
-                    <option value="">Toutes</option>
+                    <option value="">Toutes les notes</option>
                     <option value="4">4+ ⭐</option>
                     <option value="3">3+ ⭐</option>
                   </select>
                 </div>
 
-                <div className="pt-4 space-y-2">
+                <div className="pt-5 space-y-3 border-t border-gray-200">
                   <button
                     onClick={handleSearch}
-                    className="w-full bg-primary-600 text-white py-2 px-4 rounded-md hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500"
+                    className="w-full bg-gradient-to-r from-primary-600 to-primary-700 text-white py-3 px-4 rounded-lg hover:from-primary-700 hover:to-primary-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 font-semibold shadow-md hover:shadow-lg transition-all flex items-center justify-center gap-2"
                   >
+                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                    </svg>
                     Rechercher
                   </button>
                   <button
                     onClick={resetFilters}
-                    className="w-full bg-white text-gray-700 py-2 px-4 rounded-md border border-gray-300 hover:bg-gray-50"
+                    className="w-full bg-white text-gray-700 py-2.5 px-4 rounded-lg border-2 border-gray-300 hover:bg-gray-50 hover:border-gray-400 font-medium transition-all flex items-center justify-center gap-2"
                   >
+                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                    </svg>
                     Réinitialiser
                   </button>
                 </div>
@@ -390,39 +455,50 @@ export default function SearchPage() {
           {/* Résultats */}
           <div className="lg:col-span-3">
             {loading ? (
-              <div className="text-center py-12">
-                <p className="text-gray-500">Chargement...</p>
+              <div className="text-center py-16 bg-white rounded-xl shadow-lg">
+                <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary-600 mx-auto mb-4"></div>
+                <p className="text-gray-600 font-medium">Recherche en cours...</p>
               </div>
             ) : educators.length === 0 ? (
-              <div className="text-center py-12 bg-white rounded-lg shadow">
-                <p className="text-gray-500">Aucun éducateur trouvé avec ces critères.</p>
+              <div className="text-center py-16 bg-white rounded-xl shadow-lg border border-gray-100">
+                <svg className="w-16 h-16 text-gray-300 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+                <p className="text-gray-600 font-medium mb-2">Aucun éducateur trouvé</p>
+                <p className="text-sm text-gray-500">Essayez de modifier vos critères de recherche</p>
               </div>
             ) : (
-              <div className="space-y-3 sm:space-y-4">
-                <p className="text-xs sm:text-sm text-gray-600 mb-3 sm:mb-4">
-                  {educators.length} éducateur(s) trouvé(s)
-                  {filters.nearMe && ' près de vous (triés par distance)'}
-                </p>
+              <div className="space-y-4 sm:space-y-5">
+                <div className="bg-white rounded-lg shadow-sm px-4 py-3 border border-gray-100">
+                  <p className="text-sm sm:text-base font-semibold text-gray-700 flex items-center gap-2">
+                    <svg className="w-5 h-5 text-primary-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                    {educators.length} éducateur(s) trouvé(s)
+                    {filters.nearMe && ' près de vous'}
+                  </p>
+                </div>
                 {educators.map((educator) => (
-                  <div key={educator.id} className="bg-white rounded-lg shadow p-4 sm:p-6 hover:shadow-lg transition">
-                    <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-4">
-                      <div className="flex gap-3 sm:gap-4">
-                        {/* Photo de profil */}
-                        <div className="flex-shrink-0">
-                          {educator.avatar_url ? (
-                            <img
-                              src={educator.avatar_url}
-                              alt={`${educator.first_name} ${educator.last_name}`}
-                              className="w-16 h-16 sm:w-24 sm:h-24 rounded-full object-cover border-2 border-primary-200"
-                            />
-                          ) : (
-                            <div className="w-16 h-16 sm:w-24 sm:h-24 rounded-full bg-primary-100 flex items-center justify-center border-2 border-primary-200">
-                              <svg className="w-8 h-8 sm:w-12 sm:h-12 text-primary-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-                              </svg>
-                            </div>
-                          )}
-                        </div>
+                  <div key={educator.id} className="bg-white rounded-xl shadow-md hover:shadow-xl transition-all duration-300 border border-gray-100 overflow-hidden group">
+                    <div className="p-5 sm:p-6">
+                      <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-4">
+                        <div className="flex gap-4 sm:gap-5">
+                          {/* Photo de profil */}
+                          <div className="flex-shrink-0">
+                            {educator.avatar_url ? (
+                              <img
+                                src={educator.avatar_url}
+                                alt={`${educator.first_name} ${educator.last_name}`}
+                                className="w-20 h-20 sm:w-28 sm:h-28 rounded-2xl object-cover border-4 border-primary-100 shadow-lg group-hover:border-primary-200 transition-all"
+                              />
+                            ) : (
+                              <div className="w-20 h-20 sm:w-28 sm:h-28 rounded-2xl bg-gradient-to-br from-primary-100 to-primary-200 flex items-center justify-center border-4 border-primary-100 shadow-lg group-hover:border-primary-200 transition-all">
+                                <svg className="w-10 h-10 sm:w-14 sm:h-14 text-primary-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                                </svg>
+                              </div>
+                            )}
+                          </div>
 
                         <div className="flex-1 min-w-0">
                           <div className="flex items-center gap-2 flex-wrap">
@@ -496,15 +572,29 @@ export default function SearchPage() {
                             <p className="text-sm sm:text-base text-gray-700 mt-2 sm:mt-3 line-clamp-2 sm:line-clamp-3">{educator.bio}</p>
                           )}
 
-                          <div className="mt-3 sm:mt-4 flex items-center gap-3 sm:gap-6 text-xs sm:text-sm text-gray-600 flex-wrap">
+                          <div className="mt-3 sm:mt-4 flex items-center gap-2 sm:gap-3 text-xs sm:text-sm flex-wrap">
                             {educator.distance !== undefined && (
-                              <span className="font-semibold text-green-600">
-                                📍 {educator.distance} km
+                              <span className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-green-50 text-green-700 rounded-lg font-semibold border border-green-200">
+                                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                                </svg>
+                                {educator.distance} km
                               </span>
                             )}
-                            <span>📅 {educator.years_of_experience} ans</span>
+                            <span className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-blue-50 text-blue-700 rounded-lg font-medium border border-blue-200">
+                              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                              </svg>
+                              {educator.years_of_experience} ans
+                            </span>
                             {educator.hourly_rate && (
-                              <span>💰 {educator.hourly_rate}€/h</span>
+                              <span className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-purple-50 text-purple-700 rounded-lg font-medium border border-purple-200">
+                                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                </svg>
+                                {educator.hourly_rate}€/h
+                              </span>
                             )}
                           </div>
 
@@ -526,20 +616,27 @@ export default function SearchPage() {
                         </div>
                       </div>
 
-                      <div className="flex sm:flex-col gap-2 w-full sm:w-auto sm:ml-4">
+                      <div className="flex sm:flex-col gap-2.5 w-full sm:w-auto sm:ml-4">
                         <Link
                           href={`/educator/${educator.id}`}
-                          className="flex-1 sm:flex-none px-3 sm:px-4 py-2 bg-primary-600 text-white rounded-md hover:bg-primary-700 text-center text-sm sm:text-base whitespace-nowrap"
+                          className="flex-1 sm:flex-none inline-flex items-center justify-center gap-2 px-4 sm:px-5 py-2.5 bg-gradient-to-r from-primary-600 to-primary-700 text-white rounded-lg hover:from-primary-700 hover:to-primary-800 text-center text-sm sm:text-base font-semibold shadow-md hover:shadow-lg transition-all whitespace-nowrap"
                         >
+                          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                          </svg>
                           Voir le profil
                         </Link>
                         <Link
                           href={`/messages?educator=${educator.id}`}
-                          className="flex-1 sm:flex-none px-3 sm:px-4 py-2 bg-white text-primary-600 border border-primary-600 rounded-md hover:bg-primary-50 text-center text-sm sm:text-base whitespace-nowrap"
+                          className="flex-1 sm:flex-none inline-flex items-center justify-center gap-2 px-4 sm:px-5 py-2.5 bg-white text-primary-600 border-2 border-primary-600 rounded-lg hover:bg-primary-50 text-center text-sm sm:text-base font-semibold transition-all whitespace-nowrap"
                         >
+                          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+                          </svg>
                           Contacter
                         </Link>
                       </div>
+                    </div>
                     </div>
                   </div>
                 ))}
