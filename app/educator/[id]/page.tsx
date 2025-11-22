@@ -575,43 +575,15 @@ export default function EducatorPublicProfile({ params }: { params: { id: string
                         </span>
                       </div>
 
-                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
-                        {educator.region && (
-                          <div className="flex items-center text-sm">
-                            <svg className="w-5 h-5 mr-2 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-                            </svg>
-                            <span className="text-gray-700"><strong>Région:</strong> {educator.region}</span>
-                          </div>
-                        )}
-
-                        {educator.diploma_number && (
-                          <div className="flex items-center text-sm">
-                            <svg className="w-5 h-5 mr-2 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z" />
-                            </svg>
-                            <span className="text-gray-700"><strong>N°:</strong> {educator.diploma_number}</span>
-                          </div>
-                        )}
-
-                        {educator.diploma_delivery_date && (
-                          <div className="flex items-center text-sm">
-                            <svg className="w-5 h-5 mr-2 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                            </svg>
-                            <span className="text-gray-700"><strong>Délivré le:</strong> {educator.diploma_delivery_date}</span>
-                          </div>
-                        )}
-
-                        {educator.dreets_response_date && (
-                          <div className="flex items-center text-sm">
-                            <svg className="w-5 h-5 mr-2 text-green-600" fill="currentColor" viewBox="0 0 20 20">
-                              <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
-                            </svg>
-                            <span className="text-green-700"><strong>Vérifié le:</strong> {new Date(educator.dreets_response_date).toLocaleDateString('fr-FR')}</span>
-                          </div>
-                        )}
-                      </div>
+                      {/* Afficher uniquement la date de vérification */}
+                      {educator.dreets_response_date && (
+                        <div className="flex items-center mt-4">
+                          <svg className="w-5 h-5 mr-2 text-green-600" fill="currentColor" viewBox="0 0 20 20">
+                            <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                          </svg>
+                          <span className="text-green-700 text-sm"><strong>Vérifié le:</strong> {new Date(educator.dreets_response_date).toLocaleDateString('fr-FR')}</span>
+                        </div>
+                      )}
                     </div>
                   </div>
 
