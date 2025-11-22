@@ -401,7 +401,6 @@ export default function VerifyDiplomasPage() {
                       <p><strong>Email:</strong> {educator.email}</p>
                       <p><strong>Téléphone:</strong> {educator.phone || 'Non renseigné'}</p>
                       <p><strong>Spécialisation:</strong> {educator.specialization || 'Non renseignée'}</p>
-                      <p><strong>Région:</strong> {educator.region || 'Non renseignée'}</p>
 
                       {/* Informations diplôme */}
                       {educator.diploma_number && (
