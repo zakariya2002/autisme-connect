@@ -416,7 +416,7 @@ export default function DiplomePage() {
                 <EducatorMobileMenu profile={profile} isPremium={isPremium} onLogout={handleLogout} />
               </div>
               <div className="hidden md:block">
-                <Logo href="/dashboard/educator" />
+                <Logo />
               </div>
             </div>
 

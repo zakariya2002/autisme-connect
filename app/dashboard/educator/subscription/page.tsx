@@ -194,7 +194,7 @@ export default function SubscriptionManagementPage() {
                 </div>
                 {/* Logo */}
                 <div className="hidden md:block">
-                  <Logo href="/dashboard/educator" />
+                  <Logo />
                 </div>
               </div>
               {/* Button desktop */}
@@ -241,7 +241,7 @@ export default function SubscriptionManagementPage() {
               </div>
               {/* Logo */}
               <div className="hidden md:block">
-                <Logo href="/dashboard/educator" />
+                <Logo />
               </div>
             </div>
             {/* Menu desktop - caché sur mobile */}

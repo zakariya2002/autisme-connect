@@ -240,7 +240,7 @@ export default function FamilyProfilePage() {
               </div>
               {/* Logo */}
               <div className="hidden md:block">
-                <Logo href="/dashboard/family" />
+                <Logo />
               </div>
             </div>
             {/* Menu desktop - caché sur mobile */}

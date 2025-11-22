@@ -491,7 +491,6 @@ export default function VerifyDiplomasPage() {
                 <div className="bg-gray-50 p-4 rounded-lg">
                   <h3 className="font-semibold text-gray-900 mb-2">📋 Informations du diplôme</h3>
                   <div className="space-y-1 text-sm">
-                    <p><strong>Région:</strong> {selectedEducator.region || 'Non renseignée'}</p>
                     <p><strong>N° diplôme:</strong> {selectedEducator.diploma_number || 'Non renseigné'}</p>
                     <p><strong>Date de délivrance:</strong> {selectedEducator.diploma_delivery_date || 'Non renseignée'}</p>
                     <p><strong>Soumis le:</strong> {selectedEducator.diploma_submitted_at

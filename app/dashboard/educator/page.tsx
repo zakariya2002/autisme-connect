@@ -128,7 +128,7 @@ export default function EducatorDashboard() {
               </div>
               {/* Logo */}
               <div className="hidden md:block">
-                <Logo href="/dashboard/educator" />
+                <Logo />
               </div>
             </div>
             {/* Menu desktop - caché sur mobile */}

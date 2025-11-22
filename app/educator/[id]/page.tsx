@@ -6,6 +6,7 @@ import Link from 'next/link';
 import { supabase } from '@/lib/supabase';
 import Logo from '@/components/Logo';
 import PublicMobileMenu from '@/components/PublicMobileMenu';
+import HelpButton from '@/components/HelpButton';
 
 interface EducatorProfile {
   id: string;
@@ -373,10 +374,10 @@ export default function EducatorPublicProfile({ params }: { params: { id: string
                       className="w-full h-full rounded-full object-cover"
                     />
                   ) : (
-                    <div className="w-full h-full rounded-full bg-gradient-to-br from-gray-100 to-gray-200 flex items-center justify-center">
-                      <svg className="w-20 h-20 text-gray-400" fill="currentColor" viewBox="0 0 24 24">
-                        <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z" />
-                      </svg>
+                    <div className="w-full h-full rounded-full bg-gradient-to-br from-primary-500 to-primary-700 flex items-center justify-center shadow-inner">
+                      <span className="text-5xl font-bold text-white">
+                        {educator.first_name?.[0]?.toUpperCase()}{educator.last_name?.[0]?.toUpperCase()}
+                      </span>
                     </div>
                   )}
                 </div>
@@ -386,16 +387,23 @@ export default function EducatorPublicProfile({ params }: { params: { id: string
               <div className="flex-1 text-center sm:text-left pb-2">
                 <div className="mb-4">
                   <div className="flex items-center gap-3 flex-wrap justify-center sm:justify-start">
-                    <h1 className="text-3xl sm:text-4xl font-bold text-gray-900 leading-tight">
-                      {educator.first_name?.trim() && (
-                        <span className="text-primary-600">
-                          {capitalizeFirstName(educator.first_name)}{' '}
+                    <div className="flex items-center gap-3">
+                      <div className="flex-shrink-0 w-12 h-12 rounded-full bg-gradient-to-br from-primary-500 to-primary-700 flex items-center justify-center shadow-lg ring-2 ring-white">
+                        <span className="text-lg font-bold text-white">
+                          {educator.first_name?.[0]?.toUpperCase()}{educator.last_name?.[0]?.toUpperCase()}
                         </span>
-                      )}
-                      <span className="text-gray-900">
-                        {formatLastName(educator.last_name)}
-                      </span>
-                    </h1>
+                      </div>
+                      <h1 className="text-3xl sm:text-4xl font-bold text-gray-900 leading-tight">
+                        {educator.first_name?.trim() && (
+                          <span className="text-primary-600">
+                            {capitalizeFirstName(educator.first_name)}{' '}
+                          </span>
+                        )}
+                        <span className="text-gray-900">
+                          {formatLastName(educator.last_name)}
+                        </span>
+                      </h1>
+                    </div>
                     {isPremium && (
                       <span className="inline-flex items-center gap-1 px-3 py-1 bg-gradient-to-r from-yellow-400 to-yellow-500 text-white text-sm font-bold rounded-full shadow-md">
                         <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
@@ -934,6 +942,9 @@ export default function EducatorPublicProfile({ params }: { params: { id: string
           </div>
         </div>
       </div>
+
+      {/* Bouton d'aide flottant */}
+      <HelpButton />
     </div>
   );
 }

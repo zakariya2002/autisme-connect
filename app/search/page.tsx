@@ -16,6 +16,8 @@ export default function SearchPage() {
   const [geolocating, setGeolocating] = useState(false);
   const [userPosition, setUserPosition] = useState<{ latitude: number; longitude: number } | null>(null);
   const [userCity, setUserCity] = useState<string>('');
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [userRole, setUserRole] = useState<string | null>(null);
   const [filters, setFilters] = useState({
     location: '',
     certifications: [] as CertificationType[],
@@ -27,7 +29,14 @@ export default function SearchPage() {
 
   useEffect(() => {
     fetchEducators();
+    checkAuth();
   }, []);
+
+  const checkAuth = async () => {
+    const { data: { session } } = await supabase.auth.getSession();
+    setIsAuthenticated(!!session);
+    setUserRole(session?.user?.user_metadata?.role || null);
+  };
 
   const fetchEducators = async () => {
     setLoading(true);
@@ -205,7 +214,7 @@ export default function SearchPage() {
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Navigation */}
-      <nav className="bg-white shadow-sm border-b border-gray-200">
+      <nav className="bg-white shadow-sm border-b border-gray-200 sticky top-0 z-50 backdrop-blur-sm bg-white/95">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between h-16 items-center">
             <div className="hidden md:block">
@@ -215,18 +224,34 @@ export default function SearchPage() {
               <MobileMenu />
             </div>
             <div className="hidden md:flex items-center space-x-1">
-              <Link href="/search" className="text-gray-700 hover:text-primary-600 px-4 py-2 rounded-md font-medium transition-colors">
-                Trouver un éducateur
-              </Link>
-              <Link href="/pricing" className="text-gray-700 hover:text-primary-600 px-4 py-2 rounded-md font-medium transition-colors">
-                Tarifs
-              </Link>
-              <Link href="/auth/login" className="text-gray-700 hover:text-primary-600 px-4 py-2 rounded-md font-medium transition-colors">
-                Connexion
-              </Link>
-              <Link href="/auth/signup" className="bg-primary-600 text-white px-5 py-2.5 rounded-md hover:bg-primary-700 font-medium transition-colors shadow-sm">
-                Inscription
-              </Link>
+              {isAuthenticated ? (
+                <>
+                  <Link
+                    href={userRole === 'educator' ? '/dashboard/educator' : '/dashboard/family'}
+                    className="text-gray-700 hover:text-primary-600 px-4 py-2 rounded-md font-medium transition-colors"
+                  >
+                    Tableau de bord
+                  </Link>
+                  <Link href="/messages" className="text-gray-700 hover:text-primary-600 px-4 py-2 rounded-md font-medium transition-colors">
+                    Messages
+                  </Link>
+                </>
+              ) : (
+                <>
+                  <Link href="/search" className="text-gray-700 hover:text-primary-600 px-4 py-2 rounded-md font-medium transition-colors">
+                    Trouver un éducateur
+                  </Link>
+                  <Link href="/pricing" className="text-gray-700 hover:text-primary-600 px-4 py-2 rounded-md font-medium transition-colors">
+                    Tarifs
+                  </Link>
+                  <Link href="/auth/login" className="text-gray-700 hover:text-primary-600 px-4 py-2 rounded-md font-medium transition-colors">
+                    Connexion
+                  </Link>
+                  <Link href="/auth/signup" className="bg-primary-600 text-white px-5 py-2.5 rounded-md hover:bg-primary-700 font-medium transition-colors shadow-sm">
+                    Inscription
+                  </Link>
+                </>
+              )}
             </div>
           </div>
         </div>

@@ -6,6 +6,7 @@ import Link from 'next/link';
 import { supabase } from '@/lib/supabase';
 import Logo from '@/components/Logo';
 import PublicMobileMenu from '@/components/PublicMobileMenu';
+import HelpButton from '@/components/HelpButton';
 
 interface FamilyProfile {
   id: string;
@@ -206,9 +207,9 @@ export default function FamilyPublicProfile({ params }: { params: { id: string }
                     className="h-24 w-24 rounded-full object-cover border-4 border-white shadow-lg"
                   />
                 ) : (
-                  <div className="h-24 w-24 rounded-full bg-white flex items-center justify-center border-4 border-white shadow-lg">
-                    <span className="text-3xl font-bold text-primary-600">
-                      {family.first_name?.[0]}{family.last_name?.[0]}
+                  <div className="h-24 w-24 rounded-full bg-gradient-to-br from-primary-500 to-primary-700 flex items-center justify-center border-4 border-white shadow-lg">
+                    <span className="text-3xl font-bold text-white">
+                      {family.first_name?.[0]?.toUpperCase()}{family.last_name?.[0]?.toUpperCase()}
                     </span>
                   </div>
                 )}
@@ -216,9 +217,16 @@ export default function FamilyPublicProfile({ params }: { params: { id: string }
 
               {/* Informations de base */}
               <div className="flex-1">
-                <h1 className="text-3xl font-bold text-white mb-2">
-                  {getFormattedFullName(family.first_name, family.last_name)}
-                </h1>
+                <div className="flex items-center gap-3 mb-2">
+                  <div className="flex-shrink-0 w-12 h-12 rounded-full bg-gradient-to-br from-primary-500 to-primary-700 flex items-center justify-center shadow-lg ring-2 ring-white">
+                    <span className="text-lg font-bold text-white">
+                      {family.first_name?.[0]?.toUpperCase()}{family.last_name?.[0]?.toUpperCase()}
+                    </span>
+                  </div>
+                  <h1 className="text-3xl font-bold text-white">
+                    {getFormattedFullName(family.first_name, family.last_name)}
+                  </h1>
+                </div>
                 <div className="flex items-center text-white/90">
                   <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
@@ -303,6 +311,9 @@ export default function FamilyPublicProfile({ params }: { params: { id: string }
           </div>
         </div>
       </div>
+
+      {/* Bouton d'aide flottant */}
+      <HelpButton />
     </div>
   );
 }

@@ -26,15 +26,24 @@ export default function Logo({ href = '/', className = '', iconSize = 'md', show
     lg: 'text-3xl'
   };
 
+  const initialsSize = {
+    sm: 'text-xs',
+    md: 'text-sm',
+    lg: 'text-base'
+  };
+
   return (
-    <Link href={href} className={`font-bold text-primary-600 flex items-center ${className}`}>
-      <div className={`${sizeClasses[iconSize]} bg-gradient-to-br from-primary-500 to-primary-600 rounded-lg flex items-center justify-center ${showText ? 'mr-2' : ''}`}>
-        <svg className={`${iconSizeClasses[iconSize]} text-white`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
-        </svg>
+    <Link href={href} className={`flex items-center group ${className}`}>
+      {/* Logo professionnel médico-social : cercle avec initiales AC */}
+      <div className={`${sizeClasses[iconSize]} bg-gradient-to-br from-primary-600 to-blue-600 rounded-full flex items-center justify-center shadow-md group-hover:shadow-lg transition-all border-2 border-white ${showText ? 'mr-2.5' : ''}`}>
+        <span className={`text-white font-extrabold ${initialsSize[iconSize]}`}>AC</span>
       </div>
       {showText && (
-        <span className={textSizeClasses[iconSize]}>Autisme Connect</span>
+        <div className="flex flex-col leading-tight">
+          <span className={`${textSizeClasses[iconSize]} font-bold text-primary-700 group-hover:text-primary-800 transition-colors`}>
+            Autisme Connect
+          </span>
+        </div>
       )}
     </Link>
   );

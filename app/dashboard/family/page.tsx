@@ -113,7 +113,7 @@ export default function FamilyDashboard() {
               </div>
               {/* Logo */}
               <div className="hidden md:block">
-                <Logo href="/dashboard/family" />
+                <Logo />
               </div>
             </div>
             {/* Menu desktop - caché sur mobile */}
@@ -131,10 +131,19 @@ export default function FamilyDashboard() {
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="mb-8">
-          <h1 className="text-3xl font-bold text-gray-900">
-            Bienvenue, {profile?.first_name}
-          </h1>
-          <p className="text-gray-600 mt-1">Tableau de bord famille</p>
+          <div className="flex items-center gap-3">
+            <div className="h-20 w-20 rounded-full bg-primary-100 flex items-center justify-center border-2 border-primary-200">
+              <span className="text-primary-600 font-semibold text-2xl">
+                {profile?.first_name?.[0]?.toUpperCase()}{profile?.last_name?.[0]?.toUpperCase()}
+              </span>
+            </div>
+            <div>
+              <h1 className="text-3xl font-bold text-gray-900">
+                Bienvenue, {profile?.first_name}
+              </h1>
+              <p className="text-gray-600 mt-1">Tableau de bord famille</p>
+            </div>
+          </div>
         </div>
 
         {/* Stats */}
