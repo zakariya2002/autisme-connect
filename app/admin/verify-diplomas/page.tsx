@@ -402,14 +402,6 @@ export default function VerifyDiplomasPage() {
                       <p><strong>Téléphone:</strong> {educator.phone || 'Non renseigné'}</p>
                       <p><strong>Spécialisation:</strong> {educator.specialization || 'Non renseignée'}</p>
 
-                      {/* Informations diplôme */}
-                      {educator.diploma_number && (
-                        <p><strong>N° diplôme:</strong> {educator.diploma_number}</p>
-                      )}
-                      {educator.diploma_delivery_date && (
-                        <p><strong>Date de délivrance:</strong> {educator.diploma_delivery_date}</p>
-                      )}
-
                       {/* Dates importantes */}
                       {educator.diploma_submitted_at && (
                         <p><strong>📤 Soumis le:</strong> {new Date(educator.diploma_submitted_at).toLocaleDateString('fr-FR', {
