@@ -445,28 +445,43 @@ export default function MessagesPage() {
                       const isOtherEducator = selectedConversation.educator_profiles?.id === other?.id;
                       const isOtherFamily = selectedConversation.family_profiles?.id === other?.id;
                       const profileUrl = isOtherEducator ? `/educator/${other?.id}` : (isOtherFamily ? `/family/${other?.id}` : null);
+                      const appointmentUrl = isOtherEducator ? `/educator/${other?.id}/book-appointment` : (isOtherFamily ? `/family/${other?.id}/request-appointment` : null);
+                      const appointmentLabel = isOtherEducator ? 'Demander un rendez-vous' : 'Proposer un rendez-vous';
 
                       return (
-                        <div className="flex items-center gap-3">
-                          <Avatar participant={other} size="lg" />
-                          <div>
-                            {profileUrl ? (
-                              <Link href={profileUrl}>
-                                <h3 className="text-lg font-semibold text-gray-900 hover:text-primary-600 cursor-pointer transition-colors">
+                        <div className="flex items-center justify-between gap-3">
+                          <div className="flex items-center gap-3">
+                            <Avatar participant={other} size="lg" />
+                            <div>
+                              {profileUrl ? (
+                                <Link href={profileUrl}>
+                                  <h3 className="text-lg font-semibold text-gray-900 hover:text-primary-600 cursor-pointer transition-colors">
+                                    {other?.first_name || 'Utilisateur'}{' '}
+                                    {other?.last_name || ''}
+                                  </h3>
+                                </Link>
+                              ) : (
+                                <h3 className="text-lg font-semibold text-gray-900">
                                   {other?.first_name || 'Utilisateur'}{' '}
                                   {other?.last_name || ''}
                                 </h3>
-                              </Link>
-                            ) : (
-                              <h3 className="text-lg font-semibold text-gray-900">
-                                {other?.first_name || 'Utilisateur'}{' '}
-                                {other?.last_name || ''}
-                              </h3>
-                            )}
-                            <p className="text-sm text-gray-500">
-                              {other?.location || 'Localisation non renseignée'}
-                            </p>
+                              )}
+                              <p className="text-sm text-gray-500">
+                                {other?.location || 'Localisation non renseignée'}
+                              </p>
+                            </div>
                           </div>
+                          {appointmentUrl && (
+                            <Link
+                              href={appointmentUrl}
+                              className="hidden sm:inline-flex items-center px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 font-medium transition-colors text-sm"
+                            >
+                              <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                              </svg>
+                              {appointmentLabel}
+                            </Link>
+                          )}
                         </div>
                       );
                     })()}
@@ -511,8 +526,8 @@ export default function MessagesPage() {
                   </div>
 
                   {/* Formulaire d'envoi */}
-                  <form onSubmit={sendMessage} className="p-4 border-t border-gray-200">
-                    <div className="flex gap-2">
+                  <div className="p-4 border-t border-gray-200">
+                    <form onSubmit={sendMessage} className="flex gap-2 mb-2">
                       <input
                         type="text"
                         value={newMessage}
@@ -526,8 +541,27 @@ export default function MessagesPage() {
                       >
                         Envoyer
                       </button>
-                    </div>
-                  </form>
+                    </form>
+                    {(() => {
+                      const other = getOtherParticipant(selectedConversation);
+                      const isOtherEducator = selectedConversation.educator_profiles?.id === other?.id;
+                      const isOtherFamily = selectedConversation.family_profiles?.id === other?.id;
+                      const appointmentUrl = isOtherEducator ? `/educator/${other?.id}/book-appointment` : (isOtherFamily ? `/family/${other?.id}/request-appointment` : null);
+                      const appointmentLabel = isOtherEducator ? 'Demander un rendez-vous' : 'Proposer un rendez-vous';
+
+                      return appointmentUrl ? (
+                        <Link
+                          href={appointmentUrl}
+                          className="flex items-center justify-center px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 font-medium transition-colors text-sm"
+                        >
+                          <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                          </svg>
+                          {appointmentLabel}
+                        </Link>
+                      ) : null;
+                    })()}
+                  </div>
                 </>
               )}
             </div>
