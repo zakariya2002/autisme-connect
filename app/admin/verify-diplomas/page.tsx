@@ -413,53 +413,6 @@ export default function VerifyDiplomasPage() {
                         })}</p>
                       )}
 
-                      {/* Statut OCR */}
-                      {educator.diploma_ocr_text && (
-                        <p className="text-green-600">
-                          <strong>🔍 OCR:</strong> Analysé ({educator.diploma_ocr_confidence ? `${educator.diploma_ocr_confidence.toFixed(0)}% confiance` : 'Terminé'})
-                        </p>
-                      )}
-
-                      {/* Statut DREETS */}
-                      {educator.dreets_verification_sent_at ? (
-                        <div className="mt-2 p-2 bg-blue-50 border border-blue-200 rounded">
-                          <p className="text-blue-800 text-xs">
-                            <strong>📧 Email DREETS envoyé:</strong><br/>
-                            {new Date(educator.dreets_verification_sent_at).toLocaleDateString('fr-FR', {
-                              day: '2-digit',
-                              month: '2-digit',
-                              year: 'numeric',
-                              hour: '2-digit',
-                              minute: '2-digit'
-                            })}
-                          </p>
-                          {educator.dreets_verified && educator.dreets_response_date ? (
-                            <p className="text-green-700 mt-1 text-xs font-semibold">
-                              <strong>✅ DREETS a répondu le:</strong><br/>
-                              {new Date(educator.dreets_response_date).toLocaleDateString('fr-FR', {
-                                day: '2-digit',
-                                month: '2-digit',
-                                year: 'numeric',
-                                hour: '2-digit',
-                                minute: '2-digit'
-                              })}
-                            </p>
-                          ) : educator.dreets_verified ? (
-                            <p className="text-green-600 mt-1 text-xs">
-                              <strong>✅ DREETS a répondu:</strong> Diplôme validé
-                            </p>
-                          ) : (
-                            <p className="text-orange-600 mt-1 text-xs">
-                              <strong>⏳ En attente</strong> de réponse DREETS
-                            </p>
-                          )}
-                        </div>
-                      ) : (
-                        <p className="text-orange-600">
-                          <strong>⚠️ Email DREETS:</strong> Non envoyé
-                        </p>
-                      )}
-
                       {/* Raison du refus */}
                       {educator.diploma_rejected_reason && (
                         <div className="mt-2 p-2 bg-red-50 border border-red-200 rounded">
