@@ -76,8 +76,12 @@ export default function RequestAppointmentPage({ params }: { params: { id: strin
   }, [selectedDate, weeklySlots, appointments]);
 
   useEffect(() => {
+    console.log('UseEffect déclenché - weeklySlots.length:', weeklySlots.length, 'appointments.length:', appointments.length);
     if (weeklySlots.length > 0) {
+      console.log('Appel de calculateFullyBookedDates()');
       calculateFullyBookedDates();
+    } else {
+      console.log('weeklySlots est vide, calcul ignoré');
     }
   }, [weeklySlots, appointments]);
 
@@ -126,6 +130,8 @@ export default function RequestAppointmentPage({ params }: { params: { id: strin
     if (!educatorId) return;
 
     try {
+      console.log('Récupération des données pour educatorId:', educatorId);
+
       // Récupérer les créneaux hebdomadaires de l'éducateur
       const { data: slots } = await supabase
         .from('weekly_availability')
@@ -133,6 +139,7 @@ export default function RequestAppointmentPage({ params }: { params: { id: strin
         .eq('educator_id', educatorId)
         .eq('is_active', true);
 
+      console.log('Weekly slots récupérés:', slots);
       setWeeklySlots(slots || []);
 
       // Récupérer les rendez-vous existants
@@ -142,6 +149,7 @@ export default function RequestAppointmentPage({ params }: { params: { id: strin
         .eq('educator_id', educatorId)
         .in('status', ['pending', 'confirmed']);
 
+      console.log('Appointments récupérés:', existingAppointments);
       setAppointments(existingAppointments || []);
     } catch (err) {
       console.error('Erreur:', err);
