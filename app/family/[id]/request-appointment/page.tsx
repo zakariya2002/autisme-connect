@@ -141,18 +141,15 @@ export default function RequestAppointmentPage({ params }: { params: { id: strin
     }
   };
 
-  const calculateAvailableSlots = () => {
-    if (!selectedDate) return;
-
-    const date = new Date(selectedDate);
+  const calculateAvailableSlotsForDate = (dateStr: string) => {
+    const date = new Date(dateStr + 'T00:00:00');
     const dayOfWeek = date.getDay();
 
     // Trouver les créneaux pour ce jour
     const daySlots = weeklySlots.filter(slot => slot.day_of_week === dayOfWeek);
 
     if (daySlots.length === 0) {
-      setAvailableSlots([]);
-      return;
+      return [];
     }
 
     // Générer tous les créneaux de 30 minutes
@@ -178,7 +175,7 @@ export default function RequestAppointmentPage({ params }: { params: { id: strin
 
         // Vérifier si ce créneau n'est pas déjà pris
         const isBooked = appointments.some(apt => {
-          return apt.appointment_date === selectedDate &&
+          return apt.appointment_date === dateStr &&
                  apt.start_time === startTime;
         });
 
@@ -191,7 +188,40 @@ export default function RequestAppointmentPage({ params }: { params: { id: strin
       }
     });
 
+    return slots;
+  };
+
+  const calculateAvailableSlots = () => {
+    if (!selectedDate) return;
+    const slots = calculateAvailableSlotsForDate(selectedDate);
     setAvailableSlots(slots);
+  };
+
+  // Calculer les dates complètes pour le calendrier
+  const getFullyBookedDates = () => {
+    const fullyBooked: string[] = [];
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+
+    // Vérifier les 60 prochains jours
+    for (let i = 0; i < 60; i++) {
+      const checkDate = new Date(today);
+      checkDate.setDate(today.getDate() + i);
+      const dateStr = checkDate.toISOString().split('T')[0];
+      const dayOfWeek = checkDate.getDay();
+
+      // Vérifier si ce jour a des créneaux disponibles
+      const hasSlots = weeklySlots.some(slot => slot.day_of_week === dayOfWeek);
+
+      if (hasSlots) {
+        const availableSlots = calculateAvailableSlotsForDate(dateStr);
+        if (availableSlots.length === 0) {
+          fullyBooked.push(dateStr);
+        }
+      }
+    }
+
+    return fullyBooked;
   };
 
   const handleSlotToggle = (startTime: string) => {
@@ -370,6 +400,7 @@ export default function RequestAppointmentPage({ params }: { params: { id: strin
                 selectedDate={selectedDate}
                 onSelectDate={setSelectedDate}
                 availableDays={[...new Set(weeklySlots.map(slot => slot.day_of_week))]}
+                fullyBookedDates={getFullyBookedDates()}
                 minDate={new Date()}
               />
             </div>

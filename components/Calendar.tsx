@@ -7,9 +7,10 @@ interface CalendarProps {
   onDateSelect: (date: string) => void;
   availableDays: number[]; // Les jours de la semaine disponibles (0-6)
   minDate?: Date;
+  fullyBookedDates?: string[]; // Les dates complètement réservées (format YYYY-MM-DD)
 }
 
-export default function Calendar({ selectedDate, onDateSelect, availableDays, minDate = new Date() }: CalendarProps) {
+export default function Calendar({ selectedDate, onDateSelect, availableDays, minDate = new Date(), fullyBookedDates = [] }: CalendarProps) {
   const [currentMonth, setCurrentMonth] = useState(new Date());
 
   const monthNames = [
@@ -80,8 +81,13 @@ export default function Calendar({ selectedDate, onDateSelect, availableDays, mi
     return date.toDateString() === today.toDateString();
   };
 
+  const isDateFullyBooked = (date: Date) => {
+    const dateStr = date.toISOString().split('T')[0];
+    return fullyBookedDates.includes(dateStr);
+  };
+
   const handleDateClick = (date: Date) => {
-    if (isDateSelectable(date)) {
+    if (isDateSelectable(date) && !isDateFullyBooked(date)) {
       const dateStr = date.toISOString().split('T')[0];
       onDateSelect(dateStr);
     }
@@ -146,17 +152,20 @@ export default function Calendar({ selectedDate, onDateSelect, availableDays, mi
             const selectable = isDateSelectable(date);
             const selected = isDateSelected(date);
             const today = isToday(date);
+            const fullyBooked = isDateFullyBooked(date);
 
             return (
               <button
                 key={index}
                 type="button"
                 onClick={() => handleDateClick(date)}
-                disabled={!selectable}
+                disabled={!selectable || fullyBooked}
                 className={`
                   aspect-square p-1 sm:p-2 rounded-lg text-xs sm:text-sm font-semibold transition-all duration-200 relative
                   ${selected
                     ? 'bg-primary-600 text-white shadow-lg scale-105 ring-2 sm:ring-4 ring-primary-200'
+                    : fullyBooked && selectable
+                    ? 'bg-orange-100 text-orange-700 border-2 border-orange-300 cursor-not-allowed'
                     : today && selectable
                     ? 'bg-primary-100 text-primary-800 border-2 border-primary-400 hover:bg-primary-200'
                     : selectable
@@ -166,7 +175,10 @@ export default function Calendar({ selectedDate, onDateSelect, availableDays, mi
                 `}
               >
                 <span className="relative z-10">{date.getDate()}</span>
-                {today && !selected && selectable && (
+                {fullyBooked && selectable && (
+                  <span className="absolute top-0.5 right-0.5 text-[8px] sm:text-[10px] text-orange-600 font-bold">✕</span>
+                )}
+                {today && !selected && selectable && !fullyBooked && (
                   <span className="absolute bottom-1 left-1/2 transform -translate-x-1/2 w-1 h-1 bg-primary-600 rounded-full"></span>
                 )}
               </button>
@@ -188,6 +200,10 @@ export default function Calendar({ selectedDate, onDateSelect, availableDays, mi
             <div className="flex items-center gap-1 sm:gap-2">
               <div className="w-3 h-3 sm:w-4 sm:h-4 rounded-md bg-white border-2 border-gray-200"></div>
               <span className="font-medium text-gray-700">Disponible</span>
+            </div>
+            <div className="flex items-center gap-1 sm:gap-2">
+              <div className="w-3 h-3 sm:w-4 sm:h-4 rounded-md bg-orange-100 border-2 border-orange-300"></div>
+              <span className="font-medium text-gray-700">Complet</span>
             </div>
             <div className="flex items-center gap-1 sm:gap-2">
               <div className="w-3 h-3 sm:w-4 sm:h-4 rounded-md bg-gray-50"></div>
