@@ -29,6 +29,7 @@ export default function VerifyDiplomasPage() {
   const [selectedEducator, setSelectedEducator] = useState<PendingEducator | null>(null);
   const [rejectReason, setRejectReason] = useState('');
   const [processing, setProcessing] = useState(false);
+  const [markingDREETS, setMarkingDREETS] = useState(false);
   const [stats, setStats] = useState({
     pending: 0,
     verified: 0,
@@ -78,13 +79,16 @@ export default function VerifyDiplomasPage() {
         .from('educator_profiles')
         .select('diploma_verification_status, diploma_url');
 
-      if (error) throw error;
+      if (error) {
+        console.error('Erreur stats:', error);
+        return;
+      }
 
       const stats = {
-        pending: data.filter(e => e.diploma_verification_status === 'pending').length,
-        verified: data.filter(e => e.diploma_verification_status === 'verified').length,
-        rejected: data.filter(e => e.diploma_verification_status === 'rejected').length,
-        noDiploma: data.filter(e => !e.diploma_url).length
+        pending: (data || []).filter(e => e.diploma_verification_status === 'pending' && e.diploma_url).length,
+        verified: (data || []).filter(e => e.diploma_verification_status === 'verified').length,
+        rejected: (data || []).filter(e => e.diploma_verification_status === 'rejected').length,
+        noDiploma: (data || []).filter(e => !e.diploma_url).length
       };
 
       setStats(stats);
@@ -95,31 +99,24 @@ export default function VerifyDiplomasPage() {
 
   const fetchEducators = async () => {
     try {
-      let query = supabase
-        .from('educator_profiles')
-        .select('*')
-        .order('diploma_submitted_at', { ascending: false, nullsFirst: false });
+      // Récupérer le token d'authentification
+      const { data: { session } } = await supabase.auth.getSession();
+      if (!session) return;
 
-      if (filter !== 'all') {
-        query = query.eq('diploma_verification_status', filter);
+      // Appeler l'API route côté serveur
+      const response = await fetch(`/api/admin/get-diplomas?filter=${filter}`, {
+        headers: {
+          'Authorization': `Bearer ${session.access_token}`
+        }
+      });
+
+      const result = await response.json();
+
+      if (result.success) {
+        setEducators(result.data || []);
+      } else {
+        console.error('Erreur API:', result.error);
       }
-
-      const { data, error } = await query;
-
-      if (error) throw error;
-
-      // Récupérer les emails des éducateurs
-      const educatorsWithEmails = await Promise.all(
-        (data || []).map(async (educator) => {
-          const { data: userData } = await supabase.auth.admin.getUserById(educator.user_id);
-          return {
-            ...educator,
-            email: userData?.user?.email || 'Email non disponible'
-          };
-        })
-      );
-
-      setEducators(educatorsWithEmails);
     } catch (error) {
       console.error('Erreur:', error);
     }
@@ -134,35 +131,78 @@ export default function VerifyDiplomasPage() {
     setProcessing(true);
 
     try {
-      const updateData: any = {
-        diploma_verification_status: status,
-        diploma_verified_at: status === 'verified' ? new Date().toISOString() : null,
-        diploma_rejected_reason: status === 'rejected' ? rejectReason : null
-      };
+      // Récupérer le token d'authentification
+      const { data: { session } } = await supabase.auth.getSession();
+      if (!session) {
+        alert('Session expirée. Reconnectez-vous.');
+        return;
+      }
 
-      const { error } = await supabase
-        .from('educator_profiles')
-        .update(updateData)
-        .eq('id', educatorId);
+      // Appeler l'API route pour gérer la vérification
+      const response = await fetch('/api/admin/verify-diploma', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${session.access_token}`
+        },
+        body: JSON.stringify({
+          educatorId,
+          status,
+          rejectReason: status === 'rejected' ? rejectReason : null
+        })
+      });
 
-      if (error) throw error;
+      const result = await response.json();
 
-      alert(`Diplôme ${status === 'verified' ? 'accepté' : 'refusé'} avec succès !`);
+      if (result.success) {
+        alert(`✅ ${result.message}\n\nUn email de notification a été envoyé à l'éducateur.`);
 
-      // Rafraîchir la liste
-      await fetchEducators();
-      await fetchStats();
+        // Rafraîchir la liste
+        await fetchEducators();
+        await fetchStats();
 
-      // Fermer le modal
-      setSelectedEducator(null);
-      setRejectReason('');
-
-      // TODO: Envoyer un email de notification à l'éducateur
+        // Fermer le modal
+        setSelectedEducator(null);
+        setRejectReason('');
+      } else {
+        throw new Error(result.message);
+      }
     } catch (error: any) {
       console.error('Erreur:', error);
       alert('Erreur: ' + error.message);
     } finally {
       setProcessing(false);
+    }
+  };
+
+  const handleMarkDREETSResponse = async (educatorId: string) => {
+    if (!confirm('Confirmer que DREETS a répondu pour ce dossier ?')) {
+      return;
+    }
+
+    setMarkingDREETS(true);
+
+    try {
+      const { error } = await supabase
+        .from('educator_profiles')
+        .update({
+          dreets_response_date: new Date().toISOString(),
+          dreets_verified: true
+        })
+        .eq('id', educatorId);
+
+      if (error) throw error;
+
+      alert('✅ Réponse DREETS enregistrée !');
+
+      // Rafraîchir
+      await fetchEducators();
+      setSelectedEducator(null);
+    } catch (error: any) {
+      console.error('Erreur:', error);
+      alert('Erreur: ' + error.message);
+    } finally {
+      setMarkingDREETS(false);
     }
   };
 
@@ -361,11 +401,82 @@ export default function VerifyDiplomasPage() {
                       <p><strong>Email:</strong> {educator.email}</p>
                       <p><strong>Téléphone:</strong> {educator.phone || 'Non renseigné'}</p>
                       <p><strong>Spécialisation:</strong> {educator.specialization || 'Non renseignée'}</p>
-                      {educator.diploma_submitted_at && (
-                        <p><strong>Soumis le:</strong> {new Date(educator.diploma_submitted_at).toLocaleDateString('fr-FR')}</p>
+                      <p><strong>Région:</strong> {educator.region || 'Non renseignée'}</p>
+
+                      {/* Informations diplôme */}
+                      {educator.diploma_number && (
+                        <p><strong>N° diplôme:</strong> {educator.diploma_number}</p>
                       )}
+                      {educator.diploma_delivery_date && (
+                        <p><strong>Date de délivrance:</strong> {educator.diploma_delivery_date}</p>
+                      )}
+
+                      {/* Dates importantes */}
+                      {educator.diploma_submitted_at && (
+                        <p><strong>📤 Soumis le:</strong> {new Date(educator.diploma_submitted_at).toLocaleDateString('fr-FR', {
+                          day: '2-digit',
+                          month: '2-digit',
+                          year: 'numeric',
+                          hour: '2-digit',
+                          minute: '2-digit'
+                        })}</p>
+                      )}
+
+                      {/* Statut OCR */}
+                      {educator.diploma_ocr_text && (
+                        <p className="text-green-600">
+                          <strong>🔍 OCR:</strong> Analysé ({educator.diploma_ocr_confidence ? `${educator.diploma_ocr_confidence.toFixed(0)}% confiance` : 'Terminé'})
+                        </p>
+                      )}
+
+                      {/* Statut DREETS */}
+                      {educator.dreets_verification_sent_at ? (
+                        <div className="mt-2 p-2 bg-blue-50 border border-blue-200 rounded">
+                          <p className="text-blue-800 text-xs">
+                            <strong>📧 Email DREETS envoyé:</strong><br/>
+                            {new Date(educator.dreets_verification_sent_at).toLocaleDateString('fr-FR', {
+                              day: '2-digit',
+                              month: '2-digit',
+                              year: 'numeric',
+                              hour: '2-digit',
+                              minute: '2-digit'
+                            })}
+                          </p>
+                          {educator.dreets_verified && educator.dreets_response_date ? (
+                            <p className="text-green-700 mt-1 text-xs font-semibold">
+                              <strong>✅ DREETS a répondu le:</strong><br/>
+                              {new Date(educator.dreets_response_date).toLocaleDateString('fr-FR', {
+                                day: '2-digit',
+                                month: '2-digit',
+                                year: 'numeric',
+                                hour: '2-digit',
+                                minute: '2-digit'
+                              })}
+                            </p>
+                          ) : educator.dreets_verified ? (
+                            <p className="text-green-600 mt-1 text-xs">
+                              <strong>✅ DREETS a répondu:</strong> Diplôme validé
+                            </p>
+                          ) : (
+                            <p className="text-orange-600 mt-1 text-xs">
+                              <strong>⏳ En attente</strong> de réponse DREETS
+                            </p>
+                          )}
+                        </div>
+                      ) : (
+                        <p className="text-orange-600">
+                          <strong>⚠️ Email DREETS:</strong> Non envoyé
+                        </p>
+                      )}
+
+                      {/* Raison du refus */}
                       {educator.diploma_rejected_reason && (
-                        <p className="text-red-600"><strong>Raison du refus:</strong> {educator.diploma_rejected_reason}</p>
+                        <div className="mt-2 p-2 bg-red-50 border border-red-200 rounded">
+                          <p className="text-red-800">
+                            <strong>❌ Raison du refus:</strong><br/>
+                            {educator.diploma_rejected_reason}
+                          </p>
+                        </div>
                       )}
                     </div>
                   </div>
@@ -431,8 +542,78 @@ export default function VerifyDiplomasPage() {
                 </button>
               </div>
 
+              {/* Informations de suivi */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+                <div className="bg-gray-50 p-4 rounded-lg">
+                  <h3 className="font-semibold text-gray-900 mb-2">📋 Informations du diplôme</h3>
+                  <div className="space-y-1 text-sm">
+                    <p><strong>Région:</strong> {selectedEducator.region || 'Non renseignée'}</p>
+                    <p><strong>N° diplôme:</strong> {selectedEducator.diploma_number || 'Non renseigné'}</p>
+                    <p><strong>Date de délivrance:</strong> {selectedEducator.diploma_delivery_date || 'Non renseignée'}</p>
+                    <p><strong>Soumis le:</strong> {selectedEducator.diploma_submitted_at
+                      ? new Date(selectedEducator.diploma_submitted_at).toLocaleString('fr-FR')
+                      : 'N/A'}</p>
+                  </div>
+                </div>
+
+                <div className="bg-blue-50 p-4 rounded-lg border border-blue-200">
+                  <h3 className="font-semibold text-blue-900 mb-2">📧 Statut DREETS</h3>
+                  <div className="space-y-2 text-sm">
+                    {selectedEducator.dreets_verification_sent_at ? (
+                      <>
+                        <p className="text-green-700">
+                          <strong>✅ Email envoyé le:</strong><br/>
+                          {new Date(selectedEducator.dreets_verification_sent_at).toLocaleString('fr-FR')}
+                        </p>
+                        {selectedEducator.dreets_verified && selectedEducator.dreets_response_date ? (
+                          <p className="text-green-700 font-semibold">
+                            ✓ DREETS a répondu le:<br/>
+                            {new Date(selectedEducator.dreets_response_date).toLocaleString('fr-FR')}
+                          </p>
+                        ) : selectedEducator.dreets_verified ? (
+                          <p className="text-green-700 font-semibold">✓ DREETS a validé le diplôme</p>
+                        ) : (
+                          <>
+                            <p className="text-orange-700">⏳ En attente de réponse DREETS</p>
+                            <button
+                              onClick={() => handleMarkDREETSResponse(selectedEducator.id)}
+                              disabled={markingDREETS}
+                              className="mt-2 px-3 py-1 bg-blue-600 text-white rounded text-xs hover:bg-blue-700 disabled:opacity-50"
+                            >
+                              {markingDREETS ? 'Enregistrement...' : '✓ Marquer comme répondu'}
+                            </button>
+                          </>
+                        )}
+                      </>
+                    ) : (
+                      <p className="text-orange-700">⚠️ Email DREETS non envoyé</p>
+                    )}
+                  </div>
+                </div>
+
+                {selectedEducator.diploma_ocr_text && (
+                  <div className="md:col-span-2 bg-green-50 p-4 rounded-lg border border-green-200">
+                    <h3 className="font-semibold text-green-900 mb-2">🔍 Analyse OCR</h3>
+                    <p className="text-sm text-green-800 mb-2">
+                      <strong>Confiance:</strong> {selectedEducator.diploma_ocr_confidence?.toFixed(0) || 'N/A'}%
+                    </p>
+                    <details className="text-sm">
+                      <summary className="cursor-pointer font-medium text-green-900 hover:text-green-700">
+                        Voir le texte extrait
+                      </summary>
+                      <div className="mt-2 p-3 bg-white rounded border border-green-200">
+                        <pre className="whitespace-pre-wrap text-xs text-gray-700">
+                          {selectedEducator.diploma_ocr_analysis || selectedEducator.diploma_ocr_text}
+                        </pre>
+                      </div>
+                    </details>
+                  </div>
+                )}
+              </div>
+
               {/* Affichage du diplôme */}
               <div className="mb-6">
+                <h3 className="font-semibold text-gray-900 mb-3">📄 Document</h3>
                 {selectedEducator.diploma_url.endsWith('.pdf') ? (
                   <div className="border border-gray-300 rounded-lg p-4 bg-gray-50">
                     <iframe

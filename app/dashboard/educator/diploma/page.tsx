@@ -8,7 +8,6 @@ import { signOut } from '@/lib/auth';
 import EducatorMobileMenu from '@/components/EducatorMobileMenu';
 import Logo from '@/components/Logo';
 import { ocrService, OCRResult } from '@/lib/ocr-service';
-import { dreetsService } from '@/lib/dreets-verification';
 
 type DiplomaStatus = 'pending' | 'verified' | 'rejected';
 
@@ -88,9 +87,15 @@ export default function DiplomePage() {
 
       setSubscription(subscriptionData);
 
-      // Si le diplôme existe déjà, charger son URL
+      // Si le diplôme existe déjà, générer une signed URL
       if (educatorProfile.diploma_url) {
-        setPreviewUrl(educatorProfile.diploma_url);
+        const { data: signedUrlData } = await supabase.storage
+          .from('diplomas')
+          .createSignedUrl(educatorProfile.diploma_url, 3600); // 1 heure
+
+        if (signedUrlData?.signedUrl) {
+          setPreviewUrl(signedUrlData.signedUrl);
+        }
       }
 
       setLoading(false);
@@ -234,14 +239,14 @@ export default function DiplomePage() {
 
       if (uploadError) throw uploadError;
 
-      // Obtenir l'URL publique
+      // Obtenir l'URL publique (fonctionne même avec bucket privé grâce aux RLS)
       const { data: { publicUrl } } = supabase.storage
         .from('diplomas')
         .getPublicUrl(fileName);
 
       // Mettre à jour le profil éducateur
       const updateData: any = {
-        diploma_url: publicUrl,
+        diploma_url: fileName,  // Stocker le path au lieu de l'URL complète
         diploma_verification_status: 'pending',
         diploma_submitted_at: new Date().toISOString(),
         diploma_rejected_reason: null,
@@ -269,8 +274,15 @@ export default function DiplomePage() {
         text: '✅ Diplôme envoyé ! Vérification DREETS en cours...'
       });
 
+      // Générer une signed URL pour la DREETS (valide 7 jours)
+      const { data: signedUrlData } = await supabase.storage
+        .from('diplomas')
+        .createSignedUrl(fileName, 604800); // 7 jours
+
+      const diplomaUrl = signedUrlData?.signedUrl || publicUrl;
+
       // Envoyer automatiquement à la DREETS
-      await sendToDREETS(publicUrl);
+      await sendToDREETS(diplomaUrl);
 
       // Recharger le profil
       await checkAuth();
@@ -309,16 +321,18 @@ export default function DiplomePage() {
         ocrAnalysis: ocrResult ? ocrService.generateAnalysisReport(ocrResult) : undefined
       };
 
-      // Envoyer la demande à la DREETS
-      const result = await dreetsService.sendDREETSVerificationRequest(dreetsRequest);
+      // Appeler l'API route côté serveur pour envoyer l'email DREETS
+      const response = await fetch('/api/send-dreets-verification', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(dreetsRequest)
+      });
+
+      const result = await response.json();
 
       if (result.success) {
-        // Enregistrer dans la base de données
-        await supabase
-          .from('educator_profiles')
-          .update({ dreets_verification_sent_at: new Date().toISOString() })
-          .eq('id', profile.id);
-
         setMessage({
           type: 'success',
           text: '🎉 Diplôme uploadé et demande envoyée à la DREETS ! Réponse sous 5-10 jours ouvrés.'
@@ -333,6 +347,10 @@ export default function DiplomePage() {
     } catch (error) {
       console.error('Erreur DREETS:', error);
       // Ne pas faire échouer l'upload si l'envoi DREETS échoue
+      setMessage({
+        type: 'info',
+        text: 'Diplôme uploadé. L\'envoi à la DREETS sera réessayé.'
+      });
     } finally {
       setSendingToDREETS(false);
     }
@@ -523,7 +541,7 @@ export default function DiplomePage() {
           </h2>
 
           {/* Aperçu du diplôme actuel */}
-          {profile.diploma_url && !diplomaFile && (
+          {profile.diploma_url && !diplomaFile && previewUrl && (
             <div className="mb-6">
               <p className="text-sm text-gray-600 mb-2">Diplôme actuel :</p>
               {profile.diploma_url.endsWith('.pdf') ? (
@@ -535,7 +553,7 @@ export default function DiplomePage() {
                     <div className="ml-3">
                       <p className="text-sm font-medium text-gray-900">Document PDF</p>
                       <a
-                        href={profile.diploma_url}
+                        href={previewUrl}
                         target="_blank"
                         rel="noopener noreferrer"
                         className="text-sm text-primary-600 hover:text-primary-700"
@@ -547,7 +565,7 @@ export default function DiplomePage() {
                 </div>
               ) : (
                 <img
-                  src={profile.diploma_url}
+                  src={previewUrl}
                   alt="Diplôme"
                   className="max-w-full h-auto rounded-lg border border-gray-300"
                 />

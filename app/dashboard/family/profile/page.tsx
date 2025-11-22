@@ -22,6 +22,9 @@ export default function FamilyProfilePage() {
   const [avatarModerationStatus, setAvatarModerationStatus] = useState<'pending' | 'approved' | 'rejected' | null>(null);
   const [avatarModerationReason, setAvatarModerationReason] = useState<string | null>(null);
   const [profile, setProfile] = useState<any>(null);
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
+  const [deleteConfirmText, setDeleteConfirmText] = useState('');
+  const [deleting, setDeleting] = useState(false);
 
   const [profileData, setProfileData] = useState({
     first_name: '',
@@ -190,6 +193,39 @@ export default function FamilyProfilePage() {
   const handleLogout = async () => {
     await signOut();
     router.push('/');
+  };
+
+  const handleDeleteAccount = async () => {
+    if (deleteConfirmText !== 'SUPPRIMER') {
+      setError('Veuillez taper exactement "SUPPRIMER" pour confirmer');
+      return;
+    }
+
+    setDeleting(true);
+    setError('');
+
+    try {
+      // 1. Supprimer le profil famille (cascade supprimera les données liées)
+      const { error: profileError } = await supabase
+        .from('family_profiles')
+        .delete()
+        .eq('id', profile.id);
+
+      if (profileError) throw profileError;
+
+      // 2. Supprimer le compte utilisateur
+      const { error: authError } = await supabase.auth.admin.deleteUser(userId);
+
+      if (authError) throw authError;
+
+      // 3. Se déconnecter et rediriger
+      await signOut();
+      router.push('/?deleted=true');
+    } catch (err: any) {
+      console.error('Erreur suppression:', err);
+      setError(err.message || 'Erreur lors de la suppression du compte');
+      setDeleting(false);
+    }
   };
 
   return (
@@ -458,6 +494,66 @@ export default function FamilyProfilePage() {
               </button>
             </div>
           </form>
+        </div>
+
+        {/* Suppression du compte */}
+        <div className="bg-white rounded-lg shadow-md p-6 mt-8 border-2 border-red-200">
+          <div className="bg-red-50 border border-red-200 rounded-lg p-4 mb-4">
+            <h3 className="font-semibold text-red-800 mb-2">⚠️ Supprimer mon compte</h3>
+            <p className="text-sm text-red-700 mb-3">
+              Cette action est <strong>irréversible</strong>. Toutes vos données seront définitivement supprimées :
+            </p>
+            <ul className="text-sm text-red-700 space-y-1 mb-4 ml-4">
+              <li>• Votre profil et vos informations personnelles</li>
+              <li>• Vos préférences de recherche</li>
+              <li>• Votre historique de messages</li>
+              <li>• Vos favoris et éducateurs sauvegardés</li>
+              <li>• Vos réservations et rendez-vous</li>
+            </ul>
+
+            {!showDeleteConfirm ? (
+              <button
+                onClick={() => setShowDeleteConfirm(true)}
+                className="px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 font-medium transition"
+              >
+                Je veux supprimer mon compte
+              </button>
+            ) : (
+              <div className="space-y-4">
+                <div>
+                  <label className="block text-sm font-medium text-red-800 mb-2">
+                    Pour confirmer, tapez exactement <span className="font-bold">SUPPRIMER</span>
+                  </label>
+                  <input
+                    type="text"
+                    value={deleteConfirmText}
+                    onChange={(e) => setDeleteConfirmText(e.target.value)}
+                    placeholder="Tapez SUPPRIMER"
+                    className="w-full border-2 border-red-300 rounded-md shadow-sm py-2 px-3 focus:ring-red-500 focus:border-red-500"
+                  />
+                </div>
+                <div className="flex gap-3">
+                  <button
+                    onClick={handleDeleteAccount}
+                    disabled={deleting || deleteConfirmText !== 'SUPPRIMER'}
+                    className="px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 font-medium transition disabled:opacity-50 disabled:cursor-not-allowed"
+                  >
+                    {deleting ? 'Suppression en cours...' : 'Supprimer définitivement mon compte'}
+                  </button>
+                  <button
+                    onClick={() => {
+                      setShowDeleteConfirm(false);
+                      setDeleteConfirmText('');
+                    }}
+                    disabled={deleting}
+                    className="px-4 py-2 bg-gray-200 text-gray-700 rounded-md hover:bg-gray-300 font-medium transition disabled:opacity-50"
+                  >
+                    Annuler
+                  </button>
+                </div>
+              </div>
+            )}
+          </div>
         </div>
       </div>
     </div>

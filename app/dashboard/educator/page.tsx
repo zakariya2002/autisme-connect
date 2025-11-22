@@ -204,6 +204,199 @@ export default function EducatorDashboard() {
           </div>
         </div>
 
+        {/* Suivi de la vérification du diplôme */}
+        {profile && profile.diploma_verification_status !== 'verified' && (
+          <div className="mb-8 bg-gradient-to-r from-yellow-50 to-amber-50 border-2 border-yellow-300 rounded-lg p-6 shadow-md">
+            <div className="flex items-start gap-4">
+              <div className="flex-shrink-0">
+                <div className="w-12 h-12 bg-yellow-400 rounded-full flex items-center justify-center">
+                  <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                  </svg>
+                </div>
+              </div>
+
+              <div className="flex-1">
+                <h3 className="text-lg font-bold text-gray-900 mb-2">
+                  ⚠️ Votre profil n'est pas encore visible des familles
+                </h3>
+                <p className="text-gray-700 mb-4">
+                  Pour apparaître dans les résultats de recherche et être contacté par les familles, votre diplôme ME/ES doit être vérifié.
+                </p>
+
+                {/* Timeline de progression */}
+                <div className="space-y-3">
+                  {/* Étape 1: Upload */}
+                  <div className="flex items-center gap-3">
+                    {profile.diploma_url ? (
+                      <div className="w-6 h-6 bg-green-500 rounded-full flex items-center justify-center flex-shrink-0">
+                        <svg className="w-4 h-4 text-white" fill="currentColor" viewBox="0 0 20 20">
+                          <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                        </svg>
+                      </div>
+                    ) : (
+                      <div className="w-6 h-6 bg-gray-300 rounded-full flex items-center justify-center flex-shrink-0">
+                        <span className="text-xs text-gray-600 font-bold">1</span>
+                      </div>
+                    )}
+                    <div className="flex-1">
+                      <p className={`text-sm font-medium ${profile.diploma_url ? 'text-green-700' : 'text-gray-700'}`}>
+                        {profile.diploma_url ? '✓ Diplôme uploadé' : 'Uploader votre diplôme'}
+                      </p>
+                      {!profile.diploma_url && (
+                        <p className="text-xs text-gray-600 mt-0.5">
+                          Rendez-vous dans la section "Mon diplôme"
+                        </p>
+                      )}
+                    </div>
+                    {!profile.diploma_url && (
+                      <Link
+                        href="/dashboard/educator/diploma"
+                        className="px-4 py-2 bg-yellow-500 text-white rounded-md hover:bg-yellow-600 font-medium text-sm transition"
+                      >
+                        Uploader maintenant
+                      </Link>
+                    )}
+                  </div>
+
+                  {/* Étape 2: Analyse OCR */}
+                  <div className="flex items-center gap-3">
+                    {profile.diploma_ocr_text ? (
+                      <div className="w-6 h-6 bg-green-500 rounded-full flex items-center justify-center flex-shrink-0">
+                        <svg className="w-4 h-4 text-white" fill="currentColor" viewBox="0 0 20 20">
+                          <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                        </svg>
+                      </div>
+                    ) : (
+                      <div className={`w-6 h-6 rounded-full flex items-center justify-center flex-shrink-0 ${profile.diploma_url ? 'bg-yellow-400 animate-pulse' : 'bg-gray-300'}`}>
+                        <span className="text-xs text-white font-bold">2</span>
+                      </div>
+                    )}
+                    <div className="flex-1">
+                      <p className={`text-sm font-medium ${profile.diploma_ocr_text ? 'text-green-700' : profile.diploma_url ? 'text-yellow-700' : 'text-gray-500'}`}>
+                        {profile.diploma_ocr_text ? '✓ Analyse OCR effectuée' : profile.diploma_url ? 'Analyse OCR en cours...' : 'Analyse OCR automatique'}
+                      </p>
+                      {profile.diploma_ocr_confidence && (
+                        <p className="text-xs text-gray-600 mt-0.5">
+                          Confiance: {profile.diploma_ocr_confidence.toFixed(0)}%
+                        </p>
+                      )}
+                    </div>
+                  </div>
+
+                  {/* Étape 3: Envoi DREETS */}
+                  <div className="flex items-center gap-3">
+                    {profile.dreets_verification_sent_at ? (
+                      <div className="w-6 h-6 bg-green-500 rounded-full flex items-center justify-center flex-shrink-0">
+                        <svg className="w-4 h-4 text-white" fill="currentColor" viewBox="0 0 20 20">
+                          <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                        </svg>
+                      </div>
+                    ) : (
+                      <div className={`w-6 h-6 rounded-full flex items-center justify-center flex-shrink-0 ${profile.diploma_ocr_text ? 'bg-yellow-400 animate-pulse' : 'bg-gray-300'}`}>
+                        <span className="text-xs text-white font-bold">3</span>
+                      </div>
+                    )}
+                    <div className="flex-1">
+                      <p className={`text-sm font-medium ${profile.dreets_verification_sent_at ? 'text-green-700' : profile.diploma_ocr_text ? 'text-yellow-700' : 'text-gray-500'}`}>
+                        {profile.dreets_verification_sent_at ? '✓ Email envoyé à la DREETS' : profile.diploma_ocr_text ? 'Envoi à la DREETS en cours...' : 'Vérification DREETS'}
+                      </p>
+                      {profile.dreets_verification_sent_at && (
+                        <p className="text-xs text-gray-600 mt-0.5">
+                          Le {new Date(profile.dreets_verification_sent_at).toLocaleDateString('fr-FR')}
+                        </p>
+                      )}
+                    </div>
+                  </div>
+
+                  {/* Étape 4: Validation admin */}
+                  <div className="flex items-center gap-3">
+                    {profile.diploma_verification_status === 'verified' ? (
+                      <div className="w-6 h-6 bg-green-500 rounded-full flex items-center justify-center flex-shrink-0">
+                        <svg className="w-4 h-4 text-white" fill="currentColor" viewBox="0 0 20 20">
+                          <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                        </svg>
+                      </div>
+                    ) : profile.diploma_verification_status === 'rejected' ? (
+                      <div className="w-6 h-6 bg-red-500 rounded-full flex items-center justify-center flex-shrink-0">
+                        <svg className="w-4 h-4 text-white" fill="currentColor" viewBox="0 0 20 20">
+                          <path fillRule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clipRule="evenodd" />
+                        </svg>
+                      </div>
+                    ) : (
+                      <div className={`w-6 h-6 rounded-full flex items-center justify-center flex-shrink-0 ${profile.diploma_verification_status === 'pending' ? 'bg-yellow-400 animate-pulse' : 'bg-gray-300'}`}>
+                        <span className="text-xs text-white font-bold">4</span>
+                      </div>
+                    )}
+                    <div className="flex-1">
+                      <p className={`text-sm font-medium ${
+                        profile.diploma_verification_status === 'verified' ? 'text-green-700' :
+                        profile.diploma_verification_status === 'rejected' ? 'text-red-700' :
+                        profile.diploma_verification_status === 'pending' ? 'text-yellow-700' :
+                        'text-gray-500'
+                      }`}>
+                        {profile.diploma_verification_status === 'verified' ? '✓ Diplôme vérifié' :
+                         profile.diploma_verification_status === 'rejected' ? '✗ Diplôme refusé' :
+                         profile.diploma_verification_status === 'pending' ? 'En attente de validation admin (24-48h)' :
+                         'Validation par notre équipe'}
+                      </p>
+                      {profile.diploma_verification_status === 'rejected' && profile.diploma_rejected_reason && (
+                        <p className="text-xs text-red-600 mt-0.5">
+                          Raison: {profile.diploma_rejected_reason}
+                        </p>
+                      )}
+                    </div>
+                  </div>
+                </div>
+
+                {/* Message d'encouragement */}
+                {profile.diploma_verification_status === 'pending' && (
+                  <div className="mt-4 p-3 bg-blue-50 border border-blue-200 rounded-md">
+                    <p className="text-sm text-blue-800">
+                      <strong>⏳ Patience !</strong> Notre équipe examine votre diplôme. Vous recevrez une notification par email dès validation (généralement sous 24-48h).
+                    </p>
+                  </div>
+                )}
+
+                {profile.diploma_verification_status === 'rejected' && (
+                  <div className="mt-4 p-3 bg-red-50 border border-red-200 rounded-md">
+                    <p className="text-sm text-red-800 mb-2">
+                      <strong>❌ Diplôme refusé.</strong> Veuillez uploader un nouveau document conforme.
+                    </p>
+                    <Link
+                      href="/dashboard/educator/diploma"
+                      className="inline-block px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 font-medium text-sm transition"
+                    >
+                      Uploader un nouveau diplôme
+                    </Link>
+                  </div>
+                )}
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Message de succès si diplôme vérifié */}
+        {profile && profile.diploma_verification_status === 'verified' && (
+          <div className="mb-8 bg-gradient-to-r from-green-50 to-emerald-50 border-2 border-green-300 rounded-lg p-6 shadow-md">
+            <div className="flex items-center gap-4">
+              <div className="w-12 h-12 bg-green-500 rounded-full flex items-center justify-center flex-shrink-0">
+                <svg className="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 20 20">
+                  <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                </svg>
+              </div>
+              <div>
+                <h3 className="text-lg font-bold text-green-800 mb-1">
+                  ✅ Diplôme vérifié ! Vous êtes visible des familles
+                </h3>
+                <p className="text-green-700 text-sm">
+                  Votre profil apparaît maintenant dans les résultats de recherche. Les familles peuvent vous contacter !
+                </p>
+              </div>
+            </div>
+          </div>
+        )}
+
         {/* Stats */}
         <div className="grid grid-cols-1 gap-6 sm:grid-cols-3 mb-8">
           <div className="bg-white rounded-lg shadow p-6">

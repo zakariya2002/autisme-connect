@@ -52,11 +52,19 @@ export async function sendDREETSVerificationRequest(
 ): Promise<{ success: boolean; message: string }> {
   try {
     // Déterminer l'email DREETS selon la région
-    const dreetsEmail = request.region
+    let dreetsEmail = request.region
       ? DREETS_EMAILS[request.region] || DREETS_EMAILS['default']
       : DREETS_EMAILS['default'];
 
-    console.log('📧 Envoi de la demande de vérification à la DREETS:', dreetsEmail);
+    // En mode développement, envoyer à l'admin au lieu de DREETS
+    const isDevelopment = process.env.NODE_ENV === 'development' || !process.env.NEXT_PUBLIC_APP_URL?.includes('autismeconnect.fr');
+    if (isDevelopment) {
+      console.log('🔧 MODE DÉVELOPPEMENT: Email DREETS redirigé vers admin');
+      console.log(`📧 Email DREETS original: ${dreetsEmail} (région: ${request.region})`);
+      dreetsEmail = process.env.ADMIN_EMAIL || 'zakariyanebbache@gmail.com';
+    }
+
+    console.log('📧 Envoi de la demande de vérification à:', dreetsEmail);
 
     const emailData = {
       to: dreetsEmail,
