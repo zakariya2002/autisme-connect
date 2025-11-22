@@ -21,17 +21,17 @@ export default function MobileMenu() {
 
       {/* Menu en plein écran */}
       {isOpen && (
-        <div className="fixed inset-0 z-50 md:hidden">
+        <div className="fixed inset-0 z-[9999] md:hidden">
           {/* Fond avec overlay */}
           <div
-            className="absolute inset-0 bg-black/60 backdrop-blur-sm"
+            className="fixed inset-0 bg-black/60 backdrop-blur-sm"
             onClick={() => setIsOpen(false)}
           />
 
           {/* Panneau du menu */}
-          <div className="absolute inset-y-0 left-0 w-full max-w-sm bg-white shadow-2xl overflow-y-auto">
-            {/* En-tête avec gradient */}
-            <div className="bg-gradient-to-r from-primary-600 to-primary-700 px-6 py-6">
+          <div className="fixed top-0 left-0 bottom-0 w-full max-w-sm bg-white shadow-2xl flex flex-col">
+            {/* En-tête avec gradient - Fixe */}
+            <div className="flex-shrink-0 bg-gradient-to-r from-primary-600 to-primary-700 px-6 py-6">
               <div className="flex items-center justify-between">
                 <div>
                   <h2 className="text-xl font-bold text-white">Autisme Connect</h2>
@@ -39,7 +39,7 @@ export default function MobileMenu() {
                 </div>
                 <button
                   onClick={() => setIsOpen(false)}
-                  className="p-2 text-white hover:bg-white/20 rounded-lg"
+                  className="p-2 text-white hover:bg-white/20 rounded-lg flex-shrink-0"
                 >
                   <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
@@ -48,8 +48,8 @@ export default function MobileMenu() {
               </div>
             </div>
 
-            {/* Navigation */}
-            <nav className="px-4 py-6 space-y-1">
+            {/* Navigation - Scrollable */}
+            <nav className="flex-1 overflow-y-auto px-4 py-6 space-y-1">
               <div className="mb-6">
                 <p className="px-4 text-xs font-semibold text-gray-500 uppercase tracking-wider mb-3">
                   Navigation
