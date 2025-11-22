@@ -369,7 +369,8 @@ export default function RequestAppointmentPage({ params }: { params: { id: strin
               <Calendar
                 selectedDate={selectedDate}
                 onSelectDate={setSelectedDate}
-                minDate={new Date().toISOString().split('T')[0]}
+                availableDays={[...new Set(weeklySlots.map(slot => slot.day_of_week))]}
+                minDate={new Date()}
               />
             </div>
 
