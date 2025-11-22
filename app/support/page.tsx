@@ -1,15 +1,13 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
 import Link from 'next/link';
 
-export const dynamic = 'force-dynamic';
-
 export default function SupportPage() {
   const router = useRouter();
-  const supabase = createClientComponentClient();
+  const [supabase] = useState(() => createClientComponentClient());
   const [openFaqIndex, setOpenFaqIndex] = useState<number | null>(null);
   const [formData, setFormData] = useState({
     subject: '',

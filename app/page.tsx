@@ -48,9 +48,9 @@ export default function Home() {
       </nav>
 
       {/* Hero Section - Plus humain avec image de fond visible */}
-      <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 sm:py-24 lg:py-40 mt-8">
+      <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-24 lg:py-40 mt-4 sm:mt-8">
         {/* Image de fond de famille souriante se tenant la main - visible mais atténuée */}
-        <div className="absolute inset-0 z-0 opacity-40 rounded-3xl overflow-hidden">
+        <div className="absolute inset-0 z-0 opacity-40 rounded-2xl sm:rounded-3xl overflow-hidden">
           <div className="absolute inset-0 bg-gradient-to-br from-white/70 via-white/60 to-primary-50/70"></div>
           <img
             src="https://images.unsplash.com/photo-1609220136736-443140cffec6?w=1400&q=80"
@@ -60,36 +60,37 @@ export default function Home() {
         </div>
 
         <div className="relative z-10 text-center max-w-4xl mx-auto">
-          <div className="inline-flex items-center gap-2 bg-white shadow-lg text-primary-700 px-6 py-3 rounded-full text-sm font-bold mb-6 border-2 border-primary-200">
+          <div className="inline-flex items-center gap-2 bg-white shadow-lg text-primary-700 px-4 sm:px-6 py-2.5 sm:py-3 rounded-full text-xs sm:text-sm font-bold mb-4 sm:mb-6 border-2 border-primary-200">
             <span className="w-2 h-2 bg-primary-600 rounded-full animate-pulse"></span>
-            Nous sommes là pour vous accompagner
+            <span className="hidden xs:inline">Nous sommes là pour vous accompagner</span>
+            <span className="xs:hidden">Nous sommes là pour vous</span>
           </div>
-          <div className="bg-white/95 backdrop-blur-sm rounded-3xl p-8 sm:p-10 shadow-2xl border-2 border-gray-100 mb-6 sm:mb-10">
-            <h1 className="text-3xl sm:text-5xl lg:text-7xl font-bold text-gray-900 mb-6 leading-tight">
+          <div className="bg-white/95 backdrop-blur-sm rounded-2xl sm:rounded-3xl p-6 sm:p-8 lg:p-10 shadow-2xl border-2 border-gray-100 mb-6 sm:mb-10">
+            <h1 className="text-2xl sm:text-4xl lg:text-6xl xl:text-7xl font-bold text-gray-900 mb-4 sm:mb-6 leading-tight">
               Trouvez l'éducateur spécialisé
-              <span className="text-primary-600 block mt-3">qui comprend vos besoins</span>
+              <span className="text-primary-600 block mt-2 sm:mt-3">qui comprend vos besoins</span>
             </h1>
-            <p className="text-base sm:text-xl lg:text-2xl text-gray-700 leading-relaxed max-w-3xl mx-auto font-medium">
+            <p className="text-sm sm:text-lg lg:text-xl xl:text-2xl text-gray-700 leading-relaxed max-w-3xl mx-auto font-medium px-2 sm:px-0">
               Nous comprenons vos défis quotidiens. C'est pourquoi nous vous aidons à trouver
               des professionnels passionnés et qualifiés, prêts à accompagner votre famille avec bienveillance.
             </p>
           </div>
 
-          <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
+          <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center items-center px-2 sm:px-0">
             <Link
               href="/search"
-              className="w-full sm:w-auto inline-flex items-center justify-center px-8 py-4 bg-primary-600 text-white rounded-xl hover:bg-primary-700 font-bold text-lg shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-1"
+              className="w-full sm:w-auto inline-flex items-center justify-center px-6 sm:px-8 py-3 sm:py-4 bg-primary-600 text-white rounded-xl hover:bg-primary-700 font-bold text-base sm:text-lg shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-1"
             >
-              <svg className="w-6 h-6 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <svg className="w-5 h-5 sm:w-6 sm:h-6 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
               </svg>
               Je cherche un éducateur
             </Link>
             <Link
               href="/auth/signup"
-              className="w-full sm:w-auto inline-flex items-center justify-center px-8 py-4 bg-white text-primary-600 border-2 border-primary-600 rounded-xl hover:bg-primary-50 font-bold text-lg shadow-lg hover:shadow-xl transition-all duration-300"
+              className="w-full sm:w-auto inline-flex items-center justify-center px-6 sm:px-8 py-3 sm:py-4 bg-white text-primary-600 border-2 border-primary-600 rounded-xl hover:bg-primary-50 font-bold text-base sm:text-lg shadow-lg hover:shadow-xl transition-all duration-300"
             >
-              <svg className="w-6 h-6 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <svg className="w-5 h-5 sm:w-6 sm:h-6 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z" />
               </svg>
               Je suis éducateur
@@ -97,8 +98,8 @@ export default function Home() {
           </div>
 
           {/* Badge "Gratuit pour les familles" */}
-          <div className="mt-8 inline-flex items-center px-6 py-3 bg-green-100 text-green-800 rounded-full font-semibold text-base">
-            <svg className="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20">
+          <div className="mt-6 sm:mt-8 inline-flex items-center px-4 sm:px-6 py-2.5 sm:py-3 bg-green-100 text-green-800 rounded-full font-semibold text-sm sm:text-base">
+            <svg className="w-4 h-4 sm:w-5 sm:h-5 mr-2" fill="currentColor" viewBox="0 0 20 20">
               <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
             </svg>
             100% gratuit pour les familles
@@ -107,117 +108,117 @@ export default function Home() {
       </div>
 
       {/* Section "Ils nous font confiance" */}
-      <div className="bg-white py-12">
+      <div className="bg-white py-10 sm:py-12">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-10">
-            <h2 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-2">
+          <div className="text-center mb-8 sm:mb-10">
+            <h2 className="text-xl sm:text-2xl lg:text-3xl font-bold text-gray-900 mb-2">
               Une communauté qui grandit chaque jour
             </h2>
-            <p className="text-gray-600">
+            <p className="text-sm sm:text-base text-gray-600 px-4 sm:px-0">
               Rejoignez des centaines de familles et d'éducateurs qui font confiance à Autisme Connect
             </p>
           </div>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 sm:gap-6 lg:gap-8">
             <div className="text-center">
-              <div className="text-4xl sm:text-5xl font-bold text-primary-600 mb-2">150+</div>
-              <p className="text-gray-600 font-medium">Familles accompagnées</p>
+              <div className="text-3xl sm:text-4xl lg:text-5xl font-bold text-primary-600 mb-1 sm:mb-2">150+</div>
+              <p className="text-xs sm:text-sm lg:text-base text-gray-600 font-medium px-1">Familles accompagnées</p>
             </div>
             <div className="text-center">
-              <div className="text-4xl sm:text-5xl font-bold text-blue-600 mb-2">50+</div>
-              <p className="text-gray-600 font-medium">Éducateurs partenaires</p>
+              <div className="text-3xl sm:text-4xl lg:text-5xl font-bold text-blue-600 mb-1 sm:mb-2">50+</div>
+              <p className="text-xs sm:text-sm lg:text-base text-gray-600 font-medium px-1">Éducateurs partenaires</p>
             </div>
             <div className="text-center">
-              <div className="text-4xl sm:text-5xl font-bold text-green-600 mb-2">98%</div>
-              <p className="text-gray-600 font-medium">Taux de satisfaction</p>
+              <div className="text-3xl sm:text-4xl lg:text-5xl font-bold text-green-600 mb-1 sm:mb-2">98%</div>
+              <p className="text-xs sm:text-sm lg:text-base text-gray-600 font-medium px-1">Taux de satisfaction</p>
             </div>
             <div className="text-center">
-              <div className="text-4xl sm:text-5xl font-bold text-purple-600 mb-2">100%</div>
-              <p className="text-gray-600 font-medium">Diplômes vérifiés</p>
+              <div className="text-3xl sm:text-4xl lg:text-5xl font-bold text-purple-600 mb-1 sm:mb-2">100%</div>
+              <p className="text-xs sm:text-sm lg:text-base text-gray-600 font-medium px-1">Diplômes vérifiés</p>
             </div>
           </div>
         </div>
       </div>
 
       {/* Section Témoignages */}
-      <div className="bg-gradient-to-br from-gray-50 to-blue-50 py-20">
+      <div className="bg-gradient-to-br from-gray-50 to-blue-50 py-12 sm:py-16 lg:py-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-16">
-            <h2 className="text-4xl lg:text-5xl font-bold text-gray-900 mb-4">
+          <div className="text-center mb-10 sm:mb-12 lg:mb-16">
+            <h2 className="text-2xl sm:text-3xl lg:text-4xl xl:text-5xl font-bold text-gray-900 mb-3 sm:mb-4">
               Ils nous racontent leur expérience
             </h2>
-            <p className="text-xl text-gray-600">
+            <p className="text-base sm:text-lg lg:text-xl text-gray-600 px-4 sm:px-0">
               Des témoignages authentiques qui illustrent l'impact de notre plateforme
             </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 sm:gap-8">
             {/* Témoignage 1 */}
-            <div className="bg-white rounded-2xl p-8 shadow-lg hover:shadow-xl transition-shadow">
-              <div className="flex items-center mb-6">
-                <div className="w-16 h-16 bg-gradient-to-br from-pink-400 to-pink-600 rounded-full flex items-center justify-center text-white text-2xl font-bold mr-4">
+            <div className="bg-white rounded-xl sm:rounded-2xl p-6 sm:p-8 shadow-lg hover:shadow-xl transition-shadow">
+              <div className="flex items-center mb-4 sm:mb-6">
+                <div className="w-12 h-12 sm:w-16 sm:h-16 bg-gradient-to-br from-pink-400 to-pink-600 rounded-full flex items-center justify-center text-white text-xl sm:text-2xl font-bold mr-3 sm:mr-4">
                   S
                 </div>
                 <div>
-                  <h4 className="font-bold text-gray-900 text-lg">Sophie M.</h4>
-                  <p className="text-gray-600 text-sm">Maman de Lucas, 6 ans</p>
+                  <h4 className="font-bold text-gray-900 text-base sm:text-lg">Sophie M.</h4>
+                  <p className="text-gray-600 text-xs sm:text-sm">Maman de Lucas, 6 ans</p>
                 </div>
               </div>
-              <div className="flex mb-4">
+              <div className="flex mb-3 sm:mb-4">
                 {[...Array(5)].map((_, i) => (
-                  <svg key={i} className="w-5 h-5 text-yellow-400" fill="currentColor" viewBox="0 0 20 20">
+                  <svg key={i} className="w-4 h-4 sm:w-5 sm:h-5 text-yellow-400" fill="currentColor" viewBox="0 0 20 20">
                     <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
                   </svg>
                 ))}
               </div>
-              <p className="text-gray-700 leading-relaxed italic">
+              <p className="text-sm sm:text-base text-gray-700 leading-relaxed italic">
                 "Grâce à Autisme Connect, nous avons trouvé Marine, une éducatrice formidable qui a vraiment changé notre quotidien.
                 Lucas s'épanouit et progresse chaque jour. Un grand merci pour cette plateforme si humaine !"
               </p>
             </div>
 
             {/* Témoignage 2 */}
-            <div className="bg-white rounded-2xl p-8 shadow-lg hover:shadow-xl transition-shadow">
-              <div className="flex items-center mb-6">
-                <div className="w-16 h-16 bg-gradient-to-br from-blue-400 to-blue-600 rounded-full flex items-center justify-center text-white text-2xl font-bold mr-4">
+            <div className="bg-white rounded-xl sm:rounded-2xl p-6 sm:p-8 shadow-lg hover:shadow-xl transition-shadow">
+              <div className="flex items-center mb-4 sm:mb-6">
+                <div className="w-12 h-12 sm:w-16 sm:h-16 bg-gradient-to-br from-blue-400 to-blue-600 rounded-full flex items-center justify-center text-white text-xl sm:text-2xl font-bold mr-3 sm:mr-4">
                   M
                 </div>
                 <div>
-                  <h4 className="font-bold text-gray-900 text-lg">Marine L.</h4>
-                  <p className="text-gray-600 text-sm">Éducatrice spécialisée DEES</p>
+                  <h4 className="font-bold text-gray-900 text-base sm:text-lg">Marine L.</h4>
+                  <p className="text-gray-600 text-xs sm:text-sm">Éducatrice spécialisée DEES</p>
                 </div>
               </div>
-              <div className="flex mb-4">
+              <div className="flex mb-3 sm:mb-4">
                 {[...Array(5)].map((_, i) => (
-                  <svg key={i} className="w-5 h-5 text-yellow-400" fill="currentColor" viewBox="0 0 20 20">
+                  <svg key={i} className="w-4 h-4 sm:w-5 sm:h-5 text-yellow-400" fill="currentColor" viewBox="0 0 20 20">
                     <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
                   </svg>
                 ))}
               </div>
-              <p className="text-gray-700 leading-relaxed italic">
+              <p className="text-sm sm:text-base text-gray-700 leading-relaxed italic">
                 "En tant qu'éducatrice, cette plateforme m'a permis de développer mon activité libérale tout en restant fidèle à mes valeurs.
                 J'accompagne maintenant 8 familles formidables. La gestion administrative est simplifiée, je peux me concentrer sur l'essentiel !"
               </p>
             </div>
 
             {/* Témoignage 3 */}
-            <div className="bg-white rounded-2xl p-8 shadow-lg hover:shadow-xl transition-shadow">
-              <div className="flex items-center mb-6">
-                <div className="w-16 h-16 bg-gradient-to-br from-green-400 to-green-600 rounded-full flex items-center justify-center text-white text-2xl font-bold mr-4">
+            <div className="bg-white rounded-xl sm:rounded-2xl p-6 sm:p-8 shadow-lg hover:shadow-xl transition-shadow">
+              <div className="flex items-center mb-4 sm:mb-6">
+                <div className="w-12 h-12 sm:w-16 sm:h-16 bg-gradient-to-br from-green-400 to-green-600 rounded-full flex items-center justify-center text-white text-xl sm:text-2xl font-bold mr-3 sm:mr-4">
                   T
                 </div>
                 <div>
-                  <h4 className="font-bold text-gray-900 text-lg">Thomas & Léa R.</h4>
-                  <p className="text-gray-600 text-sm">Parents d'Emma, 4 ans</p>
+                  <h4 className="font-bold text-gray-900 text-base sm:text-lg">Thomas & Léa R.</h4>
+                  <p className="text-gray-600 text-xs sm:text-sm">Parents d'Emma, 4 ans</p>
                 </div>
               </div>
-              <div className="flex mb-4">
+              <div className="flex mb-3 sm:mb-4">
                 {[...Array(5)].map((_, i) => (
-                  <svg key={i} className="w-5 h-5 text-yellow-400" fill="currentColor" viewBox="0 0 20 20">
+                  <svg key={i} className="w-4 h-4 sm:w-5 sm:h-5 text-yellow-400" fill="currentColor" viewBox="0 0 20 20">
                     <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
                   </svg>
                 ))}
               </div>
-              <p className="text-gray-700 leading-relaxed italic">
+              <p className="text-sm sm:text-base text-gray-700 leading-relaxed italic">
                 "Nous cherchions depuis des mois un éducateur formé à la méthode ABA. En 2 jours, nous avons trouvé Julien qui habite à 10 minutes de chez nous !
                 Emma adore ses séances et nous voyons déjà des progrès incroyables. Merci infiniment !"
               </p>
@@ -227,30 +228,30 @@ export default function Home() {
       </div>
 
       {/* Notre Mission - Version humanisée */}
-      <div className="bg-white py-20">
+      <div className="bg-white py-12 sm:py-16 lg:py-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-16">
-            <h2 className="text-4xl lg:text-5xl font-bold text-gray-900 mb-6">
+          <div className="text-center mb-10 sm:mb-12 lg:mb-16">
+            <h2 className="text-2xl sm:text-3xl lg:text-4xl xl:text-5xl font-bold text-gray-900 mb-4 sm:mb-6">
               Pourquoi Autisme Connect existe ?
             </h2>
-            <p className="text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed">
+            <p className="text-base sm:text-lg lg:text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed px-4 sm:px-0">
               Parce que nous croyons que chaque famille mérite d'avoir accès facilement à un accompagnement de qualité,
               et que chaque enfant a le droit à une prise en charge adaptée à ses besoins uniques.
             </p>
           </div>
 
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center max-w-6xl mx-auto">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 sm:gap-10 lg:gap-12 items-center max-w-6xl mx-auto">
             {/* Colonne gauche - Texte principal */}
-            <div className="space-y-6">
-              <div className="flex items-start gap-4">
-                <div className="flex-shrink-0 w-12 h-12 bg-primary-100 rounded-lg flex items-center justify-center">
-                  <svg className="w-6 h-6 text-primary-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <div className="space-y-5 sm:space-y-6">
+              <div className="flex items-start gap-3 sm:gap-4">
+                <div className="flex-shrink-0 w-10 h-10 sm:w-12 sm:h-12 bg-primary-100 rounded-lg flex items-center justify-center">
+                  <svg className="w-5 h-5 sm:w-6 sm:h-6 text-primary-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
                   </svg>
                 </div>
                 <div>
-                  <h3 className="text-xl font-bold text-gray-900 mb-2">Pour vous, les familles</h3>
-                  <p className="text-gray-600 leading-relaxed">
+                  <h3 className="text-lg sm:text-xl font-bold text-gray-900 mb-1.5 sm:mb-2">Pour vous, les familles</h3>
+                  <p className="text-sm sm:text-base text-gray-600 leading-relaxed">
                     Nous savons à quel point il peut être difficile de trouver le bon professionnel.
                     C'est pourquoi nous avons créé un espace où vous pouvez découvrir des éducateurs passionnés,
                     consulter leurs parcours et échanger avec eux en toute confiance.
@@ -258,15 +259,15 @@ export default function Home() {
                 </div>
               </div>
 
-              <div className="flex items-start gap-4">
-                <div className="flex-shrink-0 w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center">
-                  <svg className="w-6 h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <div className="flex items-start gap-3 sm:gap-4">
+                <div className="flex-shrink-0 w-10 h-10 sm:w-12 sm:h-12 bg-green-100 rounded-lg flex items-center justify-center">
+                  <svg className="w-5 h-5 sm:w-6 sm:h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
                   </svg>
                 </div>
                 <div>
-                  <h3 className="text-xl font-bold text-gray-900 mb-2">Pour vous, les éducateurs</h3>
-                  <p className="text-gray-600 leading-relaxed">
+                  <h3 className="text-lg sm:text-xl font-bold text-gray-900 mb-1.5 sm:mb-2">Pour vous, les éducateurs</h3>
+                  <p className="text-sm sm:text-base text-gray-600 leading-relaxed">
                     Votre métier est une vocation. Nous vous donnons les moyens de développer votre activité
                     tout en gardant du temps pour ce qui compte vraiment : accompagner les enfants et leurs familles
                     avec bienveillance et professionnalisme.
@@ -274,15 +275,15 @@ export default function Home() {
                 </div>
               </div>
 
-              <div className="flex items-start gap-4">
-                <div className="flex-shrink-0 w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center">
-                  <svg className="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <div className="flex items-start gap-3 sm:gap-4">
+                <div className="flex-shrink-0 w-10 h-10 sm:w-12 sm:h-12 bg-blue-100 rounded-lg flex items-center justify-center">
+                  <svg className="w-5 h-5 sm:w-6 sm:h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
                   </svg>
                 </div>
                 <div>
-                  <h3 className="text-xl font-bold text-gray-900 mb-2">Notre engagement</h3>
-                  <p className="text-gray-600 leading-relaxed">
+                  <h3 className="text-lg sm:text-xl font-bold text-gray-900 mb-1.5 sm:mb-2">Notre engagement</h3>
+                  <p className="text-sm sm:text-base text-gray-600 leading-relaxed">
                     Transparence totale, sécurité maximale et accompagnement humain.
                     Chaque profil est vérifié, chaque échange est sécurisé, et notre équipe est toujours là pour vous aider.
                   </p>
@@ -291,7 +292,7 @@ export default function Home() {
             </div>
 
             {/* Colonne droite - Stats/Highlights */}
-            <div className="bg-gradient-to-br from-primary-50 to-blue-50 rounded-2xl p-8 lg:p-10 shadow-lg">
+            <div className="bg-gradient-to-br from-primary-50 to-blue-50 rounded-xl sm:rounded-2xl p-6 sm:p-8 lg:p-10 shadow-lg">
               <div className="space-y-8">
                 <div className="text-center pb-6 border-b border-primary-200">
                   <p className="text-primary-600 font-semibold mb-2">Une plateforme pensée pour vous</p>
