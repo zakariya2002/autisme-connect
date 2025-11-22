@@ -7,7 +7,11 @@ import Link from 'next/link';
 
 export default function SupportPage() {
   const router = useRouter();
-  const [supabase] = useState(() => createClientComponentClient());
+  const [supabase, setSupabase] = useState<ReturnType<typeof createClientComponentClient> | null>(null);
+
+  useEffect(() => {
+    setSupabase(createClientComponentClient());
+  }, []);
   const [openFaqIndex, setOpenFaqIndex] = useState<number | null>(null);
   const [formData, setFormData] = useState({
     subject: '',
@@ -139,6 +143,12 @@ export default function SupportPage() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+
+    if (!supabase) {
+      setSubmitMessage({ type: 'error', text: 'Initialisation en cours, veuillez réessayer.' });
+      return;
+    }
+
     setIsSubmitting(true);
     setSubmitMessage(null);
 
