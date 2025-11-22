@@ -429,6 +429,49 @@ export default function DiplomePage() {
           </p>
         </div>
 
+        {/* Message d'information pour les nouveaux comptes */}
+        {!profile.diploma_url && (
+          <div className="mb-6 bg-gradient-to-r from-blue-50 to-primary-50 border-l-4 border-primary-500 rounded-r-lg p-6 shadow-sm">
+            <div className="flex items-start">
+              <div className="flex-shrink-0">
+                <svg className="h-8 w-8 text-primary-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+              </div>
+              <div className="ml-4">
+                <h3 className="text-lg font-semibold text-gray-900 mb-2">
+                  📋 Bienvenue sur Autisme Connect !
+                </h3>
+                <p className="text-gray-700 mb-3">
+                  <strong>Important :</strong> Vous apparaîtrez sur le site et serez visible des familles uniquement après validation de votre diplôme.
+                </p>
+                <div className="space-y-2 text-sm text-gray-600">
+                  <div className="flex items-start">
+                    <span className="text-primary-600 font-bold mr-2">1.</span>
+                    <span>Uploadez votre diplôme ME ou ES (format PDF, JPG ou PNG)</span>
+                  </div>
+                  <div className="flex items-start">
+                    <span className="text-primary-600 font-bold mr-2">2.</span>
+                    <span>Notre système analyse automatiquement votre diplôme (OCR)</span>
+                  </div>
+                  <div className="flex items-start">
+                    <span className="text-primary-600 font-bold mr-2">3.</span>
+                    <span>Un email est envoyé à la DREETS pour vérification officielle</span>
+                  </div>
+                  <div className="flex items-start">
+                    <span className="text-primary-600 font-bold mr-2">4.</span>
+                    <span>Notre équipe valide votre diplôme (délai: 24-48h)</span>
+                  </div>
+                  <div className="flex items-start">
+                    <span className="text-green-600 font-bold mr-2">✓</span>
+                    <span className="font-medium text-green-700">Vous apparaissez dans les résultats de recherche !</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+
         {/* Statut actuel */}
         {profile.diploma_verification_status && (
           <div className="mb-6">

@@ -26,11 +26,11 @@ export default function LoginPage() {
       if (role === 'admin') {
         router.push('/admin/verify-diplomas');
       } else if (role === 'educator') {
-        router.push('/dashboard/educator');
+        router.push('/dashboard/educator/diploma');
       } else if (role === 'family') {
         router.push('/dashboard/family');
       } else {
-        router.push('/dashboard/educator');
+        router.push('/dashboard/educator/diploma');
       }
     } catch (err: any) {
       setError(err.message || 'Une erreur est survenue lors de la connexion');

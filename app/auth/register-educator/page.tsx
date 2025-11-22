@@ -207,8 +207,8 @@ export default function RegisterEducatorPage() {
         }
       }
 
-      // 4. Sinon, rediriger vers le dashboard
-      router.push('/dashboard/educator');
+      // 4. Sinon, rediriger vers la page de gestion du diplôme
+      router.push('/dashboard/educator/diploma');
     } catch (err: any) {
       setError(err.message || 'Une erreur est survenue');
     } finally {
