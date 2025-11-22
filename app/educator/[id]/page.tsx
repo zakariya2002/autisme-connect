@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { supabase } from '@/lib/supabase';
 import Logo from '@/components/Logo';
+import PublicMobileMenu from '@/components/PublicMobileMenu';
 
 interface EducatorProfile {
   id: string;
@@ -320,7 +321,17 @@ export default function EducatorPublicProfile({ params }: { params: { id: string
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between h-16 items-center">
             <Logo />
-            <div className="flex gap-2">
+
+            {/* Menu hamburger - visible uniquement sur mobile */}
+            <div className="md:hidden">
+              <PublicMobileMenu
+                isAuthenticated={isAuthenticated}
+                userRole={userRole}
+              />
+            </div>
+
+            {/* Navigation desktop - cachée sur mobile */}
+            <div className="hidden md:flex gap-2">
               <Link
                 href="/search"
                 className="text-gray-700 hover:bg-gray-100 hover:text-primary-600 px-4 py-2 rounded-lg transition-all duration-200 font-medium"

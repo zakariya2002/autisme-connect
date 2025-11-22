@@ -6,6 +6,7 @@ import Link from 'next/link';
 import { supabase } from '@/lib/supabase';
 import Calendar from '@/components/Calendar';
 import Logo from '@/components/Logo';
+import PublicMobileMenu from '@/components/PublicMobileMenu';
 import { canEducatorCreateBooking } from '@/lib/subscription-utils';
 
 interface Educator {
@@ -328,16 +329,28 @@ export default function BookAppointmentPage({ params }: { params: { id: string }
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Navigation */}
-      <nav className="bg-white shadow-sm">
+      <nav className="bg-white shadow-sm sticky top-0 z-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between h-16 items-center">
             <Logo href="/dashboard/family" />
-            <Link
-              href={`/educator/${params.id}`}
-              className="text-gray-700 hover:text-primary-600"
-            >
-              ← Retour au profil
-            </Link>
+
+            {/* Menu hamburger - visible uniquement sur mobile */}
+            <div className="md:hidden">
+              <PublicMobileMenu
+                isAuthenticated={true}
+                userRole="family"
+              />
+            </div>
+
+            {/* Navigation desktop - cachée sur mobile */}
+            <div className="hidden md:flex items-center gap-4">
+              <Link
+                href={`/educator/${params.id}`}
+                className="text-gray-700 hover:text-primary-600 hover:bg-gray-100 px-4 py-2 rounded-lg transition-all duration-200 font-medium"
+              >
+                ← Retour au profil
+              </Link>
+            </div>
           </div>
         </div>
       </nav>
