@@ -42,11 +42,11 @@ export default function MobileMenu() {
 
           {/* Menu latéral avec animation de slide depuis la gauche */}
           <div
-            className={`fixed top-0 left-0 h-full w-72 bg-white shadow-2xl z-50 p-6 transform transition-transform duration-300 ease-out ${
+            className={`fixed top-0 left-0 h-full w-72 bg-white shadow-2xl z-50 transform transition-transform duration-300 ease-out overflow-y-auto ${
               isAnimating ? 'translate-x-0' : '-translate-x-full'
             }`}
           >
-            <div className="flex items-center justify-between mb-8">
+            <div className="flex items-center justify-between p-6 pb-4 bg-white border-b border-gray-200">
               <h2 className="text-xl font-bold text-primary-600">Menu</h2>
               <button
                 onClick={handleClose}
@@ -59,7 +59,7 @@ export default function MobileMenu() {
               </button>
             </div>
 
-            <nav className="flex flex-col gap-2">
+            <nav className="flex flex-col gap-2 p-6 pt-4 bg-white">
               <Link
                 href="/"
                 onClick={handleClose}
