@@ -5,6 +5,8 @@ import { useRouter } from 'next/navigation';
 import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
 import Link from 'next/link';
 
+export const dynamic = 'force-dynamic';
+
 export default function SupportPage() {
   const router = useRouter();
   const supabase = createClientComponentClient();
