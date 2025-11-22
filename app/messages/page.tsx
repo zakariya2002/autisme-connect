@@ -380,24 +380,47 @@ export default function MessagesPage() {
                   conversations.map((conv) => {
                     const other = getOtherParticipant(conv);
                     if (!other) return null; // Ignorer les conversations sans profil valide
+                    const isEducatorProfile = userProfile?.role === 'family';
+                    const profileUrl = isEducatorProfile ? `/educator/${other?.id}` : null;
+
                     return (
-                      <button
+                      <div
                         key={conv.id}
-                        onClick={() => setSelectedConversation(conv)}
-                        className={`w-full p-4 text-left hover:bg-gray-50 border-b border-gray-100 ${
+                        className={`w-full p-4 hover:bg-gray-50 border-b border-gray-100 ${
                           selectedConversation?.id === conv.id ? 'bg-primary-50' : ''
                         }`}
                       >
                         <div className="flex items-center gap-3">
-                          <Avatar participant={other} size="md" />
+                          <button
+                            onClick={() => setSelectedConversation(conv)}
+                            className="flex-shrink-0"
+                          >
+                            <Avatar participant={other} size="md" />
+                          </button>
                           <div className="flex-1 min-w-0">
-                            <p className="font-medium text-gray-900">
-                              {other.first_name || 'Utilisateur'} {other.last_name || ''}
-                            </p>
-                            <p className="text-sm text-gray-500 truncate">{other.location || 'Localisation non renseignée'}</p>
+                            {profileUrl ? (
+                              <Link href={profileUrl}>
+                                <p className="font-medium text-gray-900 hover:text-primary-600 cursor-pointer transition-colors">
+                                  {other.first_name || 'Utilisateur'} {other.last_name || ''}
+                                </p>
+                              </Link>
+                            ) : (
+                              <button
+                                onClick={() => setSelectedConversation(conv)}
+                                className="font-medium text-gray-900 text-left"
+                              >
+                                {other.first_name || 'Utilisateur'} {other.last_name || ''}
+                              </button>
+                            )}
+                            <button
+                              onClick={() => setSelectedConversation(conv)}
+                              className="text-sm text-gray-500 truncate text-left block w-full"
+                            >
+                              {other.location || 'Localisation non renseignée'}
+                            </button>
                           </div>
                         </div>
-                      </button>
+                      </div>
                     );
                   })
                 )}
@@ -416,14 +439,26 @@ export default function MessagesPage() {
                   <div className="p-4 border-b border-gray-200">
                     {(() => {
                       const other = getOtherParticipant(selectedConversation);
+                      const isEducatorProfile = userProfile?.role === 'family';
+                      const profileUrl = isEducatorProfile ? `/educator/${other?.id}` : null;
+
                       return (
                         <div className="flex items-center gap-3">
                           <Avatar participant={other} size="lg" />
                           <div>
-                            <h3 className="text-lg font-semibold text-gray-900">
-                              {other?.first_name || 'Utilisateur'}{' '}
-                              {other?.last_name || ''}
-                            </h3>
+                            {profileUrl ? (
+                              <Link href={profileUrl}>
+                                <h3 className="text-lg font-semibold text-gray-900 hover:text-primary-600 cursor-pointer transition-colors">
+                                  {other?.first_name || 'Utilisateur'}{' '}
+                                  {other?.last_name || ''}
+                                </h3>
+                              </Link>
+                            ) : (
+                              <h3 className="text-lg font-semibold text-gray-900">
+                                {other?.first_name || 'Utilisateur'}{' '}
+                                {other?.last_name || ''}
+                              </h3>
+                            )}
                             <p className="text-sm text-gray-500">
                               {other?.location || 'Localisation non renseignée'}
                             </p>
