@@ -380,8 +380,9 @@ export default function MessagesPage() {
                   conversations.map((conv) => {
                     const other = getOtherParticipant(conv);
                     if (!other) return null; // Ignorer les conversations sans profil valide
-                    const isEducatorProfile = userProfile?.role === 'family';
-                    const profileUrl = isEducatorProfile ? `/educator/${other?.id}` : null;
+                    // Vérifier si l'autre personne est un éducateur
+                    const isOtherEducator = userProfile?.role === 'family' || conv.educator_profiles?.id === other?.id;
+                    const profileUrl = isOtherEducator ? `/educator/${other?.id}` : null;
 
                     return (
                       <div
@@ -439,8 +440,9 @@ export default function MessagesPage() {
                   <div className="p-4 border-b border-gray-200">
                     {(() => {
                       const other = getOtherParticipant(selectedConversation);
-                      const isEducatorProfile = userProfile?.role === 'family';
-                      const profileUrl = isEducatorProfile ? `/educator/${other?.id}` : null;
+                      // Vérifier si l'autre personne est un éducateur
+                      const isOtherEducator = userProfile?.role === 'family' || selectedConversation.educator_profiles?.id === other?.id;
+                      const profileUrl = isOtherEducator ? `/educator/${other?.id}` : null;
 
                       return (
                         <div className="flex items-center gap-3">
