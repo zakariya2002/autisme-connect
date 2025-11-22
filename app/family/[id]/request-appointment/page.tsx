@@ -53,6 +53,7 @@ export default function RequestAppointmentPage({ params }: { params: { id: strin
   const [educatorNotes, setEducatorNotes] = useState('');
 
   const [availableSlots, setAvailableSlots] = useState<{ start: string; end: string }[]>([]);
+  const [fullyBookedDates, setFullyBookedDates] = useState<string[]>([]);
   const [success, setSuccess] = useState('');
   const [error, setError] = useState('');
   const [submitting, setSubmitting] = useState(false);
@@ -73,6 +74,12 @@ export default function RequestAppointmentPage({ params }: { params: { id: strin
       calculateAvailableSlots();
     }
   }, [selectedDate, weeklySlots, appointments]);
+
+  useEffect(() => {
+    if (weeklySlots.length > 0) {
+      calculateFullyBookedDates();
+    }
+  }, [weeklySlots, appointments]);
 
   const checkAuth = async () => {
     const { data: { session } } = await supabase.auth.getSession();
@@ -198,13 +205,13 @@ export default function RequestAppointmentPage({ params }: { params: { id: strin
   };
 
   // Calculer les dates complètes pour le calendrier
-  const getFullyBookedDates = () => {
+  const calculateFullyBookedDates = () => {
     const fullyBooked: string[] = [];
     const today = new Date();
     today.setHours(0, 0, 0, 0);
 
-    // Vérifier les 60 prochains jours
-    for (let i = 0; i < 60; i++) {
+    // Vérifier les 90 prochains jours
+    for (let i = 0; i < 90; i++) {
       const checkDate = new Date(today);
       checkDate.setDate(today.getDate() + i);
       const dateStr = checkDate.toISOString().split('T')[0];
@@ -214,14 +221,15 @@ export default function RequestAppointmentPage({ params }: { params: { id: strin
       const hasSlots = weeklySlots.some(slot => slot.day_of_week === dayOfWeek);
 
       if (hasSlots) {
-        const availableSlots = calculateAvailableSlotsForDate(dateStr);
-        if (availableSlots.length === 0) {
+        const slots = calculateAvailableSlotsForDate(dateStr);
+        if (slots.length === 0) {
           fullyBooked.push(dateStr);
         }
       }
     }
 
-    return fullyBooked;
+    console.log('Dates complètes calculées:', fullyBooked);
+    setFullyBookedDates(fullyBooked);
   };
 
   const handleSlotToggle = (startTime: string) => {
@@ -400,7 +408,7 @@ export default function RequestAppointmentPage({ params }: { params: { id: strin
                 selectedDate={selectedDate}
                 onSelectDate={setSelectedDate}
                 availableDays={[...new Set(weeklySlots.map(slot => slot.day_of_week))]}
-                fullyBookedDates={getFullyBookedDates()}
+                fullyBookedDates={fullyBookedDates}
                 minDate={new Date()}
               />
             </div>
