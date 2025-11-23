@@ -1,0 +1,9 @@
+# robots.txt pour Autisme Connect
+User-agent: *
+Allow: /
+Disallow: /api/
+Disallow: /dashboard/
+Disallow: /admin/
+
+# Sitemap
+Sitemap: https://www.autismeconnect.fr/sitemap.xml
