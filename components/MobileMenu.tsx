@@ -13,17 +13,7 @@ export default function MobileMenu() {
     setIsOpen(false);
   }, [pathname]);
 
-  // Empêcher le scroll quand le menu est ouvert
-  useEffect(() => {
-    if (isOpen) {
-      document.body.style.overflow = 'hidden';
-    } else {
-      document.body.style.overflow = 'unset';
-    }
-    return () => {
-      document.body.style.overflow = 'unset';
-    };
-  }, [isOpen]);
+  // Note: Le scroll n'est plus bloqué pour permettre une navigation dynamique
 
   return (
     <>
@@ -76,18 +66,7 @@ export default function MobileMenu() {
             background: 'linear-gradient(135deg, #3b82f6 0%, #2563eb 100%)'
           }}
         >
-          <div className="flex items-center justify-between mb-1">
-            <h2 className="text-xl font-bold">Menu</h2>
-            <button
-              onClick={() => setIsOpen(false)}
-              className="p-2 hover:bg-white/10 rounded-lg transition-colors"
-              aria-label="Fermer le menu"
-            >
-              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-              </svg>
-            </button>
-          </div>
+          <h2 className="text-xl font-bold">Menu</h2>
           <p className="text-blue-100 text-sm">Autisme Connect</p>
         </div>
 
