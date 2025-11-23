@@ -3,9 +3,26 @@
 import Link from 'next/link';
 import Logo from '@/components/Logo';
 import MobileMenu from '@/components/MobileMenu';
+import TndToggle from '@/components/TndToggle';
+import { useTnd } from '@/contexts/TndContext';
+import HomeTnd from './page-tnd';
 
 export default function Home() {
+  const { tndMode } = useTnd();
+
+  // Si mode TND activé, afficher la version simplifiée
+  if (tndMode) {
+    return (
+      <>
+        <HomeTnd />
+        <TndToggle />
+      </>
+    );
+  }
+
+  // Sinon, afficher la version normale
   return (
+    <>
     <div className="min-h-screen bg-gradient-to-br from-primary-50 via-white to-blue-50">
       {/* Navigation */}
       <nav className="bg-white shadow-sm border-b border-gray-200 sticky top-0 z-50 backdrop-blur-sm bg-white/95">
@@ -612,5 +629,7 @@ export default function Home() {
         </div>
       </footer>
     </div>
+    <TndToggle />
+    </>
   );
 }
