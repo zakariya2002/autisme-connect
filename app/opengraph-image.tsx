@@ -31,7 +31,7 @@ export default async function Image() {
             display: 'flex',
             alignItems: 'center',
             gap: '24px',
-            marginBottom: '32px',
+            marginBottom: '40px',
           }}
         >
           <div
@@ -39,9 +39,14 @@ export default async function Image() {
               fontSize: 120,
               background: 'white',
               color: '#3b82f6',
-              padding: '24px 48px',
-              borderRadius: '24px',
+              width: '200px',
+              height: '200px',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              borderRadius: '50%',
               fontWeight: 'bold',
+              boxShadow: '0 20px 60px rgba(0, 0, 0, 0.2)',
             }}
           >
             AC
@@ -53,6 +58,7 @@ export default async function Image() {
             color: 'white',
             textAlign: 'center',
             marginBottom: '16px',
+            fontWeight: 'bold',
           }}
         >
           Autisme Connect
@@ -60,9 +66,10 @@ export default async function Image() {
         <div
           style={{
             fontSize: 36,
-            color: 'rgba(255,255,255,0.9)',
+            color: 'rgba(255,255,255,0.95)',
             textAlign: 'center',
             maxWidth: '900px',
+            fontWeight: '500',
           }}
         >
           Trouvez un éducateur spécialisé en autisme près de chez vous

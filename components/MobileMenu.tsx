@@ -64,12 +64,18 @@ export default function MobileMenu() {
 
       {/* Menu slide-in depuis la droite */}
       <div
-        className={`fixed top-0 right-0 h-full w-80 max-w-[85vw] bg-white z-50 md:hidden transform transition-transform duration-300 ease-out shadow-2xl ${
+        className={`fixed top-0 right-0 h-full w-80 max-w-[85vw] z-50 md:hidden transform transition-transform duration-300 ease-out shadow-2xl ${
           isOpen ? 'translate-x-0' : 'translate-x-full'
         }`}
+        style={{ backgroundColor: '#ffffff' }}
       >
         {/* Header du menu */}
-        <div className="bg-gradient-to-r from-primary-600 to-primary-700 px-6 py-6 text-white">
+        <div
+          className="px-6 py-6 text-white"
+          style={{
+            background: 'linear-gradient(135deg, #3b82f6 0%, #2563eb 100%)'
+          }}
+        >
           <div className="flex items-center justify-between mb-1">
             <h2 className="text-xl font-bold">Menu</h2>
             <button
@@ -82,11 +88,14 @@ export default function MobileMenu() {
               </svg>
             </button>
           </div>
-          <p className="text-primary-100 text-sm">Autisme Connect</p>
+          <p className="text-blue-100 text-sm">Autisme Connect</p>
         </div>
 
         {/* Navigation */}
-        <nav className="flex flex-col py-6 px-4 gap-1 overflow-y-auto max-h-[calc(100vh-140px)]">
+        <nav
+          className="flex flex-col py-6 px-4 gap-1 overflow-y-auto max-h-[calc(100vh-140px)]"
+          style={{ backgroundColor: '#ffffff' }}
+        >
           {/* Section principale */}
           <div className="mb-4">
             <Link
