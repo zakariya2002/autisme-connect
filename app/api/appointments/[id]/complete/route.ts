@@ -319,6 +319,27 @@ export async function POST(
 
     console.log('🎉 RDV complété avec succès');
 
+    // 📄 Générer automatiquement les factures
+    try {
+      console.log('📄 Génération automatique des factures...');
+
+      const invoiceResponse = await fetch(`${process.env.NEXT_PUBLIC_APP_URL}/api/invoices/generate`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ appointmentId: params.id })
+      });
+
+      if (invoiceResponse.ok) {
+        const invoiceData = await invoiceResponse.json();
+        console.log('✅ Factures générées:', invoiceData);
+      } else {
+        console.error('⚠️ Erreur génération factures (non-bloquant):', await invoiceResponse.text());
+      }
+    } catch (invoiceError) {
+      // Ne pas bloquer si la génération de facture échoue
+      console.error('⚠️ Erreur génération factures (non-bloquant):', invoiceError);
+    }
+
     return NextResponse.json({
       success: true,
       message: 'Rendez-vous terminé et paiement effectué',
