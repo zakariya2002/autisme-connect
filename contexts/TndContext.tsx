@@ -33,11 +33,6 @@ export function TndProvider({ children }: { children: ReactNode }) {
     setTndMode(prev => !prev);
   };
 
-  // Éviter le flash pendant l'hydratation
-  if (!mounted) {
-    return <>{children}</>;
-  }
-
   return (
     <TndContext.Provider value={{ tndMode, toggleTndMode }}>
       {children}

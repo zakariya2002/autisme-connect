@@ -4,8 +4,12 @@ import { useState } from 'react';
 import Link from 'next/link';
 import Logo from '@/components/Logo';
 import MobileMenu from '@/components/MobileMenu';
+import TndToggle from '@/components/TndToggle';
+import { useTnd } from '@/contexts/TndContext';
+import ContactTnd from './page-tnd';
 
 export default function ContactPage() {
+  const { tndMode } = useTnd();
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -59,6 +63,15 @@ export default function ContactPage() {
       [e.target.name]: e.target.value
     });
   };
+
+  if (tndMode) {
+    return (
+      <>
+        <ContactTnd />
+        <TndToggle />
+      </>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-primary-50 via-white to-blue-50">
@@ -275,8 +288,8 @@ export default function ContactPage() {
                   </div>
                   <div>
                     <p className="text-sm font-semibold text-gray-900">Email</p>
-                    <a href="mailto:contact@autisme-connect.fr" className="text-primary-600 hover:text-primary-700 transition-colors">
-                      contact@autisme-connect.fr
+                    <a href="mailto:admin@autismeconnect.fr" className="text-primary-600 hover:text-primary-700 transition-colors">
+                      admin@autismeconnect.fr
                     </a>
                   </div>
                 </div>
@@ -370,6 +383,7 @@ export default function ContactPage() {
           </div>
         </div>
       </footer>
+      <TndToggle />
     </div>
   );
 }

@@ -24,7 +24,7 @@ export default function LoginPage() {
 
       // Rediriger selon le rôle
       if (role === 'admin') {
-        router.push('/admin/verify-diplomas');
+        router.push('/admin');
       } else if (role === 'educator') {
         router.push('/dashboard/educator');
       } else if (role === 'family') {

@@ -111,7 +111,9 @@ export default function RootLayout({
       </head>
       <body className="font-sans antialiased">
         <TndProvider>
-          {children}
+          <div className="min-h-screen">
+            {children}
+          </div>
         </TndProvider>
       </body>
     </html>

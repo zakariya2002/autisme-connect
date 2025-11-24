@@ -82,7 +82,7 @@ export default function Home() {
           </div>
           <div className="bg-white/95 backdrop-blur-sm rounded-2xl sm:rounded-3xl p-6 sm:p-8 lg:p-10 shadow-2xl border-2 border-gray-100 mb-6 sm:mb-10">
             <h1 className="text-2xl sm:text-4xl lg:text-6xl xl:text-7xl font-bold text-gray-900 mb-4 sm:mb-6 leading-tight">
-              Trouvez l'éducateur spécialisé
+              Trouvez l'éducateur
               <span className="text-primary-600 block mt-2 sm:mt-3">qui comprend vos besoins</span>
             </h1>
             <p className="text-sm sm:text-lg lg:text-xl xl:text-2xl text-gray-700 leading-relaxed max-w-3xl mx-auto font-medium px-2 sm:px-0">
@@ -281,7 +281,10 @@ export default function Home() {
                   </svg>
                 </div>
                 <div>
-                  <h3 className="text-lg sm:text-xl font-bold text-gray-900 mb-1.5 sm:mb-2">Pour vous, les éducateurs</h3>
+                  <h3 className="text-lg sm:text-xl font-bold text-gray-900 mb-1.5 sm:mb-2">Pour vous, les professionnels</h3>
+                  <p className="text-sm sm:text-base text-gray-700 mb-2 leading-relaxed">
+                    <span className="font-semibold text-gray-900">Éducateurs spécialisés (ES) • Moniteurs éducateurs (ME)</span>
+                  </p>
                   <p className="text-sm sm:text-base text-gray-600 leading-relaxed">
                     Votre métier est une vocation. Nous vous donnons les moyens de développer votre activité
                     tout en gardant du temps pour ce qui compte vraiment : accompagner les enfants et leurs familles

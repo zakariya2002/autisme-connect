@@ -7,10 +7,14 @@ import { EducatorProfile, CertificationType } from '@/types';
 import { getCurrentPosition, geocodeAddress, calculateDistance, reverseGeocode } from '@/lib/geolocation';
 import Logo from '@/components/Logo';
 import MobileMenu from '@/components/MobileMenu';
+import TndToggle from '@/components/TndToggle';
+import { useTnd } from '@/contexts/TndContext';
+import SearchTnd from './page-tnd';
 
 type EducatorWithDistance = EducatorProfile & { distance?: number };
 
 export default function SearchPage() {
+  const { tndMode } = useTnd();
   const [educators, setEducators] = useState<EducatorWithDistance[]>([]);
   const [loading, setLoading] = useState(true);
   const [geolocating, setGeolocating] = useState(false);
@@ -210,6 +214,15 @@ export default function SearchPage() {
     setUserCity('');
     setTimeout(fetchEducators, 100);
   };
+
+  if (tndMode) {
+    return (
+      <>
+        <SearchTnd />
+        <TndToggle />
+      </>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-primary-50 via-white to-blue-50">
@@ -643,6 +656,7 @@ export default function SearchPage() {
           </div>
         </div>
       </div>
+      <TndToggle />
     </div>
   );
 }

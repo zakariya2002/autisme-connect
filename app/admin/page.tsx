@@ -11,6 +11,7 @@ export default function AdminDashboard() {
   const [stats, setStats] = useState({
     pendingCertifications: 0,
     pendingAvatars: 0,
+    pendingVerifications: 0,
     totalEducators: 0,
     totalFamilies: 0,
   });
@@ -56,9 +57,16 @@ export default function AdminDashboard() {
         .from('family_profiles')
         .select('*', { count: 'exact', head: true });
 
+      // Compter les vérifications en attente (documents_submitted)
+      const { count: verificationCount } = await supabase
+        .from('educator_profiles')
+        .select('*', { count: 'exact', head: true })
+        .in('verification_status', ['documents_submitted', 'documents_verified', 'interview_scheduled']);
+
       setStats({
         pendingCertifications: certCount || 0,
         pendingAvatars: avatarCount || 0,
+        pendingVerifications: verificationCount || 0,
         totalEducators: educatorCount || 0,
         totalFamilies: familyCount || 0,
       });
@@ -175,7 +183,32 @@ export default function AdminDashboard() {
           <div className="px-6 py-4 border-b border-gray-200">
             <h2 className="text-lg font-semibold text-gray-900">Modération</h2>
           </div>
-          <div className="p-6 grid grid-cols-1 gap-4 sm:grid-cols-2">
+          <div className="p-6 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+            <Link
+              href="/admin/verifications"
+              className="block p-6 bg-green-50 rounded-lg hover:bg-green-100 transition border-2 border-green-300"
+            >
+              <div className="flex items-center justify-between">
+                <div>
+                  <h3 className="text-lg font-medium text-gray-900 flex items-center gap-2">
+                    <svg className="w-6 h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+                    </svg>
+                    Vérifications
+                  </h3>
+                  <p className="text-sm text-gray-600 mt-1">Documents, casiers, entretiens vidéo</p>
+                  {stats.pendingVerifications > 0 && (
+                    <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-600 text-white mt-2">
+                      {stats.pendingVerifications} en attente
+                    </span>
+                  )}
+                </div>
+                <svg className="h-8 w-8 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                </svg>
+              </div>
+            </Link>
+
             <Link
               href="/admin/certifications"
               className="block p-6 bg-yellow-50 rounded-lg hover:bg-yellow-100 transition border border-yellow-200"

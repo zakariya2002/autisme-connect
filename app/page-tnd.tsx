@@ -1,21 +1,13 @@
 'use client';
 
 import Link from 'next/link';
+import TndNav from '@/components/TndNav';
 
 // Version TND simplifiée de la page d'accueil
 export default function HomeTnd() {
   return (
     <div className="min-h-screen bg-white">
-      {/* Navigation simplifiée */}
-      <nav className="bg-white border-b-4 border-blue-600 sticky top-0 z-40">
-        <div className="max-w-7xl mx-auto px-6 py-6">
-          <div className="flex justify-between items-center">
-            <div className="text-3xl font-bold text-blue-600">
-              AUTISME CONNECT
-            </div>
-          </div>
-        </div>
-      </nav>
+      <TndNav />
 
       {/* Hero Section TND - Ultra simplifié */}
       <div className="max-w-5xl mx-auto px-6 py-16">

@@ -3,8 +3,22 @@
 import Link from 'next/link';
 import Logo from '@/components/Logo';
 import MobileMenu from '@/components/MobileMenu';
+import TndToggle from '@/components/TndToggle';
+import { useTnd } from '@/contexts/TndContext';
+import AboutTnd from './page-tnd';
 
 export default function AboutPage() {
+  const { tndMode } = useTnd();
+
+  if (tndMode) {
+    return (
+      <>
+        <AboutTnd />
+        <TndToggle />
+      </>
+    );
+  }
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-primary-50 via-white to-blue-50">
       {/* Navigation */}
@@ -513,6 +527,7 @@ export default function AboutPage() {
           </div>
         </div>
       </footer>
+      <TndToggle />
     </div>
   );
 }
