@@ -79,19 +79,43 @@ export async function POST(request: Request) {
     // Déterminer le prix selon le plan
     const priceData = planType === 'annual'
       ? {
-          unit_amount: 8000, // 80.00€
+          unit_amount: 34800, // 348.00€ (29€ x 12 mois)
           recurring: { interval: 'year' as const },
         }
       : {
-          unit_amount: 9000, // 90.00€
+          unit_amount: 2900, // 29.00€
           recurring: { interval: 'month' as const },
         };
+
+    // Créer ou récupérer le coupon de lancement (10€ de réduction pendant 3 mois pour mensuel)
+    let discountCoupon = null;
+    if (planType === 'monthly') {
+      try {
+        // Vérifier si le coupon existe déjà
+        try {
+          discountCoupon = await stripe.coupons.retrieve('LANCEMENT2024');
+        } catch (err) {
+          // Coupon n'existe pas, on le crée
+          discountCoupon = await stripe.coupons.create({
+            id: 'LANCEMENT2024',
+            amount_off: 1000, // 10€ de réduction
+            currency: 'eur',
+            duration: 'repeating',
+            duration_in_months: 3,
+            name: 'Offre de lancement - 19€ les 3 premiers mois',
+          });
+        }
+      } catch (couponError) {
+        console.log('⚠️ Impossible de créer/récupérer le coupon:', couponError);
+        // On continue sans coupon si erreur
+      }
+    }
 
     // Créer la session de paiement Stripe
     console.log('💳 Création session Stripe pour customer:', customerId);
 
     try {
-      const session = await stripe.checkout.sessions.create({
+      const sessionData: any = {
         customer: customerId,
         mode: 'subscription',
         payment_method_types: ['card'],
@@ -102,8 +126,8 @@ export async function POST(request: Request) {
               product_data: {
                 name: 'Autisme Connect - Abonnement Éducateur',
                 description: planType === 'annual'
-                  ? 'Abonnement annuel - Économisez 120€'
-                  : 'Abonnement mensuel',
+                  ? 'Abonnement annuel - 29€/mois (348€/an)'
+                  : 'Abonnement mensuel - 29€/mois (19€ les 3 premiers mois)',
               },
               unit_amount: priceData.unit_amount,
               recurring: priceData.recurring,
@@ -112,7 +136,6 @@ export async function POST(request: Request) {
           },
         ],
         subscription_data: {
-          trial_period_days: 30, // 30 jours gratuits
           metadata: {
             educator_id: educatorId,
             plan_type: planType,
@@ -124,7 +147,16 @@ export async function POST(request: Request) {
           educator_id: educatorId,
           plan_type: planType,
         },
-      });
+      };
+
+      // Ajouter le coupon de lancement pour les abonnements mensuels
+      if (discountCoupon && planType === 'monthly') {
+        sessionData.discounts = [{
+          coupon: discountCoupon.id,
+        }];
+      }
+
+      const session = await stripe.checkout.sessions.create(sessionData);
 
       console.log('✅ Session Stripe créée:', session.id);
       return NextResponse.json({ sessionId: session.id, url: session.url });

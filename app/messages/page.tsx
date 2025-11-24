@@ -11,9 +11,13 @@ import { Conversation, Message } from '@/types';
 import { canEducatorCreateConversation } from '@/lib/subscription-utils';
 import EducatorMobileMenu from '@/components/EducatorMobileMenu';
 import FamilyMobileMenu from '@/components/FamilyMobileMenu';
+import TndToggle from '@/components/TndToggle';
+import { useTnd } from '@/contexts/TndContext';
+import MessagesTnd from './page-tnd';
 
 export default function MessagesPage() {
   const router = useRouter();
+  const { tndMode } = useTnd();
   const searchParams = useSearchParams();
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
@@ -25,6 +29,7 @@ export default function MessagesPage() {
   const [currentUser, setCurrentUser] = useState<any>(null);
   const [userProfile, setUserProfile] = useState<any>(null);
   const [subscription, setSubscription] = useState<any>(null);
+  const [showConversationList, setShowConversationList] = useState(true); // Pour mobile: bascule entre liste et conversation
 
   useEffect(() => {
     fetchCurrentUser();
@@ -326,6 +331,15 @@ export default function MessagesPage() {
     );
   }
 
+  if (tndMode) {
+    return (
+      <>
+        <MessagesTnd />
+        <TndToggle />
+      </>
+    );
+  }
+
   return (
     <div className="h-screen bg-gray-50 flex flex-col">
       {/* Navigation */}
@@ -366,8 +380,8 @@ export default function MessagesPage() {
       <div className="flex-1 overflow-hidden">
         <div className="max-w-7xl mx-auto h-full px-4 sm:px-6 lg:px-8 py-6">
           <div className="h-full bg-white rounded-lg shadow flex">
-            {/* Liste des conversations */}
-            <div className="w-1/3 border-r border-gray-200 flex flex-col">
+            {/* Liste des conversations - affichée seulement sur desktop OU sur mobile quand aucune conversation sélectionnée */}
+            <div className={`w-full lg:w-1/3 border-r border-gray-200 flex flex-col ${selectedConversation && !showConversationList ? 'hidden lg:flex' : 'flex'}`}>
               <div className="p-4 border-b border-gray-200">
                 <h2 className="text-lg font-semibold text-gray-900">Messages</h2>
               </div>
@@ -388,38 +402,25 @@ export default function MessagesPage() {
                     return (
                       <div
                         key={conv.id}
-                        className={`w-full p-4 hover:bg-gray-50 border-b border-gray-100 ${
+                        className={`w-full p-4 hover:bg-gray-50 border-b border-gray-100 cursor-pointer ${
                           selectedConversation?.id === conv.id ? 'bg-primary-50' : ''
                         }`}
+                        onClick={() => {
+                          setSelectedConversation(conv);
+                          setShowConversationList(false); // Masquer la liste sur mobile
+                        }}
                       >
                         <div className="flex items-center gap-3">
-                          <button
-                            onClick={() => setSelectedConversation(conv)}
-                            className="flex-shrink-0"
-                          >
+                          <div className="flex-shrink-0">
                             <Avatar participant={other} size="md" />
-                          </button>
+                          </div>
                           <div className="flex-1 min-w-0">
-                            {profileUrl ? (
-                              <Link href={profileUrl}>
-                                <p className="font-medium text-gray-900 hover:text-primary-600 cursor-pointer transition-colors">
-                                  {other.first_name || 'Utilisateur'} {other.last_name || ''}
-                                </p>
-                              </Link>
-                            ) : (
-                              <button
-                                onClick={() => setSelectedConversation(conv)}
-                                className="font-medium text-gray-900 text-left"
-                              >
-                                {other.first_name || 'Utilisateur'} {other.last_name || ''}
-                              </button>
-                            )}
-                            <button
-                              onClick={() => setSelectedConversation(conv)}
-                              className="text-sm text-gray-500 truncate text-left block w-full"
-                            >
+                            <p className="font-medium text-gray-900">
+                              {other.first_name || 'Utilisateur'} {other.last_name || ''}
+                            </p>
+                            <p className="text-sm text-gray-500 truncate">
                               {other.location || 'Localisation non renseignée'}
-                            </button>
+                            </p>
                           </div>
                         </div>
                       </div>
@@ -429,8 +430,8 @@ export default function MessagesPage() {
               </div>
             </div>
 
-            {/* Zone de conversation */}
-            <div className="flex-1 flex flex-col">
+            {/* Zone de conversation - affichée sur desktop OU sur mobile quand conversation sélectionnée */}
+            <div className={`flex-1 flex flex-col ${!selectedConversation || showConversationList ? 'hidden lg:flex' : 'flex'} w-full lg:w-auto`}>
               {!selectedConversation ? (
                 <div className="flex-1 flex items-center justify-center text-gray-500">
                   Sélectionnez une conversation
@@ -439,6 +440,16 @@ export default function MessagesPage() {
                 <>
                   {/* En-tête de la conversation */}
                   <div className="p-4 border-b border-gray-200">
+                    {/* Bouton retour pour mobile */}
+                    <button
+                      onClick={() => setShowConversationList(true)}
+                      className="lg:hidden mb-3 flex items-center text-primary-600 hover:text-primary-700 font-medium"
+                    >
+                      <svg className="w-5 h-5 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+                      </svg>
+                      Retour aux conversations
+                    </button>
                     {(() => {
                       const other = getOtherParticipant(selectedConversation);
                       // Vérifier si l'autre personne est un éducateur ou une famille
@@ -474,12 +485,13 @@ export default function MessagesPage() {
                           {appointmentUrl && (
                             <Link
                               href={appointmentUrl}
-                              className="hidden sm:inline-flex items-center px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 font-medium transition-colors text-sm"
+                              className="inline-flex items-center px-3 py-2 sm:px-4 bg-green-600 text-white rounded-lg hover:bg-green-700 font-medium transition-colors text-xs sm:text-sm"
                             >
-                              <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <svg className="w-4 h-4 mr-1 sm:mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
                               </svg>
-                              {appointmentLabel}
+                              <span className="hidden sm:inline">{appointmentLabel}</span>
+                              <span className="sm:hidden">RDV</span>
                             </Link>
                           )}
                         </div>
@@ -549,6 +561,7 @@ export default function MessagesPage() {
           </div>
         </div>
       </div>
+      <TndToggle />
     </div>
   );
 }
