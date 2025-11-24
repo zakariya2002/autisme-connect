@@ -40,6 +40,7 @@ export interface EducatorProfile {
   availability: AvailabilitySlot[];
   rating: number;
   total_reviews: number;
+  verification_badge?: boolean;
   created_at: string;
   updated_at: string;
 }

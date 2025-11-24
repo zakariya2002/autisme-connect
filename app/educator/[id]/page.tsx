@@ -22,6 +22,7 @@ interface EducatorProfile {
   languages: string[];
   avatar_url: string | null;
   avatar_moderation_status: string;
+  cv_url: string | null;
   created_at: string;
 }
 
@@ -99,6 +100,7 @@ export default function EducatorPublicProfile({ params }: { params: { id: string
   const [educator, setEducator] = useState<EducatorProfile | null>(null);
   const [certifications, setCertifications] = useState<Certification[]>([]);
   const [weeklySlots, setWeeklySlots] = useState<WeeklySlot[]>([]);
+  const [dailyAvailabilities, setDailyAvailabilities] = useState<any[]>([]);
   const [exceptions, setExceptions] = useState<Exception[]>([]);
   const [isPremium, setIsPremium] = useState(false);
   const [error, setError] = useState('');
@@ -224,7 +226,7 @@ export default function EducatorPublicProfile({ params }: { params: { id: string
         setCertifications(certs);
       }
 
-      // Récupérer les disponibilités hebdomadaires
+      // Récupérer les disponibilités hebdomadaires (ancien système)
       const { data: slots, error: slotsError } = await supabase
         .from('educator_weekly_availability')
         .select('*')
@@ -235,6 +237,22 @@ export default function EducatorPublicProfile({ params }: { params: { id: string
 
       if (!slotsError && slots) {
         setWeeklySlots(slots);
+      }
+
+      // Récupérer les disponibilités quotidiennes (nouveau système)
+      const today = new Date().toISOString().split('T')[0];
+      const { data: dailySlots, error: dailySlotsError } = await supabase
+        .from('educator_availability')
+        .select('*')
+        .eq('educator_id', params.id)
+        .eq('is_available', true)
+        .gte('availability_date', today)
+        .order('availability_date')
+        .order('start_time')
+        .limit(30);
+
+      if (!dailySlotsError && dailySlots) {
+        setDailyAvailabilities(dailySlots);
       }
 
       // Récupérer les exceptions (uniquement futures)
@@ -463,7 +481,7 @@ export default function EducatorPublicProfile({ params }: { params: { id: string
         </div>
 
         {/* Bouton Demander un rendez-vous - Mis en avant */}
-        {isAuthenticated && userRole === 'family' && weeklySlots.length > 0 && (
+        {isAuthenticated && userRole === 'family' && (weeklySlots.length > 0 || dailyAvailabilities.length > 0) && (
           <div className="mb-8">
             <Link
               href={`/educator/${params.id}/book-appointment`}
@@ -531,6 +549,32 @@ export default function EducatorPublicProfile({ params }: { params: { id: string
                   <h2 className="text-2xl font-bold text-gray-900">À propos</h2>
                 </div>
                 <p className="text-gray-700 leading-relaxed whitespace-pre-line text-base">{educator.bio}</p>
+              </div>
+            )}
+
+            {/* CV */}
+            {educator.cv_url && (
+              <div className="bg-white rounded-xl shadow-lg p-8 border border-gray-100 hover:shadow-xl transition-shadow duration-300">
+                <div className="flex items-center mb-5">
+                  <div className="w-10 h-10 bg-green-100 rounded-lg flex items-center justify-center mr-3">
+                    <svg className="w-6 h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                    </svg>
+                  </div>
+                  <h2 className="text-2xl font-bold text-gray-900">Curriculum Vitae</h2>
+                </div>
+                <a
+                  href={`/api/educator-cvs/${encodeURIComponent(educator.cv_url)}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-3 px-6 py-3 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors duration-200 font-medium shadow-md hover:shadow-lg"
+                >
+                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                  </svg>
+                  Voir le CV (PDF)
+                </a>
               </div>
             )}
 

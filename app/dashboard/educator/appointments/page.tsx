@@ -7,6 +7,7 @@ import { supabase } from '@/lib/supabase';
 import { signOut } from '@/lib/auth';
 import Logo from '@/components/Logo';
 import EducatorMobileMenu from '@/components/EducatorMobileMenu';
+import PinCodeModal from '@/components/PinCodeModal';
 
 interface Appointment {
   id: string;
@@ -40,6 +41,7 @@ export default function EducatorAppointmentsPage() {
   const [selectedAppointment, setSelectedAppointment] = useState<Appointment | null>(null);
   const [showRejectModal, setShowRejectModal] = useState(false);
   const [showNotesModal, setShowNotesModal] = useState(false);
+  const [showPinModal, setShowPinModal] = useState(false);
   const [rejectionReason, setRejectionReason] = useState('');
   const [educatorNotes, setEducatorNotes] = useState('');
   const [actionLoading, setActionLoading] = useState(false);
@@ -121,14 +123,20 @@ export default function EducatorAppointmentsPage() {
   const handleAccept = async (appointmentId: string) => {
     setActionLoading(true);
     try {
-      const { error } = await supabase
-        .from('appointments')
-        .update({ status: 'accepted' })
-        .eq('id', appointmentId);
+      const response = await fetch(`/api/appointments/${appointmentId}/accept`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
 
-      if (error) throw error;
+      const data = await response.json();
 
-      alert('Rendez-vous accepté !');
+      if (!response.ok) {
+        throw new Error(data.error || 'Erreur lors de l\'acceptation');
+      }
+
+      alert('✅ Rendez-vous confirmé ! Un code PIN a été envoyé à la famille par email.');
       fetchAppointments();
     } catch (error: any) {
       alert('Erreur: ' + error.message);
@@ -164,6 +172,45 @@ export default function EducatorAppointmentsPage() {
       alert('Erreur: ' + error.message);
     } finally {
       setActionLoading(false);
+    }
+  };
+
+  const handleValidatePin = async (pin: string): Promise<{ success: boolean; error?: string; attemptsLeft?: number }> => {
+    if (!selectedAppointment) {
+      return { success: false, error: 'Aucun rendez-vous sélectionné' };
+    }
+
+    try {
+      const response = await fetch(`/api/appointments/${selectedAppointment.id}/validate-pin`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ pinCode: pin }),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        return {
+          success: false,
+          error: data.error || 'Erreur lors de la validation',
+          attemptsLeft: data.attemptsLeft,
+        };
+      }
+
+      // Succès - fermer le modal et rafraîchir
+      setShowPinModal(false);
+      setSelectedAppointment(null);
+      alert('✅ Séance démarrée avec succès ! Le paiement sera traité automatiquement en fin de séance.');
+      fetchAppointments();
+
+      return { success: true };
+    } catch (error: any) {
+      return {
+        success: false,
+        error: error.message || 'Erreur réseau',
+      };
     }
   };
 
@@ -236,7 +283,9 @@ export default function EducatorAppointmentsPage() {
   const getStatusLabel = (status: string) => {
     const labels = {
       pending: 'En attente',
+      confirmed: 'Confirmé - En attente du code PIN',
       accepted: 'Accepté',
+      in_progress: 'En cours',
       rejected: 'Refusé',
       completed: 'Terminé',
       cancelled: 'Annulé'
@@ -247,7 +296,9 @@ export default function EducatorAppointmentsPage() {
   const getStatusColor = (status: string) => {
     const colors = {
       pending: 'bg-yellow-100 text-yellow-800 border-yellow-300',
+      confirmed: 'bg-purple-100 text-purple-800 border-purple-300',
       accepted: 'bg-green-100 text-green-800 border-green-300',
+      in_progress: 'bg-indigo-100 text-indigo-800 border-indigo-300',
       rejected: 'bg-red-100 text-red-800 border-red-300',
       completed: 'bg-blue-100 text-blue-800 border-blue-300',
       cancelled: 'bg-gray-100 text-gray-800 border-gray-300'
@@ -521,6 +572,22 @@ export default function EducatorAppointmentsPage() {
                     )}
 
                     {appointment.status === 'accepted' && !isPast && (
+                      <button
+                        onClick={() => {
+                          setSelectedAppointment(appointment);
+                          setShowPinModal(true);
+                        }}
+                        disabled={actionLoading}
+                        className="px-4 py-2 bg-purple-600 text-white rounded-md hover:bg-purple-700 disabled:opacity-50 font-medium flex items-center gap-2"
+                      >
+                        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+                        </svg>
+                        Démarrer la séance (Code PIN)
+                      </button>
+                    )}
+
+                    {appointment.status === 'accepted' && !isPast && (
                       <>
                         <button
                           onClick={() => handleComplete(appointment.id)}
@@ -636,6 +703,19 @@ export default function EducatorAppointmentsPage() {
             </div>
           </div>
         </div>
+      )}
+
+      {/* Modal Code PIN */}
+      {selectedAppointment && (
+        <PinCodeModal
+          isOpen={showPinModal}
+          onClose={() => {
+            setShowPinModal(false);
+            setSelectedAppointment(null);
+          }}
+          onValidate={handleValidatePin}
+          appointmentId={selectedAppointment.id}
+        />
       )}
     </div>
   );

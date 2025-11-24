@@ -102,7 +102,7 @@ export async function POST(request: Request) {
             currency: 'eur',
             duration: 'repeating',
             duration_in_months: 3,
-            name: 'Offre de lancement - 19€ les 3 premiers mois',
+            name: 'Offre lancement - 19€ x 3 mois',
           });
         }
       } catch (couponError) {

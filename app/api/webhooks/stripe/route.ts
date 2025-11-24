@@ -75,6 +75,16 @@ export async function POST(request: Request) {
 }
 
 async function handleCheckoutSessionCompleted(session: Stripe.Checkout.Session) {
+  // Vérifier si c'est un paiement de rendez-vous ou un abonnement
+  const isAppointment = session.metadata?.appointment_date;
+
+  if (isAppointment) {
+    // Gérer le paiement de rendez-vous
+    await handleAppointmentPayment(session);
+    return;
+  }
+
+  // Sinon, c'est un abonnement éducateur
   const educatorId = session.metadata?.educator_id;
   const planType = session.metadata?.plan_type;
 
@@ -261,4 +271,56 @@ async function handleInvoicePaymentFailed(invoice: Stripe.Invoice) {
       status: 'failed',
       description: 'Échec du paiement',
     });
+}
+
+async function handleAppointmentPayment(session: Stripe.Checkout.Session) {
+  console.log('📅 Création de rendez-vous après paiement');
+
+  const {
+    educator_id,
+    family_id,
+    appointment_date,
+    start_time,
+    end_time,
+    location_type,
+    address,
+    family_notes,
+  } = session.metadata || {};
+
+  if (!educator_id || !family_id || !appointment_date || !start_time || !end_time) {
+    console.error('❌ Métadonnées manquantes dans la session');
+    return;
+  }
+
+  // Récupérer le PaymentIntent
+  const paymentIntentId = session.payment_intent as string;
+
+  // Créer le rendez-vous dans la base de données
+  const { data: appointment, error: appointmentError } = await supabase
+    .from('appointments')
+    .insert({
+      educator_id,
+      family_id,
+      appointment_date,
+      start_time,
+      end_time,
+      location_type: location_type || 'online',
+      address: address || null,
+      family_notes: family_notes || null,
+      price: session.amount_total, // En centimes
+      status: 'pending', // En attente d'acceptation par l'éducateur
+      payment_intent_id: paymentIntentId,
+      payment_status: 'authorized', // Fonds bloqués mais non capturés
+    })
+    .select()
+    .single();
+
+  if (appointmentError) {
+    console.error('❌ Erreur création RDV:', appointmentError);
+    return;
+  }
+
+  console.log('✅ Rendez-vous créé:', appointment.id);
+
+  // TODO: Envoyer un email de confirmation à la famille
 }

@@ -46,7 +46,8 @@ export async function POST(request: NextRequest) {
       diploma_verified_at: status === 'verified' ? new Date().toISOString() : null,
       diploma_rejected_reason: status === 'rejected' ? rejectReason : null,
       dreets_verified: status === 'verified' ? true : false,
-      dreets_response_date: new Date().toISOString()
+      dreets_response_date: new Date().toISOString(),
+      verification_badge: status === 'verified' ? true : false // ✅ Activer automatiquement le badge
     };
 
     const { error: updateError } = await supabase

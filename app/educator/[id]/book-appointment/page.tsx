@@ -4,7 +4,6 @@ import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { supabase } from '@/lib/supabase';
-import Calendar from '@/components/Calendar';
 import Logo from '@/components/Logo';
 import PublicMobileMenu from '@/components/PublicMobileMenu';
 import { canEducatorCreateBooking } from '@/lib/subscription-utils';
@@ -16,11 +15,12 @@ interface Educator {
   hourly_rate: number | null;
 }
 
-interface WeeklySlot {
+interface DailyAvailability {
   id: string;
-  day_of_week: number;
+  availability_date: string;
   start_time: string;
   end_time: string;
+  is_available: boolean;
 }
 
 interface Appointment {
@@ -30,32 +30,22 @@ interface Appointment {
   status: string;
 }
 
-const DAYS = [
-  { value: 0, label: 'Dimanche' },
-  { value: 1, label: 'Lundi' },
-  { value: 2, label: 'Mardi' },
-  { value: 3, label: 'Mercredi' },
-  { value: 4, label: 'Jeudi' },
-  { value: 5, label: 'Vendredi' },
-  { value: 6, label: 'Samedi' },
-];
-
 export default function BookAppointmentPage({ params }: { params: { id: string } }) {
   const router = useRouter();
   const [loading, setLoading] = useState(true);
   const [educator, setEducator] = useState<Educator | null>(null);
   const [familyId, setFamilyId] = useState<string | null>(null);
-  const [weeklySlots, setWeeklySlots] = useState<WeeklySlot[]>([]);
+  const [availabilities, setAvailabilities] = useState<DailyAvailability[]>([]);
   const [appointments, setAppointments] = useState<Appointment[]>([]);
 
   const [selectedDate, setSelectedDate] = useState('');
-  const [selectedSlots, setSelectedSlots] = useState<string[]>([]); // Liste des heures de début sélectionnées
+  const [selectedSlot, setSelectedSlot] = useState<{ start: string; end: string } | null>(null);
+  const [customStartTime, setCustomStartTime] = useState('');
+  const [customEndTime, setCustomEndTime] = useState('');
   const [locationType, setLocationType] = useState<'home' | 'office' | 'online'>('online');
   const [address, setAddress] = useState('');
   const [familyNotes, setFamilyNotes] = useState('');
 
-  const [availableSlots, setAvailableSlots] = useState<{ start: string; end: string }[]>([]);
-  const [fullyBookedDates, setFullyBookedDates] = useState<string[]>([]);
   const [success, setSuccess] = useState('');
   const [error, setError] = useState('');
   const [submitting, setSubmitting] = useState(false);
@@ -70,18 +60,6 @@ export default function BookAppointmentPage({ params }: { params: { id: string }
     }
   }, [familyId]);
 
-  useEffect(() => {
-    if (selectedDate && weeklySlots.length > 0) {
-      calculateAvailableSlots();
-    }
-  }, [selectedDate, weeklySlots, appointments]);
-
-  useEffect(() => {
-    if (weeklySlots.length > 0) {
-      calculateFullyBookedDates();
-    }
-  }, [weeklySlots, appointments]);
-
   const checkAuth = async () => {
     const { data: { session } } = await supabase.auth.getSession();
     if (!session?.user) {
@@ -89,7 +67,6 @@ export default function BookAppointmentPage({ params }: { params: { id: string }
       return;
     }
 
-    // Vérifier que c'est bien une famille
     const { data: familyProfile } = await supabase
       .from('family_profiles')
       .select('id')
@@ -117,545 +94,514 @@ export default function BookAppointmentPage({ params }: { params: { id: string }
       if (educatorError) throw educatorError;
       setEducator(educatorData);
 
-      // Récupérer les disponibilités hebdomadaires
-      const { data: slots } = await supabase
-        .from('educator_weekly_availability')
+      // Récupérer les disponibilités futures
+      const today = new Date().toISOString().split('T')[0];
+      const { data: availData } = await supabase
+        .from('educator_availability')
         .select('*')
         .eq('educator_id', params.id)
-        .eq('is_active', true);
+        .eq('is_available', true)
+        .gte('availability_date', today)
+        .order('availability_date', { ascending: true })
+        .order('start_time', { ascending: true });
 
-      if (slots) setWeeklySlots(slots);
+      if (availData) setAvailabilities(availData);
 
-      // Récupérer les rendez-vous existants (acceptés ou en attente)
+      // Récupérer les rendez-vous existants
       const { data: appts } = await supabase
         .from('appointments')
         .select('appointment_date, start_time, end_time, status')
         .eq('educator_id', params.id)
-        .in('status', ['accepted', 'pending'])
-        .gte('appointment_date', new Date().toISOString().split('T')[0]);
+        .in('status', ['accepted', 'pending', 'in_progress'])
+        .gte('appointment_date', today);
 
       if (appts) setAppointments(appts);
 
       setLoading(false);
     } catch (err: any) {
+      console.error('Erreur chargement:', err);
       setError('Erreur lors du chargement des données');
       setLoading(false);
     }
   };
 
-  const calculateAvailableSlotsForDate = (dateStr: string) => {
-    const date = new Date(dateStr + 'T00:00:00');
-    const dayOfWeek = date.getDay();
+  const getAvailableDates = () => {
+    // Grouper par date
+    const dateMap = new Map<string, DailyAvailability[]>();
 
-    // Trouver les créneaux pour ce jour
-    const daySlotsTemplate = weeklySlots.filter(slot => slot.day_of_week === dayOfWeek);
+    availabilities.forEach(avail => {
+      const existing = dateMap.get(avail.availability_date) || [];
+      existing.push(avail);
+      dateMap.set(avail.availability_date, existing);
+    });
 
-    if (daySlotsTemplate.length === 0) {
-      return [];
-    }
+    // Filtrer les dates avec au moins un créneau libre
+    const freeDates: string[] = [];
 
-    // Filtrer les créneaux déjà pris
-    const dayAppointments = appointments.filter(
-      appt => appt.appointment_date === dateStr
+    dateMap.forEach((slots, date) => {
+      const hasAvailableSlot = slots.some(slot => {
+        // Vérifier si ce créneau n'est pas déjà réservé
+        return !isSlotBooked(date, slot.start_time, slot.end_time);
+      });
+
+      if (hasAvailableSlot) {
+        freeDates.push(date);
+      }
+    });
+
+    return freeDates.sort();
+  };
+
+  const getAvailableSlotsForDate = (date: string) => {
+    const dayAvail = availabilities.filter(a => a.availability_date === date);
+
+    return dayAvail.filter(slot => {
+      return !isSlotBooked(date, slot.start_time, slot.end_time);
+    });
+  };
+
+  const isSlotBooked = (date: string, startTime: string, endTime: string) => {
+    return appointments.some(appt =>
+      appt.appointment_date === date &&
+      appt.start_time === startTime &&
+      appt.end_time === endTime
     );
-
-    const available: { start: string; end: string }[] = [];
-
-    daySlotsTemplate.forEach(slot => {
-      // Générer des créneaux de 1 heure
-      const startHour = parseInt(slot.start_time.split(':')[0]);
-      const endHour = parseInt(slot.end_time.split(':')[0]);
-
-      for (let hour = startHour; hour < endHour; hour++) {
-        const slotStart = `${hour.toString().padStart(2, '0')}:00`;
-        const slotEnd = `${(hour + 1).toString().padStart(2, '0')}:00`;
-
-        // Vérifier si ce créneau n'est pas déjà pris
-        const isConflict = dayAppointments.some(appt => {
-          return (
-            (slotStart >= appt.start_time && slotStart < appt.end_time) ||
-            (slotEnd > appt.start_time && slotEnd <= appt.end_time) ||
-            (slotStart <= appt.start_time && slotEnd >= appt.end_time)
-          );
-        });
-
-        if (!isConflict) {
-          available.push({ start: slotStart, end: slotEnd });
-        }
-      }
-    });
-
-    return available;
   };
 
-  const calculateAvailableSlots = () => {
-    if (!selectedDate) return;
-    const slots = calculateAvailableSlotsForDate(selectedDate);
-    setAvailableSlots(slots);
-  };
+  // Générer des options d'heures pour un créneau (par tranches de 30 minutes)
+  const generateTimeOptions = (startTime: string, endTime: string): string[] => {
+    const times: string[] = [];
+    const [startHour, startMin] = startTime.split(':').map(Number);
+    const [endHour, endMin] = endTime.split(':').map(Number);
 
-  const calculateFullyBookedDates = () => {
-    const fullyBooked: string[] = [];
-    const today = new Date();
-    today.setHours(0, 0, 0, 0);
+    let currentHour = startHour;
+    let currentMin = startMin;
 
-    // Vérifier les 90 prochains jours
-    for (let i = 0; i < 90; i++) {
-      const checkDate = new Date(today);
-      checkDate.setDate(today.getDate() + i);
-      const dateStr = checkDate.toISOString().split('T')[0];
-      const dayOfWeek = checkDate.getDay();
+    while (currentHour < endHour || (currentHour === endHour && currentMin < endMin)) {
+      times.push(`${String(currentHour).padStart(2, '0')}:${String(currentMin).padStart(2, '0')}`);
 
-      // Vérifier si ce jour a des créneaux disponibles
-      const hasSlots = weeklySlots.some(slot => slot.day_of_week === dayOfWeek);
-
-      if (hasSlots) {
-        const slots = calculateAvailableSlotsForDate(dateStr);
-        if (slots.length === 0) {
-          fullyBooked.push(dateStr);
-        }
+      currentMin += 30;
+      if (currentMin >= 60) {
+        currentMin = 0;
+        currentHour++;
       }
     }
 
-    setFullyBookedDates(fullyBooked);
+    // Ajouter l'heure de fin
+    times.push(endTime);
+
+    return times;
   };
 
-  // Gérer la sélection/désélection des créneaux avec remplissage automatique
-  const toggleSlotSelection = (slotStart: string) => {
-    setSelectedSlots(prev => {
-      if (prev.includes(slotStart)) {
-        // Désélectionner ce créneau uniquement
-        return prev.filter(s => s !== slotStart);
-      } else {
-        // Ajouter le nouveau créneau
-        const newSelection = [...prev, slotStart].sort();
+  // Valider que la durée est d'au moins 2 heures
+  const validateDuration = (start: string, end: string): boolean => {
+    const [startHour, startMin] = start.split(':').map(Number);
+    const [endHour, endMin] = end.split(':').map(Number);
 
-        // Si on a plusieurs créneaux sélectionnés, remplir automatiquement les créneaux entre le premier et le dernier
-        if (newSelection.length >= 2) {
-          const firstSlot = newSelection[0];
-          const lastSlot = newSelection[newSelection.length - 1];
+    const startMinutes = startHour * 60 + startMin;
+    const endMinutes = endHour * 60 + endMin;
+    const durationMinutes = endMinutes - startMinutes;
 
-          // Trouver tous les créneaux disponibles entre le premier et le dernier
-          const allSlotsBetween: string[] = [];
-          availableSlots.forEach(slot => {
-            if (slot.start >= firstSlot && slot.start <= lastSlot) {
-              allSlotsBetween.push(slot.start);
-            }
-          });
-
-          return allSlotsBetween.sort();
-        }
-
-        return newSelection;
-      }
-    });
-  };
-
-  // Calculer la durée totale et le coût
-  const getAppointmentDetails = () => {
-    if (selectedSlots.length === 0) return null;
-
-    // Trouver le premier et le dernier créneau
-    const sortedSlots = [...selectedSlots].sort();
-    const startTime = sortedSlots[0];
-
-    // Trouver l'heure de fin du dernier créneau
-    const lastSlot = availableSlots.find(slot => slot.start === sortedSlots[sortedSlots.length - 1]);
-    const endTime = lastSlot?.end || startTime;
-
-    const durationHours = selectedSlots.length;
-    const totalCost = educator?.hourly_rate ? durationHours * educator.hourly_rate : null;
-
-    return {
-      startTime,
-      endTime,
-      durationHours,
-      totalCost
-    };
+    return durationMinutes >= 120; // Au moins 2 heures (120 minutes)
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setError('');
-    setSuccess('');
 
-    if (!selectedDate || selectedSlots.length === 0) {
-      setError('Veuillez sélectionner une date et au moins un créneau');
+    if (!selectedDate || !selectedSlot) {
+      setError('Veuillez sélectionner une date et un créneau');
       return;
     }
 
-    if (locationType === 'home' && !address.trim()) {
-      setError('Veuillez indiquer l\'adresse pour un rendez-vous à domicile');
+    if (!customStartTime || !customEndTime) {
+      setError('Veuillez choisir une heure de début et de fin');
       return;
     }
 
-    const details = getAppointmentDetails();
-    if (!details) {
-      setError('Erreur dans la sélection des créneaux');
+    // Vérifier que la durée est d'au moins 2 heures
+    if (!validateDuration(customStartTime, customEndTime)) {
+      setError('La durée minimum est de 2 heures');
+      return;
+    }
+
+    // Vérifier que les heures personnalisées sont dans la plage de disponibilité
+    if (customStartTime < selectedSlot.start || customEndTime > selectedSlot.end) {
+      setError(`Les heures doivent être entre ${selectedSlot.start} et ${selectedSlot.end}`);
+      return;
+    }
+
+    if (!familyId) {
+      setError('Erreur d\'authentification');
+      return;
+    }
+
+    // Vérifier les limites
+    const canBook = await canEducatorCreateBooking(params.id);
+    if (!canBook.canCreate) {
+      setError(canBook.reason || 'Limite de réservations atteinte');
       return;
     }
 
     setSubmitting(true);
+    setError('');
 
     try {
-      // Vérifier si l'éducateur peut accepter une nouvelle réservation
-      const bookingCheck = await canEducatorCreateBooking(params.id);
-      if (!bookingCheck.canCreate) {
-        setError(`Cet éducateur a atteint sa limite de réservations mensuelles (${bookingCheck.limit}/mois). Il doit passer Premium pour accepter plus de réservations.`);
-        setSubmitting(false);
-        return;
+      // Calculer le prix basé sur la durée et le tarif horaire
+      const durationMinutes = calculateDuration(customStartTime, customEndTime);
+      const durationHours = durationMinutes / 60;
+      const hourlyRate = educator?.hourly_rate || 50; // 50€ par défaut
+      const price = durationHours * hourlyRate;
+
+      console.log('💰 Prix calculé:', { durationHours, hourlyRate, price });
+
+      // Créer une session de paiement Stripe
+      const response = await fetch('/api/appointments/create-with-payment', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          educatorId: params.id,
+          familyId,
+          appointmentDate: selectedDate,
+          startTime: customStartTime,
+          endTime: customEndTime,
+          locationType,
+          address: locationType !== 'online' ? address : null,
+          familyNotes,
+          price
+        }),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.error || 'Erreur lors de la création de la session de paiement');
       }
 
-      const { error: insertError } = await supabase
-        .from('appointments')
-        .insert({
-          educator_id: params.id,
-          family_id: familyId,
-          appointment_date: selectedDate,
-          start_time: details.startTime,
-          end_time: details.endTime,
-          location_type: locationType,
-          address: locationType === 'home' ? address : null,
-          family_notes: familyNotes.trim() || null,
-        });
-
-      if (insertError) throw insertError;
-
-      setSuccess('✅ Votre demande de rendez-vous a été envoyée !');
-
-      // Réinitialiser le formulaire
-      setTimeout(() => {
-        router.push(`/educator/${params.id}`);
-      }, 2000);
+      // Rediriger vers Stripe Checkout
+      if (data.url) {
+        window.location.href = data.url;
+      } else {
+        throw new Error('URL de paiement non reçue');
+      }
     } catch (err: any) {
-      setError('Erreur lors de l\'envoi de la demande : ' + err.message);
-    } finally {
+      console.error('Erreur:', err);
+      setError(err.message || 'Erreur lors de la création du rendez-vous');
       setSubmitting(false);
     }
   };
 
-  // Obtenir les jours de la semaine disponibles
-  const getAvailableDaysOfWeek = () => {
-    const uniqueDays = new Set<number>();
-    weeklySlots.forEach(slot => {
-      uniqueDays.add(slot.day_of_week);
-    });
-    return Array.from(uniqueDays);
+  const calculateDuration = (start: string, end: string): number => {
+    const [startH, startM] = start.split(':').map(Number);
+    const [endH, endM] = end.split(':').map(Number);
+    return (endH * 60 + endM) - (startH * 60 + startM);
+  };
+
+  const formatDate = (dateStr: string) => {
+    const date = new Date(dateStr + 'T00:00:00');
+    return new Intl.DateTimeFormat('fr-FR', {
+      weekday: 'long',
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric'
+    }).format(date);
   };
 
   if (loading) {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-        <p className="text-gray-500">Chargement...</p>
+        <div className="animate-spin h-12 w-12 border-4 border-primary-600 border-t-transparent rounded-full"></div>
       </div>
     );
   }
 
-  if (!educator) {
-    return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-        <div className="text-center">
-          <p className="text-red-600 mb-4">Éducateur introuvable</p>
-          <Link href="/" className="text-primary-600 hover:underline">
-            Retour à l'accueil
-          </Link>
-        </div>
-      </div>
-    );
-  }
+  const availableDates = getAvailableDates();
 
   return (
     <div className="min-h-screen bg-gray-50">
-      {/* Navigation */}
-      <nav className="bg-white shadow-sm sticky top-0 z-50">
+      <nav className="bg-white shadow-sm">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between h-16 items-center">
             <Logo />
-
-            {/* Menu hamburger - visible uniquement sur mobile */}
-            <div className="md:hidden">
-              <PublicMobileMenu
-                isAuthenticated={true}
-                userRole="family"
-              />
-            </div>
-
-            {/* Navigation desktop - cachée sur mobile */}
-            <div className="hidden md:flex items-center gap-4">
-              <Link
-                href={`/educator/${params.id}`}
-                className="text-gray-700 hover:text-primary-600 hover:bg-gray-100 px-4 py-2 rounded-lg transition-all duration-200 font-medium"
-              >
-                ← Retour au profil
-              </Link>
-            </div>
+            <PublicMobileMenu />
           </div>
         </div>
       </nav>
 
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        {/* En-tête */}
         <div className="mb-8">
+          <Link
+            href={`/educator/${params.id}`}
+            className="text-primary-600 hover:text-primary-700 font-medium flex items-center gap-2 mb-4"
+          >
+            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+            </svg>
+            Retour au profil
+          </Link>
           <h1 className="text-3xl font-bold text-gray-900">
-            Demander un rendez-vous
+            Réserver un rendez-vous
           </h1>
-          <p className="text-gray-600 mt-2">
-            avec {educator.first_name} {educator.last_name}
-          </p>
-          {educator.hourly_rate && (
-            <p className="text-sm text-gray-500 mt-1">
-              Tarif : {educator.hourly_rate}€/heure
+          {educator && (
+            <p className="text-gray-600 mt-2">
+              Avec {educator.first_name} {educator.last_name}
+              {educator.hourly_rate && (
+                <span className="ml-2 text-primary-600 font-semibold">
+                  {educator.hourly_rate}€/heure
+                </span>
+              )}
             </p>
           )}
         </div>
 
-        {/* Messages */}
         {success && (
-          <div className="mb-6 bg-green-50 border border-green-200 text-green-700 px-4 py-3 rounded-lg">
-            {success}
-          </div>
-        )}
-        {error && (
-          <div className="mb-6 bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg">
-            {error}
+          <div className="mb-6 p-4 bg-green-50 border border-green-200 rounded-lg">
+            <p className="text-green-800 font-medium">{success}</p>
           </div>
         )}
 
-        {weeklySlots.length === 0 ? (
-          <div className="bg-white rounded-lg shadow p-8 text-center">
-            <svg className="w-16 h-16 text-gray-400 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        {error && (
+          <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-lg">
+            <p className="text-red-800">{error}</p>
+          </div>
+        )}
+
+        {availableDates.length === 0 ? (
+          <div className="bg-white rounded-xl shadow-lg p-12 text-center">
+            <svg className="w-20 h-20 text-gray-300 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
             </svg>
             <h3 className="text-xl font-bold text-gray-900 mb-2">
               Aucune disponibilité configurée
             </h3>
             <p className="text-gray-600 mb-6">
-              Cet éducateur n'a pas encore défini ses disponibilités.
-              <br />
-              Contactez-le directement par message.
+              Cet éducateur n&apos;a pas encore défini ses disponibilités.
             </p>
             <Link
-              href={`/messages?educator=${params.id}`}
-              className="inline-block px-6 py-3 bg-primary-600 text-white rounded-lg hover:bg-primary-700"
+              href="/messages"
+              className="inline-block bg-primary-600 text-white px-6 py-3 rounded-lg hover:bg-primary-700 transition font-medium"
             >
-              Envoyer un message
+              Contactez-le directement par message
             </Link>
           </div>
         ) : (
-          <form onSubmit={handleSubmit} className="bg-white rounded-lg shadow p-8">
+          <form onSubmit={handleSubmit} className="bg-white rounded-xl shadow-lg p-6 space-y-6">
             {/* Sélection de la date */}
-            <div className="mb-6">
-              <label className="block text-sm font-medium text-gray-700 mb-3">
-                1. Sélectionnez une date
+            <div>
+              <label className="block text-sm font-semibold text-gray-900 mb-3">
+                1. Choisissez une date
               </label>
-              <Calendar
-                selectedDate={selectedDate}
-                onDateSelect={(date) => {
-                  setSelectedDate(date);
-                  setSelectedSlots([]);
-                }}
-                availableDays={getAvailableDaysOfWeek()}
-                fullyBookedDates={fullyBookedDates}
-              />
-              {selectedDate && (
-                <div className="mt-3 p-3 bg-blue-50 border border-blue-200 rounded-lg">
-                  <p className="text-sm text-blue-800">
-                    📅 <strong>Date sélectionnée :</strong>{' '}
-                    {new Date(selectedDate + 'T00:00:00').toLocaleDateString('fr-FR', {
-                      weekday: 'long',
-                      year: 'numeric',
-                      month: 'long',
-                      day: 'numeric'
-                    })}
-                  </p>
-                </div>
-              )}
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+                {availableDates.map(date => (
+                  <button
+                    key={date}
+                    type="button"
+                    onClick={() => {
+                      setSelectedDate(date);
+                      setSelectedSlot(null);
+                    }}
+                    className={`p-4 rounded-lg border-2 transition text-left ${
+                      selectedDate === date
+                        ? 'border-primary-600 bg-primary-50'
+                        : 'border-gray-200 hover:border-primary-300'
+                    }`}
+                  >
+                    <p className="font-semibold text-gray-900 capitalize">
+                      {formatDate(date)}
+                    </p>
+                    <p className="text-sm text-gray-600 mt-1">
+                      {getAvailableSlotsForDate(date).length} créneau(x) disponible(s)
+                    </p>
+                  </button>
+                ))}
+              </div>
             </div>
 
             {/* Sélection du créneau */}
             {selectedDate && (
-              <div className="mb-6">
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  2. Choisissez un ou plusieurs créneaux horaires
+              <div>
+                <label className="block text-sm font-semibold text-gray-900 mb-3">
+                  2. Choisissez un créneau horaire
                 </label>
-                <div className="bg-blue-50 border border-blue-200 rounded-lg p-3 mb-3">
-                  <p className="text-sm text-blue-800">
-                    💡 <strong>Astuce :</strong> Cliquez sur une heure de début et une heure de fin, tous les créneaux entre ces deux heures seront automatiquement sélectionnés.
-                  </p>
-                </div>
-                {availableSlots.length === 0 ? (
-                  <p className="text-gray-500 text-sm bg-gray-50 p-4 rounded-lg">
-                    Aucun créneau disponible pour cette date. Essayez une autre date.
-                  </p>
-                ) : (
-                  <>
-                    <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
-                      {availableSlots.map((slot, index) => {
-                        const isSelected = selectedSlots.includes(slot.start);
-                        return (
-                          <button
-                            key={index}
-                            type="button"
-                            onClick={() => toggleSlotSelection(slot.start)}
-                            className={`p-3 rounded-lg border-2 transition-all ${
-                              isSelected
-                                ? 'border-green-600 bg-green-50 text-green-700'
-                                : 'border-gray-200 hover:border-primary-300'
-                            }`}
-                          >
-                            <div className="flex items-center justify-between">
-                              <div className="font-medium">
-                                {slot.start} - {slot.end}
-                              </div>
-                              {isSelected && (
-                                <svg className="w-5 h-5 text-green-600" fill="currentColor" viewBox="0 0 20 20">
-                                  <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
-                                </svg>
-                              )}
-                            </div>
-                          </button>
-                        );
-                      })}
-                    </div>
+                <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3">
+                  {getAvailableSlotsForDate(selectedDate).map((slot) => {
+                    const duration = calculateDuration(slot.start_time, slot.end_time);
+                    const price = educator?.hourly_rate ? ((educator.hourly_rate / 60) * duration).toFixed(2) : '0';
 
-                    {/* Récapitulatif */}
-                    {selectedSlots.length > 0 && (
-                      <div className="mt-4 p-4 bg-primary-50 border border-primary-200 rounded-lg">
-                        <div className="flex justify-between items-start mb-2">
-                          <h4 className="font-semibold text-primary-900">📋 Récapitulatif</h4>
-                          <button
-                            type="button"
-                            onClick={() => setSelectedSlots([])}
-                            className="text-xs text-red-600 hover:text-red-700 font-medium underline"
-                          >
-                            Tout désélectionner
-                          </button>
-                        </div>
-                        <div className="space-y-1 text-sm">
-                          <p>
-                            <span className="text-gray-700">Horaire :</span>{' '}
-                            <span className="font-medium text-gray-900">
-                              {getAppointmentDetails()?.startTime} - {getAppointmentDetails()?.endTime}
-                            </span>
-                          </p>
-                          <p>
-                            <span className="text-gray-700">Durée :</span>{' '}
-                            <span className="font-medium text-gray-900">
-                              {getAppointmentDetails()?.durationHours} heure{getAppointmentDetails()?.durationHours! > 1 ? 's' : ''}
-                            </span>
-                          </p>
-                          {getAppointmentDetails()?.totalCost && (
-                            <p>
-                              <span className="text-gray-700">Coût estimé :</span>{' '}
-                              <span className="font-bold text-primary-700 text-lg">
-                                {getAppointmentDetails()?.totalCost}€
-                              </span>
-                            </p>
-                          )}
-                        </div>
-                      </div>
+                    return (
+                      <button
+                        key={slot.id}
+                        type="button"
+                        onClick={() => {
+                          setSelectedSlot({ start: slot.start_time, end: slot.end_time });
+                          setCustomStartTime(slot.start_time);
+                          setCustomEndTime(slot.end_time);
+                        }}
+                        className={`p-3 rounded-lg border-2 transition ${
+                          selectedSlot?.start === slot.start_time
+                            ? 'border-primary-600 bg-primary-50'
+                            : 'border-gray-200 hover:border-primary-300'
+                        }`}
+                      >
+                        <p className="font-semibold text-gray-900 text-sm">
+                          {slot.start_time} - {slot.end_time}
+                        </p>
+                        <p className="text-xs text-gray-600 mt-1">
+                          {duration} min - {price}€
+                        </p>
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
+            )}
+
+            {/* Choisir les heures personnalisées */}
+            {selectedSlot && (
+              <div className="bg-blue-50 p-4 rounded-lg border border-blue-200">
+                <label className="block text-sm font-semibold text-gray-900 mb-3">
+                  Personnalisez votre créneau (minimum 2 heures)
+                </label>
+                <p className="text-xs text-gray-600 mb-3">
+                  Créneau disponible : {selectedSlot.start} - {selectedSlot.end}
+                </p>
+                <div className="grid grid-cols-2 gap-4">
+                  <div>
+                    <label className="block text-xs font-medium text-gray-700 mb-1">
+                      Heure de début
+                    </label>
+                    <select
+                      value={customStartTime}
+                      onChange={(e) => setCustomStartTime(e.target.value)}
+                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500"
+                    >
+                      {generateTimeOptions(selectedSlot.start, selectedSlot.end).slice(0, -1).map(time => (
+                        <option key={time} value={time}>{time}</option>
+                      ))}
+                    </select>
+                  </div>
+                  <div>
+                    <label className="block text-xs font-medium text-gray-700 mb-1">
+                      Heure de fin
+                    </label>
+                    <select
+                      value={customEndTime}
+                      onChange={(e) => setCustomEndTime(e.target.value)}
+                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500"
+                    >
+                      {generateTimeOptions(selectedSlot.start, selectedSlot.end).filter(time => time > customStartTime).map(time => (
+                        <option key={time} value={time}>{time}</option>
+                      ))}
+                    </select>
+                  </div>
+                </div>
+                {customStartTime && customEndTime && (
+                  <div className="mt-3">
+                    <p className="text-sm font-medium text-gray-900">
+                      Durée : {calculateDuration(customStartTime, customEndTime)} minutes
+                      {educator?.hourly_rate && ` - ${((educator.hourly_rate / 60) * calculateDuration(customStartTime, customEndTime)).toFixed(2)}€`}
+                    </p>
+                    {!validateDuration(customStartTime, customEndTime) && (
+                      <p className="text-xs text-red-600 mt-1">
+                        ⚠️ La durée minimum est de 2 heures
+                      </p>
                     )}
-                  </>
+                  </div>
                 )}
               </div>
             )}
 
             {/* Type de rendez-vous */}
-            {selectedSlots.length > 0 && (
+            {selectedSlot && (
               <>
-                <div className="mb-6">
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                <div>
+                  <label className="block text-sm font-semibold text-gray-900 mb-3">
                     3. Type de rendez-vous
                   </label>
-                  <div className="space-y-2">
-                    <label className="flex items-center p-3 border-2 border-gray-200 rounded-lg cursor-pointer hover:border-primary-300">
-                      <input
-                        type="radio"
-                        name="location_type"
-                        value="online"
-                        checked={locationType === 'online'}
-                        onChange={(e) => setLocationType(e.target.value as any)}
-                        className="mr-3"
-                      />
-                      <div>
-                        <div className="font-medium">En ligne</div>
-                        <div className="text-sm text-gray-500">Visioconférence</div>
-                      </div>
-                    </label>
-                    <label className="flex items-center p-3 border-2 border-gray-200 rounded-lg cursor-pointer hover:border-primary-300">
-                      <input
-                        type="radio"
-                        name="location_type"
-                        value="home"
-                        checked={locationType === 'home'}
-                        onChange={(e) => setLocationType(e.target.value as any)}
-                        className="mr-3"
-                      />
-                      <div>
-                        <div className="font-medium">À domicile</div>
-                        <div className="text-sm text-gray-500">L'éducateur se déplace</div>
-                      </div>
-                    </label>
-                    <label className="flex items-center p-3 border-2 border-gray-200 rounded-lg cursor-pointer hover:border-primary-300">
-                      <input
-                        type="radio"
-                        name="location_type"
-                        value="office"
-                        checked={locationType === 'office'}
-                        onChange={(e) => setLocationType(e.target.value as any)}
-                        className="mr-3"
-                      />
-                      <div>
-                        <div className="font-medium">Au cabinet</div>
-                        <div className="text-sm text-gray-500">Vous vous déplacez</div>
-                      </div>
-                    </label>
+                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                    <button
+                      type="button"
+                      onClick={() => setLocationType('online')}
+                      className={`p-4 rounded-lg border-2 transition ${
+                        locationType === 'online'
+                          ? 'border-primary-600 bg-primary-50'
+                          : 'border-gray-200 hover:border-primary-300'
+                      }`}
+                    >
+                      <p className="font-semibold text-gray-900">En ligne</p>
+                      <p className="text-xs text-gray-600 mt-1">Visioconférence</p>
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setLocationType('home')}
+                      className={`p-4 rounded-lg border-2 transition ${
+                        locationType === 'home'
+                          ? 'border-primary-600 bg-primary-50'
+                          : 'border-gray-200 hover:border-primary-300'
+                      }`}
+                    >
+                      <p className="font-semibold text-gray-900">À domicile</p>
+                      <p className="text-xs text-gray-600 mt-1">Chez vous</p>
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setLocationType('office')}
+                      className={`p-4 rounded-lg border-2 transition ${
+                        locationType === 'office'
+                          ? 'border-primary-600 bg-primary-50'
+                          : 'border-gray-200 hover:border-primary-300'
+                      }`}
+                    >
+                      <p className="font-semibold text-gray-900">Au cabinet</p>
+                      <p className="text-xs text-gray-600 mt-1">Cabinet de l&apos;éducateur</p>
+                    </button>
                   </div>
                 </div>
 
-                {/* Adresse si à domicile */}
-                {locationType === 'home' && (
-                  <div className="mb-6">
+                {/* Adresse si nécessaire */}
+                {(locationType === 'home' || locationType === 'office') && (
+                  <div>
                     <label className="block text-sm font-medium text-gray-700 mb-2">
-                      Adresse du rendez-vous *
+                      Adresse
                     </label>
-                    <textarea
+                    <input
+                      type="text"
                       value={address}
                       onChange={(e) => setAddress(e.target.value)}
-                      rows={3}
-                      className="w-full border border-gray-300 rounded-md px-3 py-2"
-                      placeholder="Adresse complète..."
+                      placeholder="Entrez l'adresse complète"
+                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
                       required
                     />
                   </div>
                 )}
 
                 {/* Notes */}
-                <div className="mb-6">
+                <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Notes ou demandes particulières (optionnel)
+                    Message pour l&apos;éducateur (optionnel)
                   </label>
                   <textarea
                     value={familyNotes}
                     onChange={(e) => setFamilyNotes(e.target.value)}
                     rows={4}
-                    className="w-full border border-gray-300 rounded-md px-3 py-2"
-                    placeholder="Précisez vos besoins, objectifs, ou toute information utile pour l'éducateur..."
+                    placeholder="Décrivez brièvement vos besoins, objectifs ou questions..."
+                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
                   />
                 </div>
 
-                {/* Boutons */}
-                <div className="flex gap-4">
+                {/* Bouton de soumission */}
+                <div className="flex gap-4 pt-4">
                   <Link
                     href={`/educator/${params.id}`}
-                    className="flex-1 px-6 py-3 border-2 border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 font-medium text-center"
+                    className="flex-1 px-6 py-3 border-2 border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 font-medium transition text-center"
                   >
                     Annuler
                   </Link>
                   <button
                     type="submit"
                     disabled={submitting}
-                    className="flex-1 px-6 py-3 bg-primary-600 text-white rounded-lg hover:bg-primary-700 disabled:opacity-50 font-medium"
+                    className="flex-1 px-6 py-3 bg-primary-600 text-white rounded-lg hover:bg-primary-700 font-medium transition disabled:opacity-50 disabled:cursor-not-allowed"
                   >
                     {submitting ? 'Envoi...' : 'Envoyer la demande'}
                   </button>

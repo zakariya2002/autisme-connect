@@ -68,8 +68,7 @@ export async function getEducatorActiveConversations(educatorId: string): Promis
     const { count, error } = await supabase
       .from('conversations')
       .select('*', { count: 'exact', head: true })
-      .eq('educator_id', educatorId)
-      .eq('status', 'active');
+      .eq('educator_id', educatorId);
 
     if (error) {
       console.error('Erreur comptage conversations:', error);

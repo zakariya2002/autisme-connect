@@ -15,39 +15,43 @@ const supabaseAdmin = createClient(
 
 export async function GET(
   request: NextRequest,
-  { params }: { params: { filename: string } }
+  { params }: { params: { path: string[] } }
 ) {
   try {
-    const filename = params.filename;
+    // Reconstruire le chemin complet du fichier (ex: "user_id/cv.pdf")
+    const filePath = params.path.join('/');
 
     // Télécharger le fichier depuis Supabase Storage avec les droits admin
     const { data, error } = await supabaseAdmin.storage
-      .from('verification-documents')
-      .download(filename);
+      .from('educator-cvs')
+      .download(filePath);
 
     if (error) {
       console.error('Storage download error:', error);
       return NextResponse.json(
-        { error: 'Failed to download file', details: error },
+        { error: 'Failed to download CV', details: error },
         { status: 500 }
       );
     }
 
     if (!data) {
       return NextResponse.json(
-        { error: 'File not found' },
+        { error: 'CV not found' },
         { status: 404 }
       );
     }
 
     // Déterminer le type MIME
-    const contentType = data.type || 'application/octet-stream';
+    const contentType = data.type || 'application/pdf';
+
+    // Extraire le nom du fichier pour l'en-tête Content-Disposition
+    const fileName = filePath.split('/').pop() || 'cv.pdf';
 
     // Retourner le fichier
     return new NextResponse(data, {
       headers: {
         'Content-Type': contentType,
-        'Content-Disposition': `inline; filename="${filename}"`,
+        'Content-Disposition': `inline; filename="${fileName}"`,
       },
     });
   } catch (error) {

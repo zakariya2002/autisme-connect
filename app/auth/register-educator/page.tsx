@@ -45,6 +45,9 @@ export default function RegisterEducatorPage() {
     languages: '',
   });
 
+  // CV File
+  const [cvFile, setCvFile] = useState<File | null>(null);
+
   const [passwordCriteria, setPasswordCriteria] = useState<PasswordCriteria>({
     minLength: false,
     hasUppercase: false,
@@ -121,6 +124,12 @@ export default function RegisterEducatorPage() {
       return;
     }
 
+    // Validation du CV
+    if (!cvFile) {
+      setError('Veuillez uploader votre CV');
+      return;
+    }
+
     setLoading(true);
 
     try {
@@ -184,7 +193,35 @@ export default function RegisterEducatorPage() {
         throw new Error(result.error || 'Erreur lors de la création du profil');
       }
 
-      // 3. Si éducateur venant de /pricing, rediriger vers Stripe Checkout
+      // 3. Upload du CV vers Supabase Storage
+      if (cvFile && authResult.user) {
+        const fileExt = cvFile.name.split('.').pop();
+        const fileName = `${authResult.user.id}/${Date.now()}.${fileExt}`;
+
+        const { error: uploadError } = await supabase.storage
+          .from('educator-cvs')
+          .upload(fileName, cvFile, {
+            cacheControl: '3600',
+            upsert: false
+          });
+
+        if (uploadError) {
+          console.error('Erreur upload CV:', uploadError);
+          throw new Error('Erreur lors de l\'upload du CV');
+        }
+
+        // Mettre à jour le profil avec l'URL du CV
+        const { error: updateError } = await supabase
+          .from('educator_profiles')
+          .update({ cv_url: fileName })
+          .eq('user_id', authResult.user.id);
+
+        if (updateError) {
+          console.error('Erreur MAJ profil CV:', updateError);
+        }
+      }
+
+      // 4. Si éducateur venant de /pricing, rediriger vers Stripe Checkout
       if (planParam && result.data?.id) {
         // Créer la session Stripe
         const checkoutResponse = await fetch('/api/create-checkout-session', {
@@ -207,7 +244,7 @@ export default function RegisterEducatorPage() {
         }
       }
 
-      // 4. Sinon, rediriger vers la page de gestion du diplôme
+      // 5. Sinon, rediriger vers la page de gestion du diplôme
       router.push('/dashboard/educator/diploma');
     } catch (err: any) {
       setError(err.message || 'Une erreur est survenue');
@@ -526,6 +563,66 @@ export default function RegisterEducatorPage() {
                 onChange={(e) => setEducatorData({ ...educatorData, languages: e.target.value })}
                 className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:ring-primary-500 focus:border-primary-500"
               />
+            </div>
+
+            {/* CV Upload */}
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                CV (obligatoire) *
+              </label>
+              <div className="mt-1 flex items-center gap-4">
+                <label className="flex-1 cursor-pointer">
+                  <div className={`border-2 border-dashed rounded-lg p-4 text-center ${
+                    cvFile ? 'border-green-500 bg-green-50' : 'border-gray-300 hover:border-primary-500'
+                  }`}>
+                    {cvFile ? (
+                      <div className="flex items-center justify-center gap-2 text-green-700">
+                        <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        </svg>
+                        <span className="font-medium">{cvFile.name}</span>
+                      </div>
+                    ) : (
+                      <div className="text-gray-600">
+                        <svg className="mx-auto h-12 w-12 text-gray-400" stroke="currentColor" fill="none" viewBox="0 0 48 48">
+                          <path d="M28 8H12a4 4 0 00-4 4v20m32-12v8m0 0v8a4 4 0 01-4 4H12a4 4 0 01-4-4v-4m32-4l-3.172-3.172a4 4 0 00-5.656 0L28 28M8 32l9.172-9.172a4 4 0 015.656 0L28 28m0 0l4 4m4-24h8m-4-4v8m-12 4h.02" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" />
+                        </svg>
+                        <p className="mt-1 text-sm">Cliquez pour uploader votre CV</p>
+                        <p className="mt-1 text-xs text-gray-500">PDF uniquement, max 5MB</p>
+                      </div>
+                    )}
+                  </div>
+                  <input
+                    type="file"
+                    accept=".pdf"
+                    required
+                    className="hidden"
+                    onChange={(e) => {
+                      const file = e.target.files?.[0];
+                      if (file) {
+                        if (file.size > 5 * 1024 * 1024) {
+                          alert('Le fichier est trop volumineux (max 5MB)');
+                          return;
+                        }
+                        if (file.type !== 'application/pdf') {
+                          alert('Seuls les fichiers PDF sont acceptés');
+                          return;
+                        }
+                        setCvFile(file);
+                      }
+                    }}
+                  />
+                </label>
+                {cvFile && (
+                  <button
+                    type="button"
+                    onClick={() => setCvFile(null)}
+                    className="px-3 py-2 text-sm text-red-600 hover:text-red-700 border border-red-300 rounded-md hover:bg-red-50"
+                  >
+                    Supprimer
+                  </button>
+                )}
+              </div>
             </div>
 
             <button
