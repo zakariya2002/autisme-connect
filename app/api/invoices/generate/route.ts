@@ -80,15 +80,13 @@ export async function POST(request: NextRequest) {
     // Générer le numéro de facture éducateur
     const { data: educatorInvoiceNumber } = await supabase
       .rpc('generate_invoice_number', {
-        invoice_type: 'educator_invoice',
-        educator_id_param: appointment.educator_id
+        invoice_type: 'educator_invoice'
       });
 
     // Générer le numéro de reçu famille
     const { data: familyInvoiceNumber } = await supabase
       .rpc('generate_invoice_number', {
-        invoice_type: 'family_receipt',
-        educator_id_param: appointment.educator_id
+        invoice_type: 'family_receipt'
       });
 
     // Données pour la facture éducateur
