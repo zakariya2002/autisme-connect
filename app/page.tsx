@@ -255,6 +255,26 @@ export default function Home() {
             </p>
           </div>
 
+          {/* Image d'accompagnement humaine */}
+          <div className="mb-12 lg:mb-16">
+            <div className="relative rounded-2xl overflow-hidden shadow-2xl max-w-5xl mx-auto">
+              <img
+                src="https://images.unsplash.com/photo-1503676260728-1c00da094a0b?w=1400&q=80"
+                alt="Éducateur accompagnant un jeune enfant dans son apprentissage - séance individuelle bienveillante"
+                className="w-full h-[300px] sm:h-[400px] lg:h-[500px] object-cover"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent"></div>
+              <div className="absolute bottom-0 left-0 right-0 p-6 sm:p-8 text-white">
+                <p className="text-lg sm:text-xl lg:text-2xl font-semibold mb-2">
+                  Un accompagnement personnalisé et bienveillant
+                </p>
+                <p className="text-sm sm:text-base lg:text-lg text-gray-200">
+                  Chaque séance est pensée pour respecter le rythme et les besoins uniques de votre enfant
+                </p>
+              </div>
+            </div>
+          </div>
+
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 sm:gap-10 lg:gap-12 items-center max-w-6xl mx-auto">
             {/* Colonne gauche - Texte principal */}
             <div className="space-y-5 sm:space-y-6">
