@@ -59,19 +59,19 @@ function SessionCountdown({
   };
 
   return (
-    <div className="flex items-center gap-3">
-      <div className="flex items-center gap-2 px-4 py-2 bg-indigo-50 border border-indigo-200 rounded-md">
+    <div className="flex flex-col sm:flex-row items-center gap-3 w-full sm:w-auto">
+      <div className="flex items-center gap-2 px-3 py-2 sm:px-4 bg-indigo-50 border border-indigo-200 rounded-md w-full sm:w-auto justify-center">
         <svg className="w-5 h-5 text-indigo-600 animate-pulse" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
         </svg>
-        <span className="font-mono font-bold text-indigo-900">
+        <span className="font-mono font-bold text-sm sm:text-base text-indigo-900">
           {timeRemaining > 0 ? formatTime(timeRemaining) : 'Temps écoulé'}
         </span>
       </div>
       <button
         onClick={onComplete}
         disabled={actionLoading || !canComplete}
-        className={`px-4 py-2 text-white rounded-md font-medium flex items-center gap-2 ${
+        className={`w-full sm:w-auto px-4 py-2 text-white rounded-md font-medium flex items-center justify-center gap-2 ${
           canComplete
             ? 'bg-green-600 hover:bg-green-700'
             : 'bg-gray-400 cursor-not-allowed'
@@ -81,7 +81,12 @@ function SessionCountdown({
         <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
         </svg>
-        {canComplete ? 'Terminer la séance' : 'Séance en cours...'}
+        <span className="hidden sm:inline">
+          {canComplete ? 'Terminer la séance' : 'Séance en cours...'}
+        </span>
+        <span className="sm:hidden">
+          {canComplete ? 'Terminer' : 'En cours...'}
+        </span>
       </button>
     </div>
   );
