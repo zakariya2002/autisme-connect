@@ -48,6 +48,8 @@ export async function POST(request: Request) {
           hourly_rate: profileData.hourly_rate || null,
           specializations: profileData.specializations || [],
           languages: profileData.languages || [],
+          siret: profileData.siret || null,
+          sap_number: profileData.sap_number || null,
         })
         .select()
         .single();

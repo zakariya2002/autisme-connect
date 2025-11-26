@@ -51,7 +51,7 @@ export default function PricingTnd() {
           </div>
 
           <p className="text-4xl font-bold text-blue-600 mb-4">29€ / mois</p>
-          <p className="text-3xl font-bold text-primary-600 mb-4">+ 10% de commission*</p>
+          <p className="text-3xl font-bold text-primary-600 mb-4">+ 12% de commission*</p>
 
           <div className="space-y-4 text-2xl text-black mt-8" style={{ lineHeight: '2' }}>
             <p>✓ Contacts familles illimités</p>
@@ -68,7 +68,7 @@ export default function PricingTnd() {
             <strong>* Commission de succès :</strong>
           </p>
           <p className="text-xl text-black mb-4" style={{ lineHeight: '2' }}>
-            10% uniquement sur les prestations trouvées via AutismeConnect.
+            12% (incluant frais bancaires) uniquement sur les prestations trouvées via AutismeConnect.
           </p>
           <p className="text-xl text-black mb-4" style={{ lineHeight: '2' }}>
             Vos clients existants = 0% de commission.
@@ -80,6 +80,30 @@ export default function PricingTnd() {
               → 315€ pour vous, 35€ pour nous
             </p>
           </div>
+        </div>
+
+        {/* Encart Agrément SAP */}
+        <div className="bg-blue-50 p-12 rounded-3xl border-4 border-blue-200 mb-12">
+          <div className="text-6xl mb-8 text-center">🏅</div>
+          <h2 className="text-4xl font-bold text-black mb-8 text-center">AGRÉMENT SAP</h2>
+          <p className="text-2xl text-black mb-6 text-center" style={{ lineHeight: '2' }}>
+            Obtenez l'agrément Services à la Personne<br/>
+            pour que vos clients bénéficient du <strong>CESU</strong> et du <strong>crédit d'impôt 50%</strong>
+          </p>
+          <Link href="/educators/sap-accreditation" className="block">
+            <div
+              className="bg-blue-600 text-white px-12 py-8 rounded-2xl font-bold border-4 border-blue-800 hover:bg-blue-700 transition-colors text-center"
+              style={{ fontSize: '2rem' }}
+            >
+              <div className="flex items-center justify-center gap-4">
+                <span style={{ fontSize: '2.5rem' }}>ℹ️</span>
+                <span>EN SAVOIR PLUS</span>
+              </div>
+            </div>
+          </Link>
+          <p className="text-xl text-green-700 font-bold text-center mt-6">
+            ✅ 100% GRATUIT
+          </p>
         </div>
 
         <Link href="/" className="block">

@@ -57,6 +57,29 @@ export function getEducatorWelcomeEmail(firstName: string): string {
                 En tant que membre gratuit, vous pouvez accepter jusqu'à <strong>3 réservations par mois</strong> et gérer <strong>5 conversations actives</strong>. Passez Premium pour lever ces limites !
               </p>
 
+              <!-- SAP Accreditation Section -->
+              <div style="background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%); border-left: 4px solid #2196f3; padding: 25px; margin: 0 0 30px 0; border-radius: 8px; border: 2px solid #2196f3;">
+                <h3 style="margin: 0 0 15px 0; color: #1565c0; font-size: 18px; font-weight: bold;">
+                  🏅 Obtenez l'agrément Services à la Personne (SAP)
+                </h3>
+                <p style="margin: 0 0 15px 0; font-size: 15px; line-height: 1.6; color: #333333;">
+                  Permettez à vos clients de bénéficier du <strong>CESU préfinancé</strong> et du <strong>crédit d'impôt de 50%</strong> ! L'agrément SAP est <strong style="color: #2e7d32;">100% GRATUIT</strong> et vous permet d'attirer beaucoup plus de familles.
+                </p>
+                <p style="margin: 0 0 20px 0; font-size: 15px; line-height: 1.6; color: #333333;">
+                  Nous avons préparé un guide complet pour vous accompagner dans toutes les démarches.
+                </p>
+                <table role="presentation" style="margin: 0;">
+                  <tr>
+                    <td style="border-radius: 6px; background-color: #2196f3;">
+                      <a href="https://www.autismeconnect.fr/educators/sap-accreditation"
+                         style="display: inline-block; padding: 12px 30px; color: #ffffff; text-decoration: none; font-weight: bold; font-size: 15px;">
+                        📋 Consulter le guide SAP
+                      </a>
+                    </td>
+                  </tr>
+                </table>
+              </div>
+
               <!-- CTA Button -->
               <table role="presentation" style="margin: 0 auto;">
                 <tr>

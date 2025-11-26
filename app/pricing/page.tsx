@@ -164,7 +164,7 @@ export default function PricingPage() {
         'Badge de confiance sur votre profil',
         'Support prioritaire'
       ],
-      commission: '10% sur prestations réservées via la plateforme*'
+      commission: '12% sur prestations réservées via la plateforme*'
     }
   };
 
@@ -349,7 +349,7 @@ export default function PricingPage() {
               <div className="flex items-start">
                 <span className="text-2xl mr-4">→</span>
                 <div>
-                  <p className="font-semibold text-gray-900">Commission de succès : 10%</p>
+                  <p className="font-semibold text-gray-900">Commission de succès : 12%</p>
                   <p className="text-sm text-gray-600">uniquement sur les nouvelles prestations trouvées via AutismeConnect</p>
                 </div>
               </div>
@@ -419,7 +419,7 @@ export default function PricingPage() {
                   { feature: 'Outils de facturation', free: false, premium: true },
                   { feature: 'Support prioritaire', free: false, premium: true },
                   { feature: 'Abonnement mensuel', free: 'Gratuit', premium: '29€' },
-                  { feature: 'Commission', free: '10%*', premium: '10%*' },
+                  { feature: 'Commission', free: '12%*', premium: '12%*' },
                 ].map((row, index) => (
                   <tr key={index} className="hover:bg-gray-50">
                     <td className="py-3 sm:py-4 px-3 sm:px-6 font-medium text-gray-900 text-xs sm:text-base">{row.feature}</td>
@@ -455,6 +455,47 @@ export default function PricingPage() {
           </p>
         </div>
 
+        {/* Encart Agrément SAP */}
+        <div className="max-w-4xl mx-auto mb-12 sm:mb-20">
+          <div className="bg-gradient-to-br from-blue-50 to-indigo-50 border-2 border-blue-200 rounded-2xl p-6 sm:p-10 shadow-lg">
+            <div className="flex flex-col md:flex-row items-center gap-6">
+              <div className="flex-shrink-0">
+                <div className="w-16 h-16 sm:w-20 sm:h-20 bg-blue-100 rounded-full flex items-center justify-center">
+                  <svg className="w-8 h-8 sm:w-10 sm:h-10 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+                  </svg>
+                </div>
+              </div>
+              <div className="flex-1 text-center md:text-left">
+                <h3 className="text-xl sm:text-2xl font-bold text-gray-900 mb-2">
+                  Obtenez l'agrément Services à la Personne (SAP)
+                </h3>
+                <p className="text-gray-700 text-sm sm:text-base mb-4">
+                  Permettez à vos clients de bénéficier du <strong>CESU préfinancé</strong> et du <strong>crédit d'impôt de 50%</strong>.
+                  L'agrément est gratuit et vous permet d'attirer plus de familles !
+                </p>
+                <div className="flex flex-wrap gap-3 justify-center md:justify-start">
+                  <Link
+                    href="/educators/sap-accreditation"
+                    className="inline-flex items-center px-5 py-2.5 bg-blue-600 text-white rounded-lg hover:bg-blue-700 font-semibold transition shadow-md text-sm sm:text-base"
+                  >
+                    <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                    En savoir plus
+                  </Link>
+                  <span className="inline-flex items-center px-4 py-2 bg-green-100 text-green-800 rounded-lg font-semibold text-xs sm:text-sm">
+                    <svg className="w-4 h-4 mr-1.5" fill="currentColor" viewBox="0 0 20 20">
+                      <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                    </svg>
+                    100% Gratuit
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
         {/* FAQ */}
         <div className="max-w-3xl mx-auto mb-12 sm:mb-20">
           <h2 className="text-2xl sm:text-3xl font-bold text-center text-gray-900 mb-8 sm:mb-12">
@@ -467,8 +508,8 @@ export default function PricingPage() {
                 a: "Les 3 premiers mois sont à 19€/mois au lieu de 29€. Vous bénéficiez d'un accès complet à toutes les fonctionnalités dès votre inscription."
               },
               {
-                q: "Comment fonctionne la commission de 10% ?",
-                a: "La commission de 10% s'applique uniquement sur les prestations réservées via la plateforme AutismeConnect. Vos clients existants ou trouvés en dehors de la plateforme ne sont pas concernés par cette commission."
+                q: "Comment fonctionne la commission de 12% ?",
+                a: "La commission de 12% (incluant les frais bancaires) s'applique uniquement sur les prestations réservées via la plateforme AutismeConnect. Vos clients existants ou trouvés en dehors de la plateforme ne sont pas concernés par cette commission."
               },
               {
                 q: "Puis-je annuler à tout moment ?",
@@ -484,7 +525,7 @@ export default function PricingPage() {
               },
               {
                 q: "Comment la commission est-elle prélevée ?",
-                a: "Lorsqu'une famille réserve une prestation via la plateforme, 10% du montant de la prestation est automatiquement déduit. Vous recevez directement 90% du montant sur votre compte."
+                a: "Lorsqu'une famille réserve une prestation via la plateforme, 12% du montant de la prestation est automatiquement déduit (incluant les frais bancaires). Vous recevez directement 88% du montant sur votre compte."
               },
             ].map((faq, index) => (
               <details key={index} className="bg-white rounded-lg shadow-md overflow-hidden group">

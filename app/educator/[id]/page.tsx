@@ -106,7 +106,7 @@ export default function EducatorPublicProfile({ params }: { params: { id: string
   const [error, setError] = useState('');
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [userRole, setUserRole] = useState<'educator' | 'family' | null>(null);
-  const [activeTab, setActiveTab] = useState<'about' | 'certifications' | 'availability'>('about');
+  const [activeTab, setActiveTab] = useState<'about' | 'certifications' | 'availability' | 'cv'>('about');
 
   useEffect(() => {
     let isMounted = true;
@@ -405,23 +405,16 @@ export default function EducatorPublicProfile({ params }: { params: { id: string
               <div className="flex-1 text-center sm:text-left pb-2">
                 <div className="mb-4">
                   <div className="flex items-center gap-3 flex-wrap justify-center sm:justify-start">
-                    <div className="flex items-center gap-3">
-                      <div className="flex-shrink-0 w-12 h-12 rounded-full bg-gradient-to-br from-primary-500 to-primary-700 flex items-center justify-center shadow-lg ring-2 ring-white">
-                        <span className="text-lg font-bold text-white">
-                          {educator.first_name?.[0]?.toUpperCase()}{educator.last_name?.[0]?.toUpperCase()}
+                    <h1 className="text-3xl sm:text-4xl font-bold text-gray-900 leading-tight">
+                      {educator.first_name?.trim() && (
+                        <span className="text-primary-600">
+                          {capitalizeFirstName(educator.first_name)}{' '}
                         </span>
-                      </div>
-                      <h1 className="text-3xl sm:text-4xl font-bold text-gray-900 leading-tight">
-                        {educator.first_name?.trim() && (
-                          <span className="text-primary-600">
-                            {capitalizeFirstName(educator.first_name)}{' '}
-                          </span>
-                        )}
-                        <span className="text-gray-900">
-                          {formatLastName(educator.last_name)}
-                        </span>
-                      </h1>
-                    </div>
+                      )}
+                      <span className="text-gray-900">
+                        {formatLastName(educator.last_name)}
+                      </span>
+                    </h1>
                     {isPremium && (
                       <span className="inline-flex items-center gap-1 px-3 py-1 bg-gradient-to-r from-yellow-400 to-yellow-500 text-white text-sm font-bold rounded-full shadow-md">
                         <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
@@ -517,6 +510,16 @@ export default function EducatorPublicProfile({ params }: { params: { id: string
               }`}
             >
               Certifications
+            </button>
+            <button
+              onClick={() => setActiveTab('cv')}
+              className={`px-6 py-2.5 rounded-md font-medium transition-all duration-200 ${
+                activeTab === 'cv'
+                  ? 'bg-primary-600 text-white shadow-md'
+                  : 'text-gray-700 hover:bg-gray-100'
+              }`}
+            >
+              CV
             </button>
             <button
               onClick={() => setActiveTab('availability')}
@@ -674,6 +677,65 @@ export default function EducatorPublicProfile({ params }: { params: { id: string
               </div>
             )}
               </>
+            )}
+
+            {/* Onglet CV */}
+            {activeTab === 'cv' && (
+              <div className="bg-white rounded-xl shadow-lg p-8 border border-gray-100 hover:shadow-xl transition-shadow duration-300">
+                <div className="flex items-center mb-6">
+                  <div className="w-10 h-10 bg-purple-100 rounded-lg flex items-center justify-center mr-3">
+                    <svg className="w-6 h-6 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                    </svg>
+                  </div>
+                  <h2 className="text-2xl font-bold text-gray-900">Curriculum Vitae</h2>
+                </div>
+
+                {educator.cv_url ? (
+                  <div className="space-y-4">
+                    <p className="text-gray-600">Consultez le CV de l'éducateur ci-dessous :</p>
+                    <div className="border-2 border-gray-200 rounded-lg overflow-hidden">
+                      <iframe
+                        src={educator.cv_url}
+                        className="w-full h-[600px]"
+                        title="CV de l'éducateur"
+                      />
+                    </div>
+                    <div className="flex gap-3">
+                      <a
+                        href={educator.cv_url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="inline-flex items-center gap-2 px-6 py-3 bg-primary-600 text-white rounded-lg hover:bg-primary-700 font-medium transition shadow-md hover:shadow-lg"
+                      >
+                        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                        </svg>
+                        Ouvrir en plein écran
+                      </a>
+                      <a
+                        href={educator.cv_url}
+                        download
+                        className="inline-flex items-center gap-2 px-6 py-3 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 font-medium transition"
+                      >
+                        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                        </svg>
+                        Télécharger
+                      </a>
+                    </div>
+                  </div>
+                ) : (
+                  <div className="text-center py-12 bg-gray-50 rounded-lg">
+                    <svg className="w-16 h-16 text-gray-400 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                    </svg>
+                    <p className="text-gray-600 font-medium">Aucun CV disponible</p>
+                    <p className="text-sm text-gray-500 mt-2">L'éducateur n'a pas encore téléchargé son CV.</p>
+                  </div>
+                )}
+              </div>
             )}
 
             {/* Onglet Disponibilités */}

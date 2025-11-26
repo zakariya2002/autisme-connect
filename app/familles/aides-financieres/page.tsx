@@ -1,0 +1,941 @@
+'use client';
+
+import { useState, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
+import Link from 'next/link';
+import { supabase } from '@/lib/supabase';
+import { signOut } from '@/lib/auth';
+import Logo from '@/components/Logo';
+import FamilyMobileMenu from '@/components/FamilyMobileMenu';
+import EducatorMobileMenu from '@/components/EducatorMobileMenu';
+
+export default function AidesFinancieresPage() {
+  const router = useRouter();
+  const [expandedSection, setExpandedSection] = useState<string | null>(null);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [userRole, setUserRole] = useState<'family' | 'educator' | null>(null);
+  const [profile, setProfile] = useState<any>(null);
+  const [isPremium, setIsPremium] = useState(false);
+
+  useEffect(() => {
+    checkAuthStatus();
+  }, []);
+
+  const checkAuthStatus = async () => {
+    const { data: { session } } = await supabase.auth.getSession();
+    if (!session?.user) {
+      setIsLoggedIn(false);
+      return;
+    }
+
+    setIsLoggedIn(true);
+
+    // Check if user is family
+    const { data: familyProfile } = await supabase
+      .from('family_profiles')
+      .select('*')
+      .eq('user_id', session.user.id)
+      .single();
+
+    if (familyProfile) {
+      setUserRole('family');
+      setProfile(familyProfile);
+      return;
+    }
+
+    // Check if user is educator
+    const { data: educatorProfile } = await supabase
+      .from('educator_profiles')
+      .select('*')
+      .eq('user_id', session.user.id)
+      .single();
+
+    if (educatorProfile) {
+      setUserRole('educator');
+      setProfile(educatorProfile);
+
+      // Check premium status
+      const { data: subscription } = await supabase
+        .from('subscriptions')
+        .select('status')
+        .eq('educator_id', educatorProfile.id)
+        .eq('status', 'active')
+        .single();
+
+      setIsPremium(!!subscription);
+    }
+  };
+
+  const handleLogout = async () => {
+    await signOut();
+    router.push('/');
+  };
+
+  const toggleSection = (section: string) => {
+    setExpandedSection(expandedSection === section ? null : section);
+  };
+
+  const getDashboardLink = () => {
+    if (userRole === 'family') return '/dashboard/family';
+    if (userRole === 'educator') return '/dashboard/educator';
+    return '/';
+  };
+
+  const getBackButtonText = () => {
+    if (userRole === 'family') return 'Retour au dashboard famille';
+    if (userRole === 'educator') return 'Retour au dashboard éducateur';
+    return 'Retour à l\'accueil';
+  };
+
+  return (
+    <div className="min-h-screen bg-gradient-to-b from-white to-primary-50">
+      {/* Navbar pour utilisateurs connectés */}
+      {isLoggedIn && (
+        <nav className="bg-white border-b border-gray-200">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="flex justify-between items-center h-16">
+              <Link href={getDashboardLink()} className="flex items-center">
+                <Logo />
+              </Link>
+
+              <div className="hidden md:flex items-center space-x-8">
+                <Link
+                  href={getDashboardLink()}
+                  className={`inline-flex items-center gap-2 text-white px-6 py-2.5 rounded-lg font-semibold transition-all duration-200 shadow-md hover:shadow-lg ${
+                    userRole === 'educator'
+                      ? 'bg-gradient-to-r from-primary-500 to-green-500 hover:from-primary-600 hover:to-green-600'
+                      : 'bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700'
+                  }`}
+                >
+                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
+                  </svg>
+                  Tableau de bord
+                </Link>
+                <button
+                  onClick={handleLogout}
+                  className="text-gray-700 hover:text-red-600 font-medium transition"
+                >
+                  Déconnexion
+                </button>
+              </div>
+
+              {/* Mobile Menu */}
+              {userRole === 'family' && (
+                <FamilyMobileMenu profile={profile} onLogout={handleLogout} />
+              )}
+              {userRole === 'educator' && (
+                <EducatorMobileMenu profile={profile} isPremium={isPremium} onLogout={handleLogout} />
+              )}
+            </div>
+          </div>
+        </nav>
+      )}
+
+      {/* Header */}
+      <div className="bg-gradient-to-br from-blue-600 via-purple-600 to-pink-600 border-b border-gray-200 relative overflow-hidden">
+        {/* Animated background circles */}
+        <div className="absolute inset-0 overflow-hidden">
+          <div className="absolute -top-24 -right-24 w-96 h-96 bg-white/10 rounded-full blur-3xl animate-pulse"></div>
+          <div className="absolute -bottom-24 -left-24 w-96 h-96 bg-white/10 rounded-full blur-3xl animate-pulse delay-700"></div>
+        </div>
+
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 relative z-10">
+          <Link
+            href={getDashboardLink()}
+            className="inline-flex items-center text-white hover:text-white/90 mb-6 transition-all duration-200 hover:translate-x-[-4px]"
+          >
+            <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+            </svg>
+            {getBackButtonText()}
+          </Link>
+
+          <h1 className="text-5xl md:text-6xl font-extrabold text-white text-center mb-4 drop-shadow-lg mt-6">
+            Aides Financières pour les Familles
+          </h1>
+          <p className="mt-4 text-xl md:text-2xl text-white/95 text-center max-w-4xl mx-auto font-medium drop-shadow-md">
+            Découvrez toutes les aides disponibles pour financer l'accompagnement éducatif de votre enfant
+          </p>
+          <p className="mt-3 text-lg text-white/80 text-center font-semibold">
+            Jusqu'à 100% de vos dépenses remboursées ! 💰
+          </p>
+        </div>
+      </div>
+
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        {/* Introduction */}
+        <div className="bg-gradient-to-br from-blue-500 via-blue-600 to-green-500 p-8 mb-12 rounded-2xl shadow-2xl transform hover:scale-[1.02] transition-all duration-300 relative overflow-hidden">
+          {/* Background decoration */}
+          <div className="absolute top-0 right-0 w-64 h-64 bg-white/10 rounded-full blur-3xl"></div>
+
+          <div className="flex items-start relative z-10">
+            <div className="flex-shrink-0">
+              <div className="relative">
+                <div className="absolute inset-0 bg-white/30 rounded-full blur-xl animate-pulse"></div>
+                <svg className="h-16 w-16 text-white relative z-10 drop-shadow-lg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+              </div>
+            </div>
+            <div className="ml-6 flex-1">
+              <h3 className="text-2xl font-bold text-white drop-shadow-md mb-3">
+                Vos reçus Autisme Connect sont compatibles avec toutes ces aides
+              </h3>
+              <p className="text-xl text-white/95 leading-relaxed drop-shadow">
+                Nos attestations de paiement incluent toutes les mentions légales requises pour vos démarches de remboursement.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        {/* CESU */}
+        <div className="bg-white rounded-2xl shadow-lg border border-gray-200 mb-8 overflow-hidden transform hover:scale-[1.01] transition-all duration-300">
+          <button
+            onClick={() => toggleSection('cesu')}
+            className="w-full px-8 py-6 flex items-center justify-between bg-gradient-to-r from-green-50 to-emerald-50 hover:from-green-100 hover:to-emerald-100 transition-all duration-300 relative overflow-hidden group"
+          >
+            {/* Background decoration */}
+            <div className="absolute inset-0 bg-gradient-to-r from-green-400/10 to-emerald-400/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+
+            <div className="flex items-center gap-6 relative z-10">
+              <div className="relative">
+                <div className="absolute inset-0 bg-green-400 rounded-xl blur-xl opacity-30 group-hover:opacity-50 transition-opacity"></div>
+                <div className="w-16 h-16 bg-gradient-to-br from-green-400 to-emerald-500 rounded-xl flex items-center justify-center shadow-lg relative z-10 transform group-hover:scale-110 transition-transform duration-300">
+                  <svg className="w-9 h-9 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z" />
+                  </svg>
+                </div>
+              </div>
+              <div className="text-left flex-1">
+                <h2 className="text-2xl font-bold text-gray-900 mb-1">CESU Préfinancé</h2>
+                <p className="text-base text-gray-600 font-medium">Chèque Emploi Service Universel</p>
+              </div>
+            </div>
+            <svg
+              className={`w-7 h-7 text-gray-500 transition-transform duration-300 relative z-10 ${expandedSection === 'cesu' ? 'rotate-180' : ''}`}
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+            </svg>
+          </button>
+
+          {expandedSection === 'cesu' && (
+            <div className="px-6 pb-6 border-t border-gray-100">
+              <div className="mt-4 space-y-4">
+                <div>
+                  <h3 className="font-semibold text-gray-900 mb-2">Qu'est-ce que le CESU ?</h3>
+                  <p className="text-gray-700">
+                    Le CESU préfinancé est un titre de paiement fourni par votre employeur, votre comité d'entreprise,
+                    ou certains organismes publics pour financer des services à la personne, dont l'accompagnement éducatif.
+                  </p>
+                </div>
+
+                <div>
+                  <h3 className="font-semibold text-gray-900 mb-2">Qui peut en bénéficier ?</h3>
+                  <ul className="list-disc list-inside space-y-1 text-gray-700">
+                    <li>Salariés dont l'employeur propose le CESU</li>
+                    <li>Agents de la fonction publique</li>
+                    <li>Bénéficiaires de l'aide sociale (selon départements)</li>
+                  </ul>
+                </div>
+
+                <div>
+                  <h3 className="font-semibold text-gray-900 mb-2">Comment l'utiliser avec Autisme Connect ?</h3>
+                  <ol className="list-decimal list-inside space-y-2 text-gray-700">
+                    <li>Payez votre séance par carte bancaire sur la plateforme</li>
+                    <li>Téléchargez votre reçu depuis votre dashboard</li>
+                    <li>Envoyez le reçu + vos CESU à l'organisme émetteur pour remboursement</li>
+                  </ol>
+                </div>
+
+                <div className="bg-gradient-to-br from-green-400 to-emerald-500 p-6 rounded-2xl shadow-lg relative overflow-hidden">
+                  <div className="absolute top-0 right-0 w-32 h-32 bg-white/20 rounded-full blur-2xl"></div>
+                  <div className="relative z-10">
+                    <div className="flex items-center gap-3 mb-3">
+                      <svg className="w-8 h-8 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                      </svg>
+                      <h4 className="text-xl font-bold text-white">Montant de l'aide</h4>
+                    </div>
+                    <p className="text-lg text-white font-semibold leading-relaxed">
+                      Variable selon votre employeur ou organisme. Peut couvrir jusqu'à <span className="text-2xl font-extrabold text-yellow-300">100%</span> du coût des prestations.
+                    </p>
+                  </div>
+                </div>
+
+                <div>
+                  <h3 className="font-semibold text-gray-900 mb-3">Liens utiles</h3>
+                  <a
+                    href="https://www.cesu.urssaf.fr/"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-primary-500 to-blue-600 hover:from-primary-600 hover:to-blue-700 text-white font-semibold rounded-xl shadow-md hover:shadow-lg transition-all duration-200 transform hover:scale-105"
+                  >
+                    <span>Site officiel CESU (URSSAF)</span>
+                    <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                    </svg>
+                  </a>
+                </div>
+              </div>
+            </div>
+          )}
+        </div>
+
+        {/* PCH (MDPH) */}
+        <div className="bg-white rounded-2xl shadow-lg border border-gray-200 mb-8 overflow-hidden transform hover:scale-[1.01] transition-all duration-300">
+          <button
+            onClick={() => toggleSection('pch')}
+            className="w-full px-8 py-6 flex items-center justify-between bg-gradient-to-r from-blue-50 to-cyan-50 hover:from-blue-100 hover:to-cyan-100 transition-all duration-300 relative overflow-hidden group"
+          >
+            {/* Background decoration */}
+            <div className="absolute inset-0 bg-gradient-to-r from-blue-400/10 to-cyan-400/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+
+            <div className="flex items-center gap-6 relative z-10">
+              <div className="relative">
+                <div className="absolute inset-0 bg-blue-400 rounded-xl blur-xl opacity-30 group-hover:opacity-50 transition-opacity"></div>
+                <div className="w-16 h-16 bg-gradient-to-br from-blue-500 to-cyan-500 rounded-xl flex items-center justify-center shadow-lg relative z-10 transform group-hover:scale-110 transition-transform duration-300">
+                  <svg className="w-9 h-9 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+                  </svg>
+                </div>
+              </div>
+              <div className="text-left flex-1">
+                <h2 className="text-2xl font-bold text-gray-900 mb-1">PCH - MDPH</h2>
+                <p className="text-base text-gray-600 font-medium">Prestation de Compensation du Handicap</p>
+              </div>
+            </div>
+            <svg
+              className={`w-7 h-7 text-gray-500 transition-transform duration-300 relative z-10 ${expandedSection === 'pch' ? 'rotate-180' : ''}`}
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+            </svg>
+          </button>
+
+          {expandedSection === 'pch' && (
+            <div className="px-6 pb-6 border-t border-gray-100">
+              <div className="mt-4 space-y-4">
+                <div>
+                  <h3 className="font-semibold text-gray-900 mb-2">Qu'est-ce que la PCH ?</h3>
+                  <p className="text-gray-700">
+                    La PCH est une aide financière versée par le département pour compenser les besoins liés au handicap,
+                    incluant l'aide humaine pour l'accompagnement éducatif d'un enfant autiste.
+                  </p>
+                </div>
+
+                <div>
+                  <h3 className="font-semibold text-gray-900 mb-2">Conditions d'éligibilité</h3>
+                  <ul className="list-disc list-inside space-y-1 text-gray-700">
+                    <li>Enfant avec reconnaissance du handicap (MDPH)</li>
+                    <li>Difficultés dans au moins 1 activité essentielle ou 2 activités instrumentales</li>
+                    <li>Résidence en France</li>
+                    <li>Âge : jusqu'à 75 ans (pas de limite d'âge si déjà bénéficiaire avant 60 ans)</li>
+                  </ul>
+                </div>
+
+                <div>
+                  <h3 className="font-semibold text-gray-900 mb-2">Démarches</h3>
+                  <ol className="list-decimal list-inside space-y-2 text-gray-700">
+                    <li>Constituez un dossier MDPH avec certificat médical</li>
+                    <li>Demandez la PCH volet "aide humaine"</li>
+                    <li>Après accord, utilisez Autisme Connect pour vos séances</li>
+                    <li>Envoyez mensuellement vos reçus à la MDPH pour remboursement</li>
+                  </ol>
+                </div>
+
+                <div className="bg-gradient-to-br from-blue-500 to-cyan-500 p-6 rounded-2xl shadow-lg relative overflow-hidden">
+                  <div className="absolute top-0 right-0 w-32 h-32 bg-white/20 rounded-full blur-2xl"></div>
+                  <div className="relative z-10">
+                    <div className="flex items-center gap-3 mb-3">
+                      <svg className="w-8 h-8 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                      </svg>
+                      <h4 className="text-xl font-bold text-white">Montant de l'aide</h4>
+                    </div>
+                    <p className="text-lg text-white font-semibold leading-relaxed mb-3">
+                      Jusqu'à <span className="text-2xl font-extrabold text-yellow-300">100%</span> du coût dans la limite des heures accordées. Le montant varie selon le niveau d'autonomie.
+                    </p>
+                    <p className="text-base text-white/90 font-medium">
+                      Exemples : 50h/mois pour niveau modéré, 100h+/mois pour niveau sévère
+                    </p>
+                  </div>
+                </div>
+
+                <div className="bg-gradient-to-br from-amber-50 to-orange-50 p-6 rounded-2xl border-l-4 border-amber-400 shadow-md">
+                  <h4 className="font-bold text-amber-900 mb-3 text-lg">Documents requis sur vos reçus</h4>
+                  <ul className="list-disc list-inside space-y-2 text-amber-800">
+                    <li>Nom et SIRET du prestataire (éducateur)</li>
+                    <li>Heures précises de début et fin de la prestation</li>
+                    <li>Nature du service (accompagnement éducatif)</li>
+                    <li>Montant payé</li>
+                  </ul>
+                  <div className="mt-4 pt-4 border-t border-amber-200">
+                    <p className="text-amber-900 font-bold flex items-center gap-2">
+                      <svg className="w-6 h-6 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                      </svg>
+                      Tous ces éléments sont inclus dans vos reçus Autisme Connect
+                    </p>
+                  </div>
+                </div>
+
+                <div>
+                  <h3 className="font-semibold text-gray-900 mb-3">Contact</h3>
+                  <p className="text-gray-700 mb-3">
+                    Contactez la MDPH de votre département :
+                  </p>
+                  <a
+                    href="https://www.mdphenligne.cnsa.fr/"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-blue-500 to-cyan-600 hover:from-blue-600 hover:to-cyan-700 text-white font-semibold rounded-xl shadow-md hover:shadow-lg transition-all duration-200 transform hover:scale-105"
+                  >
+                    <span>Trouver votre MDPH</span>
+                    <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                    </svg>
+                  </a>
+                </div>
+              </div>
+            </div>
+          )}
+        </div>
+
+        {/* AEEH (CAF) */}
+        <div className="bg-white rounded-2xl shadow-lg border border-gray-200 mb-8 overflow-hidden transform hover:scale-[1.01] transition-all duration-300">
+          <button
+            onClick={() => toggleSection('aeeh')}
+            className="w-full px-8 py-6 flex items-center justify-between bg-gradient-to-r from-purple-50 to-pink-50 hover:from-purple-100 hover:to-pink-100 transition-all duration-300 relative overflow-hidden group"
+          >
+            {/* Background decoration */}
+            <div className="absolute inset-0 bg-gradient-to-r from-purple-400/10 to-pink-400/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+
+            <div className="flex items-center gap-6 relative z-10">
+              <div className="relative">
+                <div className="absolute inset-0 bg-purple-400 rounded-xl blur-xl opacity-30 group-hover:opacity-50 transition-opacity"></div>
+                <div className="w-16 h-16 bg-gradient-to-br from-purple-500 to-pink-500 rounded-xl flex items-center justify-center shadow-lg relative z-10 transform group-hover:scale-110 transition-transform duration-300">
+                  <svg className="w-9 h-9 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                  </svg>
+                </div>
+              </div>
+              <div className="text-left flex-1">
+                <h2 className="text-2xl font-bold text-gray-900 mb-1">AEEH - CAF</h2>
+                <p className="text-base text-gray-600 font-medium">Allocation d'Éducation de l'Enfant Handicapé</p>
+              </div>
+            </div>
+            <svg
+              className={`w-7 h-7 text-gray-500 transition-transform duration-300 relative z-10 ${expandedSection === 'aeeh' ? 'rotate-180' : ''}`}
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+            </svg>
+          </button>
+
+          {expandedSection === 'aeeh' && (
+            <div className="px-6 pb-6 border-t border-gray-100">
+              <div className="mt-4 space-y-4">
+                <div>
+                  <h3 className="font-semibold text-gray-900 mb-2">Qu'est-ce que l'AEEH ?</h3>
+                  <p className="text-gray-700">
+                    L'AEEH est une allocation mensuelle versée par la CAF pour compenser les frais d'éducation et de soins
+                    d'un enfant en situation de handicap. Elle peut être complétée par un complément selon le niveau de handicap.
+                  </p>
+                </div>
+
+                <div>
+                  <h3 className="font-semibold text-gray-900 mb-2">Conditions d'éligibilité</h3>
+                  <ul className="list-disc list-inside space-y-1 text-gray-700">
+                    <li>Enfant de moins de 20 ans</li>
+                    <li>Taux d'incapacité d'au moins 80% (ou 50-79% si fréquente un établissement spécialisé)</li>
+                    <li>Résidence en France</li>
+                    <li>Pas de condition de ressources pour l'AEEH de base</li>
+                  </ul>
+                </div>
+
+                <div>
+                  <h3 className="font-semibold text-gray-900 mb-2">Démarches</h3>
+                  <ol className="list-decimal list-inside space-y-2 text-gray-700">
+                    <li>Demandez l'AEEH via le dossier MDPH</li>
+                    <li>La CDAPH (Commission des Droits et de l'Autonomie) évalue le dossier</li>
+                    <li>En cas d'accord, la CAF verse l'allocation mensuellement</li>
+                    <li>Utilisez cette aide pour financer les séances sur Autisme Connect</li>
+                  </ol>
+                </div>
+
+                <div className="bg-gradient-to-br from-purple-500 to-pink-500 p-6 rounded-2xl shadow-lg relative overflow-hidden">
+                  <div className="absolute top-0 right-0 w-32 h-32 bg-white/20 rounded-full blur-2xl"></div>
+                  <div className="relative z-10">
+                    <div className="flex items-center gap-3 mb-4">
+                      <svg className="w-8 h-8 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                      </svg>
+                      <h4 className="text-xl font-bold text-white">Montant de l'aide (2025)</h4>
+                    </div>
+                    <ul className="space-y-2 text-white font-medium">
+                      <li className="flex items-center gap-2">
+                        <span className="text-yellow-300 font-bold">•</span>
+                        <span><strong className="text-yellow-200">AEEH de base :</strong> 142,70€/mois</span>
+                      </li>
+                      <li className="flex items-center gap-2">
+                        <span className="text-yellow-300 font-bold">•</span>
+                        <span><strong className="text-yellow-200">Complément 1ère catégorie :</strong> +105,79€/mois</span>
+                      </li>
+                      <li className="flex items-center gap-2">
+                        <span className="text-yellow-300 font-bold">•</span>
+                        <span><strong className="text-yellow-200">Complément 2ème catégorie :</strong> +286,94€/mois</span>
+                      </li>
+                      <li className="flex items-center gap-2">
+                        <span className="text-yellow-300 font-bold">•</span>
+                        <span><strong className="text-yellow-200">Complément 3ème catégorie :</strong> +405,16€/mois</span>
+                      </li>
+                      <li className="text-base text-white/80">... jusqu'à la 6ème catégorie</li>
+                    </ul>
+                  </div>
+                </div>
+
+                <div>
+                  <h3 className="font-semibold text-gray-900 mb-3">AEEH vs PCH : Quelle différence ?</h3>
+                  <div className="bg-gradient-to-br from-gray-50 to-gray-100 p-6 rounded-2xl border border-gray-200 shadow-sm">
+                    <p className="text-gray-700 mb-3 flex items-start gap-2">
+                      <span className="text-purple-600 font-bold text-xl">→</span>
+                      <span><strong className="text-purple-700">AEEH :</strong> Allocation forfaitaire mensuelle pour compenser les frais liés au handicap</span>
+                    </p>
+                    <p className="text-gray-700 flex items-start gap-2">
+                      <span className="text-blue-600 font-bold text-xl">→</span>
+                      <span><strong className="text-blue-700">PCH :</strong> Remboursement sur justificatifs des dépenses réelles (dont aide humaine)</span>
+                    </p>
+                    <div className="mt-4 pt-4 border-t border-gray-300">
+                      <p className="text-sm text-gray-700 font-semibold flex items-center gap-2">
+                        <svg className="w-5 h-5 text-amber-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        </svg>
+                        Note : Vous pouvez choisir entre AEEH + complément OU PCH, mais pas les deux simultanément
+                      </p>
+                    </div>
+                  </div>
+                </div>
+
+                <div>
+                  <h3 className="font-semibold text-gray-900 mb-3">Contact</h3>
+                  <p className="text-gray-700 mb-3">
+                    Votre CAF :
+                  </p>
+                  <a
+                    href="https://www.caf.fr/"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-purple-500 to-pink-600 hover:from-purple-600 hover:to-pink-700 text-white font-semibold rounded-xl shadow-md hover:shadow-lg transition-all duration-200 transform hover:scale-105"
+                  >
+                    <span>www.caf.fr</span>
+                    <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                    </svg>
+                  </a>
+                </div>
+              </div>
+            </div>
+          )}
+        </div>
+
+        {/* Crédit d'impôt */}
+        <div className="bg-white rounded-2xl shadow-lg border border-gray-200 mb-8 overflow-hidden transform hover:scale-[1.01] transition-all duration-300">
+          <button
+            onClick={() => toggleSection('credit')}
+            className="w-full px-8 py-6 flex items-center justify-between bg-gradient-to-r from-yellow-50 to-orange-50 hover:from-yellow-100 hover:to-orange-100 transition-all duration-300 relative overflow-hidden group"
+          >
+            {/* Background decoration */}
+            <div className="absolute inset-0 bg-gradient-to-r from-yellow-400/10 to-orange-400/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+
+            <div className="flex items-center gap-6 relative z-10">
+              <div className="relative">
+                <div className="absolute inset-0 bg-yellow-400 rounded-xl blur-xl opacity-30 group-hover:opacity-50 transition-opacity"></div>
+                <div className="w-16 h-16 bg-gradient-to-br from-yellow-400 to-orange-500 rounded-xl flex items-center justify-center shadow-lg relative z-10 transform group-hover:scale-110 transition-transform duration-300">
+                  <svg className="w-9 h-9 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z" />
+                  </svg>
+                </div>
+              </div>
+              <div className="text-left flex-1">
+                <h2 className="text-2xl font-bold text-gray-900 mb-1">Crédit d'Impôt 50%</h2>
+                <p className="text-base text-gray-600 font-medium">Services à la Personne</p>
+              </div>
+            </div>
+            <svg
+              className={`w-7 h-7 text-gray-500 transition-transform duration-300 relative z-10 ${expandedSection === 'credit' ? 'rotate-180' : ''}`}
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+            </svg>
+          </button>
+
+          {expandedSection === 'credit' && (
+            <div className="px-6 pb-6 border-t border-gray-100">
+              <div className="mt-4 space-y-4">
+                <div>
+                  <h3 className="font-semibold text-gray-900 mb-2">Comment ça marche ?</h3>
+                  <p className="text-gray-700">
+                    Si votre éducateur dispose d'un agrément Services à la Personne (SAP), vous bénéficiez d'un crédit d'impôt
+                    de 50% des sommes versées pour les prestations d'accompagnement éducatif.
+                  </p>
+                </div>
+
+                <div className="bg-yellow-50 border-l-4 border-yellow-400 p-4">
+                  <div className="flex items-start">
+                    <svg className="h-5 w-5 text-yellow-600 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                    </svg>
+                    <p className="ml-3 text-yellow-800">
+                      <strong>Important :</strong> L'éducateur doit avoir un numéro d'agrément SAP valide.
+                      Vérifiez cette information sur son profil Autisme Connect.
+                    </p>
+                  </div>
+                </div>
+
+                <div>
+                  <h3 className="font-semibold text-gray-900 mb-3">Exemple concret</h3>
+                  <div className="bg-gradient-to-br from-yellow-400 to-orange-500 p-6 rounded-2xl shadow-lg relative overflow-hidden">
+                    <div className="absolute top-0 right-0 w-32 h-32 bg-white/20 rounded-full blur-2xl"></div>
+                    <div className="relative z-10 space-y-3">
+                      <p className="text-white font-medium text-lg">Vous payez 240€/mois pour l'accompagnement éducatif</p>
+                      <p className="text-white font-medium text-lg">Soit 2 880€/an</p>
+                      <div className="flex items-center gap-3 pt-2">
+                        <svg className="w-10 h-10 text-yellow-200" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
+                        </svg>
+                        <p className="text-white font-bold text-2xl">→ Crédit d'impôt : 1 440€ (50%)</p>
+                      </div>
+                      <p className="text-base text-white/90 pt-2 border-t border-white/30">Le crédit d'impôt sera déduit de votre impôt, ou remboursé si vous n'êtes pas imposable</p>
+                    </div>
+                  </div>
+                </div>
+
+                <div>
+                  <h3 className="font-semibold text-gray-900 mb-3">Plafonds annuels (2025)</h3>
+                  <ul className="space-y-2 text-gray-700">
+                    <li className="flex items-start gap-2">
+                      <span className="text-orange-500 font-bold">•</span>
+                      <span>Plafond général : 12 000€ de dépenses (soit 6 000€ de crédit d'impôt)</span>
+                    </li>
+                    <li className="flex items-start gap-2">
+                      <span className="text-orange-500 font-bold">•</span>
+                      <span>Majoré à 15 000€ pour le 1er enfant à charge</span>
+                    </li>
+                    <li className="flex items-start gap-2">
+                      <span className="text-orange-500 font-bold">•</span>
+                      <span>+1 500€ par enfant supplémentaire ou membre du foyer de +65 ans</span>
+                    </li>
+                    <li className="flex items-start gap-2">
+                      <span className="text-orange-500 font-bold">•</span>
+                      <span>Plafond maximal : 20 000€</span>
+                    </li>
+                  </ul>
+                </div>
+
+                <div>
+                  <h3 className="font-semibold text-gray-900 mb-3">Démarches</h3>
+                  <ol className="list-decimal list-inside space-y-2 text-gray-700">
+                    <li>Choisissez un éducateur avec agrément SAP sur Autisme Connect</li>
+                    <li>Conservez tous vos reçus de paiement</li>
+                    <li>Lors de votre déclaration d'impôts, déclarez les sommes versées</li>
+                    <li>Le crédit d'impôt sera calculé automatiquement</li>
+                  </ol>
+                </div>
+
+                <div className="bg-gradient-to-br from-green-50 to-emerald-50 p-6 rounded-2xl border-l-4 border-green-500 shadow-md">
+                  <h4 className="font-bold text-green-900 mb-3 text-lg flex items-center gap-2">
+                    <svg className="w-6 h-6 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                    Vos reçus Autisme Connect
+                  </h4>
+                  <p className="text-green-800 mb-3 font-medium">
+                    Si l'éducateur a un numéro SAP, vos reçus incluent automatiquement :
+                  </p>
+                  <ul className="space-y-2 text-green-800">
+                    <li className="flex items-start gap-2">
+                      <span className="text-green-600 font-bold">✓</span>
+                      <span>Le numéro d'agrément SAP</span>
+                    </li>
+                    <li className="flex items-start gap-2">
+                      <span className="text-green-600 font-bold">✓</span>
+                      <span>La mention "Éligible au crédit d'impôt 50%"</span>
+                    </li>
+                    <li className="flex items-start gap-2">
+                      <span className="text-green-600 font-bold">✓</span>
+                      <span>La référence à l'Article 199 sexdecies du CGI</span>
+                    </li>
+                  </ul>
+                </div>
+
+                <div>
+                  <h3 className="font-semibold text-gray-900 mb-3">Plus d'informations</h3>
+                  <a
+                    href="https://www.servicesalapersonne.gouv.fr/"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-yellow-500 to-orange-600 hover:from-yellow-600 hover:to-orange-700 text-white font-semibold rounded-xl shadow-md hover:shadow-lg transition-all duration-200 transform hover:scale-105"
+                  >
+                    <span>Site officiel Services à la Personne</span>
+                    <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                    </svg>
+                  </a>
+                </div>
+              </div>
+            </div>
+          )}
+        </div>
+
+        {/* Mutuelles */}
+        <div className="bg-white rounded-2xl shadow-lg border border-gray-200 mb-8 overflow-hidden transform hover:scale-[1.01] transition-all duration-300">
+          <button
+            onClick={() => toggleSection('mutuelle')}
+            className="w-full px-8 py-6 flex items-center justify-between bg-gradient-to-r from-pink-50 to-rose-50 hover:from-pink-100 hover:to-rose-100 transition-all duration-300 relative overflow-hidden group"
+          >
+            {/* Background decoration */}
+            <div className="absolute inset-0 bg-gradient-to-r from-pink-400/10 to-rose-400/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+
+            <div className="flex items-center gap-6 relative z-10">
+              <div className="relative">
+                <div className="absolute inset-0 bg-pink-400 rounded-xl blur-xl opacity-30 group-hover:opacity-50 transition-opacity"></div>
+                <div className="w-16 h-16 bg-gradient-to-br from-pink-500 to-rose-500 rounded-xl flex items-center justify-center shadow-lg relative z-10 transform group-hover:scale-110 transition-transform duration-300">
+                  <svg className="w-9 h-9 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+                  </svg>
+                </div>
+              </div>
+              <div className="text-left flex-1">
+                <h2 className="text-2xl font-bold text-gray-900 mb-1">Mutuelles & Complémentaires Santé</h2>
+                <p className="text-base text-gray-600 font-medium">Selon votre contrat</p>
+              </div>
+            </div>
+            <svg
+              className={`w-7 h-7 text-gray-500 transition-transform duration-300 relative z-10 ${expandedSection === 'mutuelle' ? 'rotate-180' : ''}`}
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+            </svg>
+          </button>
+
+          {expandedSection === 'mutuelle' && (
+            <div className="px-6 pb-6 border-t border-gray-100">
+              <div className="mt-4 space-y-4">
+                <div>
+                  <h3 className="font-semibold text-gray-900 mb-2">Prises en charge possibles</h3>
+                  <p className="text-gray-700">
+                    Certaines mutuelles proposent des forfaits spécifiques pour l'accompagnement des enfants en situation
+                    de handicap, notamment pour l'autisme. Les prises en charge varient selon votre contrat.
+                  </p>
+                </div>
+
+                <div>
+                  <h3 className="font-semibold text-gray-900 mb-2">Exemples de mutuelles avec forfaits autisme</h3>
+                  <ul className="space-y-2 text-gray-700">
+                    <li className="flex items-start">
+                      <span className="text-primary-600 mr-2">•</span>
+                      <span><strong>Harmonie Mutuelle :</strong> Jusqu'à 500€/an pour accompagnement autisme</span>
+                    </li>
+                    <li className="flex items-start">
+                      <span className="text-primary-600 mr-2">•</span>
+                      <span><strong>MGEN :</strong> Forfait handicap variable selon formule</span>
+                    </li>
+                    <li className="flex items-start">
+                      <span className="text-primary-600 mr-2">•</span>
+                      <span><strong>Malakoff Humanis :</strong> Prise en charge médecines douces et accompagnement</span>
+                    </li>
+                    <li className="flex items-start">
+                      <span className="text-primary-600 mr-2">•</span>
+                      <span><strong>AG2R La Mondiale :</strong> Forfait prévention santé</span>
+                    </li>
+                  </ul>
+                </div>
+
+                <div className="bg-gradient-to-br from-pink-500 to-rose-500 p-6 rounded-2xl shadow-lg relative overflow-hidden">
+                  <div className="absolute top-0 right-0 w-32 h-32 bg-white/20 rounded-full blur-2xl"></div>
+                  <div className="relative z-10">
+                    <h4 className="font-bold text-white mb-4 text-xl">Comment en bénéficier ?</h4>
+                    <ol className="list-decimal list-inside space-y-3 text-white font-medium">
+                      <li>Vérifiez votre contrat de mutuelle (garanties handicap/médecines douces)</li>
+                      <li>Contactez votre mutuelle pour connaître les conditions</li>
+                      <li>Téléchargez vos reçus Autisme Connect</li>
+                      <li>Envoyez-les à votre mutuelle avec le formulaire de remboursement</li>
+                    </ol>
+                  </div>
+                </div>
+
+                <div className="bg-gradient-to-br from-blue-50 to-cyan-50 p-6 rounded-2xl border-l-4 border-blue-400 shadow-md">
+                  <h4 className="font-bold text-blue-900 mb-3 text-lg">Documents requis</h4>
+                  <ul className="space-y-2 text-blue-800">
+                    <li className="flex items-start gap-2">
+                      <span className="text-blue-600 font-bold">•</span>
+                      <span>Reçu de paiement (téléchargeable sur votre dashboard)</span>
+                    </li>
+                    <li className="flex items-start gap-2">
+                      <span className="text-blue-600 font-bold">•</span>
+                      <span>Prescription médicale ou certificat de diagnostic (selon mutuelle)</span>
+                    </li>
+                    <li className="flex items-start gap-2">
+                      <span className="text-blue-600 font-bold">•</span>
+                      <span>Formulaire de demande de remboursement de votre mutuelle</span>
+                    </li>
+                  </ul>
+                </div>
+
+                <div className="bg-gradient-to-br from-amber-50 to-yellow-50 p-6 rounded-2xl border-l-4 border-amber-400 shadow-md">
+                  <div className="flex items-start gap-3">
+                    <svg className="w-8 h-8 text-amber-600 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
+                    </svg>
+                    <div>
+                      <h4 className="font-bold text-amber-900 mb-2 text-lg">Conseil</h4>
+                      <p className="text-amber-800 font-medium">
+                        Certaines mutuelles proposent des formules renforcées incluant des forfaits handicap plus généreux.
+                        N'hésitez pas à comparer les offres lors du renouvellement de votre contrat.
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
+        </div>
+
+        {/* Récapitulatif */}
+        <div className="bg-gradient-to-br from-indigo-600 via-purple-600 to-pink-600 rounded-2xl shadow-2xl p-10 text-white mt-16 relative overflow-hidden">
+          {/* Animated background circles */}
+          <div className="absolute inset-0 overflow-hidden">
+            <div className="absolute -top-24 -right-24 w-96 h-96 bg-white/10 rounded-full blur-3xl animate-pulse"></div>
+            <div className="absolute -bottom-24 -left-24 w-96 h-96 bg-white/10 rounded-full blur-3xl animate-pulse delay-700"></div>
+          </div>
+
+          <div className="relative z-10">
+            <div className="flex items-center gap-4 mb-6">
+              <svg className="w-12 h-12 text-yellow-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+              <h2 className="text-3xl font-extrabold">Récapitulatif : Comment maximiser vos aides ?</h2>
+            </div>
+
+            <div className="space-y-4">
+              <div className="flex items-start bg-white/10 backdrop-blur-sm p-4 rounded-xl hover:bg-white/20 transition-all duration-300 transform hover:scale-[1.02]">
+                <div className="flex-shrink-0 mr-4">
+                  <div className="w-10 h-10 bg-green-400 rounded-full flex items-center justify-center shadow-lg">
+                    <svg className="w-6 h-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
+                    </svg>
+                  </div>
+                </div>
+                <p className="text-lg font-medium leading-relaxed">Demandez la PCH (MDPH) OU l'AEEH + complément selon votre situation</p>
+              </div>
+
+              <div className="flex items-start bg-white/10 backdrop-blur-sm p-4 rounded-xl hover:bg-white/20 transition-all duration-300 transform hover:scale-[1.02]">
+                <div className="flex-shrink-0 mr-4">
+                  <div className="w-10 h-10 bg-blue-400 rounded-full flex items-center justify-center shadow-lg">
+                    <svg className="w-6 h-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
+                    </svg>
+                  </div>
+                </div>
+                <p className="text-lg font-medium leading-relaxed">Vérifiez si votre employeur propose des CESU préfinancés</p>
+              </div>
+
+              <div className="flex items-start bg-white/10 backdrop-blur-sm p-4 rounded-xl hover:bg-white/20 transition-all duration-300 transform hover:scale-[1.02]">
+                <div className="flex-shrink-0 mr-4">
+                  <div className="w-10 h-10 bg-yellow-400 rounded-full flex items-center justify-center shadow-lg">
+                    <svg className="w-6 h-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
+                    </svg>
+                  </div>
+                </div>
+                <p className="text-lg font-medium leading-relaxed">Choisissez un éducateur avec agrément SAP pour bénéficier du crédit d'impôt 50%</p>
+              </div>
+
+              <div className="flex items-start bg-white/10 backdrop-blur-sm p-4 rounded-xl hover:bg-white/20 transition-all duration-300 transform hover:scale-[1.02]">
+                <div className="flex-shrink-0 mr-4">
+                  <div className="w-10 h-10 bg-pink-400 rounded-full flex items-center justify-center shadow-lg">
+                    <svg className="w-6 h-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
+                    </svg>
+                  </div>
+                </div>
+                <p className="text-lg font-medium leading-relaxed">Contactez votre mutuelle pour connaître les forfaits handicap disponibles</p>
+              </div>
+
+              <div className="flex items-start bg-white/10 backdrop-blur-sm p-4 rounded-xl hover:bg-white/20 transition-all duration-300 transform hover:scale-[1.02]">
+                <div className="flex-shrink-0 mr-4">
+                  <div className="w-10 h-10 bg-purple-400 rounded-full flex items-center justify-center shadow-lg">
+                    <svg className="w-6 h-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
+                    </svg>
+                  </div>
+                </div>
+                <p className="text-lg font-medium leading-relaxed">Conservez TOUS vos reçus Autisme Connect pour vos démarches</p>
+              </div>
+            </div>
+
+            <div className="mt-8 pt-8 border-t border-white/30">
+              <div className="bg-white/10 backdrop-blur-sm p-6 rounded-xl">
+                <p className="text-base leading-relaxed font-medium">
+                  Nos attestations de paiement sont automatiquement conformes aux exigences de tous ces organismes.
+                  Vous n'avez qu'à les télécharger depuis votre dashboard et les transmettre.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* CTA */}
+        {!isLoggedIn && (
+          <div className="mt-12 text-center">
+            <Link
+              href="/auth/register"
+              className="inline-flex items-center px-8 py-4 bg-primary-600 hover:bg-primary-700 text-white font-semibold rounded-lg shadow-lg transition transform hover:scale-105"
+            >
+              Créer mon compte famille
+              <svg className="w-5 h-5 ml-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
+              </svg>
+            </Link>
+            <p className="mt-4 text-gray-600">
+              Déjà inscrit ?{' '}
+              <Link href="/auth/login" className="text-primary-600 hover:text-primary-700 font-medium">
+                Se connecter
+              </Link>
+            </p>
+          </div>
+        )}
+
+        {isLoggedIn && (
+          <div className="mt-12 text-center">
+            <Link
+              href={getDashboardLink()}
+              className={`inline-flex items-center px-8 py-4 text-white font-semibold rounded-lg shadow-lg transition-all duration-200 hover:shadow-xl ${
+                userRole === 'educator'
+                  ? 'bg-gradient-to-r from-primary-500 to-green-500 hover:from-primary-600 hover:to-green-600'
+                  : 'bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700'
+              }`}
+            >
+              <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
+              </svg>
+              Tableau de bord
+            </Link>
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}

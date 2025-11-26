@@ -92,7 +92,7 @@ export async function POST(
     const { error: updateError } = await supabase
       .from('appointments')
       .update({
-        status: 'confirmed',
+        status: 'accepted',
         pin_code: pinCode,
         pin_code_expires_at: pinExpiresAt.toISOString(),
         pin_code_attempts: 0,
@@ -248,7 +248,7 @@ export async function POST(
             <div style="background: #f9fafb; padding: 15px; border-radius: 8px; margin: 20px 0;">
               <p style="margin: 5px 0;"><strong>💰 Rémunération :</strong> ${(appointment.price * 0.88).toFixed(2)}€ net</p>
               <p style="font-size: 14px; color: #6b7280; margin: 5px 0;">
-                (${appointment.price}€ - 10% commission - 2% frais bancaires)
+                (${appointment.price}€ - 12% commission incluant frais bancaires)
               </p>
               <p style="font-size: 14px; color: #6b7280; margin: 5px 0;">
                 Virement sous 48h après la séance

@@ -27,6 +27,10 @@ export async function POST(request: Request) {
       price
     });
 
+    // Utiliser APP_URL (server-side) au lieu de NEXT_PUBLIC_APP_URL (build-time)
+    const appUrl = process.env.APP_URL || process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000';
+    console.log('🌐 APP_URL utilisée:', appUrl);
+
     // Valider les données
     if (!educatorId || !familyId || !appointmentDate || !startTime || !endTime || !price) {
       return NextResponse.json(
@@ -119,7 +123,7 @@ export async function POST(request: Request) {
             currency: 'eur',
             product_data: {
               name: `Séance avec ${educatorProfile.first_name} ${educatorProfile.last_name}`,
-              description: `Le ${new Date(appointmentDate).toLocaleDateString('fr-FR')} à ${startTime}`,
+              description: `Le ${new Date(appointmentDate).toLocaleDateString('fr-FR')} à ${startTime}\n\n✅ Le prélèvement aura lieu uniquement après la séance terminée avec ${educatorProfile.first_name} ${educatorProfile.last_name}.\n\nVous ne serez débité(e) qu'une fois le rendez-vous effectué et validé par l'éducateur.`,
             },
             unit_amount: priceInCents,
           },
@@ -149,11 +153,41 @@ export async function POST(request: Request) {
         address: address || '',
         family_notes: familyNotes || '',
       },
-      success_url: `${process.env.NEXT_PUBLIC_APP_URL}/dashboard/family?booking=success&session_id={CHECKOUT_SESSION_ID}`,
-      cancel_url: `${process.env.NEXT_PUBLIC_APP_URL}/educator/${educatorId}/book-appointment?canceled=true`,
+      success_url: `${appUrl}/dashboard/family?booking=success&session_id={CHECKOUT_SESSION_ID}`,
+      cancel_url: `${appUrl}/educator/${educatorId}/book-appointment?canceled=true`,
     });
 
     console.log('✅ Session Stripe créée:', session.id);
+
+    // Créer le rendez-vous IMMÉDIATEMENT
+    try {
+      const { data: appointment, error: appointmentError } = await supabase
+        .from('appointments')
+        .insert({
+          educator_id: educatorId,
+          family_id: familyId,
+          appointment_date: appointmentDate,
+          start_time: startTime,
+          end_time: endTime,
+          location_type: locationType,
+          address: address || null,
+          family_notes: familyNotes || null,
+          price: priceInCents, // En centimes
+          status: 'pending', // En attente d'acceptation par l'éducateur
+          payment_status: 'authorized', // Paiement autorisé (à capturer après la séance)
+        })
+        .select()
+        .single();
+
+      if (appointmentError) {
+        console.error('❌ Erreur création RDV immédiate:', appointmentError);
+      } else {
+        console.log('✅ Rendez-vous créé immédiatement:', appointment.id);
+      }
+    } catch (err) {
+      console.error('❌ Erreur création RDV:', err);
+      // Ne pas bloquer la session de paiement même si la création échoue
+    }
 
     return NextResponse.json({
       sessionId: session.id,

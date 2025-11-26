@@ -367,9 +367,16 @@ export default function MessagesPage() {
             <div className="hidden md:flex space-x-4">
               <Link
                 href={userProfile?.role === 'educator' ? '/dashboard/educator' : '/dashboard/family'}
-                className="text-gray-700 hover:text-primary-600 px-3 py-2"
+                className={`inline-flex items-center gap-2 text-white px-6 py-2.5 rounded-lg font-semibold transition-all duration-200 shadow-md hover:shadow-lg ${
+                  userProfile?.role === 'educator'
+                    ? 'bg-gradient-to-r from-primary-500 to-green-500 hover:from-primary-600 hover:to-green-600'
+                    : 'bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700'
+                }`}
               >
-                Mon tableau de bord
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
+                </svg>
+                Tableau de bord
               </Link>
             </div>
           </div>

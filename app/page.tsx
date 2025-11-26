@@ -463,9 +463,25 @@ export default function Home() {
           {/* Note informative */}
           <div className="mt-8 text-center">
             <p className="text-sm text-gray-600 max-w-2xl mx-auto">
-              <span className="font-semibold">ℹ️ Bon à savoir :</span> Tous nos éducateurs acceptent le paiement par CESU.
+              <span className="font-semibold">ℹ️ Bon à savoir :</span> La plupart de nos éducateurs acceptent le paiement par CESU.
               N'hésitez pas à les contacter pour échanger sur les modalités adaptées à votre situation.
             </p>
+          </div>
+
+          {/* CTA Aides financières */}
+          <div className="mt-12 text-center">
+            <Link
+              href="/familles/aides-financieres"
+              className="inline-flex items-center gap-2 px-8 py-4 bg-primary-600 hover:bg-primary-700 text-white font-semibold rounded-lg shadow-lg transition transform hover:scale-105"
+            >
+              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+              </svg>
+              Découvrir toutes les aides financières
+              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
+              </svg>
+            </Link>
           </div>
         </div>
       </div>
@@ -613,10 +629,11 @@ export default function Home() {
                 <li><Link href="/search" className="hover:text-white transition-colors">Trouver un éducateur</Link></li>
                 <li><Link href="/about" className="hover:text-white transition-colors">Qui sommes-nous ?</Link></li>
                 <li><Link href="/pricing" className="hover:text-white transition-colors">Tarifs</Link></li>
+                <li><Link href="/educators/sap-accreditation" className="hover:text-white transition-colors">Agrément SAP</Link></li>
+                <li><Link href="/familles/aides-financieres" className="hover:text-white transition-colors">Aides financières</Link></li>
                 <li><Link href="/auth/signup" className="hover:text-white transition-colors">Inscription</Link></li>
               </ul>
-            </div>
-            <div>
+            </div>            <div>
               <h3 className="text-white font-bold text-lg mb-4">Besoin d'aide ?</h3>
               <p className="text-gray-400 leading-relaxed mb-4">
                 Notre équipe est là pour vous accompagner dans votre parcours.

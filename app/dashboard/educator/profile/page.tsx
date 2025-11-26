@@ -8,6 +8,7 @@ import { signOut } from '@/lib/auth';
 import { CertificationType } from '@/types';
 import { getCurrentPosition, reverseGeocode } from '@/lib/geolocation';
 import AvatarUpload from '@/components/AvatarUpload';
+import CVUpload from '@/components/CVUpload';
 import CertificationDocumentUpload from '@/components/CertificationDocumentUpload';
 import Logo from '@/components/Logo';
 import EducatorMobileMenu from '@/components/EducatorMobileMenu';
@@ -20,9 +21,13 @@ export default function EducatorProfilePage() {
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
   const [userId, setUserId] = useState<string>('');
+  const [currentEmail, setCurrentEmail] = useState<string>('');
+  const [newEmail, setNewEmail] = useState<string>('');
+  const [updatingEmail, setUpdatingEmail] = useState(false);
   const [avatarUrl, setAvatarUrl] = useState<string | null>(null);
   const [avatarModerationStatus, setAvatarModerationStatus] = useState<'pending' | 'approved' | 'rejected' | null>(null);
   const [avatarModerationReason, setAvatarModerationReason] = useState<string | null>(null);
+  const [cvUrl, setCvUrl] = useState<string | null>(null);
   const [profile, setProfile] = useState<any>(null);
   const [subscription, setSubscription] = useState<any>(null);
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
@@ -41,6 +46,8 @@ export default function EducatorProfilePage() {
     languages: '',
     show_email: false,
     show_phone: false,
+    siret: '',
+    sap_number: '',
   });
 
   const [certifications, setCertifications] = useState<Array<{
@@ -88,6 +95,8 @@ export default function EducatorProfilePage() {
       }
 
       setUserId(session.user.id);
+      console.log('📧 Email utilisateur:', session.user.email);
+      setCurrentEmail(session.user.email || '');
 
       // Récupérer le profil éducateur
       const { data: profile } = await supabase
@@ -110,12 +119,17 @@ export default function EducatorProfilePage() {
           languages: (profile.languages || []).join(', '),
           show_email: profile.show_email || false,
           show_phone: profile.show_phone || false,
+          siret: profile.siret || '',
+          sap_number: profile.sap_number || '',
         });
 
         // Charger les données d'avatar
         setAvatarUrl(profile.avatar_url || null);
         setAvatarModerationStatus(profile.avatar_moderation_status || null);
         setAvatarModerationReason(profile.avatar_moderation_reason || null);
+
+        // Charger les données de CV
+        setCvUrl(profile.cv_url || null);
 
         // Récupérer l'abonnement
         const { data: subscriptionData } = await supabase
@@ -145,6 +159,44 @@ export default function EducatorProfilePage() {
     }
   };
 
+  // Validation du SIRET avec algorithme de Luhn
+  const validateSIRET = (siret: string): { valid: boolean; message?: string } => {
+    // Vérifier que c'est exactement 14 chiffres
+    if (siret.length !== 14) {
+      return { valid: false, message: 'Le SIRET doit contenir exactement 14 chiffres' };
+    }
+
+    if (!/^\d{14}$/.test(siret)) {
+      return { valid: false, message: 'Le SIRET ne doit contenir que des chiffres' };
+    }
+
+    // Valider le SIREN (9 premiers chiffres) avec l'algorithme de Luhn
+    const siren = siret.substring(0, 9);
+    let sum = 0;
+
+    for (let i = 0; i < siren.length; i++) {
+      let digit = parseInt(siren[i]);
+
+      // Doubler chaque deuxième chiffre en partant de la droite
+      if ((siren.length - i) % 2 === 0) {
+        digit *= 2;
+        // Si le résultat est > 9, soustraire 9
+        if (digit > 9) {
+          digit -= 9;
+        }
+      }
+
+      sum += digit;
+    }
+
+    // Le SIREN est valide si la somme est divisible par 10
+    if (sum % 10 !== 0) {
+      return { valid: false, message: 'Le numéro SIRET est invalide (le SIREN ne passe pas la validation)' };
+    }
+
+    return { valid: true };
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setSaving(true);
@@ -152,6 +204,14 @@ export default function EducatorProfilePage() {
     setSuccess('');
 
     try {
+      // Valider le SIRET
+      if (profileData.siret) {
+        const siretValidation = validateSIRET(profileData.siret);
+        if (!siretValidation.valid) {
+          throw new Error(siretValidation.message);
+        }
+      }
+
       const { data: { session } } = await supabase.auth.getSession();
       if (!session?.user) {
         throw new Error('Utilisateur non connecté');
@@ -172,6 +232,8 @@ export default function EducatorProfilePage() {
           languages: profileData.languages.split(',').map(l => l.trim()).filter(Boolean),
           show_email: profileData.show_email,
           show_phone: profileData.show_phone,
+          siret: profileData.siret || null,
+          sap_number: profileData.sap_number || null,
         })
         .eq('user_id', session.user.id);
 
@@ -389,6 +451,42 @@ export default function EducatorProfilePage() {
     }
   };
 
+  const handleUpdateEmail = async (e: React.FormEvent) => {
+    e.preventDefault();
+
+    if (!newEmail || newEmail === currentEmail) {
+      setError('Veuillez entrer une nouvelle adresse email différente');
+      return;
+    }
+
+    // Validation email
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(newEmail)) {
+      setError('Adresse email invalide');
+      return;
+    }
+
+    setUpdatingEmail(true);
+    setError('');
+    setSuccess('');
+
+    try {
+      const { error: updateError } = await supabase.auth.updateUser({
+        email: newEmail
+      });
+
+      if (updateError) throw updateError;
+
+      setSuccess('Un email de confirmation a été envoyé à votre nouvelle adresse. Veuillez cliquer sur le lien de confirmation pour finaliser le changement.');
+      setNewEmail('');
+    } catch (err: any) {
+      console.error('Erreur changement email:', err);
+      setError(err.message || 'Erreur lors du changement d\'email');
+    } finally {
+      setUpdatingEmail(false);
+    }
+  };
+
   const handleLogout = async () => {
     await signOut();
     router.push('/');
@@ -456,9 +554,15 @@ export default function EducatorProfilePage() {
               </div>
             </div>
             {/* Menu desktop - caché sur mobile */}
-            <div className="hidden md:block">
-              <Link href="/dashboard/educator" className="text-gray-700 hover:text-primary-600 px-3 py-2 font-medium transition">
-                Retour au dashboard
+            <div className="hidden md:flex items-center gap-4">
+              <Link
+                href="/dashboard/educator"
+                className="bg-gradient-to-r from-primary-500 to-green-500 text-white hover:from-primary-600 hover:to-green-600 px-6 py-2.5 rounded-lg font-semibold transition-all duration-200 flex items-center gap-2 shadow-md hover:shadow-lg"
+              >
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
+                </svg>
+                Tableau de bord
               </Link>
             </div>
           </div>
@@ -489,6 +593,22 @@ export default function EducatorProfilePage() {
                 moderationReason={avatarModerationReason}
                 onAvatarChange={(newUrl) => setAvatarUrl(newUrl)}
               />
+            </div>
+
+            {/* CV Upload */}
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-3">
+                CV (Curriculum Vitae) *
+              </label>
+              <CVUpload
+                currentCVUrl={cvUrl}
+                userId={userId}
+                educatorId={profile?.id || ''}
+                onCVChange={(newUrl) => setCvUrl(newUrl)}
+              />
+              <p className="text-xs text-gray-500 mt-2">
+                Votre CV sera visible sur votre profil public. Format PDF uniquement.
+              </p>
             </div>
 
             <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
@@ -522,6 +642,65 @@ export default function EducatorProfilePage() {
                 onChange={(e) => setProfileData({ ...profileData, phone: e.target.value })}
                 className="w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:ring-primary-500 focus:border-primary-500"
               />
+            </div>
+
+            {/* Informations professionnelles */}
+            <div className="border-t border-gray-200 pt-6 mt-6">
+              <h3 className="text-sm font-medium text-gray-900 mb-4">Informations professionnelles</h3>
+
+              <div className="space-y-4">
+                {/* SIRET */}
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Numéro SIRET *
+                  </label>
+                  <input
+                    type="text"
+                    required
+                    maxLength={14}
+                    value={profileData.siret}
+                    onChange={(e) => {
+                      const value = e.target.value.replace(/\D/g, '');
+                      setProfileData({ ...profileData, siret: value });
+                    }}
+                    placeholder="12345678901234"
+                    className="w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:ring-primary-500 focus:border-primary-500"
+                  />
+                  <p className="mt-1 text-xs text-gray-500">
+                    14 chiffres - Obligatoire pour la facturation et les paiements
+                  </p>
+                </div>
+
+                {/* SAP Number */}
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2 flex items-center gap-2">
+                    Numéro d'agrément SAP
+                    <span className="text-xs text-green-600 font-normal">(Facultatif)</span>
+                  </label>
+                  <input
+                    type="text"
+                    value={profileData.sap_number}
+                    onChange={(e) => setProfileData({ ...profileData, sap_number: e.target.value.toUpperCase() })}
+                    placeholder="SAP123456789"
+                    className="w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:ring-primary-500 focus:border-primary-500"
+                  />
+                  <div className="mt-2 bg-blue-50 border border-blue-200 rounded-lg p-3">
+                    <p className="text-xs text-blue-800 mb-2">
+                      <strong>💡 Pourquoi ajouter votre agrément SAP ?</strong>
+                    </p>
+                    <p className="text-xs text-blue-700 mb-2">
+                      Avec l'agrément Services à la Personne, vos clients peuvent bénéficier du <strong>CESU préfinancé</strong> et du <strong>crédit d'impôt de 50%</strong> !
+                    </p>
+                    <a
+                      href="/educators/sap-accreditation"
+                      target="_blank"
+                      className="text-xs text-blue-600 hover:text-blue-800 font-medium underline"
+                    >
+                      → En savoir plus sur l'agrément SAP (100% gratuit)
+                    </a>
+                  </div>
+                </div>
+              </div>
             </div>
 
             {/* Paramètres de confidentialité */}
@@ -663,6 +842,51 @@ export default function EducatorProfilePage() {
               </button>
             </div>
           </form>
+        </div>
+
+        {/* Changement d'email */}
+        <div className="bg-white rounded-lg shadow mb-6">
+          <div className="px-6 py-4 border-b border-gray-200">
+            <h2 className="text-lg font-semibold text-gray-900">Adresse email</h2>
+          </div>
+          <div className="p-6 space-y-4">
+            <div className="bg-gray-50 border border-gray-200 rounded-lg p-4">
+              <div className="flex items-center gap-2 text-sm text-gray-700">
+                <svg className="h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                </svg>
+                <span className="font-medium">Email actuel :</span>
+                <span>{currentEmail || 'Chargement...'}</span>
+              </div>
+            </div>
+
+            <form onSubmit={handleUpdateEmail} className="space-y-3">
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Nouvelle adresse email
+                </label>
+                <input
+                  type="email"
+                  value={newEmail}
+                  onChange={(e) => setNewEmail(e.target.value)}
+                  placeholder="nouvelle@email.com"
+                  className="w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:ring-primary-500 focus:border-primary-500"
+                />
+              </div>
+              <div className="flex gap-3 items-center">
+                <button
+                  type="submit"
+                  disabled={updatingEmail || !newEmail}
+                  className="px-4 py-2 bg-primary-600 text-white rounded-md hover:bg-primary-700 disabled:opacity-50 disabled:cursor-not-allowed text-sm font-medium transition"
+                >
+                  {updatingEmail ? 'Envoi en cours...' : 'Changer mon email'}
+                </button>
+                <p className="text-xs text-gray-500">
+                  Un email de confirmation sera envoyé à votre nouvelle adresse.
+                </p>
+              </div>
+            </form>
+          </div>
         </div>
 
         {/* Certifications */}

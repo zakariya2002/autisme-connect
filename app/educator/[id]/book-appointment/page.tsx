@@ -161,11 +161,25 @@ export default function BookAppointmentPage({ params }: { params: { id: string }
   };
 
   const isSlotBooked = (date: string, startTime: string, endTime: string) => {
-    return appointments.some(appt =>
-      appt.appointment_date === date &&
-      appt.start_time === startTime &&
-      appt.end_time === endTime
-    );
+    // Vérifier s'il y a un chevauchement avec des rendez-vous existants
+    return appointments.some(appt => {
+      if (appt.appointment_date !== date) return false;
+
+      // Convertir les heures en minutes pour faciliter la comparaison
+      const slotStart = timeToMinutes(startTime);
+      const slotEnd = timeToMinutes(endTime);
+      const apptStart = timeToMinutes(appt.start_time);
+      const apptEnd = timeToMinutes(appt.end_time);
+
+      // Vérifier le chevauchement : un créneau est réservé s'il y a une intersection
+      return (slotStart < apptEnd && slotEnd > apptStart);
+    });
+  };
+
+  // Fonction utilitaire pour convertir HH:MM en minutes
+  const timeToMinutes = (time: string): number => {
+    const [hours, minutes] = time.split(':').map(Number);
+    return hours * 60 + minutes;
   };
 
   // Générer des options d'heures pour un créneau (par tranches de 30 minutes)
@@ -252,7 +266,7 @@ export default function BookAppointmentPage({ params }: { params: { id: string }
       const hourlyRate = educator?.hourly_rate || 50; // 50€ par défaut
       const price = durationHours * hourlyRate;
 
-      console.log('💰 Prix calculé:', { durationHours, hourlyRate, price });
+      console.log('💰 Prix calculé:', { durationMinutes, durationHours, hourlyRate, price });
 
       // Créer une session de paiement Stripe
       const response = await fetch('/api/appointments/create-with-payment', {
@@ -296,6 +310,16 @@ export default function BookAppointmentPage({ params }: { params: { id: string }
     const [startH, startM] = start.split(':').map(Number);
     const [endH, endM] = end.split(':').map(Number);
     return (endH * 60 + endM) - (startH * 60 + startM);
+  };
+
+  const formatDuration = (minutes: number): string => {
+    const hours = Math.floor(minutes / 60);
+    const remainingMinutes = minutes % 60;
+
+    if (remainingMinutes === 0) {
+      return `${hours}h`;
+    }
+    return `${hours}h ${remainingMinutes}min`;
   };
 
   const formatDate = (dateStr: string) => {
@@ -448,7 +472,7 @@ export default function BookAppointmentPage({ params }: { params: { id: string }
                           {slot.start_time} - {slot.end_time}
                         </p>
                         <p className="text-xs text-gray-600 mt-1">
-                          {duration} min - {price}€
+                          {formatDuration(duration)} - {price}€
                         </p>
                       </button>
                     );
@@ -499,7 +523,7 @@ export default function BookAppointmentPage({ params }: { params: { id: string }
                 {customStartTime && customEndTime && (
                   <div className="mt-3">
                     <p className="text-sm font-medium text-gray-900">
-                      Durée : {calculateDuration(customStartTime, customEndTime)} minutes
+                      Durée : {formatDuration(calculateDuration(customStartTime, customEndTime))}
                       {educator?.hourly_rate && ` - ${((educator.hourly_rate / 60) * calculateDuration(customStartTime, customEndTime)).toFixed(2)}€`}
                     </p>
                     {!validateDuration(customStartTime, customEndTime) && (

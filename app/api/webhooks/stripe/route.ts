@@ -5,8 +5,6 @@ import { sendPremiumWelcomeEmail } from '@/lib/email';
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY || 'sk_test_placeholder');
 
-const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET!;
-
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
 const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY!;
 const supabase = createClient(supabaseUrl, supabaseServiceKey);
@@ -27,14 +25,32 @@ export async function POST(request: Request) {
 
     // Vérifier l'événement Stripe
     let event: Stripe.Event;
-    try {
-      event = stripe.webhooks.constructEvent(body, signature, webhookSecret);
-    } catch (err: any) {
-      console.error('Erreur webhook signature:', err.message);
-      return NextResponse.json(
-        { error: `Webhook Error: ${err.message}` },
-        { status: 400 }
-      );
+
+    // En développement, parser directement le body sans vérification stricte
+    if (process.env.NODE_ENV === 'development') {
+      console.log('🔧 Mode développement : parsing sans vérification stricte');
+      try {
+        event = JSON.parse(body);
+        console.log('📦 Événement reçu:', event.type);
+      } catch (err: any) {
+        console.error('❌ Erreur parsing JSON:', err.message);
+        return NextResponse.json(
+          { error: `Parse Error: ${err.message}` },
+          { status: 400 }
+        );
+      }
+    } else {
+      // En production, vérifier la signature normalement
+      const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET!;
+      try {
+        event = stripe.webhooks.constructEvent(body, signature, webhookSecret);
+      } catch (err: any) {
+        console.error('Erreur webhook signature:', err.message);
+        return NextResponse.json(
+          { error: `Webhook Error: ${err.message}` },
+          { status: 400 }
+        );
+      }
     }
 
     // Gérer les différents types d'événements

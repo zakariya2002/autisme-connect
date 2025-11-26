@@ -43,10 +43,18 @@ export default function RegisterEducatorPage() {
     hourly_rate: '',
     specializations: '',
     languages: '',
+    siret: '',
+    sap_number: '',
   });
 
   // CV File
   const [cvFile, setCvFile] = useState<File | null>(null);
+
+  // État de validation SIRET
+  const [siretValidationState, setSiretValidationState] = useState<{
+    isValid: boolean | null;
+    message: string;
+  }>({ isValid: null, message: '' });
 
   const [passwordCriteria, setPasswordCriteria] = useState<PasswordCriteria>({
     minLength: false,
@@ -109,6 +117,44 @@ export default function RegisterEducatorPage() {
     }
   };
 
+  // Validation du SIRET avec algorithme de Luhn
+  const validateSIRET = (siret: string): { valid: boolean; message?: string } => {
+    // Vérifier que c'est exactement 14 chiffres
+    if (siret.length !== 14) {
+      return { valid: false, message: 'Le SIRET doit contenir exactement 14 chiffres' };
+    }
+
+    if (!/^\d{14}$/.test(siret)) {
+      return { valid: false, message: 'Le SIRET ne doit contenir que des chiffres' };
+    }
+
+    // Valider le SIREN (9 premiers chiffres) avec l'algorithme de Luhn
+    const siren = siret.substring(0, 9);
+    let sum = 0;
+
+    for (let i = 0; i < siren.length; i++) {
+      let digit = parseInt(siren[i]);
+
+      // Doubler chaque deuxième chiffre en partant de la droite
+      if ((siren.length - i) % 2 === 0) {
+        digit *= 2;
+        // Si le résultat est > 9, soustraire 9
+        if (digit > 9) {
+          digit -= 9;
+        }
+      }
+
+      sum += digit;
+    }
+
+    // Le SIREN est valide si la somme est divisible par 10
+    if (sum % 10 !== 0) {
+      return { valid: false, message: 'Le numéro SIRET est invalide (le SIREN ne passe pas la validation)' };
+    }
+
+    return { valid: true };
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError('');
@@ -121,6 +167,18 @@ export default function RegisterEducatorPage() {
 
     if (!validatePassword(authData.password)) {
       setError('Le mot de passe ne respecte pas tous les critères de sécurité');
+      return;
+    }
+
+    // Validation du SIRET
+    if (!educatorData.siret) {
+      setError('Le numéro SIRET est obligatoire');
+      return;
+    }
+
+    const siretValidation = validateSIRET(educatorData.siret);
+    if (!siretValidation.valid) {
+      setError(siretValidation.message || 'SIRET invalide');
       return;
     }
 
@@ -173,6 +231,8 @@ export default function RegisterEducatorPage() {
         hourly_rate: educatorData.hourly_rate ? parseFloat(educatorData.hourly_rate) : null,
         specializations: educatorData.specializations.split(',').map(s => s.trim()).filter(Boolean),
         languages: educatorData.languages.split(',').map(l => l.trim()).filter(Boolean),
+        siret: educatorData.siret,
+        sap_number: educatorData.sap_number || null,
       };
 
       const response = await fetch('/api/create-profile-simple', {
@@ -471,6 +531,108 @@ export default function RegisterEducatorPage() {
                 onChange={(e) => setEducatorData({ ...educatorData, phone: e.target.value })}
                 className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:ring-primary-500 focus:border-primary-500"
               />
+            </div>
+
+            {/* Section Informations professionnelles */}
+            <div className="border-t border-gray-200 pt-6">
+              <h3 className="text-base font-semibold text-gray-900 mb-4">Informations professionnelles</h3>
+
+              <div className="space-y-4">
+                {/* SIRET */}
+                <div>
+                  <label className="block text-sm font-medium text-gray-700">
+                    Numéro SIRET *
+                  </label>
+                  <div className="relative">
+                    <input
+                      type="text"
+                      required
+                      maxLength={14}
+                      value={educatorData.siret}
+                      onChange={(e) => {
+                        const value = e.target.value.replace(/\D/g, '');
+                        setEducatorData({ ...educatorData, siret: value });
+
+                        // Valider en temps réel si on a 14 chiffres
+                        if (value.length === 14) {
+                          const validation = validateSIRET(value);
+                          setSiretValidationState({
+                            isValid: validation.valid,
+                            message: validation.message || 'SIRET valide ✓'
+                          });
+                        } else if (value.length > 0) {
+                          setSiretValidationState({
+                            isValid: false,
+                            message: `${value.length}/14 chiffres`
+                          });
+                        } else {
+                          setSiretValidationState({ isValid: null, message: '' });
+                        }
+                      }}
+                      placeholder="12345678901234"
+                      className={`mt-1 block w-full border rounded-md shadow-sm py-2 px-3 pr-10 focus:ring-primary-500 focus:border-primary-500 ${
+                        siretValidationState.isValid === true
+                          ? 'border-green-500 bg-green-50'
+                          : siretValidationState.isValid === false
+                          ? 'border-red-500 bg-red-50'
+                          : 'border-gray-300'
+                      }`}
+                    />
+                    {siretValidationState.isValid !== null && (
+                      <div className="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
+                        {siretValidationState.isValid ? (
+                          <svg className="h-5 w-5 text-green-500" fill="currentColor" viewBox="0 0 20 20">
+                            <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                          </svg>
+                        ) : (
+                          <svg className="h-5 w-5 text-red-500" fill="currentColor" viewBox="0 0 20 20">
+                            <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd" />
+                          </svg>
+                        )}
+                      </div>
+                    )}
+                  </div>
+                  <p className={`mt-1 text-xs ${
+                    siretValidationState.isValid === true
+                      ? 'text-green-600 font-medium'
+                      : siretValidationState.isValid === false
+                      ? 'text-red-600'
+                      : 'text-gray-500'
+                  }`}>
+                    {siretValidationState.message || '14 chiffres - Obligatoire pour la facturation et les paiements'}
+                  </p>
+                </div>
+
+                {/* SAP Number */}
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 flex items-center gap-2">
+                    Numéro d'agrément SAP
+                    <span className="text-xs text-green-600 font-normal">(Facultatif)</span>
+                  </label>
+                  <input
+                    type="text"
+                    value={educatorData.sap_number}
+                    onChange={(e) => setEducatorData({ ...educatorData, sap_number: e.target.value.toUpperCase() })}
+                    placeholder="SAP123456789"
+                    className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:ring-primary-500 focus:border-primary-500"
+                  />
+                  <div className="mt-2 bg-blue-50 border border-blue-200 rounded-lg p-3">
+                    <p className="text-xs text-blue-800 mb-2">
+                      <strong>💡 Avantage : Crédit d'impôt 50% pour vos clients</strong>
+                    </p>
+                    <p className="text-xs text-blue-700 mb-2">
+                      Avec l'agrément Services à la Personne, vos clients peuvent bénéficier du CESU préfinancé et du crédit d'impôt de 50% !
+                    </p>
+                    <a
+                      href="/educators/sap-accreditation"
+                      target="_blank"
+                      className="text-xs text-blue-600 hover:text-blue-800 font-medium underline"
+                    >
+                      → En savoir plus sur l'agrément SAP (100% gratuit)
+                    </a>
+                  </div>
+                </div>
+              </div>
             </div>
 
             <div>

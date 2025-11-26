@@ -9,6 +9,84 @@ import Logo from '@/components/Logo';
 import EducatorMobileMenu from '@/components/EducatorMobileMenu';
 import PinCodeModal from '@/components/PinCodeModal';
 
+// Composant de compte à rebours
+function SessionCountdown({
+  sessionStart,
+  scheduledDuration,
+  onTimeUp,
+  canComplete,
+  onComplete,
+  actionLoading
+}: {
+  sessionStart: string;
+  scheduledDuration: number;
+  onTimeUp: () => void;
+  canComplete: boolean;
+  onComplete: () => void;
+  actionLoading: boolean;
+}) {
+  const [timeRemaining, setTimeRemaining] = useState(0);
+
+  useEffect(() => {
+    const startTime = new Date(sessionStart).getTime();
+    const endTime = startTime + scheduledDuration;
+
+    const interval = setInterval(() => {
+      const now = Date.now();
+      const remaining = endTime - now;
+
+      if (remaining <= 0) {
+        setTimeRemaining(0);
+        onTimeUp();
+      } else {
+        setTimeRemaining(remaining);
+      }
+    }, 1000);
+
+    return () => clearInterval(interval);
+  }, [sessionStart, scheduledDuration, onTimeUp]);
+
+  const formatTime = (ms: number) => {
+    const totalSeconds = Math.floor(ms / 1000);
+    const hours = Math.floor(totalSeconds / 3600);
+    const minutes = Math.floor((totalSeconds % 3600) / 60);
+    const seconds = totalSeconds % 60;
+
+    if (hours > 0) {
+      return `${hours}h ${minutes.toString().padStart(2, '0')}m ${seconds.toString().padStart(2, '0')}s`;
+    }
+    return `${minutes}m ${seconds.toString().padStart(2, '0')}s`;
+  };
+
+  return (
+    <div className="flex items-center gap-3">
+      <div className="flex items-center gap-2 px-4 py-2 bg-indigo-50 border border-indigo-200 rounded-md">
+        <svg className="w-5 h-5 text-indigo-600 animate-pulse" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+        </svg>
+        <span className="font-mono font-bold text-indigo-900">
+          {timeRemaining > 0 ? formatTime(timeRemaining) : 'Temps écoulé'}
+        </span>
+      </div>
+      <button
+        onClick={onComplete}
+        disabled={actionLoading || !canComplete}
+        className={`px-4 py-2 text-white rounded-md font-medium flex items-center gap-2 ${
+          canComplete
+            ? 'bg-green-600 hover:bg-green-700'
+            : 'bg-gray-400 cursor-not-allowed'
+        } disabled:opacity-50`}
+        title={!canComplete ? 'Le temps minimum de la séance doit être écoulé' : ''}
+      >
+        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+        </svg>
+        {canComplete ? 'Terminer la séance' : 'Séance en cours...'}
+      </button>
+    </div>
+  );
+}
+
 interface Appointment {
   id: string;
   family_id: string;
@@ -23,6 +101,7 @@ interface Appointment {
   educator_notes: string | null;
   rejection_reason: string | null;
   created_at: string;
+  started_at: string | null;
   family_first_name: string;
   family_last_name: string;
   family_phone: string;
@@ -42,6 +121,7 @@ export default function EducatorAppointmentsPage() {
   const [showRejectModal, setShowRejectModal] = useState(false);
   const [showNotesModal, setShowNotesModal] = useState(false);
   const [showPinModal, setShowPinModal] = useState(false);
+  const [pinModalMode, setPinModalMode] = useState<'start' | 'complete'>('start');
   const [rejectionReason, setRejectionReason] = useState('');
   const [educatorNotes, setEducatorNotes] = useState('');
   const [actionLoading, setActionLoading] = useState(false);
@@ -97,8 +177,15 @@ export default function EducatorAppointmentsPage() {
     setLoading(true);
     try {
       let query = supabase
-        .from('appointments_with_details')
-        .select('*')
+        .from('appointments')
+        .select(`
+          *,
+          family:family_profiles!family_id (
+            first_name,
+            last_name,
+            phone
+          )
+        `)
         .eq('educator_id', educatorId)
         .order('appointment_date', { ascending: true })
         .order('start_time', { ascending: true });
@@ -112,7 +199,15 @@ export default function EducatorAppointmentsPage() {
 
       if (error) throw error;
 
-      setAppointments(data || []);
+      // Mapper les données pour correspondre à l'interface Appointment
+      const mappedData = (data || []).map((apt: any) => ({
+        ...apt,
+        family_first_name: apt.family?.first_name || '',
+        family_last_name: apt.family?.last_name || '',
+        family_phone: apt.family?.phone || '',
+      }));
+
+      setAppointments(mappedData);
     } catch (error) {
       console.error('Erreur chargement rendez-vous:', error);
     } finally {
@@ -181,7 +276,11 @@ export default function EducatorAppointmentsPage() {
     }
 
     try {
-      const response = await fetch(`/api/appointments/${selectedAppointment.id}/validate-pin`, {
+      const endpoint = pinModalMode === 'start'
+        ? `/api/appointments/${selectedAppointment.id}/start-session`
+        : `/api/appointments/${selectedAppointment.id}/complete`;
+
+      const response = await fetch(endpoint, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -202,7 +301,13 @@ export default function EducatorAppointmentsPage() {
       // Succès - fermer le modal et rafraîchir
       setShowPinModal(false);
       setSelectedAppointment(null);
-      alert('✅ Séance démarrée avec succès ! Le paiement sera traité automatiquement en fin de séance.');
+
+      if (pinModalMode === 'start') {
+        alert('✅ Séance démarrée ! Le compte à rebours est lancé.');
+      } else {
+        alert('✅ Séance terminée avec succès ! Le paiement a été traité et les factures ont été générées.');
+      }
+
       fetchAppointments();
 
       return { success: true };
@@ -214,24 +319,23 @@ export default function EducatorAppointmentsPage() {
     }
   };
 
+  const handleStartSession = async (appointmentId: string) => {
+    // Ouvrir le modal PIN pour démarrer la séance
+    const appointment = appointments.find(a => a.id === appointmentId);
+    if (appointment) {
+      setSelectedAppointment(appointment);
+      setPinModalMode('start');
+      setShowPinModal(true);
+    }
+  };
+
   const handleComplete = async (appointmentId: string) => {
-    if (!confirm('Marquer ce rendez-vous comme terminé ?')) return;
-
-    setActionLoading(true);
-    try {
-      const { error } = await supabase
-        .from('appointments')
-        .update({ status: 'completed' })
-        .eq('id', appointmentId);
-
-      if (error) throw error;
-
-      alert('Rendez-vous marqué comme terminé');
-      fetchAppointments();
-    } catch (error: any) {
-      alert('Erreur: ' + error.message);
-    } finally {
-      setActionLoading(false);
+    // Ouvrir le modal PIN pour terminer la séance
+    const appointment = appointments.find(a => a.id === appointmentId);
+    if (appointment) {
+      setSelectedAppointment(appointment);
+      setPinModalMode('complete');
+      setShowPinModal(true);
     }
   };
 
@@ -366,8 +470,14 @@ export default function EducatorAppointmentsPage() {
               </div>
             </div>
             {/* Menu desktop - caché sur mobile */}
-            <div className="hidden md:flex space-x-4">
-              <Link href="/dashboard/educator" className="text-gray-700 hover:text-primary-600 px-3 py-2 font-medium transition">
+            <div className="hidden md:flex items-center space-x-4">
+              <Link
+                href="/dashboard/educator"
+                className="bg-gradient-to-r from-primary-500 to-green-500 text-white hover:from-primary-600 hover:to-green-600 px-6 py-2.5 rounded-lg font-semibold transition-all duration-200 flex items-center gap-2 shadow-md hover:shadow-lg"
+              >
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
+                </svg>
                 Tableau de bord
               </Link>
               <Link href="/dashboard/educator/availability" className="text-gray-700 hover:text-primary-600 px-3 py-2 font-medium transition">
@@ -571,40 +681,65 @@ export default function EducatorAppointmentsPage() {
                       </>
                     )}
 
-                    {appointment.status === 'accepted' && !isPast && (
-                      <button
-                        onClick={() => {
-                          setSelectedAppointment(appointment);
-                          setShowPinModal(true);
-                        }}
-                        disabled={actionLoading}
-                        className="px-4 py-2 bg-purple-600 text-white rounded-md hover:bg-purple-700 disabled:opacity-50 font-medium flex items-center gap-2"
-                      >
-                        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
-                        </svg>
-                        Démarrer la séance (Code PIN)
-                      </button>
-                    )}
+                    {appointment.status === 'accepted' && !isPast && (() => {
+                      // Calculer si le temps minimum est écoulé
+                      const canComplete = appointment.started_at ? (() => {
+                        const sessionStart = new Date(appointment.started_at);
+                        const [startHour, startMinute] = appointment.start_time.split(':');
+                        const [endHour, endMinute] = appointment.end_time.split(':');
+                        const appointmentDate = new Date(appointment.appointment_date);
 
-                    {appointment.status === 'accepted' && !isPast && (
-                      <>
-                        <button
-                          onClick={() => handleComplete(appointment.id)}
-                          disabled={actionLoading}
-                          className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 disabled:opacity-50 font-medium"
-                        >
-                          Marquer comme terminé
-                        </button>
-                        <button
-                          onClick={() => handleCancel(appointment.id)}
-                          disabled={actionLoading}
-                          className="px-4 py-2 bg-gray-600 text-white rounded-md hover:bg-gray-700 disabled:opacity-50 font-medium"
-                        >
-                          Annuler
-                        </button>
-                      </>
-                    )}
+                        const scheduledStart = new Date(appointmentDate);
+                        scheduledStart.setHours(parseInt(startHour), parseInt(startMinute), 0);
+
+                        const scheduledEnd = new Date(appointmentDate);
+                        scheduledEnd.setHours(parseInt(endHour), parseInt(endMinute), 0);
+
+                        const sessionDuration = scheduledEnd.getTime() - scheduledStart.getTime();
+                        const minimumEndTime = new Date(sessionStart.getTime() + sessionDuration);
+
+                        return Date.now() >= minimumEndTime.getTime();
+                      })() : false;
+
+                      return (
+                        <>
+                          {!appointment.started_at ? (
+                            <button
+                              onClick={() => handleStartSession(appointment.id)}
+                              disabled={actionLoading}
+                              className="px-4 py-2 bg-purple-600 text-white rounded-md hover:bg-purple-700 disabled:opacity-50 font-medium flex items-center gap-2"
+                            >
+                              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+                              </svg>
+                              Démarrer la séance (Code PIN)
+                            </button>
+                          ) : (
+                            <SessionCountdown
+                              sessionStart={appointment.started_at}
+                              scheduledDuration={(() => {
+                                const [startHour, startMinute] = appointment.start_time.split(':');
+                                const [endHour, endMinute] = appointment.end_time.split(':');
+                                const start = parseInt(startHour) * 60 + parseInt(startMinute);
+                                const end = parseInt(endHour) * 60 + parseInt(endMinute);
+                                return (end - start) * 60 * 1000; // en millisecondes
+                              })()}
+                              onTimeUp={() => {}}
+                              canComplete={canComplete}
+                              onComplete={() => handleComplete(appointment.id)}
+                              actionLoading={actionLoading}
+                            />
+                          )}
+                          <button
+                            onClick={() => handleCancel(appointment.id)}
+                            disabled={actionLoading}
+                            className="px-4 py-2 bg-gray-600 text-white rounded-md hover:bg-gray-700 disabled:opacity-50 font-medium"
+                          >
+                            Annuler
+                          </button>
+                        </>
+                      );
+                    })()}
 
                     {(appointment.status === 'accepted' || appointment.status === 'completed') && (
                       <button

@@ -59,26 +59,36 @@ export async function POST(
       );
     }
 
-    if (appointment.status !== 'in_progress') {
+    if (appointment.status !== 'accepted') {
       console.error('❌ Statut invalide:', appointment.status);
       return NextResponse.json(
         {
-          error: 'Le rendez-vous n\'est pas en cours',
+          error: 'Le rendez-vous doit être accepté',
           code: 'INVALID_STATUS'
         },
         { status: 400 }
       );
     }
 
+    // Vérifier que la séance a été démarrée
+    if (!appointment.started_at) {
+      console.error('❌ Séance non démarrée');
+      return NextResponse.json(
+        {
+          error: 'La séance n\'a pas été démarrée',
+          code: 'SESSION_NOT_STARTED'
+        },
+        { status: 400 }
+      );
+    }
+
     const price = appointment.price || 10000; // 100€ par défaut en centimes
-    const commission = Math.round(price * 0.10); // 10%
-    const stripeFees = Math.round(price * 0.014 + 25); // 1.4% + 0.25€
-    const educatorAmount = price - commission - stripeFees;
+    const commission = Math.round(price * 0.12); // 12% (incluant frais Stripe)
+    const educatorAmount = price - commission;
 
     console.log('💰 Montants:', {
       total: price,
       commission,
-      stripeFees,
       educator: educatorAmount
     });
 
@@ -128,7 +138,7 @@ export async function POST(
           amount_total: price,
           amount_educator: educatorAmount,
           amount_commission: commission,
-          amount_stripe_fees: stripeFees,
+          amount_stripe_fees: 0, // Inclus dans la commission de 12%
           payment_intent_id: appointment.payment_intent_id,
           status: paymentCaptured ? 'captured' : 'test',
           payment_status: paymentCaptured ? 'succeeded' : 'test',
@@ -287,8 +297,7 @@ export async function POST(
             <div style="background: #f3f4f6; padding: 20px; border-radius: 8px; margin: 20px 0;">
               <h3 style="margin-top: 0;">💵 Récapitulatif des revenus</h3>
               <p style="margin: 5px 0;"><strong>Montant séance :</strong> ${(price / 100).toFixed(2)}€</p>
-              <p style="margin: 5px 0; color: #ef4444;"><strong>Commission (10%) :</strong> -${(commission / 100).toFixed(2)}€</p>
-              <p style="margin: 5px 0; color: #ef4444;"><strong>Frais bancaires :</strong> -${(stripeFees / 100).toFixed(2)}€</p>
+              <p style="margin: 5px 0; color: #ef4444;"><strong>Commission (12% incluant frais) :</strong> -${(commission / 100).toFixed(2)}€</p>
               <p style="margin: 15px 0 5px 0; font-size: 18px; color: #10b981;"><strong>Net à percevoir :</strong> ${(educatorAmount / 100).toFixed(2)}€</p>
             </div>
 
@@ -323,7 +332,10 @@ export async function POST(
     try {
       console.log('📄 Génération automatique des factures...');
 
-      const invoiceResponse = await fetch(`${process.env.NEXT_PUBLIC_APP_URL}/api/invoices/generate`, {
+      const appUrl = process.env.APP_URL || process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000';
+      console.log('🌐 URL utilisée pour factures:', appUrl);
+
+      const invoiceResponse = await fetch(`${appUrl}/api/invoices/generate`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ appointmentId: params.id })
@@ -333,7 +345,9 @@ export async function POST(
         const invoiceData = await invoiceResponse.json();
         console.log('✅ Factures générées:', invoiceData);
       } else {
-        console.error('⚠️ Erreur génération factures (non-bloquant):', await invoiceResponse.text());
+        const errorText = await invoiceResponse.text();
+        console.error('⚠️ Erreur génération factures (non-bloquant):', errorText);
+        console.error('Status:', invoiceResponse.status, invoiceResponse.statusText);
       }
     } catch (invoiceError) {
       // Ne pas bloquer si la génération de facture échoue

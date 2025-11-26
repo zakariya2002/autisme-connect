@@ -202,8 +202,15 @@ export default function AppointmentsPage() {
             <div className="hidden md:flex space-x-4">
               <Link
                 href={userProfile?.role === 'educator' ? '/dashboard/educator' : '/dashboard/family'}
-                className="text-gray-700 hover:text-primary-600 px-3 py-2 rounded-md font-medium transition"
+                className={`inline-flex items-center gap-2 text-white px-6 py-2.5 rounded-lg font-semibold transition-all duration-200 shadow-md hover:shadow-lg ${
+                  userProfile?.role === 'educator'
+                    ? 'bg-gradient-to-r from-primary-500 to-green-500 hover:from-primary-600 hover:to-green-600'
+                    : 'bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700'
+                }`}
               >
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
+                </svg>
                 Tableau de bord
               </Link>
               <Link
@@ -329,7 +336,7 @@ export default function AppointmentsPage() {
                       <div className="flex-1">
                         <div className="flex items-center gap-3 mb-2">
                           <h3 className="text-xl font-semibold text-gray-900">
-                            {isEducator ? 'Famille' : 'Éducateur'}: {otherParty?.first_name} {otherParty?.last_name}
+                            {isEducator ? 'Famille' : ''}{isEducator && ': '}{otherParty?.first_name} {otherParty?.last_name}
                           </h3>
                           <span className={`px-3 py-1 rounded-full text-xs font-medium ${getStatusBadgeColor(appointment.status)}`}>
                             {getStatusLabel(appointment.status)}
@@ -405,14 +412,6 @@ export default function AppointmentsPage() {
                         </button>
                       )}
 
-                      {appointment.status === 'accepted' && (
-                        <button
-                          onClick={() => updateAppointmentStatus(appointment.id, 'completed')}
-                          className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 text-sm whitespace-nowrap font-medium transition shadow-sm hover:shadow"
-                        >
-                          ✓ Marquer terminé
-                        </button>
-                      )}
                     </div>
                   </div>
                 </div>
