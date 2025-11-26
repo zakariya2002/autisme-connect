@@ -259,8 +259,8 @@ export default function Home() {
           <div className="mb-12 lg:mb-16">
             <div className="relative rounded-2xl overflow-hidden shadow-2xl max-w-5xl mx-auto">
               <img
-                src="https://images.unsplash.com/photo-1503676260728-1c00da094a0b?w=1400&q=80"
-                alt="Éducateur accompagnant un jeune enfant dans son apprentissage - séance individuelle bienveillante"
+                src="/images/rs5439-662bb2eef1a51261042165.webp"
+                alt="Éducatrice spécialisée accompagnant un enfant avec des activités éducatives - séance d'apprentissage individualisée et bienveillante"
                 className="w-full h-[300px] sm:h-[400px] lg:h-[500px] object-cover"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent"></div>
