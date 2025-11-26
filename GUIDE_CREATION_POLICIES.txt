@@ -1,0 +1,177 @@
+═══════════════════════════════════════════════════════════════
+   GUIDE COMPLET : CRÉER LES POLITIQUES DE STOCKAGE POUR LES CVS
+═══════════════════════════════════════════════════════════════
+
+ÉTAPE 1 : ALLER SUR LA PAGE STORAGE
+───────────────────────────────────
+1. Ouvrez votre navigateur
+2. Allez sur cette URL exacte :
+   https://supabase.com/dashboard/project/ghfymwjclzacriswqxme/storage/buckets
+
+3. Vous verrez une liste de "buckets" (dossiers)
+4. Cherchez le bucket nommé "documents"
+5. Cliquez sur "documents" pour l'ouvrir
+
+
+ÉTAPE 2 : ACCÉDER AUX POLICIES
+───────────────────────────────
+1. Une fois dans le bucket "documents"
+2. En haut, vous verrez des onglets : Objects | Policies | Configuration
+3. Cliquez sur l'onglet "Policies"
+4. Vous verrez un bouton "New Policy" ou "+ New policy"
+
+
+═══════════════════════════════════════════════════════════════
+   MAINTENANT, CRÉEZ LES 4 POLITIQUES UNE PAR UNE
+═══════════════════════════════════════════════════════════════
+
+
+┌─────────────────────────────────────────────────────────────┐
+│  POLITIQUE 1/4 : UPLOAD (INSERT)                            │
+└─────────────────────────────────────────────────────────────┘
+
+1. Cliquez sur "New Policy"
+2. Si on vous demande un template, choisissez "Custom" ou "Create a policy"
+3. Remplissez les champs :
+
+   Policy name:
+   ↓
+   Educators can upload their CV
+
+   Allowed operation:
+   ↓
+   Cochez uniquement : INSERT
+
+   Target roles:
+   ↓
+   Sélectionnez : authenticated
+
+   Policy definition (USING expression ou WITH CHECK):
+   ↓
+   Copiez-collez EXACTEMENT ceci (tout sur une ligne):
+
+bucket_id = 'documents' AND (storage.foldername(name))[1] = 'educator-cvs' AND auth.uid() IN (SELECT user_id FROM educator_profiles WHERE id::text = (storage.foldername(name))[2])
+
+4. Cliquez sur "Save" ou "Create policy"
+5. Attendez que la politique soit créée (vous devriez la voir dans la liste)
+
+
+┌─────────────────────────────────────────────────────────────┐
+│  POLITIQUE 2/4 : UPDATE (UPDATE)                            │
+└─────────────────────────────────────────────────────────────┘
+
+1. Cliquez à nouveau sur "New Policy"
+2. Remplissez :
+
+   Policy name:
+   ↓
+   Educators can update their CV
+
+   Allowed operation:
+   ↓
+   Cochez uniquement : UPDATE
+
+   Target roles:
+   ↓
+   Sélectionnez : authenticated
+
+   Policy definition (USING expression):
+   ↓
+   Copiez-collez EXACTEMENT ceci :
+
+bucket_id = 'documents' AND (storage.foldername(name))[1] = 'educator-cvs' AND auth.uid() IN (SELECT user_id FROM educator_profiles WHERE id::text = (storage.foldername(name))[2])
+
+3. Cliquez sur "Save"
+
+
+┌─────────────────────────────────────────────────────────────┐
+│  POLITIQUE 3/4 : DELETE (DELETE)                            │
+└─────────────────────────────────────────────────────────────┘
+
+1. Cliquez sur "New Policy"
+2. Remplissez :
+
+   Policy name:
+   ↓
+   Educators can delete their CV
+
+   Allowed operation:
+   ↓
+   Cochez uniquement : DELETE
+
+   Target roles:
+   ↓
+   Sélectionnez : authenticated
+
+   Policy definition (USING expression):
+   ↓
+   Copiez-collez EXACTEMENT ceci :
+
+bucket_id = 'documents' AND (storage.foldername(name))[1] = 'educator-cvs' AND auth.uid() IN (SELECT user_id FROM educator_profiles WHERE id::text = (storage.foldername(name))[2])
+
+3. Cliquez sur "Save"
+
+
+┌─────────────────────────────────────────────────────────────┐
+│  POLITIQUE 4/4 : VIEW (SELECT)                              │
+└─────────────────────────────────────────────────────────────┘
+
+1. Cliquez sur "New Policy"
+2. Remplissez :
+
+   Policy name:
+   ↓
+   Anyone can view educator CVs
+
+   Allowed operation:
+   ↓
+   Cochez uniquement : SELECT
+
+   Target roles:
+   ↓
+   Sélectionnez : public
+   OU cochez la case "Allow public access" si disponible
+
+   Policy definition (USING expression):
+   ↓
+   Copiez-collez EXACTEMENT ceci :
+
+bucket_id = 'documents' AND (storage.foldername(name))[1] = 'educator-cvs'
+
+3. Cliquez sur "Save"
+
+
+═══════════════════════════════════════════════════════════════
+   VÉRIFICATION FINALE
+═══════════════════════════════════════════════════════════════
+
+Après avoir créé les 4 politiques, vous devriez voir dans la liste :
+
+✓ Educators can upload their CV (INSERT)
+✓ Educators can update their CV (UPDATE)
+✓ Educators can delete their CV (DELETE)
+✓ Anyone can view educator CVs (SELECT)
+
+
+═══════════════════════════════════════════════════════════════
+   TESTER L'UPLOAD
+═══════════════════════════════════════════════════════════════
+
+1. Allez sur : http://localhost:3000/dashboard/educator/profile
+2. Faites défiler jusqu'à la section "CV (Curriculum Vitae)"
+3. Cliquez sur "Télécharger mon CV (PDF)"
+4. Sélectionnez votre fichier PDF
+5. L'upload devrait fonctionner maintenant ! 🎉
+
+
+═══════════════════════════════════════════════════════════════
+   EN CAS DE PROBLÈME
+═══════════════════════════════════════════════════════════════
+
+Si l'erreur persiste après avoir créé les 4 politiques :
+
+1. Vérifiez que les 4 politiques sont bien visibles dans l'onglet Policies
+2. Vérifiez que vous avez bien sélectionné le bucket "documents"
+3. Essayez de vous déconnecter et reconnecter sur votre application
+4. Videz le cache du navigateur (Ctrl+Shift+Suppr)
+

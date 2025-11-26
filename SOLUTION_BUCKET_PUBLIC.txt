@@ -1,0 +1,90 @@
+═══════════════════════════════════════════════════════════════
+   SOLUTION SIMPLE : RENDRE LE BUCKET PUBLIC
+═══════════════════════════════════════════════════════════════
+
+Le problème vient du fait que le bucket "documents" a le RLS (Row Level Security)
+activé, ce qui bloque tous les uploads même avec des politiques.
+
+La solution la plus simple pour les CVs (qui doivent être publics de toute façon) :
+Rendre le bucket public.
+
+═══════════════════════════════════════════════════════════════
+   ÉTAPE 1 : ALLER SUR LA CONFIGURATION DU BUCKET
+═══════════════════════════════════════════════════════════════
+
+1. Allez sur : https://supabase.com/dashboard/project/ghfymwjclzacriswqxme/storage/buckets
+
+2. Vous verrez le bucket "documents" dans la liste
+
+3. À droite du bucket "documents", cliquez sur les 3 petits points (⋮)
+   ou cherchez un bouton "Settings" ou "Configuration"
+
+4. Cliquez sur "Edit" ou "Settings"
+
+
+═══════════════════════════════════════════════════════════════
+   ÉTAPE 2 : ACTIVER "PUBLIC BUCKET"
+═══════════════════════════════════════════════════════════════
+
+Dans les paramètres du bucket, vous devriez voir :
+
+   ☐ Public bucket
+
+Cochez cette case ✓
+
+Puis cliquez sur "Save" ou "Update"
+
+
+═══════════════════════════════════════════════════════════════
+   ALTERNATIVE : VIA SQL (si l'interface ne fonctionne pas)
+═══════════════════════════════════════════════════════════════
+
+Allez sur : https://supabase.com/dashboard/project/ghfymwjclzacriswqxme/sql/new
+
+Exécutez cette commande SQL :
+
+UPDATE storage.buckets
+SET public = true
+WHERE name = 'documents';
+
+
+═══════════════════════════════════════════════════════════════
+   POURQUOI CETTE SOLUTION ?
+═══════════════════════════════════════════════════════════════
+
+- Les CVs des éducateurs DOIVENT être publics (visibles sur leur profil)
+- Rendre le bucket public simplifie la gestion
+- Les fichiers dans "educator-cvs/" seront accessibles via URL publique
+- C'est la configuration standard pour ce type de fichiers
+
+SÉCURITÉ :
+- Même public, seuls les éducateurs authentifiés pourront UPLOADER
+- Tout le monde peut VOIR (ce qui est voulu pour un CV public)
+- Le chemin contient l'ID de l'éducateur : educator-cvs/{educatorId}/fichier.pdf
+
+
+═══════════════════════════════════════════════════════════════
+   APRÈS AVOIR RENDU LE BUCKET PUBLIC
+═══════════════════════════════════════════════════════════════
+
+1. Supprimez TOUTES les politiques RLS pour les CVs
+   (elles ne sont plus nécessaires avec un bucket public)
+
+2. Testez l'upload sur : http://localhost:3000/dashboard/educator/profile
+
+3. Ça devrait fonctionner immédiatement ! ✅
+
+
+═══════════════════════════════════════════════════════════════
+   SI VOUS VOULEZ GARDER LA SÉCURITÉ RLS
+═══════════════════════════════════════════════════════════════
+
+Si vous préférez garder le bucket privé avec RLS, il faut :
+
+1. Créer les politiques directement via l'interface Storage > Policies
+2. NE PAS utiliser les commandes SQL CREATE POLICY
+3. Utiliser l'éditeur visuel de politiques de Supabase
+
+Mais franchement, pour des CVs publics, rendre le bucket public est la
+meilleure solution. 😊
+

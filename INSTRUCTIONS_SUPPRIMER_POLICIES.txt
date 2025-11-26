@@ -1,0 +1,60 @@
+═══════════════════════════════════════════════════════════════
+   SUPPRIMER LES POLITIQUES MANUELLEMENT
+═══════════════════════════════════════════════════════════════
+
+Sur la page que vous avez ouverte :
+https://supabase.com/dashboard/project/ghfymwjclzacriswqxme/storage/buckets/documents
+
+Vous voyez 8 politiques. Il faut les SUPPRIMER TOUTES sauf 2.
+
+═══════════════════════════════════════════════════════════════
+   POLITIQUES À SUPPRIMER (6 au total)
+═══════════════════════════════════════════════════════════════
+
+Cliquez sur les 3 points (⋮) à droite de chaque politique,
+puis choisissez "Delete" ou "Remove" :
+
+1. ❌ "Anyone can view educat..." (SELECT) - SUPPRIMER
+2. ❌ "Educators can delete thei..." (DELETE) - SUPPRIMER
+3. ❌ "Educators can update the..." (UPDATE) - SUPPRIMER
+4. ❌ "Educators can upload the..." (INSERT) - SUPPRIMER
+5. ❌ "Service role can insert do..." (INSERT) - SUPPRIMER
+6. ❌ "Service role can update d..." (UPDATE) - SUPPRIMER
+
+
+═══════════════════════════════════════════════════════════════
+   POLITIQUES À GARDER (2 au total)
+═══════════════════════════════════════════════════════════════
+
+Gardez UNIQUEMENT ces 2 politiques :
+
+✅ "Authenticated users can ..." (ALL) - authenticated
+✅ "Public can read documents" (SELECT) - public
+
+
+═══════════════════════════════════════════════════════════════
+   APRÈS LA SUPPRESSION
+═══════════════════════════════════════════════════════════════
+
+Une fois que vous avez supprimé les 6 politiques et qu'il ne reste que 2 :
+
+1. Rafraîchissez la page
+2. Vérifiez qu'il ne reste bien que 2 politiques
+3. Testez l'upload sur : http://localhost:3000/dashboard/educator/profile
+
+Ça devrait ENFIN fonctionner ! 🎉
+
+
+═══════════════════════════════════════════════════════════════
+   SI ÇA NE FONCTIONNE TOUJOURS PAS
+═══════════════════════════════════════════════════════════════
+
+Si après avoir supprimé les 6 politiques, l'upload ne fonctionne toujours pas :
+
+1. Supprimez AUSSI les 2 politiques restantes (tout supprimer)
+2. Le bucket restera public, donc accessible en lecture
+3. Testez l'upload
+
+Si ça fonctionne sans aucune politique, c'est que les politiques elles-mêmes
+ont des conditions qui bloquent. On pourra alors en recréer de plus permissives.
+

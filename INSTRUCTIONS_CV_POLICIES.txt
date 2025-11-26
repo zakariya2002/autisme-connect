@@ -1,0 +1,51 @@
+========================================
+POLITIQUES DE STOCKAGE POUR LES CVS
+========================================
+
+Aller sur : https://supabase.com/dashboard/project/ghfymwjclzacriswqxme/storage/buckets/documents
+
+Cliquez sur le bucket "documents" > Onglet "Policies" > "New Policy"
+
+========================================
+POLITIQUE 1 : Upload CV
+========================================
+Name: Educators can upload their CV
+Policy type: INSERT
+Target roles: authenticated
+Policy definition (copiez-collez ci-dessous):
+
+(bucket_id = 'documents'::text) AND ((storage.foldername(name))[1] = 'educator-cvs'::text) AND (auth.uid() IN ( SELECT educator_profiles.user_id FROM educator_profiles WHERE ((educator_profiles.id)::text = (storage.foldername(name))[2])))
+
+========================================
+POLITIQUE 2 : Update CV
+========================================
+Name: Educators can update their CV
+Policy type: UPDATE
+Target roles: authenticated
+Policy definition (copiez-collez ci-dessous):
+
+(bucket_id = 'documents'::text) AND ((storage.foldername(name))[1] = 'educator-cvs'::text) AND (auth.uid() IN ( SELECT educator_profiles.user_id FROM educator_profiles WHERE ((educator_profiles.id)::text = (storage.foldername(name))[2])))
+
+========================================
+POLITIQUE 3 : Delete CV
+========================================
+Name: Educators can delete their CV
+Policy type: DELETE
+Target roles: authenticated
+Policy definition (copiez-collez ci-dessous):
+
+(bucket_id = 'documents'::text) AND ((storage.foldername(name))[1] = 'educator-cvs'::text) AND (auth.uid() IN ( SELECT educator_profiles.user_id FROM educator_profiles WHERE ((educator_profiles.id)::text = (storage.foldername(name))[2])))
+
+========================================
+POLITIQUE 4 : View CV
+========================================
+Name: Anyone can view educator CVs
+Policy type: SELECT
+Target roles: public (cochez "Allow public access")
+Policy definition (copiez-collez ci-dessous):
+
+(bucket_id = 'documents'::text) AND ((storage.foldername(name))[1] = 'educator-cvs'::text)
+
+========================================
+FIN - Après avoir créé ces 4 politiques, l'upload du CV fonctionnera !
+========================================
