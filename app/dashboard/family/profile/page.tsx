@@ -32,8 +32,6 @@ export default function FamilyProfilePage() {
     phone: '',
     location: '',
     relationship: 'parent',
-    person_with_autism_age: '',
-    support_level_needed: 'level_1',
     specific_needs: '',
     preferred_certifications: [] as string[],
     budget_min: '',
@@ -72,8 +70,6 @@ export default function FamilyProfilePage() {
           phone: profile.phone || '',
           location: profile.location || '',
           relationship: profile.relationship || 'parent',
-          person_with_autism_age: profile.person_with_autism_age?.toString() || '',
-          support_level_needed: profile.support_level_needed || 'level_1',
           specific_needs: (profile.specific_needs || []).join(', '),
           preferred_certifications: profile.preferred_certifications || [],
           budget_min: profile.budget_min?.toString() || '',
@@ -115,8 +111,6 @@ export default function FamilyProfilePage() {
           phone: profileData.phone || null,
           location: profileData.location,
           relationship: profileData.relationship,
-          person_with_autism_age: profileData.person_with_autism_age ? parseInt(profileData.person_with_autism_age) : null,
-          support_level_needed: profileData.support_level_needed,
           specific_needs: profileData.specific_needs.split(',').map(s => s.trim()).filter(Boolean),
           preferred_certifications: profileData.preferred_certifications,
           budget_min: profileData.budget_min ? parseFloat(profileData.budget_min) : null,
@@ -408,31 +402,6 @@ export default function FamilyProfilePage() {
                 <option value="guardian">Tuteur</option>
                 <option value="self">Personne avec TSA</option>
                 <option value="other">Autre</option>
-              </select>
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">Âge de la personne avec TSA</label>
-              <input
-                type="number"
-                min="0"
-                max="150"
-                value={profileData.person_with_autism_age}
-                onChange={(e) => setProfileData({ ...profileData, person_with_autism_age: e.target.value })}
-                className="w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:ring-primary-500 focus:border-primary-500"
-              />
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">Niveau de soutien requis *</label>
-              <select
-                value={profileData.support_level_needed}
-                onChange={(e) => setProfileData({ ...profileData, support_level_needed: e.target.value })}
-                className="w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:ring-primary-500 focus:border-primary-500"
-              >
-                <option value="level_1">Niveau 1 - Nécessite un soutien</option>
-                <option value="level_2">Niveau 2 - Nécessite un soutien important</option>
-                <option value="level_3">Niveau 3 - Nécessite un soutien très important</option>
               </select>
             </div>
 

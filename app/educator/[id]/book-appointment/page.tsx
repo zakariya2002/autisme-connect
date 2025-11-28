@@ -30,6 +30,13 @@ interface Appointment {
   status: string;
 }
 
+interface ChildProfile {
+  id: string;
+  first_name: string;
+  age: number | null;
+  support_level_needed: string | null;
+}
+
 export default function BookAppointmentPage({ params }: { params: { id: string } }) {
   const router = useRouter();
   const [loading, setLoading] = useState(true);
@@ -37,6 +44,8 @@ export default function BookAppointmentPage({ params }: { params: { id: string }
   const [familyId, setFamilyId] = useState<string | null>(null);
   const [availabilities, setAvailabilities] = useState<DailyAvailability[]>([]);
   const [appointments, setAppointments] = useState<Appointment[]>([]);
+  const [children, setChildren] = useState<ChildProfile[]>([]);
+  const [selectedChildId, setSelectedChildId] = useState<string | null>(null);
 
   const [selectedDate, setSelectedDate] = useState('');
   const [selectedSlot, setSelectedSlot] = useState<{ start: string; end: string } | null>(null);
@@ -80,6 +89,22 @@ export default function BookAppointmentPage({ params }: { params: { id: string }
     }
 
     setFamilyId(familyProfile.id);
+
+    // Récupérer les enfants de la famille
+    const { data: childrenData } = await supabase
+      .from('child_profiles')
+      .select('id, first_name, age, support_level_needed')
+      .eq('family_id', familyProfile.id)
+      .eq('is_active', true)
+      .order('created_at', { ascending: true });
+
+    if (childrenData && childrenData.length > 0) {
+      setChildren(childrenData);
+      // Présélectionner le premier enfant s'il n'y en a qu'un
+      if (childrenData.length === 1) {
+        setSelectedChildId(childrenData[0].id);
+      }
+    }
   };
 
   const fetchEducatorData = async () => {
@@ -249,6 +274,12 @@ export default function BookAppointmentPage({ params }: { params: { id: string }
       return;
     }
 
+    // Vérifier qu'un enfant est sélectionné si la famille a des enfants
+    if (children.length > 0 && !selectedChildId) {
+      setError('Veuillez sélectionner l\'enfant concerné par ce rendez-vous');
+      return;
+    }
+
     // Vérifier les limites
     const canBook = await canEducatorCreateBooking(params.id);
     if (!canBook.canCreate) {
@@ -277,6 +308,7 @@ export default function BookAppointmentPage({ params }: { params: { id: string }
         body: JSON.stringify({
           educatorId: params.id,
           familyId,
+          childId: selectedChildId,
           appointmentDate: selectedDate,
           startTime: customStartTime,
           endTime: customEndTime,
@@ -411,10 +443,58 @@ export default function BookAppointmentPage({ params }: { params: { id: string }
           </div>
         ) : (
           <form onSubmit={handleSubmit} className="bg-white rounded-xl shadow-lg p-6 space-y-6">
+            {/* Sélection de l'enfant (si la famille a des enfants) */}
+            {children.length > 0 && (
+              <div>
+                <label className="block text-sm font-semibold text-gray-900 mb-3">
+                  1. Sélectionnez l'enfant concerné
+                </label>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                  {children.map((child) => (
+                    <button
+                      key={child.id}
+                      type="button"
+                      onClick={() => setSelectedChildId(child.id)}
+                      className={`p-4 rounded-lg border-2 transition text-left ${
+                        selectedChildId === child.id
+                          ? 'border-primary-600 bg-primary-50'
+                          : 'border-gray-200 hover:border-primary-300'
+                      }`}
+                    >
+                      <div className="flex items-center gap-3">
+                        <div className="w-10 h-10 bg-primary-100 rounded-full flex items-center justify-center flex-shrink-0">
+                          <span className="text-sm font-semibold text-primary-600">
+                            {child.first_name[0].toUpperCase()}
+                          </span>
+                        </div>
+                        <div>
+                          <p className="font-semibold text-gray-900">{child.first_name}</p>
+                          <p className="text-sm text-gray-600">
+                            {child.age && `${child.age} ans`}
+                            {child.age && child.support_level_needed && ' • '}
+                            {child.support_level_needed && (
+                              child.support_level_needed === 'level_1' ? 'Niveau 1' :
+                              child.support_level_needed === 'level_2' ? 'Niveau 2' : 'Niveau 3'
+                            )}
+                          </p>
+                        </div>
+                      </div>
+                    </button>
+                  ))}
+                </div>
+                <p className="text-xs text-gray-500 mt-2">
+                  Vous pouvez gérer vos enfants dans{' '}
+                  <Link href="/dashboard/family/children" className="text-primary-600 hover:underline">
+                    votre espace famille
+                  </Link>
+                </p>
+              </div>
+            )}
+
             {/* Sélection de la date */}
             <div>
               <label className="block text-sm font-semibold text-gray-900 mb-3">
-                1. Choisissez une date
+                {children.length > 0 ? '2. Choisissez une date' : '1. Choisissez une date'}
               </label>
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
                 {availableDates.map(date => (
@@ -446,7 +526,7 @@ export default function BookAppointmentPage({ params }: { params: { id: string }
             {selectedDate && (
               <div>
                 <label className="block text-sm font-semibold text-gray-900 mb-3">
-                  2. Choisissez un créneau horaire
+                  {children.length > 0 ? '3. Choisissez un créneau horaire' : '2. Choisissez un créneau horaire'}
                 </label>
                 <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3">
                   {getAvailableSlotsForDate(selectedDate).map((slot) => {
@@ -541,7 +621,7 @@ export default function BookAppointmentPage({ params }: { params: { id: string }
               <>
                 <div>
                   <label className="block text-sm font-semibold text-gray-900 mb-3">
-                    3. Type de rendez-vous
+                    {children.length > 0 ? '4. Type de rendez-vous' : '3. Type de rendez-vous'}
                   </label>
                   <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
                     <button

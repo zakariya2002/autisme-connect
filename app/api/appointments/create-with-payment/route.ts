@@ -7,11 +7,24 @@ const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
 const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY!;
 const supabase = createClient(supabaseUrl, supabaseServiceKey);
 
+// CORS headers for mobile app
+const corsHeaders = {
+  'Access-Control-Allow-Origin': '*',
+  'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS',
+  'Access-Control-Allow-Headers': 'Content-Type, Authorization',
+};
+
+// Handle preflight OPTIONS request
+export async function OPTIONS() {
+  return NextResponse.json({}, { headers: corsHeaders });
+}
+
 export async function POST(request: Request) {
   try {
     const {
       educatorId,
       familyId,
+      childId,
       appointmentDate,
       startTime,
       endTime,
@@ -24,6 +37,7 @@ export async function POST(request: Request) {
     console.log('📝 Création RDV avec paiement:', {
       educatorId,
       familyId,
+      childId,
       price
     });
 
@@ -35,7 +49,7 @@ export async function POST(request: Request) {
     if (!educatorId || !familyId || !appointmentDate || !startTime || !endTime || !price) {
       return NextResponse.json(
         { error: 'Données manquantes' },
-        { status: 400 }
+        { status: 400, headers: corsHeaders }
       );
     }
 
@@ -50,7 +64,7 @@ export async function POST(request: Request) {
       console.error('❌ Famille introuvable:', familyError);
       return NextResponse.json(
         { error: 'Famille introuvable' },
-        { status: 404 }
+        { status: 404, headers: corsHeaders }
       );
     }
 
@@ -63,7 +77,7 @@ export async function POST(request: Request) {
     if (!familyEmail) {
       return NextResponse.json(
         { error: 'Email famille introuvable' },
-        { status: 404 }
+        { status: 404, headers: corsHeaders }
       );
     }
 
@@ -78,7 +92,7 @@ export async function POST(request: Request) {
       console.error('❌ Éducateur introuvable:', educatorError);
       return NextResponse.json(
         { error: 'Éducateur introuvable' },
-        { status: 404 }
+        { status: 404, headers: corsHeaders }
       );
     }
 
@@ -135,6 +149,7 @@ export async function POST(request: Request) {
         metadata: {
           educator_id: educatorId,
           family_id: familyId,
+          child_id: childId || '',
           appointment_date: appointmentDate,
           start_time: startTime,
           end_time: endTime,
@@ -146,6 +161,7 @@ export async function POST(request: Request) {
       metadata: {
         educator_id: educatorId,
         family_id: familyId,
+        child_id: childId || '',
         appointment_date: appointmentDate,
         start_time: startTime,
         end_time: endTime,
@@ -166,6 +182,7 @@ export async function POST(request: Request) {
         .insert({
           educator_id: educatorId,
           family_id: familyId,
+          child_id: childId || null,
           appointment_date: appointmentDate,
           start_time: startTime,
           end_time: endTime,
@@ -192,13 +209,13 @@ export async function POST(request: Request) {
     return NextResponse.json({
       sessionId: session.id,
       url: session.url
-    });
+    }, { headers: corsHeaders });
 
   } catch (error: any) {
     console.error('❌ Erreur création session paiement:', error);
     return NextResponse.json(
       { error: error.message || 'Erreur lors de la création de la session de paiement' },
-      { status: 500 }
+      { status: 500, headers: corsHeaders }
     );
   }
 }

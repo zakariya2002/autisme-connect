@@ -95,6 +95,7 @@ function SessionCountdown({
 interface Appointment {
   id: string;
   family_id: string;
+  child_id: string | null;
   appointment_date: string;
   start_time: string;
   end_time: string;
@@ -110,6 +111,12 @@ interface Appointment {
   family_first_name: string;
   family_last_name: string;
   family_phone: string;
+  child_first_name: string | null;
+  child_age: number | null;
+  child_support_level: string | null;
+  child_description: string | null;
+  child_accompaniment_types: string[] | null;
+  child_accompaniment_goals: string | null;
 }
 
 export default function EducatorAppointmentsPage() {
@@ -189,6 +196,14 @@ export default function EducatorAppointmentsPage() {
             first_name,
             last_name,
             phone
+          ),
+          child:child_profiles!child_id (
+            first_name,
+            age,
+            support_level_needed,
+            description,
+            accompaniment_types,
+            accompaniment_goals
           )
         `)
         .eq('educator_id', educatorId)
@@ -210,6 +225,12 @@ export default function EducatorAppointmentsPage() {
         family_first_name: apt.family?.first_name || '',
         family_last_name: apt.family?.last_name || '',
         family_phone: apt.family?.phone || '',
+        child_first_name: apt.child?.first_name || null,
+        child_age: apt.child?.age || null,
+        child_support_level: apt.child?.support_level_needed || null,
+        child_description: apt.child?.description || null,
+        child_accompaniment_types: apt.child?.accompaniment_types || null,
+        child_accompaniment_goals: apt.child?.accompaniment_goals || null,
       }));
 
       setAppointments(mappedData);
@@ -637,6 +658,62 @@ export default function EducatorAppointmentsPage() {
                         <a href={`tel:${appointment.family_phone}`} className="hover:text-primary-600">
                           {appointment.family_phone}
                         </a>
+                      </div>
+                    )}
+
+                    {/* Informations de l'enfant */}
+                    {appointment.child_first_name && (
+                      <div className="p-3 bg-purple-50 rounded-lg border border-purple-200">
+                        <p className="text-sm font-semibold text-purple-900 mb-2 flex items-center gap-2">
+                          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                          </svg>
+                          Enfant concerné : {appointment.child_first_name}
+                        </p>
+                        <div className="flex flex-wrap gap-2 mb-2">
+                          {appointment.child_age && (
+                            <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-purple-100 text-purple-700">
+                              {appointment.child_age} ans
+                            </span>
+                          )}
+                          {appointment.child_support_level && (
+                            <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-blue-100 text-blue-700">
+                              {appointment.child_support_level === 'level_1' ? 'Niveau 1' :
+                               appointment.child_support_level === 'level_2' ? 'Niveau 2' : 'Niveau 3'}
+                            </span>
+                          )}
+                        </div>
+                        {appointment.child_accompaniment_types && appointment.child_accompaniment_types.length > 0 && (
+                          <div className="mb-2">
+                            <p className="text-xs text-purple-700 mb-1">Types d'accompagnement recherchés :</p>
+                            <div className="flex flex-wrap gap-1">
+                              {appointment.child_accompaniment_types.map((type: string) => (
+                                <span key={type} className="inline-flex items-center px-2 py-0.5 rounded text-xs bg-white text-purple-600 border border-purple-200">
+                                  {type === 'scolaire' ? 'Soutien scolaire' :
+                                   type === 'comportemental' ? 'Gestion du comportement' :
+                                   type === 'socialisation' ? 'Socialisation' :
+                                   type === 'autonomie' ? 'Autonomie' :
+                                   type === 'communication' ? 'Communication' :
+                                   type === 'motricite' ? 'Motricité' :
+                                   type === 'sensoriel' ? 'Sensoriel' :
+                                   type === 'loisirs' ? 'Loisirs' : type}
+                                </span>
+                              ))}
+                            </div>
+                          </div>
+                        )}
+                        {appointment.child_accompaniment_goals && (
+                          <div className="mb-2">
+                            <p className="text-xs text-purple-700 mb-1">Objectifs :</p>
+                            <p className="text-sm text-purple-800">{appointment.child_accompaniment_goals}</p>
+                          </div>
+                        )}
+                        {appointment.child_description && (
+                          <div>
+                            <p className="text-xs text-purple-700 mb-1">Description :</p>
+                            <p className="text-sm text-purple-800">{appointment.child_description}</p>
+                          </div>
+                        )}
                       </div>
                     )}
 

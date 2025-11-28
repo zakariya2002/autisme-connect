@@ -373,107 +373,107 @@ export default function Home() {
       </div>
 
       {/* Section Aides Financières */}
-      <div className="bg-gradient-to-br from-green-50 to-blue-50 py-20">
+      <div className="bg-gradient-to-br from-green-50 to-blue-50 py-12 sm:py-16 lg:py-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-12">
-            <h2 className="text-4xl lg:text-5xl font-bold text-gray-900 mb-4">
-              💰 Nous vous aidons aussi financièrement
+          <div className="text-center mb-8 sm:mb-10 lg:mb-12">
+            <h2 className="text-2xl sm:text-3xl lg:text-4xl xl:text-5xl font-bold text-gray-900 mb-3 sm:mb-4">
+              Nous vous aidons aussi financièrement
             </h2>
-            <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+            <p className="text-sm sm:text-base lg:text-xl text-gray-600 max-w-3xl mx-auto px-2 sm:px-0">
               Plusieurs aides existent pour financer l'accompagnement de votre enfant.
               Nous sommes là pour vous guider dans vos démarches.
             </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-6 lg:gap-8 mb-8 sm:mb-10 lg:mb-12">
             {/* CESU */}
-            <div className="bg-white rounded-2xl p-8 shadow-lg hover:shadow-xl transition-shadow">
-              <div className="w-16 h-16 bg-blue-100 rounded-xl flex items-center justify-center mb-6 mx-auto">
-                <svg className="w-8 h-8 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <div className="bg-white rounded-xl sm:rounded-2xl p-5 sm:p-6 lg:p-8 shadow-lg hover:shadow-xl transition-shadow">
+              <div className="w-12 h-12 sm:w-14 sm:h-14 lg:w-16 lg:h-16 bg-blue-100 rounded-lg sm:rounded-xl flex items-center justify-center mb-4 sm:mb-6 mx-auto">
+                <svg className="w-6 h-6 sm:w-7 sm:h-7 lg:w-8 lg:h-8 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z" />
                 </svg>
               </div>
-              <h3 className="text-2xl font-bold text-gray-900 mb-3 text-center">CESU</h3>
-              <p className="text-gray-600 text-center mb-4 leading-relaxed">
+              <h3 className="text-xl sm:text-2xl font-bold text-gray-900 mb-2 sm:mb-3 text-center">CESU</h3>
+              <p className="text-sm sm:text-base text-gray-600 text-center mb-3 sm:mb-4 leading-relaxed">
                 Chèque Emploi Service Universel pour simplifier le paiement et les démarches administratives
               </p>
-              <div className="bg-blue-50 rounded-lg p-4 text-center">
-                <p className="text-sm text-gray-700 font-semibold">Crédit d'impôt</p>
-                <p className="text-3xl font-bold text-blue-600">50%</p>
+              <div className="bg-blue-50 rounded-lg p-3 sm:p-4 text-center">
+                <p className="text-xs sm:text-sm text-gray-700 font-semibold">Crédit d'impôt</p>
+                <p className="text-2xl sm:text-3xl font-bold text-blue-600">50%</p>
                 <p className="text-xs text-gray-600 mt-1">sur les dépenses engagées</p>
               </div>
             </div>
 
             {/* AEEH */}
-            <div className="bg-white rounded-2xl p-8 shadow-lg hover:shadow-xl transition-shadow">
-              <div className="w-16 h-16 bg-green-100 rounded-xl flex items-center justify-center mb-6 mx-auto">
-                <svg className="w-8 h-8 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <div className="bg-white rounded-xl sm:rounded-2xl p-5 sm:p-6 lg:p-8 shadow-lg hover:shadow-xl transition-shadow">
+              <div className="w-12 h-12 sm:w-14 sm:h-14 lg:w-16 lg:h-16 bg-green-100 rounded-lg sm:rounded-xl flex items-center justify-center mb-4 sm:mb-6 mx-auto">
+                <svg className="w-6 h-6 sm:w-7 sm:h-7 lg:w-8 lg:h-8 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                 </svg>
               </div>
-              <h3 className="text-2xl font-bold text-gray-900 mb-3 text-center">AEEH</h3>
-              <p className="text-gray-600 text-center mb-4 leading-relaxed">
+              <h3 className="text-xl sm:text-2xl font-bold text-gray-900 mb-2 sm:mb-3 text-center">AEEH</h3>
+              <p className="text-sm sm:text-base text-gray-600 text-center mb-3 sm:mb-4 leading-relaxed">
                 Allocation d'Éducation de l'Enfant Handicapé versée par la MDPH
               </p>
-              <div className="bg-green-50 rounded-lg p-4 text-center">
-                <p className="text-sm text-gray-700 font-semibold">Montant de base</p>
-                <p className="text-3xl font-bold text-green-600">151,80€</p>
+              <div className="bg-green-50 rounded-lg p-3 sm:p-4 text-center">
+                <p className="text-xs sm:text-sm text-gray-700 font-semibold">Montant de base</p>
+                <p className="text-2xl sm:text-3xl font-bold text-green-600">151,80€</p>
                 <p className="text-xs text-gray-600 mt-1">+ compléments selon besoins</p>
               </div>
             </div>
 
             {/* PCH */}
-            <div className="bg-white rounded-2xl p-8 shadow-lg hover:shadow-xl transition-shadow">
-              <div className="w-16 h-16 bg-purple-100 rounded-xl flex items-center justify-center mb-6 mx-auto">
-                <svg className="w-8 h-8 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <div className="bg-white rounded-xl sm:rounded-2xl p-5 sm:p-6 lg:p-8 shadow-lg hover:shadow-xl transition-shadow">
+              <div className="w-12 h-12 sm:w-14 sm:h-14 lg:w-16 lg:h-16 bg-purple-100 rounded-lg sm:rounded-xl flex items-center justify-center mb-4 sm:mb-6 mx-auto">
+                <svg className="w-6 h-6 sm:w-7 sm:h-7 lg:w-8 lg:h-8 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
                 </svg>
               </div>
-              <h3 className="text-2xl font-bold text-gray-900 mb-3 text-center">PCH</h3>
-              <p className="text-gray-600 text-center mb-4 leading-relaxed">
+              <h3 className="text-xl sm:text-2xl font-bold text-gray-900 mb-2 sm:mb-3 text-center">PCH</h3>
+              <p className="text-sm sm:text-base text-gray-600 text-center mb-3 sm:mb-4 leading-relaxed">
                 Prestation de Compensation du Handicap pour financer l'aide humaine
               </p>
-              <div className="bg-purple-50 rounded-lg p-4 text-center">
-                <p className="text-sm text-gray-700 font-semibold">Montant variable</p>
-                <p className="text-3xl font-bold text-purple-600">Sur mesure</p>
+              <div className="bg-purple-50 rounded-lg p-3 sm:p-4 text-center">
+                <p className="text-xs sm:text-sm text-gray-700 font-semibold">Montant variable</p>
+                <p className="text-2xl sm:text-3xl font-bold text-purple-600">Sur mesure</p>
                 <p className="text-xs text-gray-600 mt-1">selon évaluation MDPH</p>
               </div>
             </div>
           </div>
 
           {/* Exemple de calcul */}
-          <div className="max-w-4xl mx-auto bg-white rounded-2xl shadow-xl p-8 lg:p-10">
-            <h3 className="text-2xl font-bold text-gray-900 mb-6 text-center">
-              💡 Exemple concret de coût pour votre famille
+          <div className="max-w-4xl mx-auto bg-white rounded-xl sm:rounded-2xl shadow-xl p-5 sm:p-6 lg:p-10">
+            <h3 className="text-lg sm:text-xl lg:text-2xl font-bold text-gray-900 mb-4 sm:mb-6 text-center">
+              Exemple concret de coût pour votre famille
             </h3>
 
-            <div className="space-y-4">
-              <div className="flex justify-between items-center py-3 border-b border-gray-200">
-                <span className="text-gray-700 font-medium">Tarif éducateur (1 heure)</span>
-                <span className="text-xl font-bold text-gray-900">40€</span>
+            <div className="space-y-3 sm:space-y-4">
+              <div className="flex justify-between items-center py-2 sm:py-3 border-b border-gray-200">
+                <span className="text-sm sm:text-base text-gray-700 font-medium">Tarif éducateur (1 heure)</span>
+                <span className="text-lg sm:text-xl font-bold text-gray-900">40€</span>
               </div>
 
-              <div className="flex justify-between items-center py-3 border-b border-gray-200">
-                <span className="text-gray-700 font-medium">Crédit d'impôt CESU (50%)</span>
-                <span className="text-xl font-bold text-green-600">-20€</span>
+              <div className="flex justify-between items-center py-2 sm:py-3 border-b border-gray-200">
+                <span className="text-sm sm:text-base text-gray-700 font-medium">Crédit d'impôt CESU (50%)</span>
+                <span className="text-lg sm:text-xl font-bold text-green-600">-20€</span>
               </div>
 
-              <div className="flex justify-between items-center py-4 bg-primary-50 rounded-lg px-4">
-                <span className="text-lg font-bold text-gray-900">Votre coût réel</span>
-                <span className="text-3xl font-bold text-primary-600">20€</span>
+              <div className="flex justify-between items-center py-3 sm:py-4 bg-primary-50 rounded-lg px-3 sm:px-4">
+                <span className="text-base sm:text-lg font-bold text-gray-900">Votre coût réel</span>
+                <span className="text-2xl sm:text-3xl font-bold text-primary-600">20€</span>
               </div>
             </div>
 
-            <div className="mt-8 p-6 bg-blue-50 rounded-xl">
-              <p className="text-gray-700 text-center leading-relaxed">
-                <span className="font-semibold">💳 Avec les aides MDPH (AEEH ou PCH)</span>, votre reste à charge peut être encore réduit, voire nul selon votre situation. Nous sommes là pour vous accompagner dans vos démarches.
+            <div className="mt-5 sm:mt-8 p-4 sm:p-6 bg-blue-50 rounded-lg sm:rounded-xl">
+              <p className="text-sm sm:text-base text-gray-700 text-center leading-relaxed">
+                <span className="font-semibold">Avec les aides MDPH (AEEH ou PCH)</span>, votre reste à charge peut être encore réduit, voire nul selon votre situation.
               </p>
             </div>
 
-            <div className="mt-6 text-center">
+            <div className="mt-5 sm:mt-6 text-center">
               <Link
                 href="/search"
-                className="inline-block px-8 py-4 bg-primary-600 text-white rounded-xl hover:bg-primary-700 font-bold text-lg shadow-lg transition-colors"
+                className="inline-block w-full sm:w-auto px-6 sm:px-8 py-3 sm:py-4 bg-primary-600 text-white rounded-lg sm:rounded-xl hover:bg-primary-700 font-bold text-base sm:text-lg shadow-lg transition-colors"
               >
                 Je trouve mon éducateur
               </Link>
@@ -481,24 +481,24 @@ export default function Home() {
           </div>
 
           {/* Note informative */}
-          <div className="mt-8 text-center">
-            <p className="text-sm text-gray-600 max-w-2xl mx-auto">
-              <span className="font-semibold">ℹ️ Bon à savoir :</span> La plupart de nos éducateurs acceptent le paiement par CESU.
-              N'hésitez pas à les contacter pour échanger sur les modalités adaptées à votre situation.
+          <div className="mt-6 sm:mt-8 text-center px-2">
+            <p className="text-xs sm:text-sm text-gray-600 max-w-2xl mx-auto">
+              <span className="font-semibold">Bon à savoir :</span> La plupart de nos éducateurs acceptent le paiement par CESU.
             </p>
           </div>
 
           {/* CTA Aides financières */}
-          <div className="mt-12 text-center">
+          <div className="mt-8 sm:mt-12 text-center px-2">
             <Link
               href="/familles/aides-financieres"
-              className="inline-flex items-center gap-2 px-8 py-4 bg-primary-600 hover:bg-primary-700 text-white font-semibold rounded-lg shadow-lg transition transform hover:scale-105"
+              className="inline-flex items-center justify-center gap-2 w-full sm:w-auto px-5 sm:px-8 py-3 sm:py-4 bg-primary-600 hover:bg-primary-700 text-white font-semibold rounded-lg shadow-lg transition transform hover:scale-105 text-sm sm:text-base"
             >
-              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <svg className="w-5 h-5 sm:w-6 sm:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
               </svg>
-              Découvrir toutes les aides financières
-              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <span className="hidden sm:inline">Découvrir toutes les aides financières</span>
+              <span className="sm:hidden">Voir les aides financières</span>
+              <svg className="w-4 h-4 sm:w-5 sm:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
               </svg>
             </Link>
@@ -507,91 +507,91 @@ export default function Home() {
       </div>
 
       {/* Pour les familles / Pour les éducateurs */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16 lg:py-20">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 sm:gap-8 lg:gap-12">
           {/* Pour les familles */}
-          <div className="bg-gradient-to-br from-blue-50 to-blue-100 rounded-2xl p-8 lg:p-10 shadow-lg hover:shadow-xl transition-shadow">
-            <div className="flex items-center mb-6">
-              <div className="w-14 h-14 bg-blue-600 rounded-xl flex items-center justify-center mr-4">
-                <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <div className="bg-gradient-to-br from-blue-50 to-blue-100 rounded-xl sm:rounded-2xl p-5 sm:p-6 lg:p-10 shadow-lg hover:shadow-xl transition-shadow">
+            <div className="flex items-center mb-4 sm:mb-6">
+              <div className="w-10 h-10 sm:w-12 sm:h-12 lg:w-14 lg:h-14 bg-blue-600 rounded-lg sm:rounded-xl flex items-center justify-center mr-3 sm:mr-4">
+                <svg className="w-5 h-5 sm:w-6 sm:h-6 lg:w-8 lg:h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
                 </svg>
               </div>
-              <h3 className="text-3xl font-bold text-gray-900">Vous êtes parents ?</h3>
+              <h3 className="text-xl sm:text-2xl lg:text-3xl font-bold text-gray-900">Vous êtes parents ?</h3>
             </div>
-            <ul className="space-y-4 mb-8">
+            <ul className="space-y-3 sm:space-y-4 mb-5 sm:mb-8">
               <li className="flex items-start">
-                <svg className="w-6 h-6 text-green-600 mr-3 flex-shrink-0 mt-1" fill="currentColor" viewBox="0 0 20 20">
+                <svg className="w-5 h-5 sm:w-6 sm:h-6 text-green-600 mr-2 sm:mr-3 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
                   <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
                 </svg>
-                <span className="text-gray-700 text-lg">Trouvez des éducateurs qualifiés près de chez vous</span>
+                <span className="text-sm sm:text-base lg:text-lg text-gray-700">Trouvez des éducateurs qualifiés près de chez vous</span>
               </li>
               <li className="flex items-start">
-                <svg className="w-6 h-6 text-green-600 mr-3 flex-shrink-0 mt-1" fill="currentColor" viewBox="0 0 20 20">
+                <svg className="w-5 h-5 sm:w-6 sm:h-6 text-green-600 mr-2 sm:mr-3 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
                   <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
                 </svg>
-                <span className="text-gray-700 text-lg">Consultez leurs profils, parcours et spécialités</span>
+                <span className="text-sm sm:text-base lg:text-lg text-gray-700">Consultez leurs profils et spécialités</span>
               </li>
               <li className="flex items-start">
-                <svg className="w-6 h-6 text-green-600 mr-3 flex-shrink-0 mt-1" fill="currentColor" viewBox="0 0 20 20">
+                <svg className="w-5 h-5 sm:w-6 sm:h-6 text-green-600 mr-2 sm:mr-3 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
                   <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
                 </svg>
-                <span className="text-gray-700 text-lg">Échangez directement avec eux en toute confiance</span>
+                <span className="text-sm sm:text-base lg:text-lg text-gray-700">Échangez en toute confiance</span>
               </li>
               <li className="flex items-start">
-                <svg className="w-6 h-6 text-green-600 mr-3 flex-shrink-0 mt-1" fill="currentColor" viewBox="0 0 20 20">
+                <svg className="w-5 h-5 sm:w-6 sm:h-6 text-green-600 mr-2 sm:mr-3 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
                   <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
                 </svg>
-                <span className="text-gray-700 text-lg">100% gratuit, sans engagement</span>
+                <span className="text-sm sm:text-base lg:text-lg text-gray-700">100% gratuit, sans engagement</span>
               </li>
             </ul>
             <Link
               href="/search"
-              className="inline-block w-full text-center px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 font-semibold transition-colors shadow-md"
+              className="inline-block w-full text-center px-5 sm:px-6 py-2.5 sm:py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 font-semibold transition-colors shadow-md text-sm sm:text-base"
             >
               Commencer ma recherche
             </Link>
           </div>
 
           {/* Pour les éducateurs */}
-          <div className="bg-gradient-to-br from-primary-50 to-primary-100 rounded-2xl p-8 lg:p-10 shadow-lg hover:shadow-xl transition-shadow">
-            <div className="flex items-center mb-6">
-              <div className="w-14 h-14 bg-primary-600 rounded-xl flex items-center justify-center mr-4">
-                <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <div className="bg-gradient-to-br from-primary-50 to-primary-100 rounded-xl sm:rounded-2xl p-5 sm:p-6 lg:p-10 shadow-lg hover:shadow-xl transition-shadow">
+            <div className="flex items-center mb-4 sm:mb-6">
+              <div className="w-10 h-10 sm:w-12 sm:h-12 lg:w-14 lg:h-14 bg-primary-600 rounded-lg sm:rounded-xl flex items-center justify-center mr-3 sm:mr-4">
+                <svg className="w-5 h-5 sm:w-6 sm:h-6 lg:w-8 lg:h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
                 </svg>
               </div>
-              <h3 className="text-3xl font-bold text-gray-900">Vous êtes éducateur ?</h3>
+              <h3 className="text-xl sm:text-2xl lg:text-3xl font-bold text-gray-900">Vous êtes éducateur ?</h3>
             </div>
-            <ul className="space-y-4 mb-8">
+            <ul className="space-y-3 sm:space-y-4 mb-5 sm:mb-8">
               <li className="flex items-start">
-                <svg className="w-6 h-6 text-green-600 mr-3 flex-shrink-0 mt-1" fill="currentColor" viewBox="0 0 20 20">
+                <svg className="w-5 h-5 sm:w-6 sm:h-6 text-green-600 mr-2 sm:mr-3 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
                   <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
                 </svg>
-                <span className="text-gray-700 text-lg">Valorisez votre expertise et vos diplômes</span>
+                <span className="text-sm sm:text-base lg:text-lg text-gray-700">Valorisez votre expertise et vos diplômes</span>
               </li>
               <li className="flex items-start">
-                <svg className="w-6 h-6 text-green-600 mr-3 flex-shrink-0 mt-1" fill="currentColor" viewBox="0 0 20 20">
+                <svg className="w-5 h-5 sm:w-6 sm:h-6 text-green-600 mr-2 sm:mr-3 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
                   <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
                 </svg>
-                <span className="text-gray-700 text-lg">Développez votre activité à votre rythme</span>
+                <span className="text-sm sm:text-base lg:text-lg text-gray-700">Développez votre activité à votre rythme</span>
               </li>
               <li className="flex items-start">
-                <svg className="w-6 h-6 text-green-600 mr-3 flex-shrink-0 mt-1" fill="currentColor" viewBox="0 0 20 20">
+                <svg className="w-5 h-5 sm:w-6 sm:h-6 text-green-600 mr-2 sm:mr-3 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
                   <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
                 </svg>
-                <span className="text-gray-700 text-lg">Gagnez du temps sur l'administratif</span>
+                <span className="text-sm sm:text-base lg:text-lg text-gray-700">Gagnez du temps sur l'administratif</span>
               </li>
               <li className="flex items-start">
-                <svg className="w-6 h-6 text-green-600 mr-3 flex-shrink-0 mt-1" fill="currentColor" viewBox="0 0 20 20">
+                <svg className="w-5 h-5 sm:w-6 sm:h-6 text-green-600 mr-2 sm:mr-3 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
                   <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
                 </svg>
-                <span className="text-gray-700 text-lg">30 jours d'essai gratuit</span>
+                <span className="text-sm sm:text-base lg:text-lg text-gray-700">30 jours d'essai gratuit</span>
               </li>
             </ul>
             <Link
               href="/pricing"
-              className="inline-block w-full text-center px-6 py-3 bg-primary-600 text-white rounded-lg hover:bg-primary-700 font-semibold transition-colors shadow-md"
+              className="inline-block w-full text-center px-5 sm:px-6 py-2.5 sm:py-3 bg-primary-600 text-white rounded-lg hover:bg-primary-700 font-semibold transition-colors shadow-md text-sm sm:text-base"
             >
               Découvrir les offres
             </Link>
@@ -600,31 +600,30 @@ export default function Home() {
       </div>
 
       {/* Call to Action Final - Plus humain */}
-      <div className="relative overflow-hidden bg-gradient-to-r from-primary-600 via-blue-600 to-purple-600 py-20">
+      <div className="relative overflow-hidden bg-gradient-to-r from-primary-600 via-blue-600 to-purple-600 py-12 sm:py-16 lg:py-20">
         <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGRlZnM+PHBhdHRlcm4gaWQ9ImdyaWQiIHdpZHRoPSI2MCIgaGVpZ2h0PSI2MCIgcGF0dGVyblVuaXRzPSJ1c2VyU3BhY2VPblVzZSI+PHBhdGggZD0iTSAxMCAwIEwgMCAwIDAgMTAiIGZpbGw9Im5vbmUiIHN0cm9rZT0id2hpdGUiIHN0cm9rZS1vcGFjaXR5PSIwLjEiIHN0cm9rZS13aWR0aD0iMSIvPjwvcGF0dGVybj48L2RlZnM+PHJlY3Qgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgZmlsbD0idXJsKCNncmlkKSIvPjwvc3ZnPg==')] opacity-20"></div>
         <div className="relative max-w-4xl mx-auto text-center px-4 sm:px-6 lg:px-8">
-          <h2 className="text-4xl lg:text-5xl font-bold text-white mb-6">
+          <h2 className="text-2xl sm:text-3xl lg:text-4xl xl:text-5xl font-bold text-white mb-4 sm:mb-6">
             Prêt à faire partie de l'aventure ?
           </h2>
-          <p className="text-xl text-blue-100 mb-10 leading-relaxed">
+          <p className="text-sm sm:text-base lg:text-xl text-blue-100 mb-6 sm:mb-8 lg:mb-10 leading-relaxed px-2 sm:px-0">
             Rejoignez une communauté bienveillante qui croit en l'inclusion et en l'accompagnement personnalisé.
-            Ensemble, faisons la différence.
           </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
+          <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center px-2 sm:px-0">
             <Link
               href="/search"
-              className="inline-flex items-center justify-center px-8 py-4 bg-white text-primary-600 rounded-xl hover:bg-gray-50 font-bold text-lg shadow-xl transition-all transform hover:scale-105"
+              className="inline-flex items-center justify-center px-5 sm:px-6 lg:px-8 py-3 sm:py-4 bg-white text-primary-600 rounded-lg sm:rounded-xl hover:bg-gray-50 font-bold text-sm sm:text-base lg:text-lg shadow-xl transition-all transform hover:scale-105"
             >
-              <svg className="w-6 h-6 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <svg className="w-5 h-5 sm:w-6 sm:h-6 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
               </svg>
               Trouver un éducateur
             </Link>
             <Link
               href="/auth/signup"
-              className="inline-flex items-center justify-center px-8 py-4 bg-transparent text-white border-2 border-white rounded-xl hover:bg-white/10 font-bold text-lg shadow-xl transition-all"
+              className="inline-flex items-center justify-center px-5 sm:px-6 lg:px-8 py-3 sm:py-4 bg-transparent text-white border-2 border-white rounded-lg sm:rounded-xl hover:bg-white/10 font-bold text-sm sm:text-base lg:text-lg shadow-xl transition-all"
             >
-              <svg className="w-6 h-6 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <svg className="w-5 h-5 sm:w-6 sm:h-6 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z" />
               </svg>
               Créer mon compte
