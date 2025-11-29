@@ -240,7 +240,7 @@ export default function PricingPage() {
         <div className="text-center mb-8 sm:mb-16">
           <h1 className="text-3xl sm:text-5xl lg:text-6xl font-bold text-gray-900 mb-4 sm:mb-6">
             Développez votre
-            <span className="text-primary-600"> activité professionnelle</span>
+            <span className="bg-gradient-to-r from-violet-600 via-purple-500 to-blue-500 bg-clip-text text-transparent"> activité professionnelle</span>
           </h1>
           <p className="text-base sm:text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed">
             Rejoignez la plateforme de référence pour les professionnels de l'accompagnement des troubles du neurodéveloppement et connectez-vous avec des familles motivées

@@ -109,12 +109,12 @@ export default function AboutPage() {
         <div className="absolute inset-0 bg-gradient-to-br from-primary-600/10 via-blue-500/5 to-purple-600/10"></div>
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 sm:py-24">
           <div className="text-center max-w-4xl mx-auto">
-            <div className="inline-flex items-center justify-center w-20 h-20 bg-primary-600 rounded-full mb-8 shadow-lg">
+            <div className="inline-flex items-center justify-center w-20 h-20 bg-gradient-to-r from-violet-600 to-blue-500 rounded-full mb-8 shadow-lg">
               <svg className="w-10 h-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
               </svg>
             </div>
-            <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold bg-gradient-to-r from-primary-600 to-blue-600 bg-clip-text text-transparent mb-8 leading-tight">
+            <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold bg-gradient-to-r from-violet-600 via-purple-500 to-blue-500 bg-clip-text text-transparent mb-8 leading-tight">
               Qui sommes-nous ?
             </h1>
             <p className="text-xl sm:text-2xl text-gray-700 leading-relaxed mb-6 font-light">
@@ -123,7 +123,7 @@ export default function AboutPage() {
             </p>
             <div className="bg-white/80 backdrop-blur-sm rounded-2xl p-6 sm:p-8 shadow-xl border border-primary-100">
               <p className="text-xl sm:text-2xl text-gray-800 leading-relaxed font-medium">
-                Notre plateforme a été pensée avant tout pour <span className="text-primary-600 font-bold text-2xl sm:text-3xl">aider les institutions et les familles en manque de places</span>,
+                Notre plateforme a été pensée avant tout pour <span className="bg-gradient-to-r from-violet-600 via-purple-500 to-blue-500 bg-clip-text text-transparent font-bold text-2xl sm:text-3xl">aider les institutions et les familles en manque de places</span>,
                 sans solutions ou avec des solutions qui ne correspondent pas à leurs besoins spécifiques.
               </p>
             </div>

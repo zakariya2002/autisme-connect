@@ -101,7 +101,7 @@ export default function Home() {
                   <Link href="/auth/login" className="ml-4 text-gray-700 hover:text-primary-600 px-2 lg:px-4 py-2 rounded-md font-medium transition-colors text-sm lg:text-base">
                     Connexion
                   </Link>
-                  <Link href="/auth/signup" className="bg-primary-600 text-white px-5 py-2.5 rounded-md hover:bg-primary-700 font-medium transition-colors shadow-sm text-sm lg:text-base">
+                  <Link href="/auth/signup" className="bg-gradient-to-r from-violet-600 to-blue-500 hover:from-violet-700 hover:to-blue-600 text-white px-5 py-2.5 rounded-md font-medium transition-all shadow-sm text-sm lg:text-base">
                     Inscription
                   </Link>
                 </>
@@ -132,7 +132,7 @@ export default function Home() {
           <div className="bg-white/95 backdrop-blur-sm rounded-2xl sm:rounded-3xl p-6 sm:p-8 lg:p-10 shadow-2xl border-2 border-gray-100 mb-6 sm:mb-10">
             <h1 className="text-2xl sm:text-4xl lg:text-6xl xl:text-7xl font-bold text-gray-900 mb-4 sm:mb-6 leading-tight">
               Trouvez l'éducateur
-              <span className="text-primary-600 block mt-2 sm:mt-3">qui comprend vos besoins</span>
+              <span className="bg-gradient-to-r from-violet-600 via-purple-500 to-blue-500 bg-clip-text text-transparent block mt-2 sm:mt-3">qui comprend vos besoins</span>
             </h1>
             <p className="text-sm sm:text-lg lg:text-xl xl:text-2xl text-gray-700 leading-relaxed max-w-3xl mx-auto font-medium px-2 sm:px-0">
               Nous comprenons vos défis quotidiens. C'est pourquoi nous vous aidons à trouver
