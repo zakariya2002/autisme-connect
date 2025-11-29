@@ -48,7 +48,7 @@ export default function LoginPage() {
             <span className="text-white font-extrabold text-base">AC</span>
           </div>
         </Link>
-        <h1 className="text-center text-4xl font-bold text-primary-700 mb-2">
+        <h1 className="text-center text-4xl font-bold bg-gradient-to-r from-violet-600 via-purple-500 to-blue-500 bg-clip-text text-transparent mb-2">
           Autisme Connect
         </h1>
         <h2 className="text-center text-3xl font-extrabold text-gray-900 mb-2">
