@@ -1,14 +1,49 @@
 'use client';
 
+import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import Logo from '@/components/Logo';
 import MobileMenu from '@/components/MobileMenu';
 import TndToggle from '@/components/TndToggle';
 import { useTnd } from '@/contexts/TndContext';
+import { supabase } from '@/lib/supabase';
 import HomeTnd from './page-tnd';
 
 export default function Home() {
   const { tndMode } = useTnd();
+  const [user, setUser] = useState<any>(null);
+  const [userType, setUserType] = useState<'educator' | 'family' | null>(null);
+
+  useEffect(() => {
+    checkUser();
+  }, []);
+
+  const checkUser = async () => {
+    const { data: { session } } = await supabase.auth.getSession();
+    if (session?.user) {
+      setUser(session.user);
+
+      // Vérifier si c'est un éducateur
+      const { data: educator } = await supabase
+        .from('educator_profiles')
+        .select('id')
+        .eq('user_id', session.user.id)
+        .single();
+
+      if (educator) {
+        setUserType('educator');
+      } else {
+        // Sinon c'est une famille
+        setUserType('family');
+      }
+    }
+  };
+
+  const getDashboardLink = () => {
+    if (userType === 'educator') return '/dashboard/educator';
+    if (userType === 'family') return '/dashboard/family';
+    return '/auth/login';
+  };
 
   // Si mode TND activé, afficher la version simplifiée
   if (tndMode) {
@@ -27,12 +62,15 @@ export default function Home() {
       {/* Navigation */}
       <nav className="bg-white shadow-sm border-b border-gray-200 sticky top-0 z-50 backdrop-blur-sm bg-white/95">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between h-16 items-center">
+          <div className="flex justify-between h-20 items-center">
             <Logo />
             <div className="md:hidden">
               <MobileMenu />
             </div>
             <div className="hidden md:flex items-center gap-2">
+              <Link href="/" className="text-gray-700 hover:text-primary-600 px-3 lg:px-4 py-2 rounded-md font-medium transition-colors text-sm lg:text-base">
+                Accueil
+              </Link>
               <Link href="/about" className="text-gray-700 hover:text-primary-600 px-3 lg:px-4 py-2 rounded-md font-medium transition-colors text-sm lg:text-base">
                 Qui sommes-nous ?
               </Link>
@@ -51,12 +89,23 @@ export default function Home() {
               <Link href="/contact" className="text-gray-700 hover:text-primary-600 px-2 lg:px-4 py-2 rounded-md font-medium transition-colors text-sm lg:text-base">
                 Contact
               </Link>
-              <Link href="/auth/login" className="text-gray-700 hover:text-primary-600 px-2 lg:px-4 py-2 rounded-md font-medium transition-colors text-sm lg:text-base">
-                Connexion
-              </Link>
-              <Link href="/auth/signup" className="bg-primary-600 text-white px-5 py-2.5 rounded-md hover:bg-primary-700 font-medium transition-colors shadow-sm text-sm lg:text-base">
-                Inscription
-              </Link>
+              {user ? (
+                <Link href={getDashboardLink()} className="ml-4 bg-primary-600 text-white px-5 py-2.5 rounded-md hover:bg-primary-700 font-medium transition-colors shadow-sm text-sm lg:text-base inline-flex items-center gap-2">
+                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z" />
+                  </svg>
+                  Tableau de bord
+                </Link>
+              ) : (
+                <>
+                  <Link href="/auth/login" className="ml-4 text-gray-700 hover:text-primary-600 px-2 lg:px-4 py-2 rounded-md font-medium transition-colors text-sm lg:text-base">
+                    Connexion
+                  </Link>
+                  <Link href="/auth/signup" className="bg-primary-600 text-white px-5 py-2.5 rounded-md hover:bg-primary-700 font-medium transition-colors shadow-sm text-sm lg:text-base">
+                    Inscription
+                  </Link>
+                </>
+              )}
             </div>
           </div>
         </div>

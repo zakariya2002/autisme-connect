@@ -1,14 +1,41 @@
 'use client';
 
+import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import Logo from '@/components/Logo';
 import MobileMenu from '@/components/MobileMenu';
 import TndToggle from '@/components/TndToggle';
 import { useTnd } from '@/contexts/TndContext';
+import { supabase } from '@/lib/supabase';
 import AboutTnd from './page-tnd';
 
 export default function AboutPage() {
   const { tndMode } = useTnd();
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [userType, setUserType] = useState<'educator' | 'family' | null>(null);
+
+  useEffect(() => {
+    checkAuth();
+  }, []);
+
+  const checkAuth = async () => {
+    const { data: { session } } = await supabase.auth.getSession();
+    setIsLoggedIn(!!session);
+
+    if (session) {
+      const { data: educatorProfile } = await supabase
+        .from('educator_profiles')
+        .select('id')
+        .eq('user_id', session.user.id)
+        .single();
+
+      if (educatorProfile) {
+        setUserType('educator');
+      } else {
+        setUserType('family');
+      }
+    }
+  };
 
   if (tndMode) {
     return (
@@ -24,7 +51,7 @@ export default function AboutPage() {
       {/* Navigation */}
       <nav className="bg-white shadow-sm border-b border-gray-200 sticky top-0 z-50 backdrop-blur-sm bg-white/95">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between h-16 items-center">
+          <div className="flex justify-between h-20 items-center">
             <Logo />
             <div className="md:hidden">
               <MobileMenu />
@@ -48,12 +75,30 @@ export default function AboutPage() {
               <Link href="/contact" className="text-gray-700 hover:text-primary-600 px-2 lg:px-4 py-2 rounded-md font-medium transition-colors text-sm lg:text-base">
                 Contact
               </Link>
-              <Link href="/auth/login" className="text-gray-700 hover:text-primary-600 px-2 lg:px-4 py-2 rounded-md font-medium transition-colors text-sm lg:text-base">
-                Connexion
-              </Link>
-              <Link href="/auth/signup" className="bg-primary-600 text-white px-5 py-2.5 rounded-md hover:bg-primary-700 font-medium transition-colors shadow-sm text-sm lg:text-base">
-                Inscription
-              </Link>
+              {isLoggedIn ? (
+                <Link
+                  href={userType === 'educator' ? '/dashboard/educator' : '/dashboard/family'}
+                  className={`ml-4 inline-flex items-center gap-2 text-white px-6 py-2.5 rounded-lg font-semibold transition-all duration-200 shadow-md hover:shadow-lg ${
+                    userType === 'educator'
+                      ? 'bg-gradient-to-r from-primary-500 to-green-500 hover:from-primary-600 hover:to-green-600'
+                      : 'bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700'
+                  }`}
+                >
+                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
+                  </svg>
+                  Tableau de bord
+                </Link>
+              ) : (
+                <>
+                  <Link href="/auth/login" className="ml-4 text-gray-700 hover:text-primary-600 px-2 lg:px-4 py-2 rounded-md font-medium transition-colors text-sm lg:text-base">
+                    Connexion
+                  </Link>
+                  <Link href="/auth/signup" className="bg-primary-600 text-white px-5 py-2.5 rounded-md hover:bg-primary-700 font-medium transition-colors shadow-sm text-sm lg:text-base">
+                    Inscription
+                  </Link>
+                </>
+              )}
             </div>
           </div>
         </div>

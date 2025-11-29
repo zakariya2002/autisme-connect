@@ -3,8 +3,8 @@ import './globals.css'
 import { TndProvider } from '@/contexts/TndContext'
 
 export const metadata: Metadata = {
-  title: 'Autisme Connect - Éducateurs Spécialisés en Autisme TSA',
-  description: 'Trouvez un éducateur spécialisé qualifié en autisme et TSA près de chez vous. Plateforme de mise en relation entre familles et professionnels de l\'accompagnement autisme. Prise de rendez-vous simplifiée.',
+  title: 'Autisme Connect - Trouvez le professionnel adapté au TSA de votre enfant',
+  description: 'Plateforme gratuite pour les familles. Trouvez un éducateur spécialisé diplômé et vérifié près de chez vous. Accompagnement personnalisé autisme et TSA. Prise de rendez-vous en ligne simplifiée.',
   keywords: [
     'éducateur spécialisé',
     'éducateur spécialisé autisme',
@@ -34,8 +34,8 @@ export const metadata: Metadata = {
     canonical: '/',
   },
   openGraph: {
-    title: 'Autisme Connect - Éducateurs Spécialisés en Autisme',
-    description: 'Trouvez un éducateur spécialisé qualifié en autisme et TSA. Mise en relation simplifiée entre familles et professionnels.',
+    title: 'Autisme Connect - Trouvez le professionnel adapté au TSA de votre enfant',
+    description: 'Plateforme gratuite pour les familles. Trouvez un éducateur spécialisé diplômé et vérifié près de chez vous. Accompagnement personnalisé autisme et TSA.',
     url: 'https://www.autismeconnect.fr',
     siteName: 'Autisme Connect',
     locale: 'fr_FR',
@@ -51,8 +51,8 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Autisme Connect - Éducateurs Spécialisés en Autisme',
-    description: 'Trouvez un éducateur spécialisé qualifié en autisme et TSA près de chez vous.',
+    title: 'Autisme Connect - Trouvez le professionnel adapté au TSA de votre enfant',
+    description: 'Plateforme gratuite pour les familles. Trouvez un éducateur spécialisé diplômé et vérifié près de chez vous.',
     images: ['/og-image.png'],
   },
   robots: {
@@ -101,12 +101,53 @@ export default function RootLayout({
     }
   }
 
+  const siteNavigationJsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'SiteNavigationElement',
+    name: 'Navigation principale',
+    hasPart: [
+      {
+        '@type': 'SiteNavigationElement',
+        name: 'Qui sommes-nous ?',
+        description: 'Découvrez l\'équipe et la mission d\'Autisme Connect',
+        url: 'https://www.autismeconnect.fr/about'
+      },
+      {
+        '@type': 'SiteNavigationElement',
+        name: 'Trouver un éducateur',
+        description: 'Recherchez un éducateur spécialisé en autisme près de chez vous',
+        url: 'https://www.autismeconnect.fr/search'
+      },
+      {
+        '@type': 'SiteNavigationElement',
+        name: 'Connexion',
+        description: 'Connectez-vous à votre espace famille ou éducateur',
+        url: 'https://www.autismeconnect.fr/auth/login'
+      },
+      {
+        '@type': 'SiteNavigationElement',
+        name: 'Tarifs',
+        description: 'Découvrez nos offres pour les éducateurs spécialisés',
+        url: 'https://www.autismeconnect.fr/pricing'
+      }
+    ]
+  }
+
   return (
     <html lang="fr">
       <head>
+        <link rel="icon" href="/favicon.ico" sizes="any" />
+        <link rel="icon" href="/icon.svg" type="image/svg+xml" />
+        <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+        <link rel="manifest" href="/manifest.json" />
+        <meta name="theme-color" content="#7c3aed" />
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+        />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(siteNavigationJsonLd) }}
         />
       </head>
       <body className="font-sans antialiased">

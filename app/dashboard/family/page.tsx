@@ -181,22 +181,22 @@ export default function FamilyDashboard() {
         )}
 
         {/* Bandeau de bienvenue */}
-        <div className="mb-8 bg-gradient-to-r from-blue-500 to-purple-600 rounded-2xl p-6 shadow-lg relative overflow-hidden">
+        <div className="mb-8 bg-gradient-to-r from-violet-500 via-purple-500 to-fuchsia-500 rounded-2xl sm:rounded-3xl p-6 sm:p-8 shadow-xl relative overflow-hidden">
           <div className="absolute inset-0 overflow-hidden">
             <div className="absolute -top-24 -right-24 w-64 h-64 bg-white/10 rounded-full blur-3xl"></div>
             <div className="absolute -bottom-24 -left-24 w-64 h-64 bg-white/10 rounded-full blur-3xl"></div>
           </div>
           <div className="flex items-center gap-4 relative z-10">
-            <div className="h-16 w-16 rounded-full bg-white flex items-center justify-center shadow-lg">
-              <span className="text-primary-600 font-bold text-xl">
+            <div className="h-16 w-16 sm:h-20 sm:w-20 rounded-full bg-white/20 backdrop-blur flex items-center justify-center border-4 border-white/30 shadow-lg">
+              <span className="text-white font-bold text-xl sm:text-2xl">
                 {profile?.first_name?.[0]?.toUpperCase()}{profile?.last_name?.[0]?.toUpperCase()}
               </span>
             </div>
             <div>
-              <h1 className="text-2xl font-bold text-white">
+              <h1 className="text-2xl sm:text-3xl font-bold text-white">
                 Bienvenue, {profile?.first_name}
               </h1>
-              <p className="text-blue-100 text-sm">Tableau de bord famille</p>
+              <p className="text-white/80 text-sm sm:text-base mt-1">Tableau de bord famille</p>
             </div>
           </div>
         </div>
