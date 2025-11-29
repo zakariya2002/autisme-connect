@@ -11,13 +11,9 @@ import { Conversation, Message } from '@/types';
 import { canEducatorCreateConversation } from '@/lib/subscription-utils';
 import EducatorMobileMenu from '@/components/EducatorMobileMenu';
 import FamilyMobileMenu from '@/components/FamilyMobileMenu';
-import TndToggle from '@/components/TndToggle';
-import { useTnd } from '@/contexts/TndContext';
-import MessagesTnd from './page-tnd';
 
 export default function MessagesPage() {
   const router = useRouter();
-  const { tndMode } = useTnd();
   const searchParams = useSearchParams();
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
@@ -331,15 +327,6 @@ export default function MessagesPage() {
     );
   }
 
-  if (tndMode) {
-    return (
-      <>
-        <MessagesTnd />
-        <TndToggle />
-      </>
-    );
-  }
-
   return (
     <div className="h-screen bg-gray-50 flex flex-col">
       {/* Navigation */}
@@ -568,7 +555,6 @@ export default function MessagesPage() {
           </div>
         </div>
       </div>
-      <TndToggle />
     </div>
   );
 }
