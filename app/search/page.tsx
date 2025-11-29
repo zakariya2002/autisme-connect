@@ -253,6 +253,9 @@ export default function SearchPage() {
                 </Link>
               ) : (
                 <>
+                  <Link href="/" className="text-gray-700 hover:text-primary-600 px-3 lg:px-4 py-2 rounded-md font-medium transition-colors text-sm lg:text-base">
+                    Accueil
+                  </Link>
                   <Link href="/about" className="text-gray-700 hover:text-primary-600 px-3 lg:px-4 py-2 rounded-md font-medium transition-colors text-sm lg:text-base">
                     Qui sommes-nous ?
                   </Link>

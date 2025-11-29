@@ -146,7 +146,7 @@ export default function PricingPage() {
       price: 0,
       features: [
         'Création de profil',
-        '3 contacts familles/mois',
+        '5 contacts familles/mois',
         'Messagerie de base'
       ]
     },
@@ -159,7 +159,6 @@ export default function PricingPage() {
       features: [
         'Accès illimité aux demandes des familles',
         'Mise en avant de votre profil',
-        'En moyenne, nos éducateurs trouvent 2-3 nouvelles familles/mois',
         'Outils de gestion et facturation automatique',
         'Badge de confiance sur votre profil',
         'Support prioritaire'
@@ -188,6 +187,9 @@ export default function PricingPage() {
               <MobileMenu />
             </div>
             <div className="hidden md:flex items-center gap-2">
+              <Link href="/" className="text-gray-700 hover:text-primary-600 px-3 lg:px-4 py-2 rounded-md font-medium transition-colors text-sm lg:text-base">
+                Accueil
+              </Link>
               <Link href="/about" className="text-gray-700 hover:text-primary-600 px-3 lg:px-4 py-2 rounded-md font-medium transition-colors text-sm lg:text-base">
                 Qui sommes-nous ?
               </Link>
@@ -328,7 +330,7 @@ export default function PricingPage() {
             <button
               onClick={handleStartTrial}
               disabled={loading}
-              className="w-full px-6 py-4 bg-gradient-to-r from-primary-600 to-primary-700 text-white rounded-xl hover:from-primary-700 hover:to-primary-800 font-bold text-lg shadow-xl hover:shadow-2xl transition-all transform hover:-translate-y-1 disabled:opacity-50"
+              className="w-full px-6 py-4 bg-gradient-to-r from-violet-600 to-blue-500 text-white rounded-xl hover:from-violet-700 hover:to-blue-600 font-bold text-lg shadow-xl hover:shadow-2xl transition-all transform hover:-translate-y-1 disabled:opacity-50"
             >
               {loading ? 'Chargement...' : 'S\'abonner maintenant'}
             </button>
@@ -418,7 +420,7 @@ export default function PricingPage() {
               <tbody className="divide-y divide-gray-200">
                 {[
                   { feature: 'Profil visible', free: true, premium: true },
-                  { feature: 'Contacts familles', free: '3/mois', premium: 'Illimité' },
+                  { feature: 'Contacts familles', free: '5/mois', premium: 'Illimité' },
                   { feature: 'Rendez-vous', free: '3/mois', premium: 'Illimité' },
                   { feature: 'Messagerie', free: 'Basique', premium: 'Complète' },
                   { feature: 'Badge de confiance', free: false, premium: true },
