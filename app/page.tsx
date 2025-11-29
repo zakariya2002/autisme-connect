@@ -58,7 +58,7 @@ export default function Home() {
   // Sinon, afficher la version normale
   return (
     <>
-    <div className="min-h-screen bg-gradient-to-l from-primary-100 via-white to-blue-100 md:bg-gradient-to-br md:from-primary-50 md:via-white md:to-blue-50">
+    <div className="min-h-screen bg-gradient-to-br from-primary-50 via-white to-blue-50">
       {/* Navigation */}
       <nav className="bg-white shadow-sm border-b border-gray-200 sticky top-0 z-50 backdrop-blur-sm bg-white/95">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
