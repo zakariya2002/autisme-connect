@@ -116,10 +116,10 @@ export default function SignupChoicePage() {
 
               {/* Titre */}
               <h3 className="text-2xl font-bold text-gray-900 mb-3">
-                Je suis un éducateur
+                Je suis un professionnel
               </h3>
               <p className="text-gray-600 mb-6">
-                spécialisé en autisme
+                spécialisé en autisme / TSA
               </p>
 
               {/* Description */}
@@ -128,13 +128,13 @@ export default function SignupChoicePage() {
                   <svg className="w-5 h-5 text-green-500 mr-2 mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
                     <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
                   </svg>
-                  <span className="text-sm text-gray-600">Créer votre profil professionnel</span>
+                  <span className="text-sm text-gray-600">Éducateur, psychologue, psychomotricien...</span>
                 </div>
                 <div className="flex items-start">
                   <svg className="w-5 h-5 text-green-500 mr-2 mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
                     <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
                   </svg>
-                  <span className="text-sm text-gray-600">Faire vérifier vos certifications</span>
+                  <span className="text-sm text-gray-600">Faire vérifier vos diplômes et certifications</span>
                 </div>
                 <div className="flex items-start">
                   <svg className="w-5 h-5 text-green-500 mr-2 mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
@@ -161,8 +161,8 @@ export default function SignupChoicePage() {
         {/* Message informatif */}
         <div className="mt-12 text-center">
           <p className="text-sm text-gray-500 max-w-2xl mx-auto">
-            En créant un compte, vous acceptez nos conditions d'utilisation et notre politique de confidentialité.
-            Toutes les certifications des éducateurs sont vérifiées par notre équipe.
+            En créant un compte, vous acceptez nos <a href="/cgu" className="text-primary-600 hover:underline">conditions d'utilisation</a> et notre <a href="/politique-confidentialite" className="text-primary-600 hover:underline">politique de confidentialité</a>.
+            Tous les diplômes et certifications des professionnels sont vérifiés par notre équipe.
           </p>
         </div>
       </div>

@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import { supabase } from '@/lib/supabase';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
+import { getProfessionByValue, ProfessionConfig } from '@/lib/professions-config';
 
 type DocumentType = 'diploma' | 'criminal_record' | 'id_card' | 'insurance';
 
@@ -21,6 +22,7 @@ interface EducatorProfile {
   id: string;
   verification_status: string;
   verification_badge: boolean;
+  profession_type?: string;
 }
 
 export default function VerificationPage() {
@@ -28,6 +30,7 @@ export default function VerificationPage() {
   const [loading, setLoading] = useState(true);
   const [uploading, setUploading] = useState<DocumentType | null>(null);
   const [educatorProfile, setEducatorProfile] = useState<EducatorProfile | null>(null);
+  const [professionConfig, setProfessionConfig] = useState<ProfessionConfig | null>(null);
   const [documents, setDocuments] = useState<VerificationDocument[]>([]);
   const [error, setError] = useState('');
   const [successMessage, setSuccessMessage] = useState('');
@@ -47,12 +50,16 @@ export default function VerificationPage() {
       // Récupérer le profil éducateur
       const { data: profile, error: profileError } = await supabase
         .from('educator_profiles')
-        .select('id, verification_status, verification_badge')
+        .select('id, verification_status, verification_badge, profession_type')
         .eq('user_id', session.user.id)
         .single();
 
       if (profileError) throw profileError;
       setEducatorProfile(profile);
+
+      // Charger la configuration de la profession
+      const profConfig = getProfessionByValue(profile.profession_type || 'educator');
+      setProfessionConfig(profConfig || null);
 
       // Récupérer les documents
       const { data: docs, error: docsError } = await supabase
@@ -194,12 +201,16 @@ export default function VerificationPage() {
   };
 
   const getDocumentInfo = (type: DocumentType) => {
+    // Adapter le diplôme selon la profession
+    const diplomaLabel = professionConfig?.label || 'Diplôme d\'État';
+    const diplomaDescription = professionConfig?.diplomaDescription || 'Diplôme professionnel';
+
     const infos = {
       diploma: {
-        label: 'Diplôme d\'État',
-        description: 'DEES, DEME ou équivalent',
+        label: `Diplôme - ${diplomaLabel}`,
+        description: diplomaDescription,
         icon: '🎓',
-        help: 'Diplôme d\'Éducateur Spécialisé (DEES) ou Moniteur Éducateur (DEME)'
+        help: professionConfig?.diplomaDescription || 'Diplôme correspondant à votre profession'
       },
       criminal_record: {
         label: 'Casier judiciaire B3',
@@ -585,7 +596,7 @@ export default function VerificationPage() {
             {[
               { step: 1, label: 'Documents uploadés', status: ['documents_submitted', 'documents_verified', 'interview_scheduled', 'verified'] },
               { step: 2, label: 'Documents vérifiés (24-48h)', status: ['documents_verified', 'interview_scheduled', 'verified'] },
-              { step: 3, label: 'Entretien vidéo planifié', status: ['interview_scheduled', 'verified'] },
+              { step: 3, label: 'Entretien vidéo', status: ['interview_scheduled', 'verified'] },
               { step: 4, label: 'Profil vérifié et visible', status: ['verified'] }
             ].map((item, index, array) => {
               const isComplete = item.status.includes(educatorProfile.verification_status);

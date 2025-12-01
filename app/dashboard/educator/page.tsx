@@ -8,6 +8,7 @@ import { signOut } from '@/lib/auth';
 import Logo from '@/components/Logo';
 import EducatorMobileMenu from '@/components/EducatorMobileMenu';
 import { getEducatorUsageStats, FREE_PLAN_LIMITS } from '@/lib/subscription-utils';
+import { getProfessionByValue } from '@/lib/professions-config';
 
 export default function EducatorDashboard() {
   const router = useRouter();
@@ -194,7 +195,7 @@ export default function EducatorDashboard() {
                   </span>
                 )}
               </div>
-              <p className="text-white/80 mt-1 text-sm sm:text-base">Tableau de bord éducateur</p>
+              <p className="text-white/80 mt-1 text-sm sm:text-base">Tableau de bord {getProfessionByValue(profile?.profession_type)?.label?.toLowerCase() || 'professionnel'}</p>
             </div>
           </div>
         </div>

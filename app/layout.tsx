@@ -1,10 +1,11 @@
 import type { Metadata } from 'next'
 import './globals.css'
 import { TndProvider } from '@/contexts/TndContext'
+import CookieBanner from '@/components/CookieBanner'
 
 export const metadata: Metadata = {
-  title: 'Autisme Connect - Trouvez le professionnel adapté au TSA de votre enfant',
-  description: 'Plateforme gratuite pour les familles. Trouvez un éducateur spécialisé diplômé et vérifié près de chez vous. Accompagnement personnalisé autisme et TSA. Prise de rendez-vous en ligne simplifiée.',
+  title: 'Autisme Connect - Trouvez les professionnels adaptés au TSA de votre enfant',
+  description: 'Plateforme gratuite pour les familles. Trouvez un professionnel diplômé et vérifié près de chez vous. Accompagnement personnalisé autisme et TSA. Prise de rendez-vous en ligne simplifiée.',
   keywords: [
     'éducateur spécialisé',
     'éducateur spécialisé autisme',
@@ -34,8 +35,8 @@ export const metadata: Metadata = {
     canonical: '/',
   },
   openGraph: {
-    title: 'Autisme Connect - Trouvez le professionnel adapté au TSA de votre enfant',
-    description: 'Plateforme gratuite pour les familles. Trouvez un éducateur spécialisé diplômé et vérifié près de chez vous. Accompagnement personnalisé autisme et TSA.',
+    title: 'Autisme Connect - Trouvez les professionnels adaptés au TSA de votre enfant',
+    description: 'Plateforme gratuite pour les familles. Trouvez un professionnel diplômé et vérifié près de chez vous. Accompagnement personnalisé autisme et TSA.',
     url: 'https://www.autismeconnect.fr',
     siteName: 'Autisme Connect',
     locale: 'fr_FR',
@@ -51,8 +52,8 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Autisme Connect - Trouvez le professionnel adapté au TSA de votre enfant',
-    description: 'Plateforme gratuite pour les familles. Trouvez un éducateur spécialisé diplômé et vérifié près de chez vous.',
+    title: 'Autisme Connect - Trouvez les professionnels adaptés au TSA de votre enfant',
+    description: 'Plateforme gratuite pour les familles. Trouvez un professionnel diplômé et vérifié près de chez vous.',
     images: ['/og-image.png'],
   },
   robots: {
@@ -114,7 +115,7 @@ export default function RootLayout({
       },
       {
         '@type': 'SiteNavigationElement',
-        name: 'Trouver un éducateur',
+        name: 'Trouver un professionnel',
         description: 'Recherchez un éducateur spécialisé en autisme près de chez vous',
         url: 'https://www.autismeconnect.fr/search'
       },
@@ -151,10 +152,18 @@ export default function RootLayout({
         />
       </head>
       <body className="font-sans antialiased">
+        {/* Skip link pour accessibilité RGAA */}
+        <a
+          href="#main-content"
+          className="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 focus:z-[100] focus:px-4 focus:py-2 focus:bg-primary-600 focus:text-white focus:rounded-lg focus:font-semibold focus:shadow-lg"
+        >
+          Aller au contenu principal
+        </a>
         <TndProvider>
-          <div className="min-h-screen">
+          <main id="main-content" className="min-h-screen">
             {children}
-          </div>
+          </main>
+          <CookieBanner />
         </TndProvider>
       </body>
     </html>

@@ -57,7 +57,7 @@ export default function SupportPage() {
       questions: [
         {
           question: "Comment rechercher un éducateur spécialisé ?",
-          answer: "Utilisez la page 'Trouver un éducateur' accessible depuis le menu. Vous pouvez filtrer par localisation, certifications, et disponibilités pour trouver le professionnel qui correspond à vos besoins."
+          answer: "Utilisez la page 'Trouver un professionnel' accessible depuis le menu. Vous pouvez filtrer par localisation, certifications, et disponibilités pour trouver le professionnel qui correspond à vos besoins."
         },
         {
           question: "Est-ce que l'utilisation de la plateforme est vraiment gratuite ?",

@@ -560,6 +560,38 @@ export default function RegisterFamilyPage() {
               </div>
             </div>
 
+            {/* Consentement RGPD */}
+            <div className="space-y-3 p-4 bg-gray-50 rounded-lg border border-gray-200">
+              <label className="flex items-start gap-3 cursor-pointer">
+                <input
+                  type="checkbox"
+                  required
+                  className="mt-1 h-4 w-4 text-primary-600 focus:ring-primary-500 border-gray-300 rounded cursor-pointer"
+                />
+                <span className="text-sm text-gray-700">
+                  J'accepte les{' '}
+                  <a href="/cgu" target="_blank" className="text-primary-600 hover:underline font-medium">
+                    conditions générales d'utilisation
+                  </a>{' '}
+                  et la{' '}
+                  <a href="/politique-confidentialite" target="_blank" className="text-primary-600 hover:underline font-medium">
+                    politique de confidentialité
+                  </a>
+                  . <span className="text-red-500">*</span>
+                </span>
+              </label>
+              <label className="flex items-start gap-3 cursor-pointer">
+                <input
+                  type="checkbox"
+                  required
+                  className="mt-1 h-4 w-4 text-primary-600 focus:ring-primary-500 border-gray-300 rounded cursor-pointer"
+                />
+                <span className="text-sm text-gray-700">
+                  Je consens au traitement de mes données personnelles pour la mise en relation avec des professionnels. <span className="text-red-500">*</span>
+                </span>
+              </label>
+            </div>
+
             <button
               type="submit"
               disabled={loading}

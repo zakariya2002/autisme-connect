@@ -8,6 +8,7 @@ import { signOut } from '@/lib/auth';
 import EducatorMobileMenu from '@/components/EducatorMobileMenu';
 import Logo from '@/components/Logo';
 import { ocrService, OCRResult } from '@/lib/ocr-service';
+import { getProfessionByValue, getDiplomaLabel, ProfessionConfig } from '@/lib/professions-config';
 
 type DiplomaStatus = 'pending' | 'verified' | 'rejected';
 
@@ -36,6 +37,7 @@ export default function DiplomePage() {
 
   const [profile, setProfile] = useState<any>(null);
   const [subscription, setSubscription] = useState<any>(null);
+  const [professionConfig, setProfessionConfig] = useState<ProfessionConfig | null>(null);
   const [diplomaFile, setDiplomaFile] = useState<File | null>(null);
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
   const [message, setMessage] = useState<{ type: 'success' | 'error' | 'info'; text: string } | null>(null);
@@ -70,6 +72,10 @@ export default function DiplomePage() {
       }
 
       setProfile(educatorProfile);
+
+      // Charger la configuration de la profession
+      const profConfig = getProfessionByValue(educatorProfile.profession_type || 'educator');
+      setProfessionConfig(profConfig || null);
 
       // Pré-remplir les champs si déjà saisis
       if (educatorProfile.diploma_number) setDiplomaNumber(educatorProfile.diploma_number);
@@ -447,10 +453,21 @@ export default function DiplomePage() {
       {/* Contenu principal */}
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="mb-8">
-          <h1 className="text-4xl font-bold text-gray-900 mb-2">Mon Diplôme ME/ES</h1>
+          <h1 className="text-4xl font-bold text-gray-900 mb-2">
+            Mon Diplôme {professionConfig ? `- ${professionConfig.label}` : ''}
+          </h1>
           <p className="text-gray-600">
-            Votre diplôme sera vérifié automatiquement par la DREETS pour garantir son authenticité.
+            {professionConfig?.verificationMethod === 'dreets'
+              ? 'Votre diplôme sera vérifié automatiquement par la DREETS pour garantir son authenticité.'
+              : professionConfig?.verificationMethod === 'rpps'
+              ? 'Votre diplôme sera vérifié via votre numéro RPPS et par notre équipe.'
+              : 'Votre diplôme sera vérifié manuellement par notre équipe (24-48h).'}
           </p>
+          {professionConfig && (
+            <p className="text-sm text-primary-600 mt-1">
+              Diplôme attendu : {professionConfig.diplomaDescription}
+            </p>
+          )}
         </div>
 
         {/* Message d'information pour les nouveaux comptes */}
@@ -472,19 +489,31 @@ export default function DiplomePage() {
                 <div className="space-y-2 text-sm text-gray-600">
                   <div className="flex items-start">
                     <span className="text-primary-600 font-bold mr-2">1.</span>
-                    <span>Uploadez votre diplôme ME ou ES (format PDF, JPG ou PNG)</span>
+                    <span>Uploadez votre diplôme (format PDF, JPG ou PNG)</span>
                   </div>
                   <div className="flex items-start">
                     <span className="text-primary-600 font-bold mr-2">2.</span>
                     <span>Notre système analyse automatiquement votre diplôme (OCR)</span>
                   </div>
-                  <div className="flex items-start">
-                    <span className="text-primary-600 font-bold mr-2">3.</span>
-                    <span>Un email est envoyé à la DREETS pour vérification officielle</span>
-                  </div>
+                  {professionConfig?.verificationMethod === 'dreets' ? (
+                    <div className="flex items-start">
+                      <span className="text-primary-600 font-bold mr-2">3.</span>
+                      <span>Un email est envoyé à la DREETS pour vérification officielle</span>
+                    </div>
+                  ) : professionConfig?.verificationMethod === 'rpps' ? (
+                    <div className="flex items-start">
+                      <span className="text-primary-600 font-bold mr-2">3.</span>
+                      <span>Vérification croisée avec votre numéro RPPS</span>
+                    </div>
+                  ) : (
+                    <div className="flex items-start">
+                      <span className="text-primary-600 font-bold mr-2">3.</span>
+                      <span>Notre équipe vérifie manuellement votre diplôme</span>
+                    </div>
+                  )}
                   <div className="flex items-start">
                     <span className="text-primary-600 font-bold mr-2">4.</span>
-                    <span>Notre équipe valide votre diplôme (délai: 24-48h)</span>
+                    <span>Validation finale (délai: 24-48h)</span>
                   </div>
                   <div className="flex items-start">
                     <span className="text-green-600 font-bold mr-2">✓</span>
@@ -621,24 +650,27 @@ export default function DiplomePage() {
               />
             </div>
 
-            <div className="md:col-span-2">
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                Région de délivrance <span className="text-red-500">*</span>
-              </label>
-              <select
-                value={region}
-                onChange={(e) => setRegion(e.target.value)}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-primary-500 focus:border-primary-500"
-              >
-                <option value="">Sélectionnez une région</option>
-                {FRENCH_REGIONS.map(r => (
-                  <option key={r} value={r}>{r}</option>
-                ))}
-              </select>
-              <p className="text-xs text-gray-500 mt-1">
-                Cette information permet de contacter la bonne DREETS pour la vérification
-              </p>
-            </div>
+            {/* Région - uniquement pour vérification DREETS */}
+            {professionConfig?.verificationMethod === 'dreets' && (
+              <div className="md:col-span-2">
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Région de délivrance <span className="text-red-500">*</span>
+                </label>
+                <select
+                  value={region}
+                  onChange={(e) => setRegion(e.target.value)}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-primary-500 focus:border-primary-500"
+                >
+                  <option value="">Sélectionnez une région</option>
+                  {FRENCH_REGIONS.map(r => (
+                    <option key={r} value={r}>{r}</option>
+                  ))}
+                </select>
+                <p className="text-xs text-gray-500 mt-1">
+                  Cette information permet de contacter la bonne DREETS pour la vérification
+                </p>
+              </div>
+            )}
           </div>
 
           {/* Analyse OCR */}
@@ -696,9 +728,9 @@ export default function DiplomePage() {
           {/* Bouton d'upload */}
           <button
             onClick={uploadDiploma}
-            disabled={!diplomaFile || uploading || analyzing || !region}
+            disabled={!diplomaFile || uploading || analyzing || (professionConfig?.verificationMethod === 'dreets' && !region)}
             className={`w-full py-3 px-4 rounded-lg font-medium transition ${
-              !diplomaFile || uploading || analyzing || !region
+              !diplomaFile || uploading || analyzing || (professionConfig?.verificationMethod === 'dreets' && !region)
                 ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
                 : 'bg-primary-600 text-white hover:bg-primary-700 shadow-sm hover:shadow'
             }`}
@@ -711,8 +743,10 @@ export default function DiplomePage() {
                 </svg>
                 {sendingToDREETS ? 'Envoi à la DREETS...' : 'Upload en cours...'}
               </span>
-            ) : (
+            ) : professionConfig?.verificationMethod === 'dreets' ? (
               '📤 Envoyer le diplôme et demander la vérification DREETS'
+            ) : (
+              '📤 Envoyer le diplôme pour vérification'
             )}
           </button>
         </div>
@@ -725,14 +759,40 @@ export default function DiplomePage() {
               <span className="mr-2">1️⃣</span>
               <span><strong>Analyse automatique :</strong> Le diplôme est analysé par OCR pour détecter les informations clés</span>
             </li>
-            <li className="flex items-start">
-              <span className="mr-2">2️⃣</span>
-              <span><strong>Envoi à la DREETS :</strong> Une demande officielle est envoyée automatiquement à la DREETS de votre région</span>
-            </li>
-            <li className="flex items-start">
-              <span className="mr-2">3️⃣</span>
-              <span><strong>Vérification officielle :</strong> La DREETS vérifie l'authenticité du diplôme (délai: 5-10 jours ouvrés)</span>
-            </li>
+            {professionConfig?.verificationMethod === 'dreets' ? (
+              <>
+                <li className="flex items-start">
+                  <span className="mr-2">2️⃣</span>
+                  <span><strong>Envoi à la DREETS :</strong> Une demande officielle est envoyée automatiquement à la DREETS de votre région</span>
+                </li>
+                <li className="flex items-start">
+                  <span className="mr-2">3️⃣</span>
+                  <span><strong>Vérification officielle :</strong> La DREETS vérifie l'authenticité du diplôme (délai: 5-10 jours ouvrés)</span>
+                </li>
+              </>
+            ) : professionConfig?.verificationMethod === 'rpps' ? (
+              <>
+                <li className="flex items-start">
+                  <span className="mr-2">2️⃣</span>
+                  <span><strong>Vérification RPPS :</strong> Nous vérifions la cohérence entre votre diplôme et votre numéro RPPS</span>
+                </li>
+                <li className="flex items-start">
+                  <span className="mr-2">3️⃣</span>
+                  <span><strong>Validation manuelle :</strong> Notre équipe valide votre profil (délai: 24-48h)</span>
+                </li>
+              </>
+            ) : (
+              <>
+                <li className="flex items-start">
+                  <span className="mr-2">2️⃣</span>
+                  <span><strong>Vérification manuelle :</strong> Notre équipe examine votre diplôme et vos certifications</span>
+                </li>
+                <li className="flex items-start">
+                  <span className="mr-2">3️⃣</span>
+                  <span><strong>Validation :</strong> Délai de traitement : 24-48h ouvrés</span>
+                </li>
+              </>
+            )}
             <li className="flex items-start">
               <span className="mr-2">4️⃣</span>
               <span><strong>Notification :</strong> Vous recevez un email dès que la vérification est terminée</span>

@@ -23,7 +23,7 @@ export default function HomeNormal() {
                 <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
                 </svg>
-                Trouver un éducateur
+                Trouver un professionnel
               </Link>
               <Link href="/pricing" className="text-gray-700 hover:text-primary-600 px-2 lg:px-4 py-2 rounded-md font-medium transition-colors text-sm lg:text-base inline-flex items-center gap-1.5">
                 <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -65,7 +65,7 @@ export default function HomeNormal() {
           </div>
           <div className="bg-white/95 backdrop-blur-sm rounded-2xl sm:rounded-3xl p-6 sm:p-8 lg:p-10 shadow-2xl border-2 border-gray-100 mb-6 sm:mb-10">
             <h1 className="text-2xl sm:text-4xl lg:text-6xl xl:text-7xl font-bold text-gray-900 mb-4 sm:mb-6 leading-tight">
-              Trouvez l'éducateur spécialisé
+              Trouvez les professionnels
               <span className="text-primary-600 block mt-2 sm:mt-3">qui comprend vos besoins</span>
             </h1>
             <p className="text-sm sm:text-lg lg:text-xl xl:text-2xl text-gray-700 leading-relaxed max-w-3xl mx-auto font-medium px-2 sm:px-0">
@@ -153,7 +153,7 @@ export default function HomeNormal() {
             <div>
               <h3 className="text-white font-bold text-lg mb-4">Liens rapides</h3>
               <ul className="space-y-2">
-                <li><Link href="/search" className="hover:text-white transition-colors">Trouver un éducateur</Link></li>
+                <li><Link href="/search" className="hover:text-white transition-colors">Trouver un professionnel</Link></li>
                 <li><Link href="/about" className="hover:text-white transition-colors">Qui sommes-nous ?</Link></li>
                 <li><Link href="/pricing" className="hover:text-white transition-colors">Tarifs</Link></li>
                 <li><Link href="/auth/signup" className="hover:text-white transition-colors">Inscription</Link></li>

@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { supabase } from '@/lib/supabase';
+import { getProfessionByValue } from '@/lib/professions-config';
 
 interface Educator {
   id: string;
@@ -13,6 +14,7 @@ interface Educator {
   verification_status: string;
   created_at: string;
   documents_count: number;
+  profession_type: string;
 }
 
 export default function AdminVerificationsPage() {
@@ -37,7 +39,8 @@ export default function AdminVerificationsPage() {
           last_name,
           verification_status,
           created_at,
-          user_id
+          user_id,
+          profession_type
         `)
         .order('created_at', { ascending: false });
 
@@ -72,7 +75,8 @@ export default function AdminVerificationsPage() {
           return {
             ...profile,
             email: userData?.user?.email || 'N/A',
-            documents_count: count || 0
+            documents_count: count || 0,
+            profession_type: profile.profession_type || 'educator'
           };
         })
       );
@@ -184,10 +188,10 @@ export default function AdminVerificationsPage() {
               <thead className="bg-gray-50">
                 <tr>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    Éducateur
+                    Professionnel
                   </th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    Email
+                    Profession
                   </th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                     Documents
@@ -196,7 +200,7 @@ export default function AdminVerificationsPage() {
                     Statut
                   </th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    Date soumission
+                    Date
                   </th>
                   <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
                     Actions
@@ -206,19 +210,27 @@ export default function AdminVerificationsPage() {
               <tbody className="bg-white divide-y divide-gray-200">
                 {educators.map((educator) => {
                   const statusInfo = getStatusInfo(educator.verification_status);
+                  const professionConfig = getProfessionByValue(educator.profession_type);
                   return (
                     <tr key={educator.id} className="hover:bg-gray-50">
                       <td className="px-6 py-4 whitespace-nowrap">
                         <div className="text-sm font-medium text-gray-900">
                           {educator.first_name} {educator.last_name}
                         </div>
-                      </td>
-                      <td className="px-6 py-4 whitespace-nowrap">
-                        <div className="text-sm text-gray-500">{educator.email}</div>
+                        <div className="text-xs text-gray-500">{educator.email}</div>
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap">
                         <div className="text-sm text-gray-900">
-                          {educator.documents_count}/4 documents
+                          {professionConfig?.label || 'Non défini'}
+                        </div>
+                        <div className="text-xs text-gray-500">
+                          {professionConfig?.verificationMethod === 'dreets' ? '🏛️ DREETS' :
+                           professionConfig?.verificationMethod === 'rpps' ? '🔬 RPPS' : '👤 Manuel'}
+                        </div>
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap">
+                        <div className="text-sm text-gray-900">
+                          {educator.documents_count}/4
                         </div>
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap">

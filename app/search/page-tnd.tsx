@@ -16,7 +16,7 @@ export default function SearchTnd() {
             🔍
           </div>
           <h1 className="text-2xl sm:text-4xl md:text-5xl font-bold mb-6 sm:mb-12 text-black leading-relaxed">
-            TROUVER UN ÉDUCATEUR
+            TROUVER UN PROFESSIONNEL
           </h1>
           <p className="text-lg sm:text-2xl md:text-3xl text-black mb-6 sm:mb-12 leading-relaxed">
             La recherche complète arrive bientôt en mode simple.

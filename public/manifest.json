@@ -1,7 +1,7 @@
 {
   "name": "Autisme Connect",
   "short_name": "Autisme Connect",
-  "description": "Trouvez le professionnel adapté au TSA de votre enfant",
+  "description": "Trouvez les professionnels adaptés au TSA de votre enfant",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#ffffff",

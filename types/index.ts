@@ -41,6 +41,7 @@ export interface EducatorProfile {
   rating: number;
   total_reviews: number;
   verification_badge?: boolean;
+  profession_type?: string;
   created_at: string;
   updated_at: string;
 }

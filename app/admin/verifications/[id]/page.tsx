@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import { useRouter, useParams } from 'next/navigation';
 import Link from 'next/link';
 import { supabase } from '@/lib/supabase';
+import { getProfessionByValue, ProfessionConfig } from '@/lib/professions-config';
 
 interface Document {
   id: string;
@@ -27,6 +28,9 @@ interface EducatorProfile {
   created_at: string;
   admin_notes: string | null;
   interview_scheduled_date: string | null;
+  profession_type: string | null;
+  rpps_number: string | null;
+  diploma_type: string | null;
 }
 
 
@@ -37,6 +41,7 @@ export default function EducatorVerificationDetailPage() {
 
   const [loading, setLoading] = useState(true);
   const [educator, setEducator] = useState<EducatorProfile | null>(null);
+  const [professionConfig, setProfessionConfig] = useState<ProfessionConfig | null>(null);
   const [documents, setDocuments] = useState<Document[]>([]);
   const [processing, setProcessing] = useState(false);
   const [rejectionReason, setRejectionReason] = useState<{ [key: string]: string }>({});
@@ -73,6 +78,10 @@ export default function EducatorVerificationDetailPage() {
       setAdminNotes(educatorData.admin_notes || '');
       setScheduledDate(educatorData.interview_scheduled_date ? new Date(educatorData.interview_scheduled_date).toISOString().slice(0, 16) : '');
 
+      // Charger la configuration de la profession
+      const profConfig = getProfessionByValue(profile.profession_type || 'educator');
+      setProfessionConfig(profConfig || null);
+
       // Récupérer les documents
       const { data: docs, error: docsError } = await supabase
         .from('verification_documents')
@@ -90,8 +99,13 @@ export default function EducatorVerificationDetailPage() {
   };
 
   const getDocumentInfo = (type: string) => {
+    // Adapter le label du diplôme selon la profession
+    const diplomaLabel = professionConfig
+      ? `Diplôme - ${professionConfig.label}`
+      : 'Diplôme d\'État';
+
     const infos: Record<string, { label: string; icon: string }> = {
-      diploma: { label: 'Diplôme d\'État (DEES/DEME)', icon: '🎓' },
+      diploma: { label: diplomaLabel, icon: '🎓' },
       criminal_record: { label: 'Casier judiciaire B3', icon: '📄' },
       id_card: { label: 'Pièce d\'identité', icon: '🪪' },
       insurance: { label: 'Assurance RC Pro', icon: '🛡️' }
@@ -404,6 +418,35 @@ export default function EducatorVerificationDetailPage() {
                 <p>📧 {educator.email}</p>
                 {educator.phone && <p>📞 {educator.phone}</p>}
                 <p>📅 Inscrit le {new Date(educator.created_at).toLocaleDateString('fr-FR')}</p>
+              </div>
+
+              {/* Informations profession */}
+              <div className="mt-4 p-3 bg-gray-50 rounded-lg">
+                <div className="flex items-center gap-2 mb-2">
+                  <span className="text-lg">👤</span>
+                  <span className="font-semibold text-gray-900">
+                    {professionConfig?.label || 'Profession non définie'}
+                  </span>
+                </div>
+                <div className="text-xs text-gray-600 space-y-1">
+                  <p>
+                    <span className="font-medium">Vérification :</span>{' '}
+                    {professionConfig?.verificationMethod === 'dreets' ? '🏛️ DREETS (automatique)' :
+                     professionConfig?.verificationMethod === 'rpps' ? '🔬 RPPS + Manuel' : '👤 Manuelle'}
+                  </p>
+                  {educator.rpps_number && (
+                    <p>
+                      <span className="font-medium">N° RPPS :</span>{' '}
+                      <span className="font-mono bg-blue-100 px-2 py-0.5 rounded">{educator.rpps_number}</span>
+                    </p>
+                  )}
+                  {professionConfig && (
+                    <p>
+                      <span className="font-medium">Diplôme attendu :</span>{' '}
+                      {professionConfig.diplomaDescription}
+                    </p>
+                  )}
+                </div>
               </div>
             </div>
             <div className="text-right">

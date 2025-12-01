@@ -50,6 +50,9 @@ export async function POST(request: Request) {
           languages: profileData.languages || [],
           siret: profileData.siret || null,
           sap_number: profileData.sap_number || null,
+          profession_type: profileData.profession_type || 'educator',
+          diploma_type: profileData.diploma_type || null,
+          rpps_number: profileData.rpps_number || null,
         })
         .select()
         .single();

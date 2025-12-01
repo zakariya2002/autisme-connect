@@ -66,7 +66,7 @@ export function getFamilyWelcomeEmail(firstName: string): string {
                   <td style="border-radius: 8px; background: linear-gradient(135deg, #48bb78 0%, #38a169 100%);">
                     <a href="https://www.autismeconnect.fr/search"
                        style="display: inline-block; padding: 16px 40px; color: #ffffff; text-decoration: none; font-weight: bold; font-size: 16px;">
-                      Trouver un éducateur
+                      Trouver un professionnel
                     </a>
                   </td>
                 </tr>

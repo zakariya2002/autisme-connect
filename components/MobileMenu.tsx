@@ -98,7 +98,7 @@ export default function MobileMenu() {
             className="p-2 text-white hover:bg-white/20 rounded-full transition-colors"
             aria-label="Fermer le menu"
           >
-            <svg className="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <svg className="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M6 18L18 6M6 6l12 12" />
             </svg>
           </button>
@@ -107,23 +107,6 @@ export default function MobileMenu() {
         {/* Navigation */}
         <nav className="flex-1 px-4 py-6 overflow-y-auto">
           <div className="space-y-2">
-            <Link
-              href="/"
-              onClick={closeMenu}
-              className={`flex items-center gap-3 px-4 py-3 rounded-xl font-medium transition-colors ${
-                pathname === '/' ? 'bg-white text-violet-600' : 'text-white hover:bg-white/20'
-              }`}
-            >
-              <div className={`w-10 h-10 rounded-lg flex items-center justify-center ${
-                pathname === '/' ? 'bg-violet-100' : 'bg-white/20'
-              }`}>
-                <svg className={`w-5 h-5 ${pathname === '/' ? 'text-violet-600' : 'text-white'}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
-                </svg>
-              </div>
-              <span>Accueil</span>
-            </Link>
-
             <Link
               href="/about"
               onClick={closeMenu}
@@ -134,7 +117,7 @@ export default function MobileMenu() {
               <div className={`w-10 h-10 rounded-lg flex items-center justify-center ${
                 pathname === '/about' ? 'bg-violet-100' : 'bg-white/20'
               }`}>
-                <svg className={`w-5 h-5 ${pathname === '/about' ? 'text-violet-600' : 'text-white'}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg className={`w-5 h-5 ${pathname === '/about' ? 'text-violet-600' : 'text-white'}`} fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                 </svg>
               </div>
@@ -151,11 +134,11 @@ export default function MobileMenu() {
               <div className={`w-10 h-10 rounded-lg flex items-center justify-center ${
                 pathname === '/search' ? 'bg-violet-100' : 'bg-white/20'
               }`}>
-                <svg className={`w-5 h-5 ${pathname === '/search' ? 'text-violet-600' : 'text-white'}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg className={`w-5 h-5 ${pathname === '/search' ? 'text-violet-600' : 'text-white'}`} fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
                 </svg>
               </div>
-              <span>Trouver un éducateur</span>
+              <span>Trouver un professionnel</span>
             </Link>
 
             <Link
@@ -168,11 +151,28 @@ export default function MobileMenu() {
               <div className={`w-10 h-10 rounded-lg flex items-center justify-center ${
                 pathname === '/pricing' ? 'bg-violet-100' : 'bg-white/20'
               }`}>
-                <svg className={`w-5 h-5 ${pathname === '/pricing' ? 'text-violet-600' : 'text-white'}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg className={`w-5 h-5 ${pathname === '/pricing' ? 'text-violet-600' : 'text-white'}`} fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                 </svg>
               </div>
               <span>Tarifs</span>
+            </Link>
+
+            <Link
+              href="/familles/aides-financieres"
+              onClick={closeMenu}
+              className={`flex items-center gap-3 px-4 py-3 rounded-xl font-medium transition-colors ${
+                pathname === '/familles/aides-financieres' ? 'bg-white text-violet-600' : 'text-white hover:bg-white/20'
+              }`}
+            >
+              <div className={`w-10 h-10 rounded-lg flex items-center justify-center ${
+                pathname === '/familles/aides-financieres' ? 'bg-violet-100' : 'bg-white/20'
+              }`}>
+                <svg className={`w-5 h-5 ${pathname === '/familles/aides-financieres' ? 'text-violet-600' : 'text-white'}`} fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+                </svg>
+              </div>
+              <span>Aides financières</span>
             </Link>
 
             <Link
@@ -185,7 +185,7 @@ export default function MobileMenu() {
               <div className={`w-10 h-10 rounded-lg flex items-center justify-center ${
                 pathname === '/contact' ? 'bg-violet-100' : 'bg-white/20'
               }`}>
-                <svg className={`w-5 h-5 ${pathname === '/contact' ? 'text-violet-600' : 'text-white'}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg className={`w-5 h-5 ${pathname === '/contact' ? 'text-violet-600' : 'text-white'}`} fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
                 </svg>
               </div>
@@ -204,7 +204,7 @@ export default function MobileMenu() {
                 onClick={closeMenu}
                 className="flex items-center justify-center gap-2 bg-white text-violet-600 px-4 py-3 rounded-xl font-bold hover:bg-white/90 transition-colors"
               >
-                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z" />
                 </svg>
                 <span>Tableau de bord</span>
@@ -217,7 +217,7 @@ export default function MobileMenu() {
                   className="flex items-center gap-3 px-4 py-3 rounded-xl font-medium text-white hover:bg-white/20 transition-colors"
                 >
                   <div className="w-10 h-10 bg-white/20 rounded-lg flex items-center justify-center">
-                    <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1" />
                     </svg>
                   </div>
@@ -229,7 +229,7 @@ export default function MobileMenu() {
                   onClick={closeMenu}
                   className="flex items-center justify-center gap-2 bg-white text-violet-600 px-4 py-3 rounded-xl font-bold hover:bg-white/90 transition-colors"
                 >
-                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z" />
                   </svg>
                   <span>Créer un compte</span>
@@ -258,7 +258,7 @@ export default function MobileMenu() {
         className="md:hidden p-2 text-gray-700 hover:text-primary-600 transition-colors"
         aria-label="Ouvrir le menu"
       >
-        <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
         </svg>
       </button>
