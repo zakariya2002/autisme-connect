@@ -219,7 +219,7 @@ export default function RegisterFamilyPage() {
             Autisme Connect
           </Link>
           <h2 className="mt-4 text-2xl font-extrabold text-gray-900">
-            Inscription Famille
+            Inscription Aidant
           </h2>
           <p className="mt-2 text-sm text-gray-600">
             Ou{' '}
@@ -252,7 +252,7 @@ export default function RegisterFamilyPage() {
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
                 </svg>
                 <span className="text-sm font-medium text-gray-900">
-                  Compte Famille / Personne avec TSA
+                  Compte Aidant / Personne avec TND
                 </span>
               </div>
             </div>
@@ -394,7 +394,7 @@ export default function RegisterFamilyPage() {
 
             {/* Séparateur */}
             <div className="border-t border-gray-200 pt-6">
-              <h3 className="text-lg font-medium text-gray-900 mb-4">Votre profil famille</h3>
+              <h3 className="text-lg font-medium text-gray-900 mb-4">Votre profil aidant</h3>
             </div>
 
             <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
@@ -474,13 +474,13 @@ export default function RegisterFamilyPage() {
               >
                 <option value="parent">Parent</option>
                 <option value="guardian">Tuteur</option>
-                <option value="self">Personne avec TSA</option>
+                <option value="self">Personne avec TND</option>
                 <option value="other">Autre</option>
               </select>
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700">Âge de la personne avec TSA</label>
+              <label className="block text-sm font-medium text-gray-700">Âge de la personne avec TND</label>
               <input
                 type="number"
                 min="0"
@@ -491,18 +491,6 @@ export default function RegisterFamilyPage() {
               />
             </div>
 
-            <div>
-              <label className="block text-sm font-medium text-gray-700">Niveau de soutien requis *</label>
-              <select
-                value={familyData.support_level_needed}
-                onChange={(e) => setFamilyData({ ...familyData, support_level_needed: e.target.value })}
-                className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:ring-primary-500 focus:border-primary-500"
-              >
-                <option value="level_1">Niveau 1 - Nécessite un soutien</option>
-                <option value="level_2">Niveau 2 - Nécessite un soutien important</option>
-                <option value="level_3">Niveau 3 - Nécessite un soutien très important</option>
-              </select>
-            </div>
 
             <div>
               <label className="block text-sm font-medium text-gray-700">Besoins spécifiques (séparés par des virgules)</label>
@@ -515,25 +503,6 @@ export default function RegisterFamilyPage() {
               />
             </div>
 
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">Certifications préférées (optionnel)</label>
-              <div className="space-y-2">
-                {['ABA', 'TEACCH', 'PECS', 'DEES', 'DEME'].map((cert) => (
-                  <div key={cert} className="flex items-center">
-                    <input
-                      id={`cert-${cert}`}
-                      type="checkbox"
-                      checked={familyData.preferred_certifications.includes(cert)}
-                      onChange={() => handleCertificationToggle(cert)}
-                      className="focus:ring-primary-500 h-4 w-4 text-primary-600 border-gray-300 rounded"
-                    />
-                    <label htmlFor={`cert-${cert}`} className="ml-2 block text-sm text-gray-700">
-                      {cert}
-                    </label>
-                  </div>
-                ))}
-              </div>
-            </div>
 
             <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
               <div>

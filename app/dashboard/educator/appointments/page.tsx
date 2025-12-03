@@ -126,13 +126,16 @@ export default function EducatorAppointmentsPage() {
   const [profile, setProfile] = useState<any>(null);
   const [subscription, setSubscription] = useState<any>(null);
   const [appointments, setAppointments] = useState<Appointment[]>([]);
-  const [filter, setFilter] = useState<'all' | 'pending' | 'accepted' | 'completed'>('all');
+  const [activeFilter, setActiveFilter] = useState<'all' | 'pending' | 'in_progress' | 'upcoming' | 'completed' | null>(null);
 
   // Modal states
   const [selectedAppointment, setSelectedAppointment] = useState<Appointment | null>(null);
   const [showRejectModal, setShowRejectModal] = useState(false);
   const [showNotesModal, setShowNotesModal] = useState(false);
   const [showPinModal, setShowPinModal] = useState(false);
+  const [showDossierModal, setShowDossierModal] = useState(false);
+  const [childDossier, setChildDossier] = useState<any>(null);
+  const [dossierLoading, setDossierLoading] = useState(false);
   const [pinModalMode, setPinModalMode] = useState<'start' | 'complete'>('start');
   const [rejectionReason, setRejectionReason] = useState('');
   const [educatorNotes, setEducatorNotes] = useState('');
@@ -146,7 +149,7 @@ export default function EducatorAppointmentsPage() {
     if (educatorId) {
       fetchAppointments();
     }
-  }, [educatorId, filter]);
+  }, [educatorId]);
 
   const fetchEducatorProfile = async () => {
     try {
@@ -209,11 +212,6 @@ export default function EducatorAppointmentsPage() {
         .eq('educator_id', educatorId)
         .order('appointment_date', { ascending: true })
         .order('start_time', { ascending: true });
-
-      // Appliquer le filtre
-      if (filter !== 'all') {
-        query = query.eq('status', filter);
-      }
 
       const { data, error } = await query;
 
@@ -386,6 +384,53 @@ export default function EducatorAppointmentsPage() {
     }
   };
 
+  const handleViewDossier = async (childId: string) => {
+    setDossierLoading(true);
+    setShowDossierModal(true);
+    try {
+      // Récupérer le profil complet de l'enfant
+      const { data: childData, error: childError } = await supabase
+        .from('child_profiles')
+        .select('*')
+        .eq('id', childId)
+        .single();
+
+      if (childError) throw childError;
+
+      // Récupérer les préférences
+      const { data: preferences } = await supabase
+        .from('child_preferences')
+        .select('*')
+        .eq('child_id', childId);
+
+      // Récupérer les compétences
+      const { data: skills } = await supabase
+        .from('child_skills')
+        .select('*')
+        .eq('child_id', childId);
+
+      // Récupérer les objectifs en cours
+      const { data: goals } = await supabase
+        .from('child_educational_goals')
+        .select('*')
+        .eq('child_id', childId)
+        .eq('status', 'en_cours');
+
+      setChildDossier({
+        ...childData,
+        preferences: preferences || [],
+        skills: skills || [],
+        goals: goals || [],
+      });
+    } catch (error) {
+      console.error('Erreur chargement dossier:', error);
+      alert('Erreur lors du chargement du dossier');
+      setShowDossierModal(false);
+    } finally {
+      setDossierLoading(false);
+    }
+  };
+
   const handleSaveNotes = async () => {
     if (!selectedAppointment) return;
 
@@ -479,23 +524,266 @@ export default function EducatorAppointmentsPage() {
 
   const isPremium = subscription && ['active', 'trialing'].includes(subscription.status);
 
+  // Grouper les rendez-vous par catégorie
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+
+  const pendingAppointments = appointments.filter(a => a.status === 'pending');
+  const inProgressAppointments = appointments.filter(a => a.status === 'accepted' && a.started_at);
+  const upcomingAppointments = appointments.filter(a => {
+    const date = new Date(a.appointment_date);
+    return a.status === 'accepted' && !a.started_at && date >= today;
+  });
+  const completedAppointments = appointments.filter(a => a.status === 'completed');
+  const cancelledAppointments = appointments.filter(a => a.status === 'cancelled' || a.status === 'rejected');
+
+  // Fonction pour sélectionner un filtre (un seul à la fois)
+  const selectFilter = (filter: 'all' | 'pending' | 'in_progress' | 'upcoming' | 'completed') => {
+    setActiveFilter(prev => prev === filter ? null : filter);
+  };
+
+  const formatDate = (dateStr: string) => {
+    const date = new Date(dateStr + 'T00:00:00');
+    const now = new Date();
+    const tomorrow = new Date(now);
+    tomorrow.setDate(tomorrow.getDate() + 1);
+
+    if (date.toDateString() === now.toDateString()) {
+      return "Aujourd'hui";
+    } else if (date.toDateString() === tomorrow.toDateString()) {
+      return 'Demain';
+    }
+    return date.toLocaleDateString('fr-FR', {
+      weekday: 'short',
+      day: 'numeric',
+      month: 'short'
+    });
+  };
+
+  // Composant carte de rendez-vous compact
+  const AppointmentCard = ({ appointment }: { appointment: Appointment }) => {
+    const isPast = isPastAppointment(appointment.appointment_date, appointment.end_time);
+
+    return (
+      <div className={`bg-white rounded-xl border ${isPast && appointment.status !== 'completed' ? 'border-gray-200 opacity-70' : 'border-gray-100'} shadow-sm hover:shadow-md transition-all`}>
+        {/* En-tête compact */}
+        <div className="p-4 border-b border-gray-100">
+          <div className="flex items-center justify-between mb-2">
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-10 rounded-full bg-gradient-to-br from-primary-400 to-primary-600 flex items-center justify-center">
+                <span className="text-sm font-bold text-white">
+                  {appointment.family_first_name?.[0]}{appointment.family_last_name?.[0]}
+                </span>
+              </div>
+              <div>
+                <h3 className="font-semibold text-gray-900">
+                  {appointment.family_first_name} {appointment.family_last_name}
+                </h3>
+                {appointment.child_first_name && (
+                  <p className="text-xs text-purple-600 font-medium">
+                    Enfant : {appointment.child_first_name}
+                  </p>
+                )}
+              </div>
+            </div>
+            <span className={`px-2 py-1 rounded-full text-xs font-medium ${getStatusColor(appointment.status)}`}>
+              {getStatusLabel(appointment.status)}
+            </span>
+          </div>
+
+          {/* Date et heure */}
+          <div className="flex flex-wrap items-center gap-3 text-sm text-gray-600">
+            <span className="flex items-center gap-1.5">
+              <svg className="h-4 w-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+              </svg>
+              <span className="font-medium">{formatDate(appointment.appointment_date)}</span>
+            </span>
+            <span className="flex items-center gap-1.5">
+              <svg className="h-4 w-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+              {appointment.start_time.substring(0, 5)} - {appointment.end_time.substring(0, 5)}
+            </span>
+            <span className="flex items-center gap-1.5 text-gray-500">
+              {getLocationTypeIcon(appointment.location_type)}
+              <span className="text-xs">{getLocationTypeLabel(appointment.location_type)}</span>
+            </span>
+          </div>
+        </div>
+
+        {/* Détails additionnels si présents */}
+        {(appointment.address || appointment.family_notes || appointment.child_accompaniment_goals) && (
+          <div className="px-4 py-3 space-y-2 bg-gray-50/50">
+            {appointment.address && (
+              <p className="text-sm text-gray-600 flex items-center gap-2">
+                <svg className="h-4 w-4 text-gray-400 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                </svg>
+                <span className="truncate">{appointment.address}</span>
+              </p>
+            )}
+            {appointment.family_notes && (
+              <p className="text-sm text-gray-600 italic bg-blue-50 rounded p-2 line-clamp-2">
+                "{appointment.family_notes}"
+              </p>
+            )}
+          </div>
+        )}
+
+        {/* Actions */}
+        <div className="p-3 border-t border-gray-100 flex flex-wrap gap-2">
+          {appointment.status === 'pending' && (
+            <>
+              {appointment.child_id && (
+                <button
+                  onClick={() => handleViewDossier(appointment.child_id!)}
+                  disabled={dossierLoading}
+                  className="flex-1 px-3 py-2 bg-purple-100 text-purple-700 rounded-lg hover:bg-purple-200 text-sm font-medium transition flex items-center justify-center gap-1"
+                >
+                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                  </svg>
+                  Dossier
+                </button>
+              )}
+              <button
+                onClick={() => handleAccept(appointment.id)}
+                disabled={actionLoading}
+                className="flex-1 px-3 py-2 bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 text-sm font-medium transition flex items-center justify-center gap-1"
+              >
+                <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                </svg>
+                Accepter
+              </button>
+              <button
+                onClick={() => {
+                  setSelectedAppointment(appointment);
+                  setShowRejectModal(true);
+                }}
+                disabled={actionLoading}
+                className="flex-1 px-3 py-2 bg-red-100 text-red-700 rounded-lg hover:bg-red-200 text-sm font-medium transition flex items-center justify-center gap-1"
+              >
+                <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                </svg>
+                Refuser
+              </button>
+            </>
+          )}
+
+          {appointment.status === 'accepted' && !isPast && (
+            <>
+              {!appointment.started_at ? (
+                <button
+                  onClick={() => handleStartSession(appointment.id)}
+                  disabled={actionLoading}
+                  className="flex-1 px-3 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 text-sm font-medium transition flex items-center justify-center gap-2"
+                >
+                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+                  </svg>
+                  Démarrer (PIN)
+                </button>
+              ) : (
+                <SessionCountdown
+                  sessionStart={appointment.started_at}
+                  scheduledDuration={(() => {
+                    const [startHour, startMinute] = appointment.start_time.split(':');
+                    const [endHour, endMinute] = appointment.end_time.split(':');
+                    const start = parseInt(startHour) * 60 + parseInt(startMinute);
+                    const end = parseInt(endHour) * 60 + parseInt(endMinute);
+                    return (end - start) * 60 * 1000;
+                  })()}
+                  onTimeUp={() => {}}
+                  canComplete={(() => {
+                    const sessionStart = new Date(appointment.started_at!);
+                    const [startHour, startMinute] = appointment.start_time.split(':');
+                    const [endHour, endMinute] = appointment.end_time.split(':');
+                    const appointmentDate = new Date(appointment.appointment_date);
+                    const scheduledStart = new Date(appointmentDate);
+                    scheduledStart.setHours(parseInt(startHour), parseInt(startMinute), 0);
+                    const scheduledEnd = new Date(appointmentDate);
+                    scheduledEnd.setHours(parseInt(endHour), parseInt(endMinute), 0);
+                    const sessionDuration = scheduledEnd.getTime() - scheduledStart.getTime();
+                    const minimumEndTime = new Date(sessionStart.getTime() + sessionDuration);
+                    return Date.now() >= minimumEndTime.getTime();
+                  })()}
+                  onComplete={() => handleComplete(appointment.id)}
+                  actionLoading={actionLoading}
+                />
+              )}
+              <button
+                onClick={() => handleCancel(appointment.id)}
+                disabled={actionLoading}
+                className="px-3 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 text-sm font-medium transition"
+              >
+                Annuler
+              </button>
+            </>
+          )}
+
+          {(appointment.status === 'accepted' || appointment.status === 'completed') && (
+            <button
+              onClick={() => {
+                setSelectedAppointment(appointment);
+                setEducatorNotes(appointment.educator_notes || '');
+                setShowNotesModal(true);
+              }}
+              disabled={actionLoading}
+              className="px-3 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 text-sm font-medium transition flex items-center gap-1"
+            >
+              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+              </svg>
+              Notes
+            </button>
+          )}
+
+          {appointment.child_id && appointment.status !== 'pending' && (
+            <button
+              onClick={() => handleViewDossier(appointment.child_id!)}
+              disabled={dossierLoading}
+              className="px-3 py-2 bg-purple-100 text-purple-700 rounded-lg hover:bg-purple-200 text-sm font-medium transition flex items-center gap-1"
+            >
+              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+              </svg>
+              Dossier
+            </button>
+          )}
+        </div>
+      </div>
+    );
+  };
+
+  const SectionHeader = ({ title, count, icon, color }: { title: string; count: number; icon: React.ReactNode; color: string }) => (
+    <div className="flex items-center gap-3 mb-4">
+      <div className={`w-10 h-10 ${color} rounded-xl flex items-center justify-center`}>
+        {icon}
+      </div>
+      <div>
+        <h2 className="text-lg font-semibold text-gray-900">{title}</h2>
+        <p className="text-sm text-gray-500">{count} rendez-vous</p>
+      </div>
+    </div>
+  );
+
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Navigation */}
-      <nav className="bg-white shadow-sm">
+      <nav className="bg-white shadow-sm sticky top-0 z-40">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between h-16 items-center">
             <div className="flex items-center gap-3">
-              {/* Menu mobile (hamburger) */}
               <div className="md:hidden">
                 <EducatorMobileMenu profile={profile} isPremium={isPremium} onLogout={handleLogout} />
               </div>
-              {/* Logo */}
               <div className="hidden md:block">
                 <Logo />
               </div>
             </div>
-            {/* Menu desktop - caché sur mobile */}
             <div className="hidden md:flex items-center space-x-4">
               <Link
                 href="/dashboard/educator"
@@ -514,332 +802,206 @@ export default function EducatorAppointmentsPage() {
         </div>
       </nav>
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <div className="mb-8">
-          <h1 className="text-3xl font-bold text-gray-900">Mes rendez-vous</h1>
-          <p className="text-gray-600 mt-2">Gérez vos demandes et rendez-vous avec les familles</p>
+      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+        {/* En-tête */}
+        <div className="mb-6">
+          <h1 className="text-2xl font-bold text-gray-900">Mes rendez-vous</h1>
+          <p className="text-gray-500 text-sm mt-1">Gérez vos demandes et séances</p>
         </div>
 
-        {/* Filtres */}
-        <div className="bg-white rounded-lg shadow p-4 mb-6">
-          <div className="flex flex-wrap gap-2">
-            <button
-              onClick={() => setFilter('all')}
-              className={`px-4 py-2 rounded-md font-medium transition ${
-                filter === 'all'
-                  ? 'bg-primary-600 text-white'
-                  : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-              }`}
-            >
-              Tous
-            </button>
-            <button
-              onClick={() => setFilter('pending')}
-              className={`px-4 py-2 rounded-md font-medium transition ${
-                filter === 'pending'
-                  ? 'bg-primary-600 text-white'
-                  : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-              }`}
-            >
-              En attente
-            </button>
-            <button
-              onClick={() => setFilter('accepted')}
-              className={`px-4 py-2 rounded-md font-medium transition ${
-                filter === 'accepted'
-                  ? 'bg-primary-600 text-white'
-                  : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-              }`}
-            >
-              Acceptés
-            </button>
-            <button
-              onClick={() => setFilter('completed')}
-              className={`px-4 py-2 rounded-md font-medium transition ${
-                filter === 'completed'
-                  ? 'bg-primary-600 text-white'
-                  : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-              }`}
-            >
-              Terminés
-            </button>
-          </div>
+        {/* Résumé rapide - cliquable pour filtrer */}
+        <div className="grid grid-cols-5 gap-2 mb-8">
+          <button
+            onClick={() => appointments.length > 0 && selectFilter('all')}
+            disabled={appointments.length === 0}
+            className={`rounded-xl p-3 text-center transition-all ${
+              appointments.length === 0
+                ? 'bg-gray-100 opacity-60 cursor-not-allowed'
+                : activeFilter === 'all'
+                  ? 'bg-gray-300 ring-2 ring-gray-500'
+                  : 'bg-gray-100 hover:bg-gray-200 cursor-pointer'
+            }`}
+          >
+            <p className="text-2xl font-bold text-gray-600">{appointments.length}</p>
+            <p className="text-xs text-gray-700 mt-0.5">Tous</p>
+          </button>
+          <button
+            onClick={() => pendingAppointments.length > 0 && selectFilter('pending')}
+            disabled={pendingAppointments.length === 0}
+            className={`rounded-xl p-3 text-center transition-all ${
+              pendingAppointments.length === 0
+                ? 'bg-amber-50 opacity-60 cursor-not-allowed'
+                : activeFilter === 'pending'
+                  ? 'bg-amber-200 ring-2 ring-amber-400'
+                  : 'bg-amber-50 hover:bg-amber-100 cursor-pointer'
+            }`}
+          >
+            <p className="text-2xl font-bold text-amber-600">{pendingAppointments.length}</p>
+            <p className="text-xs text-amber-700 mt-0.5">En attente</p>
+          </button>
+          <button
+            onClick={() => inProgressAppointments.length > 0 && selectFilter('in_progress')}
+            disabled={inProgressAppointments.length === 0}
+            className={`rounded-xl p-3 text-center transition-all ${
+              inProgressAppointments.length === 0
+                ? 'bg-indigo-50 opacity-60 cursor-not-allowed'
+                : activeFilter === 'in_progress'
+                  ? 'bg-indigo-200 ring-2 ring-indigo-400'
+                  : 'bg-indigo-50 hover:bg-indigo-100 cursor-pointer'
+            }`}
+          >
+            <p className="text-2xl font-bold text-indigo-600">{inProgressAppointments.length}</p>
+            <p className="text-xs text-indigo-700 mt-0.5">En cours</p>
+          </button>
+          <button
+            onClick={() => upcomingAppointments.length > 0 && selectFilter('upcoming')}
+            disabled={upcomingAppointments.length === 0}
+            className={`rounded-xl p-3 text-center transition-all ${
+              upcomingAppointments.length === 0
+                ? 'bg-emerald-50 opacity-60 cursor-not-allowed'
+                : activeFilter === 'upcoming'
+                  ? 'bg-emerald-200 ring-2 ring-emerald-400'
+                  : 'bg-emerald-50 hover:bg-emerald-100 cursor-pointer'
+            }`}
+          >
+            <p className="text-2xl font-bold text-emerald-600">{upcomingAppointments.length}</p>
+            <p className="text-xs text-emerald-700 mt-0.5">À venir</p>
+          </button>
+          <button
+            onClick={() => completedAppointments.length > 0 && selectFilter('completed')}
+            disabled={completedAppointments.length === 0}
+            className={`rounded-xl p-3 text-center transition-all ${
+              completedAppointments.length === 0
+                ? 'bg-blue-50 opacity-60 cursor-not-allowed'
+                : activeFilter === 'completed'
+                  ? 'bg-blue-200 ring-2 ring-blue-400'
+                  : 'bg-blue-50 hover:bg-blue-100 cursor-pointer'
+            }`}
+          >
+            <p className="text-2xl font-bold text-blue-600">{completedAppointments.length}</p>
+            <p className="text-xs text-blue-700 mt-0.5">Terminés</p>
+          </button>
         </div>
 
-        {/* Liste des rendez-vous */}
         {loading ? (
           <div className="text-center py-12">
-            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary-600 mx-auto"></div>
-            <p className="mt-4 text-gray-600">Chargement...</p>
+            <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-primary-600 mx-auto"></div>
+            <p className="text-gray-500 mt-4 text-sm">Chargement...</p>
           </div>
         ) : appointments.length === 0 ? (
-          <div className="bg-white rounded-lg shadow p-12 text-center">
-            <svg className="w-20 h-20 text-gray-400 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-            </svg>
-            <h3 className="text-xl font-bold text-gray-900 mb-2">Aucun rendez-vous</h3>
-            <p className="text-gray-600">
-              {filter === 'all'
-                ? "Vous n'avez aucun rendez-vous pour le moment."
-                : `Vous n'avez aucun rendez-vous ${getStatusLabel(filter).toLowerCase()}.`
-              }
-            </p>
+          <div className="text-center py-12 bg-white rounded-2xl border border-gray-100">
+            <div className="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
+              <svg className="h-8 w-8 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+              </svg>
+            </div>
+            <h3 className="text-lg font-medium text-gray-900">Aucun rendez-vous</h3>
+            <p className="text-gray-500 mt-2 text-sm">Vous n'avez pas encore de demandes de rendez-vous.</p>
           </div>
         ) : (
-          <div className="space-y-4">
-            {appointments.map((appointment) => {
-              const isPast = isPastAppointment(appointment.appointment_date, appointment.end_time);
-
-              return (
-                <div key={appointment.id} className="bg-white rounded-lg shadow-md p-6 hover:shadow-lg transition">
-                  <div className="flex justify-between items-start mb-4">
-                    <div>
-                      <div className="flex items-center gap-3 mb-2">
-                        <h3 className="text-xl font-bold text-gray-900">
-                          {appointment.family_first_name} {appointment.family_last_name}
-                        </h3>
-                        <span className={`px-3 py-1 rounded-full text-xs font-semibold border ${getStatusColor(appointment.status)}`}>
-                          {getStatusLabel(appointment.status)}
-                        </span>
-                      </div>
-                      <div className="flex items-center text-gray-600 gap-4 text-sm">
-                        <div className="flex items-center">
-                          <svg className="w-5 h-5 mr-2 text-primary-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                          </svg>
-                          <span className="font-medium">
-                            {new Date(appointment.appointment_date + 'T00:00:00').toLocaleDateString('fr-FR', {
-                              weekday: 'long',
-                              year: 'numeric',
-                              month: 'long',
-                              day: 'numeric'
-                            })}
-                          </span>
-                        </div>
-                        <div className="flex items-center">
-                          <svg className="w-5 h-5 mr-2 text-primary-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-                          </svg>
-                          <span className="font-medium">
-                            {appointment.start_time.substring(0, 5)} - {appointment.end_time.substring(0, 5)}
-                          </span>
-                        </div>
-                      </div>
-                    </div>
-                    {isPast && appointment.status === 'accepted' && (
-                      <span className="px-3 py-1 bg-orange-100 text-orange-700 rounded-full text-xs font-semibold border border-orange-300">
-                        Passé
-                      </span>
-                    )}
-                  </div>
-
-                  {/* Détails */}
-                  <div className="space-y-3 mb-4">
-                    <div className="flex items-center text-gray-700">
-                      {getLocationTypeIcon(appointment.location_type)}
-                      <span className="ml-2 font-medium">{getLocationTypeLabel(appointment.location_type)}</span>
-                    </div>
-
-                    {appointment.address && (
-                      <div className="flex items-start text-gray-700">
-                        <svg className="w-5 h-5 mr-2 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
-                        </svg>
-                        <span>{appointment.address}</span>
-                      </div>
-                    )}
-
-                    {appointment.family_phone && (
-                      <div className="flex items-center text-gray-700">
-                        <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
-                        </svg>
-                        <a href={`tel:${appointment.family_phone}`} className="hover:text-primary-600">
-                          {appointment.family_phone}
-                        </a>
-                      </div>
-                    )}
-
-                    {/* Informations de l'enfant */}
-                    {appointment.child_first_name && (
-                      <div className="p-3 bg-purple-50 rounded-lg border border-purple-200">
-                        <p className="text-sm font-semibold text-purple-900 mb-2 flex items-center gap-2">
-                          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-                          </svg>
-                          Enfant concerné : {appointment.child_first_name}
-                        </p>
-                        <div className="flex flex-wrap gap-2 mb-2">
-                          {appointment.child_age && (
-                            <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-purple-100 text-purple-700">
-                              {appointment.child_age} ans
-                            </span>
-                          )}
-                          {appointment.child_support_level && (
-                            <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-blue-100 text-blue-700">
-                              {appointment.child_support_level === 'level_1' ? 'Niveau 1' :
-                               appointment.child_support_level === 'level_2' ? 'Niveau 2' : 'Niveau 3'}
-                            </span>
-                          )}
-                        </div>
-                        {appointment.child_accompaniment_types && appointment.child_accompaniment_types.length > 0 && (
-                          <div className="mb-2">
-                            <p className="text-xs text-purple-700 mb-1">Types d'accompagnement recherchés :</p>
-                            <div className="flex flex-wrap gap-1">
-                              {appointment.child_accompaniment_types.map((type: string) => (
-                                <span key={type} className="inline-flex items-center px-2 py-0.5 rounded text-xs bg-white text-purple-600 border border-purple-200">
-                                  {type === 'scolaire' ? 'Soutien scolaire' :
-                                   type === 'comportemental' ? 'Gestion du comportement' :
-                                   type === 'socialisation' ? 'Socialisation' :
-                                   type === 'autonomie' ? 'Autonomie' :
-                                   type === 'communication' ? 'Communication' :
-                                   type === 'motricite' ? 'Motricité' :
-                                   type === 'sensoriel' ? 'Sensoriel' :
-                                   type === 'loisirs' ? 'Loisirs' : type}
-                                </span>
-                              ))}
-                            </div>
-                          </div>
-                        )}
-                        {appointment.child_accompaniment_goals && (
-                          <div className="mb-2">
-                            <p className="text-xs text-purple-700 mb-1">Objectifs :</p>
-                            <p className="text-sm text-purple-800">{appointment.child_accompaniment_goals}</p>
-                          </div>
-                        )}
-                        {appointment.child_description && (
-                          <div>
-                            <p className="text-xs text-purple-700 mb-1">Description :</p>
-                            <p className="text-sm text-purple-800">{appointment.child_description}</p>
-                          </div>
-                        )}
-                      </div>
-                    )}
-
-                    {appointment.family_notes && (
-                      <div className="p-3 bg-blue-50 rounded-lg border border-blue-200">
-                        <p className="text-sm font-semibold text-blue-900 mb-1">Note de la famille :</p>
-                        <p className="text-sm text-blue-800">{appointment.family_notes}</p>
-                      </div>
-                    )}
-
-                    {appointment.educator_notes && (
-                      <div className="p-3 bg-green-50 rounded-lg border border-green-200">
-                        <p className="text-sm font-semibold text-green-900 mb-1">Mes notes :</p>
-                        <p className="text-sm text-green-800">{appointment.educator_notes}</p>
-                      </div>
-                    )}
-
-                    {appointment.rejection_reason && (
-                      <div className="p-3 bg-red-50 rounded-lg border border-red-200">
-                        <p className="text-sm font-semibold text-red-900 mb-1">Raison du refus :</p>
-                        <p className="text-sm text-red-800">{appointment.rejection_reason}</p>
-                      </div>
-                    )}
-                  </div>
-
-                  {/* Actions */}
-                  <div className="flex flex-wrap gap-2 pt-4 border-t border-gray-200">
-                    {appointment.status === 'pending' && (
-                      <>
-                        <button
-                          onClick={() => handleAccept(appointment.id)}
-                          disabled={actionLoading}
-                          className="px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 disabled:opacity-50 font-medium"
-                        >
-                          Accepter
-                        </button>
-                        <button
-                          onClick={() => {
-                            setSelectedAppointment(appointment);
-                            setShowRejectModal(true);
-                          }}
-                          disabled={actionLoading}
-                          className="px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 disabled:opacity-50 font-medium"
-                        >
-                          Refuser
-                        </button>
-                      </>
-                    )}
-
-                    {appointment.status === 'accepted' && !isPast && (() => {
-                      // Calculer si le temps minimum est écoulé
-                      const canComplete = appointment.started_at ? (() => {
-                        const sessionStart = new Date(appointment.started_at);
-                        const [startHour, startMinute] = appointment.start_time.split(':');
-                        const [endHour, endMinute] = appointment.end_time.split(':');
-                        const appointmentDate = new Date(appointment.appointment_date);
-
-                        const scheduledStart = new Date(appointmentDate);
-                        scheduledStart.setHours(parseInt(startHour), parseInt(startMinute), 0);
-
-                        const scheduledEnd = new Date(appointmentDate);
-                        scheduledEnd.setHours(parseInt(endHour), parseInt(endMinute), 0);
-
-                        const sessionDuration = scheduledEnd.getTime() - scheduledStart.getTime();
-                        const minimumEndTime = new Date(sessionStart.getTime() + sessionDuration);
-
-                        return Date.now() >= minimumEndTime.getTime();
-                      })() : false;
-
-                      return (
-                        <>
-                          {!appointment.started_at ? (
-                            <button
-                              onClick={() => handleStartSession(appointment.id)}
-                              disabled={actionLoading}
-                              className="px-4 py-2 bg-purple-600 text-white rounded-md hover:bg-purple-700 disabled:opacity-50 font-medium flex items-center gap-2"
-                            >
-                              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
-                              </svg>
-                              Démarrer la séance (Code PIN)
-                            </button>
-                          ) : (
-                            <SessionCountdown
-                              sessionStart={appointment.started_at}
-                              scheduledDuration={(() => {
-                                const [startHour, startMinute] = appointment.start_time.split(':');
-                                const [endHour, endMinute] = appointment.end_time.split(':');
-                                const start = parseInt(startHour) * 60 + parseInt(startMinute);
-                                const end = parseInt(endHour) * 60 + parseInt(endMinute);
-                                return (end - start) * 60 * 1000; // en millisecondes
-                              })()}
-                              onTimeUp={() => {}}
-                              canComplete={canComplete}
-                              onComplete={() => handleComplete(appointment.id)}
-                              actionLoading={actionLoading}
-                            />
-                          )}
-                          <button
-                            onClick={() => handleCancel(appointment.id)}
-                            disabled={actionLoading}
-                            className="px-4 py-2 bg-gray-600 text-white rounded-md hover:bg-gray-700 disabled:opacity-50 font-medium"
-                          >
-                            Annuler
-                          </button>
-                        </>
-                      );
-                    })()}
-
-                    {(appointment.status === 'accepted' || appointment.status === 'completed') && (
-                      <button
-                        onClick={() => {
-                          setSelectedAppointment(appointment);
-                          setEducatorNotes(appointment.educator_notes || '');
-                          setShowNotesModal(true);
-                        }}
-                        disabled={actionLoading}
-                        className="px-4 py-2 bg-primary-600 text-white rounded-md hover:bg-primary-700 disabled:opacity-50 font-medium"
-                      >
-                        {appointment.educator_notes ? 'Modifier mes notes' : 'Ajouter une note'}
-                      </button>
-                    )}
-                  </div>
+          <div className="space-y-8">
+            {/* Section: En attente */}
+            {(activeFilter === 'all' || activeFilter === 'pending') && pendingAppointments.length > 0 && (
+              <section>
+                <SectionHeader
+                  title="Demandes en attente"
+                  count={pendingAppointments.length}
+                  icon={<svg className="h-5 w-5 text-amber-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>}
+                  color="bg-amber-100"
+                />
+                <div className="space-y-3">
+                  {pendingAppointments.map(apt => (
+                    <AppointmentCard key={apt.id} appointment={apt} />
+                  ))}
                 </div>
-              );
-            })}
+              </section>
+            )}
+
+            {/* Section: En cours */}
+            {(activeFilter === 'all' || activeFilter === 'in_progress') && inProgressAppointments.length > 0 && (
+              <section>
+                <SectionHeader
+                  title="Séances en cours"
+                  count={inProgressAppointments.length}
+                  icon={<svg className="h-5 w-5 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z" /><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>}
+                  color="bg-indigo-100"
+                />
+                <div className="space-y-3">
+                  {inProgressAppointments.map(apt => (
+                    <AppointmentCard key={apt.id} appointment={apt} />
+                  ))}
+                </div>
+              </section>
+            )}
+
+            {/* Section: À venir */}
+            {(activeFilter === 'all' || activeFilter === 'upcoming') && upcomingAppointments.length > 0 && (
+              <section>
+                <SectionHeader
+                  title="Rendez-vous à venir"
+                  count={upcomingAppointments.length}
+                  icon={<svg className="h-5 w-5 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" /></svg>}
+                  color="bg-emerald-100"
+                />
+                <div className="space-y-3">
+                  {upcomingAppointments.map(apt => (
+                    <AppointmentCard key={apt.id} appointment={apt} />
+                  ))}
+                </div>
+              </section>
+            )}
+
+            {/* Section: Terminés */}
+            {(activeFilter === 'all' || activeFilter === 'completed') && completedAppointments.length > 0 && (
+              <section>
+                <SectionHeader
+                  title="Séances terminées"
+                  count={completedAppointments.length}
+                  icon={<svg className="h-5 w-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>}
+                  color="bg-blue-100"
+                />
+                <div className="space-y-3">
+                  {completedAppointments.map(apt => (
+                    <AppointmentCard key={apt.id} appointment={apt} />
+                  ))}
+                </div>
+              </section>
+            )}
+
+            {/* Section: Annulés/Refusés - visible uniquement avec "Tous" */}
+            {activeFilter === 'all' && cancelledAppointments.length > 0 && (
+              <section>
+                <SectionHeader
+                  title="Annulés / Refusés"
+                  count={cancelledAppointments.length}
+                  icon={<svg className="h-5 w-5 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" /></svg>}
+                  color="bg-gray-200"
+                />
+                <div className="space-y-3">
+                  {cancelledAppointments.slice(0, 5).map(apt => (
+                    <AppointmentCard key={apt.id} appointment={apt} />
+                  ))}
+                  {cancelledAppointments.length > 5 && (
+                    <p className="text-center text-sm text-gray-500 py-2">
+                      + {cancelledAppointments.length - 5} autres rendez-vous annulés
+                    </p>
+                  )}
+                </div>
+              </section>
+            )}
+
+            {/* Message si aucun filtre sélectionné */}
+            {activeFilter === null && (
+              <div className="text-center py-12 bg-white rounded-2xl border border-gray-100">
+                <div className="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                  <svg className="h-8 w-8 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 15l-2 5L9 9l11 4-5 2zm0 0l5 5M7.188 2.239l.777 2.897M5.136 7.965l-2.898-.777M13.95 4.05l-2.122 2.122m-5.657 5.656l-2.12 2.122" />
+                  </svg>
+                </div>
+                <h3 className="text-lg font-medium text-gray-900">Sélectionnez une catégorie</h3>
+                <p className="text-gray-500 mt-2 text-sm">Cliquez sur un des boutons ci-dessus pour afficher les rendez-vous</p>
+              </div>
+            )}
           </div>
         )}
       </div>
@@ -933,6 +1095,227 @@ export default function EducatorAppointmentsPage() {
           onValidate={handleValidatePin}
           appointmentId={selectedAppointment.id}
         />
+      )}
+
+      {/* Modal Dossier Enfant */}
+      {showDossierModal && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+          <div className="bg-white rounded-xl shadow-xl max-w-3xl w-full max-h-[90vh] overflow-hidden flex flex-col">
+            {/* Header */}
+            <div className="bg-gradient-to-r from-purple-600 to-indigo-600 px-6 py-4 flex items-center justify-between">
+              <h3 className="text-xl font-bold text-white flex items-center gap-2">
+                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                </svg>
+                Dossier de la personne accompagnée
+              </h3>
+              <button
+                onClick={() => {
+                  setShowDossierModal(false);
+                  setChildDossier(null);
+                }}
+                className="text-white/80 hover:text-white transition"
+              >
+                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              </button>
+            </div>
+
+            {/* Content */}
+            <div className="flex-1 overflow-y-auto p-6">
+              {dossierLoading ? (
+                <div className="flex items-center justify-center py-12">
+                  <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-purple-600"></div>
+                </div>
+              ) : childDossier ? (
+                <div className="space-y-6">
+                  {/* Identité */}
+                  <div className="bg-purple-50 rounded-lg p-4 border border-purple-200">
+                    <h4 className="font-semibold text-purple-900 mb-3 flex items-center gap-2">
+                      <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                      </svg>
+                      Identité
+                    </h4>
+                    <div className="grid grid-cols-2 gap-4 text-sm">
+                      <div>
+                        <span className="text-gray-600">Prénom :</span>
+                        <span className="ml-2 font-medium text-gray-900">{childDossier.first_name}</span>
+                      </div>
+                      {childDossier.birth_date && (
+                        <div>
+                          <span className="text-gray-600">Date de naissance :</span>
+                          <span className="ml-2 font-medium text-gray-900">
+                            {new Date(childDossier.birth_date).toLocaleDateString('fr-FR')}
+                            {' '}({Math.floor((Date.now() - new Date(childDossier.birth_date).getTime()) / (1000 * 60 * 60 * 24 * 365.25))} ans)
+                          </span>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+
+                  {/* Description */}
+                  {childDossier.description && (
+                    <div className="bg-gray-50 rounded-lg p-4 border border-gray-200">
+                      <h4 className="font-semibold text-gray-900 mb-2">Présentation</h4>
+                      <p className="text-gray-700 text-sm">{childDossier.description}</p>
+                    </div>
+                  )}
+
+                  {/* Types d'accompagnement */}
+                  {childDossier.accompaniment_types && childDossier.accompaniment_types.length > 0 && (
+                    <div>
+                      <h4 className="font-semibold text-gray-900 mb-2">Types d'accompagnement recherchés</h4>
+                      <div className="flex flex-wrap gap-2">
+                        {childDossier.accompaniment_types.map((type: string) => (
+                          <span key={type} className="px-3 py-1 bg-blue-100 text-blue-800 rounded-full text-sm font-medium">
+                            {type === 'scolaire' ? 'Soutien scolaire' :
+                             type === 'comportemental' ? 'Gestion du comportement' :
+                             type === 'socialisation' ? 'Socialisation' :
+                             type === 'autonomie' ? 'Autonomie' :
+                             type === 'communication' ? 'Communication' :
+                             type === 'motricite' ? 'Motricité' :
+                             type === 'sensoriel' ? 'Sensoriel' :
+                             type === 'loisirs' ? 'Loisirs' : type}
+                          </span>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Objectifs */}
+                  {childDossier.accompaniment_goals && (
+                    <div className="bg-green-50 rounded-lg p-4 border border-green-200">
+                      <h4 className="font-semibold text-green-900 mb-2">Objectifs d'accompagnement</h4>
+                      <p className="text-green-800 text-sm">{childDossier.accompaniment_goals}</p>
+                    </div>
+                  )}
+
+                  {/* Points forts et défis */}
+                  <div className="grid grid-cols-2 gap-4">
+                    {childDossier.strengths && (
+                      <div className="bg-emerald-50 rounded-lg p-4 border border-emerald-200">
+                        <h4 className="font-semibold text-emerald-900 mb-2 flex items-center gap-2">
+                          <span className="text-lg">✓</span> Points forts
+                        </h4>
+                        <p className="text-emerald-800 text-sm">{childDossier.strengths}</p>
+                      </div>
+                    )}
+                    {childDossier.challenges && (
+                      <div className="bg-orange-50 rounded-lg p-4 border border-orange-200">
+                        <h4 className="font-semibold text-orange-900 mb-2 flex items-center gap-2">
+                          <span className="text-lg">!</span> Points de vigilance
+                        </h4>
+                        <p className="text-orange-800 text-sm">{childDossier.challenges}</p>
+                      </div>
+                    )}
+                  </div>
+
+                  {/* Centres d'intérêt */}
+                  {childDossier.interests && (
+                    <div className="bg-pink-50 rounded-lg p-4 border border-pink-200">
+                      <h4 className="font-semibold text-pink-900 mb-2">❤️ Centres d'intérêt</h4>
+                      <p className="text-pink-800 text-sm">{childDossier.interests}</p>
+                    </div>
+                  )}
+
+                  {/* Préférences du dossier */}
+                  {childDossier.preferences && childDossier.preferences.length > 0 && (
+                    <div>
+                      <h4 className="font-semibold text-gray-900 mb-3">Préférences et stratégies</h4>
+                      <div className="grid grid-cols-2 gap-4">
+                        {/* Renforçateurs */}
+                        {childDossier.preferences.filter((p: any) => p.type === 'reinforcer').length > 0 && (
+                          <div className="bg-yellow-50 rounded-lg p-3 border border-yellow-200">
+                            <h5 className="font-medium text-yellow-900 mb-2 text-sm">⭐ Renforçateurs</h5>
+                            <ul className="space-y-1">
+                              {childDossier.preferences.filter((p: any) => p.type === 'reinforcer').map((pref: any) => (
+                                <li key={pref.id} className="text-yellow-800 text-sm">• {pref.name}</li>
+                              ))}
+                            </ul>
+                          </div>
+                        )}
+                        {/* Stratégies */}
+                        {childDossier.preferences.filter((p: any) => p.type === 'strategy').length > 0 && (
+                          <div className="bg-blue-50 rounded-lg p-3 border border-blue-200">
+                            <h5 className="font-medium text-blue-900 mb-2 text-sm">💡 Stratégies efficaces</h5>
+                            <ul className="space-y-1">
+                              {childDossier.preferences.filter((p: any) => p.type === 'strategy').map((pref: any) => (
+                                <li key={pref.id} className="text-blue-800 text-sm">• {pref.name}</li>
+                              ))}
+                            </ul>
+                          </div>
+                        )}
+                        {/* À éviter */}
+                        {childDossier.preferences.filter((p: any) => p.type === 'avoid').length > 0 && (
+                          <div className="bg-red-50 rounded-lg p-3 border border-red-200">
+                            <h5 className="font-medium text-red-900 mb-2 text-sm">⚠️ À éviter</h5>
+                            <ul className="space-y-1">
+                              {childDossier.preferences.filter((p: any) => p.type === 'avoid').map((pref: any) => (
+                                <li key={pref.id} className="text-red-800 text-sm">• {pref.name}</li>
+                              ))}
+                            </ul>
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Objectifs éducatifs en cours */}
+                  {childDossier.goals && childDossier.goals.length > 0 && (
+                    <div>
+                      <h4 className="font-semibold text-gray-900 mb-3">Objectifs éducatifs en cours</h4>
+                      <div className="space-y-2">
+                        {childDossier.goals.map((goal: any) => (
+                          <div key={goal.id} className="bg-indigo-50 rounded-lg p-3 border border-indigo-200">
+                            <div className="flex items-center justify-between mb-1">
+                              <h5 className="font-medium text-indigo-900 text-sm">{goal.title}</h5>
+                              <span className="text-xs bg-indigo-200 text-indigo-800 px-2 py-0.5 rounded-full">
+                                {goal.progress}%
+                              </span>
+                            </div>
+                            {goal.description && (
+                              <p className="text-indigo-700 text-xs">{goal.description}</p>
+                            )}
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Message si dossier incomplet */}
+                  {!childDossier.description && !childDossier.strengths && !childDossier.challenges &&
+                   (!childDossier.preferences || childDossier.preferences.length === 0) && (
+                    <div className="bg-gray-100 rounded-lg p-6 text-center">
+                      <svg className="w-12 h-12 text-gray-400 mx-auto mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                      </svg>
+                      <p className="text-gray-600">Le dossier de cet enfant n'a pas encore été complété par la famille.</p>
+                    </div>
+                  )}
+                </div>
+              ) : (
+                <div className="text-center py-12 text-gray-500">
+                  Impossible de charger le dossier
+                </div>
+              )}
+            </div>
+
+            {/* Footer */}
+            <div className="border-t bg-gray-50 px-6 py-4">
+              <button
+                onClick={() => {
+                  setShowDossierModal(false);
+                  setChildDossier(null);
+                }}
+                className="w-full px-4 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700 font-medium transition"
+              >
+                Fermer
+              </button>
+            </div>
+          </div>
+        </div>
       )}
     </div>
   );

@@ -166,6 +166,35 @@ export default function AidesFinancieresPage() {
       </div>
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        {/* Simulateur CTA */}
+        <Link
+          href="/familles/simulateur-aides"
+          className="block mb-8 bg-gradient-to-r from-yellow-400 via-orange-500 to-red-500 p-6 rounded-2xl shadow-xl hover:shadow-2xl transform hover:scale-[1.02] transition-all duration-300 relative overflow-hidden group"
+        >
+          <div className="absolute inset-0 bg-white/10 opacity-0 group-hover:opacity-100 transition-opacity"></div>
+          <div className="flex items-center justify-between relative z-10">
+            <div className="flex items-center gap-4">
+              <div className="w-14 h-14 bg-white/20 rounded-xl flex items-center justify-center backdrop-blur">
+                <span className="text-3xl">🧮</span>
+              </div>
+              <div>
+                <h3 className="text-xl font-bold text-white drop-shadow-md">
+                  Simulateur d'aides personnalisé
+                </h3>
+                <p className="text-white/90 text-sm mt-1">
+                  Découvrez en 2 minutes les aides auxquelles vous avez droit et estimez les montants
+                </p>
+              </div>
+            </div>
+            <div className="hidden sm:flex items-center gap-2 bg-white/20 px-4 py-2 rounded-lg backdrop-blur">
+              <span className="text-white font-semibold">Lancer le simulateur</span>
+              <svg className="w-5 h-5 text-white group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+              </svg>
+            </div>
+          </div>
+        </Link>
+
         {/* Introduction */}
         <div className="bg-gradient-to-br from-blue-500 via-blue-600 to-green-500 p-8 mb-8 rounded-2xl shadow-2xl transform hover:scale-[1.02] transition-all duration-300 relative overflow-hidden">
           {/* Background decoration */}

@@ -58,10 +58,10 @@ export default function SignupChoicePage() {
 
               {/* Titre */}
               <h3 className="text-2xl font-bold text-gray-900 mb-3">
-                Je suis une famille
+                Je suis un aidant
               </h3>
               <p className="text-gray-600 mb-6">
-                ou une personne avec TSA
+                ou une personne avec TND
               </p>
 
               {/* Description */}
@@ -115,12 +115,9 @@ export default function SignupChoicePage() {
               </div>
 
               {/* Titre */}
-              <h3 className="text-2xl font-bold text-gray-900 mb-3">
+              <h3 className="text-2xl font-bold text-gray-900 mb-6">
                 Je suis un professionnel
               </h3>
-              <p className="text-gray-600 mb-6">
-                spécialisé en autisme / TSA
-              </p>
 
               {/* Description */}
               <div className="text-left space-y-3 mb-6">

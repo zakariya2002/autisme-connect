@@ -400,7 +400,7 @@ export default function FamilyProfilePage() {
               >
                 <option value="parent">Parent</option>
                 <option value="guardian">Tuteur</option>
-                <option value="self">Personne avec TSA</option>
+                <option value="self">Personne avec TND</option>
                 <option value="other">Autre</option>
               </select>
             </div>
@@ -417,22 +417,6 @@ export default function FamilyProfilePage() {
               <p className="mt-1 text-sm text-gray-500">Séparez les besoins par des virgules</p>
             </div>
 
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">Certifications préférées</label>
-              <div className="space-y-2">
-                {['ABA', 'TEACCH', 'PECS', 'Makaton'].map(cert => (
-                  <label key={cert} className="flex items-center">
-                    <input
-                      type="checkbox"
-                      checked={profileData.preferred_certifications.includes(cert)}
-                      onChange={() => handleCertificationToggle(cert)}
-                      className="h-4 w-4 text-primary-600 focus:ring-primary-500 border-gray-300 rounded"
-                    />
-                    <span className="ml-2 text-sm text-gray-700">{cert}</span>
-                  </label>
-                ))}
-              </div>
-            </div>
 
             <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
               <div>

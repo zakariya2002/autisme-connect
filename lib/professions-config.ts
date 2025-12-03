@@ -42,24 +42,6 @@ export const professions: ProfessionConfig[] = [
     verificationMethod: 'rpps',
     diplomaDescription: 'Master 2 Psychologie',
   },
-  {
-    value: 'psychiatrist',
-    label: 'Psychiatre',
-    category: 'Psychologie',
-    requiresRpps: true,
-    diplomas: ['DES_PSYCHIATRIE', 'OTHER'],
-    verificationMethod: 'rpps',
-    diplomaDescription: 'DES de Psychiatrie',
-  },
-  {
-    value: 'child_psychiatrist',
-    label: 'Pédopsychiatre',
-    category: 'Psychologie',
-    requiresRpps: true,
-    diplomas: ['DES_PSYCHIATRIE', 'OTHER'],
-    verificationMethod: 'rpps',
-    diplomaDescription: 'DES de Psychiatrie',
-  },
   // Catégorie Thérapies paramédicales - RPPS requis
   {
     value: 'psychomotricist',
@@ -126,7 +108,6 @@ export const diplomaLabels: { [key: string]: string } = {
   'CAFERUIS': 'CAFERUIS',
   // Psychologie
   'MASTER_PSY': 'Master 2 Psychologie',
-  'DES_PSYCHIATRIE': 'DES de Psychiatrie',
   // Thérapies paramédicales
   'DE_PSYCHOMOT': 'Diplôme d\'État de Psychomotricien',
   'DE_ERGO': 'Diplôme d\'État d\'Ergothérapeute',

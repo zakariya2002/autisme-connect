@@ -12,13 +12,41 @@ import FamilyMobileMenu from '@/components/FamilyMobileMenu';
 
 type AppointmentStatus = 'pending' | 'accepted' | 'rejected' | 'completed' | 'cancelled';
 
+interface Appointment {
+  id: string;
+  status: AppointmentStatus;
+  appointment_date: string;
+  start_time: string;
+  end_time: string;
+  address?: string;
+  notes?: string;
+  educator?: {
+    id: string;
+    first_name: string;
+    last_name: string;
+    phone?: string;
+    profile_image_url?: string;
+    avatar_url?: string;
+  };
+  family?: {
+    id: string;
+    first_name: string;
+    last_name: string;
+    phone?: string;
+  };
+}
+
 export default function AppointmentsPage() {
   const router = useRouter();
-  const [appointments, setAppointments] = useState<any[]>([]);
+  const [appointments, setAppointments] = useState<Appointment[]>([]);
   const [loading, setLoading] = useState(true);
   const [userProfile, setUserProfile] = useState<any>(null);
   const [subscription, setSubscription] = useState<any>(null);
-  const [filter, setFilter] = useState<'all' | AppointmentStatus>('all');
+  const [activeFilter, setActiveFilter] = useState<'all' | 'pending' | 'upcoming' | 'past' | null>(null);
+
+  const selectFilter = (filter: 'all' | 'pending' | 'upcoming' | 'past') => {
+    setActiveFilter(prev => prev === filter ? null : filter);
+  };
 
   useEffect(() => {
     fetchCurrentUser();
@@ -49,7 +77,6 @@ export default function AppointmentsPage() {
 
       setUserProfile({ ...profile, role });
 
-      // Récupérer l'abonnement pour les éducateurs
       if (role === 'educator' && profile) {
         const { data: subscriptionData } = await supabase
           .from('subscriptions')
@@ -92,10 +119,9 @@ export default function AppointmentsPage() {
           )
         `)
         .eq(field, userProfile.id)
-        .order('appointment_date', { ascending: false });
+        .order('appointment_date', { ascending: true });
 
       if (error) throw error;
-
       setAppointments(data || []);
     } catch (error) {
       console.error('Erreur:', error);
@@ -113,7 +139,13 @@ export default function AppointmentsPage() {
 
       if (error) throw error;
 
-      alert(`Rendez-vous ${status === 'accepted' ? 'accepté' : status === 'rejected' ? 'refusé' : status === 'cancelled' ? 'annulé' : 'mis à jour'} avec succès!`);
+      const messages: Record<string, string> = {
+        accepted: 'Rendez-vous accepté !',
+        rejected: 'Rendez-vous refusé.',
+        cancelled: 'Rendez-vous annulé.',
+        completed: 'Rendez-vous marqué comme terminé.'
+      };
+      alert(messages[status] || 'Statut mis à jour.');
       fetchAppointments();
     } catch (error: any) {
       alert('Erreur: ' + error.message);
@@ -127,42 +159,180 @@ export default function AppointmentsPage() {
 
   const isPremium = !!(subscription && ['active', 'trialing'].includes(subscription.status));
 
-  const getStatusBadgeColor = (status: AppointmentStatus) => {
-    switch (status) {
-      case 'pending':
-        return 'bg-yellow-100 text-yellow-800';
-      case 'accepted':
-        return 'bg-green-100 text-green-800';
-      case 'rejected':
-      case 'cancelled':
-        return 'bg-red-100 text-red-800';
-      case 'completed':
-        return 'bg-blue-100 text-blue-800';
-      default:
-        return 'bg-gray-100 text-gray-800';
-    }
+  // Grouper les rendez-vous par catégorie
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+
+  const pendingAppointments = appointments.filter(a => a.status === 'pending');
+  const upcomingAppointments = appointments.filter(a => {
+    const date = new Date(a.appointment_date);
+    return a.status === 'accepted' && date >= today;
+  });
+  const pastAppointments = appointments.filter(a => {
+    const date = new Date(a.appointment_date);
+    return a.status === 'completed' || (a.status === 'accepted' && date < today) || a.status === 'rejected' || a.status === 'cancelled';
+  });
+
+  const getStatusConfig = (status: AppointmentStatus) => {
+    const configs = {
+      pending: { bg: 'bg-amber-100', text: 'text-amber-800', label: 'En attente', icon: '⏳' },
+      accepted: { bg: 'bg-emerald-100', text: 'text-emerald-800', label: 'Confirmé', icon: '✓' },
+      rejected: { bg: 'bg-red-100', text: 'text-red-800', label: 'Refusé', icon: '✗' },
+      cancelled: { bg: 'bg-gray-100', text: 'text-gray-800', label: 'Annulé', icon: '−' },
+      completed: { bg: 'bg-blue-100', text: 'text-blue-800', label: 'Terminé', icon: '✓' }
+    };
+    return configs[status] || configs.pending;
   };
 
-  const getStatusLabel = (status: AppointmentStatus) => {
-    switch (status) {
-      case 'pending':
-        return 'En attente';
-      case 'accepted':
-        return 'Accepté';
-      case 'rejected':
-        return 'Refusé';
-      case 'cancelled':
-        return 'Annulé';
-      case 'completed':
-        return 'Terminé';
-      default:
-        return status;
+  const formatDate = (dateStr: string) => {
+    const date = new Date(dateStr);
+    const now = new Date();
+    const tomorrow = new Date(now);
+    tomorrow.setDate(tomorrow.getDate() + 1);
+
+    if (date.toDateString() === now.toDateString()) {
+      return "Aujourd'hui";
+    } else if (date.toDateString() === tomorrow.toDateString()) {
+      return 'Demain';
     }
+    return date.toLocaleDateString('fr-FR', {
+      weekday: 'short',
+      day: 'numeric',
+      month: 'short'
+    });
   };
 
-  const filteredAppointments = filter === 'all'
-    ? appointments
-    : appointments.filter(apt => apt.status === filter);
+  const AppointmentCard = ({ appointment }: { appointment: Appointment }) => {
+    const isEducator = userProfile?.role === 'educator';
+    const otherParty = isEducator ? appointment.family : appointment.educator;
+    const statusConfig = getStatusConfig(appointment.status);
+    const appointmentDate = new Date(appointment.appointment_date);
+    const isPast = appointmentDate < today;
+
+    return (
+      <div className={`bg-white rounded-xl border ${isPast ? 'border-gray-200 opacity-75' : 'border-gray-100'} shadow-sm hover:shadow-md transition-all p-4`}>
+        <div className="flex items-start gap-4">
+          {/* Avatar */}
+          <div className="flex-shrink-0">
+            {!isEducator && (appointment.educator?.avatar_url || appointment.educator?.profile_image_url) ? (
+              <img
+                src={appointment.educator.avatar_url || appointment.educator.profile_image_url}
+                alt={`${appointment.educator.first_name} ${appointment.educator.last_name}`}
+                className="h-12 w-12 rounded-full object-cover border-2 border-white shadow"
+              />
+            ) : (
+              <div className="h-12 w-12 rounded-full bg-gradient-to-br from-violet-400 to-purple-600 flex items-center justify-center shadow">
+                <span className="text-sm font-bold text-white">
+                  {otherParty?.first_name?.[0]}{otherParty?.last_name?.[0]}
+                </span>
+              </div>
+            )}
+          </div>
+
+          {/* Contenu principal */}
+          <div className="flex-1 min-w-0">
+            <div className="flex items-center justify-between gap-2 mb-1">
+              <h3 className="font-semibold text-gray-900 truncate">
+                {otherParty?.first_name} {otherParty?.last_name}
+              </h3>
+              <span className={`${statusConfig.bg} ${statusConfig.text} px-2 py-0.5 rounded-full text-xs font-medium flex-shrink-0`}>
+                {statusConfig.icon} {statusConfig.label}
+              </span>
+            </div>
+
+            {/* Date et heure */}
+            <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-sm text-gray-600">
+              <span className="flex items-center gap-1.5">
+                <svg className="h-4 w-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                </svg>
+                <span className="font-medium">{formatDate(appointment.appointment_date)}</span>
+              </span>
+              <span className="flex items-center gap-1.5">
+                <svg className="h-4 w-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+                {appointment.start_time} - {appointment.end_time}
+              </span>
+            </div>
+
+            {appointment.address && (
+              <p className="text-sm text-gray-500 mt-1 flex items-center gap-1.5">
+                <svg className="h-4 w-4 text-gray-400 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                </svg>
+                <span className="truncate">{appointment.address}</span>
+              </p>
+            )}
+
+            {appointment.notes && (
+              <p className="text-sm text-gray-500 mt-2 italic bg-gray-50 rounded-lg p-2 line-clamp-2">
+                "{appointment.notes}"
+              </p>
+            )}
+          </div>
+        </div>
+
+        {/* Actions */}
+        {appointment.status === 'pending' && (
+          <div className="mt-4 pt-3 border-t border-gray-100 flex gap-2">
+            {isEducator ? (
+              <>
+                <button
+                  onClick={() => updateAppointmentStatus(appointment.id, 'accepted')}
+                  className="flex-1 px-3 py-2 bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 text-sm font-medium transition flex items-center justify-center gap-1"
+                >
+                  <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                  </svg>
+                  Accepter
+                </button>
+                <button
+                  onClick={() => updateAppointmentStatus(appointment.id, 'rejected')}
+                  className="flex-1 px-3 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 text-sm font-medium transition flex items-center justify-center gap-1"
+                >
+                  <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                  </svg>
+                  Refuser
+                </button>
+              </>
+            ) : (
+              <button
+                onClick={() => updateAppointmentStatus(appointment.id, 'cancelled')}
+                className="w-full px-3 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 text-sm font-medium transition"
+              >
+                Annuler la demande
+              </button>
+            )}
+          </div>
+        )}
+
+        {isEducator && appointment.status === 'accepted' && !isPast && (
+          <div className="mt-4 pt-3 border-t border-gray-100">
+            <button
+              onClick={() => updateAppointmentStatus(appointment.id, 'completed')}
+              className="w-full px-3 py-2 bg-blue-50 text-blue-700 rounded-lg hover:bg-blue-100 text-sm font-medium transition"
+            >
+              Marquer comme terminé
+            </button>
+          </div>
+        )}
+      </div>
+    );
+  };
+
+  const SectionHeader = ({ title, count, icon, color }: { title: string; count: number; icon: React.ReactNode; color: string }) => (
+    <div className="flex items-center gap-3 mb-4">
+      <div className={`w-10 h-10 ${color} rounded-xl flex items-center justify-center`}>
+        {icon}
+      </div>
+      <div>
+        <h2 className="text-lg font-semibold text-gray-900">{title}</h2>
+        <p className="text-sm text-gray-500">{count} rendez-vous</p>
+      </div>
+    </div>
+  );
 
   if (loading && !userProfile) {
     return (
@@ -173,13 +343,12 @@ export default function AppointmentsPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-primary-50 via-white to-blue-50">
+    <div className="min-h-screen bg-gray-50">
       {/* Navigation */}
-      <nav className="bg-white shadow-sm border-b border-gray-200">
+      <nav className="bg-white shadow-sm border-b border-gray-200 sticky top-0 z-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between h-16 items-center">
             <div className="flex items-center gap-3">
-              {/* Menu mobile (hamburger) */}
               <div className="md:hidden">
                 {userProfile?.role === 'educator' ? (
                   <EducatorMobileMenu profile={userProfile} isPremium={isPremium} onLogout={handleLogout} />
@@ -187,7 +356,6 @@ export default function AppointmentsPage() {
                   <FamilyMobileMenu profile={userProfile} onLogout={handleLogout} />
                 )}
               </div>
-              {/* Logo */}
               <Link href="/" className="text-2xl font-bold text-primary-600 flex items-center">
                 <div className="w-10 h-10 bg-gradient-to-br from-primary-500 to-primary-600 rounded-lg items-center justify-center mr-2 hidden md:flex">
                   <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -198,7 +366,6 @@ export default function AppointmentsPage() {
                 <span className="md:hidden">AC</span>
               </Link>
             </div>
-            {/* Menu desktop - caché sur mobile */}
             <div className="hidden md:flex space-x-4">
               <Link
                 href={userProfile?.role === 'educator' ? '/dashboard/educator' : '/dashboard/family'}
@@ -213,212 +380,175 @@ export default function AppointmentsPage() {
                 </svg>
                 Tableau de bord
               </Link>
-              <Link
-                href="/search"
-                className="text-gray-700 hover:text-primary-600 px-3 py-2 rounded-md font-medium transition"
-              >
-                Recherche
-              </Link>
             </div>
           </div>
         </div>
       </nav>
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
         {/* En-tête */}
-        <div className="mb-8">
-          <h1 className="text-4xl font-bold text-gray-900 mb-2">Mes rendez-vous</h1>
-          <p className="text-gray-600">Gérez vos rendez-vous et consultez leur statut</p>
+        <div className="mb-6">
+          <h1 className="text-2xl font-bold text-gray-900">Mes rendez-vous</h1>
+          <p className="text-gray-500 text-sm mt-1">Gérez et suivez vos rendez-vous</p>
         </div>
 
-        {/* Filtres */}
-        <div className="bg-white rounded-lg shadow-sm p-4 mb-6">
-          <div className="flex flex-wrap gap-2">
-            <button
-              onClick={() => setFilter('all')}
-              className={`px-4 py-2 rounded-md font-medium transition ${
-                filter === 'all'
-                  ? 'bg-primary-600 text-white'
-                  : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-              }`}
-            >
-              Tous ({appointments.length})
-            </button>
-            <button
-              onClick={() => setFilter('pending')}
-              className={`px-4 py-2 rounded-md font-medium transition ${
-                filter === 'pending'
-                  ? 'bg-yellow-600 text-white'
-                  : 'bg-yellow-100 text-yellow-800 hover:bg-yellow-200'
-              }`}
-            >
-              En attente ({appointments.filter(a => a.status === 'pending').length})
-            </button>
-            <button
-              onClick={() => setFilter('accepted')}
-              className={`px-4 py-2 rounded-md font-medium transition ${
-                filter === 'accepted'
-                  ? 'bg-green-600 text-white'
-                  : 'bg-green-100 text-green-800 hover:bg-green-200'
-              }`}
-            >
-              Acceptés ({appointments.filter(a => a.status === 'accepted').length})
-            </button>
-            <button
-              onClick={() => setFilter('completed')}
-              className={`px-4 py-2 rounded-md font-medium transition ${
-                filter === 'completed'
-                  ? 'bg-blue-600 text-white'
-                  : 'bg-blue-100 text-blue-800 hover:bg-blue-200'
-              }`}
-            >
-              Terminés ({appointments.filter(a => a.status === 'completed').length})
-            </button>
+        {/* Boutons de filtre */}
+        <div className="grid grid-cols-4 gap-3 mb-8">
+          {/* Tous */}
+          <button
+            onClick={() => appointments.length > 0 && selectFilter('all')}
+            disabled={appointments.length === 0}
+            className={`rounded-xl p-3 text-center transition-all ${
+              appointments.length === 0
+                ? 'bg-gray-100 opacity-60 cursor-not-allowed'
+                : activeFilter === 'all'
+                  ? 'bg-gray-300 ring-2 ring-gray-500'
+                  : 'bg-gray-100 hover:bg-gray-200 cursor-pointer'
+            }`}
+          >
+            <p className="text-2xl font-bold text-gray-700">{appointments.length}</p>
+            <p className="text-xs text-gray-600 mt-1">Tous</p>
+          </button>
+
+          {/* En attente */}
+          <button
+            onClick={() => pendingAppointments.length > 0 && selectFilter('pending')}
+            disabled={pendingAppointments.length === 0}
+            className={`rounded-xl p-3 text-center transition-all ${
+              pendingAppointments.length === 0
+                ? 'bg-amber-50 opacity-60 cursor-not-allowed'
+                : activeFilter === 'pending'
+                  ? 'bg-amber-200 ring-2 ring-amber-500'
+                  : 'bg-amber-50 hover:bg-amber-100 cursor-pointer'
+            }`}
+          >
+            <p className="text-2xl font-bold text-amber-600">{pendingAppointments.length}</p>
+            <p className="text-xs text-amber-700 mt-1">En attente</p>
+          </button>
+
+          {/* À venir */}
+          <button
+            onClick={() => upcomingAppointments.length > 0 && selectFilter('upcoming')}
+            disabled={upcomingAppointments.length === 0}
+            className={`rounded-xl p-3 text-center transition-all ${
+              upcomingAppointments.length === 0
+                ? 'bg-emerald-50 opacity-60 cursor-not-allowed'
+                : activeFilter === 'upcoming'
+                  ? 'bg-emerald-200 ring-2 ring-emerald-500'
+                  : 'bg-emerald-50 hover:bg-emerald-100 cursor-pointer'
+            }`}
+          >
+            <p className="text-2xl font-bold text-emerald-600">{upcomingAppointments.length}</p>
+            <p className="text-xs text-emerald-700 mt-1">À venir</p>
+          </button>
+
+          {/* Passés */}
+          <button
+            onClick={() => pastAppointments.length > 0 && selectFilter('past')}
+            disabled={pastAppointments.length === 0}
+            className={`rounded-xl p-3 text-center transition-all ${
+              pastAppointments.length === 0
+                ? 'bg-gray-100 opacity-60 cursor-not-allowed'
+                : activeFilter === 'past'
+                  ? 'bg-gray-300 ring-2 ring-gray-500'
+                  : 'bg-gray-100 hover:bg-gray-200 cursor-pointer'
+            }`}
+          >
+            <p className="text-2xl font-bold text-gray-600">{pastAppointments.length}</p>
+            <p className="text-xs text-gray-600 mt-1">Passés</p>
+          </button>
+        </div>
+
+        {loading ? (
+          <div className="text-center py-12">
+            <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-primary-600 mx-auto"></div>
+            <p className="text-gray-500 mt-4 text-sm">Chargement...</p>
           </div>
-        </div>
-
-        {/* Liste des rendez-vous */}
-        <div className="space-y-4">
-          {loading ? (
-            <div className="text-center py-12">
-              <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary-600 mx-auto"></div>
-              <p className="text-gray-500 mt-4">Chargement...</p>
-            </div>
-          ) : filteredAppointments.length === 0 ? (
-            <div className="text-center py-12 bg-white rounded-lg shadow">
-              <svg className="mx-auto h-16 w-16 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        ) : appointments.length === 0 ? (
+          <div className="text-center py-12 bg-white rounded-2xl border border-gray-100">
+            <div className="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
+              <svg className="h-8 w-8 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
               </svg>
-              <h3 className="mt-4 text-lg font-medium text-gray-900">Aucun rendez-vous</h3>
-              <p className="text-gray-500 mt-2">
-                {filter === 'all'
-                  ? 'Vous n\'avez pas encore de rendez-vous.'
-                  : `Aucun rendez-vous avec le statut "${getStatusLabel(filter as AppointmentStatus)}".`
-                }
-              </p>
-              {userProfile?.role === 'family' && filter === 'all' && (
-                <Link
-                  href="/search"
-                  className="mt-6 inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-primary-600 hover:bg-primary-700"
-                >
-                  Chercher un éducateur
-                </Link>
-              )}
             </div>
-          ) : (
-            filteredAppointments.map((appointment) => {
-              const isEducator = userProfile.role === 'educator';
-              const otherParty = isEducator ? appointment.family : appointment.educator;
-              const appointmentDate = new Date(appointment.appointment_date);
-
-              return (
-                <div key={appointment.id} className="bg-white rounded-lg shadow-md hover:shadow-lg transition p-6">
-                  <div className="flex justify-between items-start">
-                    <div className="flex items-start space-x-4 flex-1">
-                      {/* Photo */}
-                      <div className="flex-shrink-0">
-                        {!isEducator && (otherParty?.avatar_url || otherParty?.profile_image_url) ? (
-                          <img
-                            src={otherParty.avatar_url || otherParty.profile_image_url}
-                            alt={`${otherParty.first_name} ${otherParty.last_name}`}
-                            className="h-16 w-16 rounded-full object-cover border-2 border-primary-200"
-                          />
-                        ) : (
-                          <div className="h-16 w-16 rounded-full bg-gradient-to-br from-primary-400 to-primary-600 flex items-center justify-center border-2 border-primary-200">
-                            <span className="text-xl font-bold text-white">
-                              {otherParty?.first_name?.[0]}{otherParty?.last_name?.[0]}
-                            </span>
-                          </div>
-                        )}
-                      </div>
-
-                      {/* Détails */}
-                      <div className="flex-1">
-                        <div className="flex items-center gap-3 mb-2">
-                          <h3 className="text-xl font-semibold text-gray-900">
-                            {isEducator ? 'Famille' : ''}{isEducator && ': '}{otherParty?.first_name} {otherParty?.last_name}
-                          </h3>
-                          <span className={`px-3 py-1 rounded-full text-xs font-medium ${getStatusBadgeColor(appointment.status)}`}>
-                            {getStatusLabel(appointment.status)}
-                          </span>
-                        </div>
-
-                        <div className="space-y-2 text-gray-600">
-                          <div className="flex items-center">
-                            <svg className="h-5 w-5 mr-2 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                            </svg>
-                            <span className="font-medium">
-                              {appointmentDate.toLocaleDateString('fr-FR', {
-                                weekday: 'long',
-                                year: 'numeric',
-                                month: 'long',
-                                day: 'numeric'
-                              })}
-                            </span>
-                          </div>
-
-                          <div className="flex items-center">
-                            <svg className="h-5 w-5 mr-2 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-                            </svg>
-                            <span>{appointment.start_time} - {appointment.end_time}</span>
-                          </div>
-
-                          {appointment.address && (
-                            <div className="flex items-center">
-                              <svg className="h-5 w-5 mr-2 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
-                              </svg>
-                              <span>{appointment.address}</span>
-                            </div>
-                          )}
-
-                          {appointment.notes && (
-                            <div className="mt-3 p-3 bg-gray-50 rounded-md">
-                              <p className="text-sm italic text-gray-700">{appointment.notes}</p>
-                            </div>
-                          )}
-                        </div>
-                      </div>
-                    </div>
-
-                    {/* Actions */}
-                    <div className="ml-4 flex flex-col gap-2">
-                      {isEducator && appointment.status === 'pending' && (
-                        <>
-                          <button
-                            onClick={() => updateAppointmentStatus(appointment.id, 'accepted')}
-                            className="px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 text-sm whitespace-nowrap font-medium transition shadow-sm hover:shadow"
-                          >
-                            ✓ Accepter
-                          </button>
-                          <button
-                            onClick={() => updateAppointmentStatus(appointment.id, 'rejected')}
-                            className="px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 text-sm whitespace-nowrap font-medium transition shadow-sm hover:shadow"
-                          >
-                            ✗ Refuser
-                          </button>
-                        </>
-                      )}
-
-                      {!isEducator && appointment.status === 'pending' && (
-                        <button
-                          onClick={() => updateAppointmentStatus(appointment.id, 'cancelled')}
-                          className="px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 text-sm whitespace-nowrap font-medium transition shadow-sm hover:shadow"
-                        >
-                          Annuler
-                        </button>
-                      )}
-
-                    </div>
-                  </div>
+            <h3 className="text-lg font-medium text-gray-900">Aucun rendez-vous</h3>
+            <p className="text-gray-500 mt-2 text-sm">Vous n'avez pas encore de rendez-vous.</p>
+            {userProfile?.role === 'family' && (
+              <Link
+                href="/search"
+                className="mt-6 inline-flex items-center px-5 py-2.5 bg-primary-600 text-white rounded-xl font-medium hover:bg-primary-700 transition"
+              >
+                <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                </svg>
+                Trouver un professionnel
+              </Link>
+            )}
+          </div>
+        ) : activeFilter === null ? (
+          <div className="text-center py-12 bg-white rounded-2xl border border-gray-100">
+            <div className="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
+              <svg className="h-8 w-8 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 15l-2 5L9 9l11 4-5 2zm0 0l5 5M7.188 2.239l.777 2.897M5.136 7.965l-2.898-.777M13.95 4.05l-2.122 2.122m-5.657 5.656l-2.12 2.122" />
+              </svg>
+            </div>
+            <h3 className="text-lg font-medium text-gray-900">Sélectionnez une catégorie</h3>
+            <p className="text-gray-500 mt-2 text-sm">Cliquez sur un des boutons ci-dessus pour afficher les rendez-vous</p>
+          </div>
+        ) : (
+          <div className="space-y-8">
+            {/* Section: En attente */}
+            {(activeFilter === 'all' || activeFilter === 'pending') && pendingAppointments.length > 0 && (
+              <section>
+                <SectionHeader
+                  title="En attente de réponse"
+                  count={pendingAppointments.length}
+                  icon={<svg className="h-5 w-5 text-amber-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>}
+                  color="bg-amber-100"
+                />
+                <div className="space-y-3">
+                  {pendingAppointments.map(apt => (
+                    <AppointmentCard key={apt.id} appointment={apt} />
+                  ))}
                 </div>
-              );
-            })
-          )}
-        </div>
+              </section>
+            )}
+
+            {/* Section: À venir */}
+            {(activeFilter === 'all' || activeFilter === 'upcoming') && upcomingAppointments.length > 0 && (
+              <section>
+                <SectionHeader
+                  title="Rendez-vous à venir"
+                  count={upcomingAppointments.length}
+                  icon={<svg className="h-5 w-5 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" /></svg>}
+                  color="bg-emerald-100"
+                />
+                <div className="space-y-3">
+                  {upcomingAppointments.map(apt => (
+                    <AppointmentCard key={apt.id} appointment={apt} />
+                  ))}
+                </div>
+              </section>
+            )}
+
+            {/* Section: Passés */}
+            {(activeFilter === 'all' || activeFilter === 'past') && pastAppointments.length > 0 && (
+              <section>
+                <SectionHeader
+                  title="Historique"
+                  count={pastAppointments.length}
+                  icon={<svg className="h-5 w-5 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 8h14M5 8a2 2 0 110-4h14a2 2 0 110 4M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8m-9 4h4" /></svg>}
+                  color="bg-gray-200"
+                />
+                <div className="space-y-3">
+                  {pastAppointments.map(apt => (
+                    <AppointmentCard key={apt.id} appointment={apt} />
+                  ))}
+                </div>
+              </section>
+            )}
+          </div>
+        )}
       </div>
     </div>
   );

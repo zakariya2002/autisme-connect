@@ -114,8 +114,6 @@ export default function RegisterEducatorPage() {
     { value: 'educator', label: 'Éducateur spécialisé', category: 'Éducatif', requiresRpps: false, diplomas: ['DEES', 'CAFERUIS', 'OTHER'], icon: '👨‍🏫' },
     { value: 'moniteur_educateur', label: 'Moniteur éducateur', category: 'Éducatif', requiresRpps: false, diplomas: ['DEME', 'OTHER'], icon: '👩‍🏫' },
     { value: 'psychologist', label: 'Psychologue', category: 'Psychologie', requiresRpps: true, diplomas: ['MASTER_PSY', 'OTHER'], icon: '🧠' },
-    { value: 'psychiatrist', label: 'Psychiatre', category: 'Psychologie', requiresRpps: true, diplomas: ['DES_PSYCHIATRIE', 'OTHER'], icon: '🩺' },
-    { value: 'child_psychiatrist', label: 'Pédopsychiatre', category: 'Psychologie', requiresRpps: true, diplomas: ['DES_PSYCHIATRIE', 'OTHER'], icon: '👨‍⚕️' },
     { value: 'psychomotricist', label: 'Psychomotricien', category: 'Thérapies', requiresRpps: true, diplomas: ['DE_PSYCHOMOT', 'OTHER'], icon: '🤸' },
     { value: 'occupational_therapist', label: 'Ergothérapeute', category: 'Thérapies', requiresRpps: true, diplomas: ['DE_ERGO', 'OTHER'], icon: '🎯' },
     { value: 'speech_therapist', label: 'Orthophoniste', category: 'Thérapies', requiresRpps: true, diplomas: ['CCO', 'OTHER'], icon: '🗣️' },

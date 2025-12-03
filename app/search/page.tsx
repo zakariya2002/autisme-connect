@@ -12,6 +12,77 @@ import { useTnd } from '@/contexts/TndContext';
 import { professions, getProfessionByValue } from '@/lib/professions-config';
 import SearchTnd from './page-tnd';
 
+// Composant bouton favori
+function FavoriteButton({ educatorId, familyId, isFavorite, onToggle }: {
+  educatorId: string;
+  familyId: string | null;
+  isFavorite: boolean;
+  onToggle: (educatorId: string, newState: boolean) => void;
+}) {
+  const [loading, setLoading] = useState(false);
+
+  const handleClick = async (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+
+    if (!familyId) {
+      alert('Veuillez vous connecter en tant que famille pour ajouter des favoris');
+      return;
+    }
+
+    setLoading(true);
+    try {
+      if (isFavorite) {
+        // Supprimer des favoris
+        await supabase
+          .from('favorite_educators')
+          .delete()
+          .eq('family_id', familyId)
+          .eq('educator_id', educatorId);
+        onToggle(educatorId, false);
+      } else {
+        // Ajouter aux favoris
+        await supabase
+          .from('favorite_educators')
+          .insert({ family_id: familyId, educator_id: educatorId });
+        onToggle(educatorId, true);
+      }
+    } catch (error) {
+      console.error('Erreur lors de la gestion des favoris:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  return (
+    <button
+      onClick={handleClick}
+      disabled={loading}
+      className={`p-2 rounded-full transition-all ${
+        isFavorite
+          ? 'bg-red-100 text-red-500 hover:bg-red-200'
+          : 'bg-gray-100 text-gray-400 hover:bg-gray-200 hover:text-red-400'
+      } ${loading ? 'opacity-50 cursor-not-allowed' : ''}`}
+      aria-label={isFavorite ? 'Retirer des favoris' : 'Ajouter aux favoris'}
+      title={isFavorite ? 'Retirer des favoris' : 'Ajouter aux favoris'}
+    >
+      <svg
+        className="w-5 h-5"
+        fill={isFavorite ? 'currentColor' : 'none'}
+        stroke="currentColor"
+        viewBox="0 0 24 24"
+      >
+        <path
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          strokeWidth={2}
+          d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"
+        />
+      </svg>
+    </button>
+  );
+}
+
 
 // Catégories de professions pour les filtres
 const professionCategories = [
@@ -46,6 +117,8 @@ export default function SearchPage() {
   const [geolocating, setGeolocating] = useState(false);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [userRole, setUserRole] = useState<string | null>(null);
+  const [familyId, setFamilyId] = useState<string | null>(null);
+  const [favorites, setFavorites] = useState<Set<string>>(new Set());
   const [showFilters, setShowFilters] = useState(false);
   const [filters, setFilters] = useState({
     location: '',
@@ -65,6 +138,41 @@ export default function SearchPage() {
     const { data: { session } } = await supabase.auth.getSession();
     setIsAuthenticated(!!session);
     setUserRole(session?.user?.user_metadata?.role || null);
+
+    // Récupérer le familyId et les favoris si c'est une famille
+    if (session?.user && session.user.user_metadata?.role === 'family') {
+      const { data: familyProfile } = await supabase
+        .from('family_profiles')
+        .select('id')
+        .eq('user_id', session.user.id)
+        .single();
+
+      if (familyProfile) {
+        setFamilyId(familyProfile.id);
+
+        // Récupérer les favoris
+        const { data: favoritesData } = await supabase
+          .from('favorite_educators')
+          .select('educator_id')
+          .eq('family_id', familyProfile.id);
+
+        if (favoritesData) {
+          setFavorites(new Set(favoritesData.map(f => f.educator_id)));
+        }
+      }
+    }
+  };
+
+  const handleFavoriteToggle = (educatorId: string, newState: boolean) => {
+    setFavorites(prev => {
+      const newFavorites = new Set(prev);
+      if (newState) {
+        newFavorites.add(educatorId);
+      } else {
+        newFavorites.delete(educatorId);
+      }
+      return newFavorites;
+    });
   };
 
   const fetchEducators = async () => {
@@ -740,6 +848,17 @@ export default function SearchPage() {
                       </div>
 
                       <div className="flex sm:flex-col gap-2.5 w-full sm:w-auto sm:ml-4">
+                        {/* Bouton favori - visible uniquement pour les familles connectées */}
+                        {userRole === 'family' && (
+                          <div className="flex justify-end sm:justify-center mb-1">
+                            <FavoriteButton
+                              educatorId={educator.id}
+                              familyId={familyId}
+                              isFavorite={favorites.has(educator.id)}
+                              onToggle={handleFavoriteToggle}
+                            />
+                          </div>
+                        )}
                         <Link
                           href={`/educator/${educator.id}`}
                           className="flex-1 sm:flex-none inline-flex items-center justify-center gap-2 px-4 sm:px-5 py-2.5 bg-gradient-to-r from-primary-600 to-primary-700 text-white rounded-lg hover:from-primary-700 hover:to-primary-800 text-center text-sm sm:text-base font-semibold shadow-md hover:shadow-lg transition-all whitespace-nowrap"

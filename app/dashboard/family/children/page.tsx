@@ -12,6 +12,7 @@ interface ChildProfile {
   id: string;
   first_name: string;
   age: number | null;
+  birth_date: string | null;
   support_level_needed: string | null;
   description: string | null;
   accompaniment_types: string[];
@@ -65,7 +66,7 @@ export default function ChildrenPage() {
 
   const [formData, setFormData] = useState({
     first_name: '',
-    age: '',
+    birth_date: '',
     support_level_needed: 'level_1',
     description: '',
     accompaniment_types: [] as string[],
@@ -127,7 +128,7 @@ export default function ChildrenPage() {
   const resetForm = () => {
     setFormData({
       first_name: '',
-      age: '',
+      birth_date: '',
       support_level_needed: 'level_1',
       description: '',
       accompaniment_types: [],
@@ -162,7 +163,7 @@ export default function ChildrenPage() {
 
     setFormData({
       first_name: child.first_name,
-      age: child.age?.toString() || '',
+      birth_date: child.birth_date || '',
       support_level_needed: child.support_level_needed || 'level_1',
       description: child.description || '',
       accompaniment_types: child.accompaniment_types || [],
@@ -211,7 +212,7 @@ export default function ChildrenPage() {
       const childData = {
         family_id: profile.id,
         first_name: formData.first_name.trim(),
-        age: formData.age ? parseInt(formData.age) : null,
+        birth_date: formData.birth_date || null,
         support_level_needed: formData.support_level_needed,
         description: formData.description || null,
         accompaniment_types: formData.accompaniment_types,
@@ -355,13 +356,13 @@ export default function ChildrenPage() {
                     <div>
                       <h3 className="text-lg font-semibold text-gray-900">{child.first_name}</h3>
                       <div className="flex flex-wrap items-center gap-2 mt-1">
-                        {child.age && (
-                          <span className="text-sm text-gray-500">{child.age} ans</span>
-                        )}
-                        {child.support_level_needed && (
-                          <span className="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-700">
-                            {supportLevelLabels[child.support_level_needed] || child.support_level_needed}
+                        {child.birth_date && (
+                          <span className="text-sm text-gray-500">
+                            Né(e) le {new Date(child.birth_date).toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' })}
                           </span>
+                        )}
+                        {!child.birth_date && child.age && (
+                          <span className="text-sm text-gray-500">{child.age} ans</span>
                         )}
                         {child.location_preference && (
                           <span className="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-700">
@@ -391,7 +392,7 @@ export default function ChildrenPage() {
                     <button
                       onClick={() => openEditModal(child)}
                       className="p-2 text-gray-400 hover:text-primary-600 hover:bg-primary-50 rounded-lg transition"
-                      title="Modifier"
+                      title="Modifier les infos de base"
                     >
                       <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
@@ -407,6 +408,29 @@ export default function ChildrenPage() {
                       </svg>
                     </button>
                   </div>
+                </div>
+
+                {/* Bouton dossier - bien visible */}
+                <div className="mt-4 pt-4 border-t border-gray-100">
+                  <Link
+                    href={`/dashboard/family/children/${child.id}/dossier`}
+                    className="flex items-center justify-between w-full p-3 bg-gradient-to-r from-green-50 to-emerald-50 hover:from-green-100 hover:to-emerald-100 border border-green-300 rounded-xl transition-all group"
+                  >
+                    <div className="flex items-center gap-3">
+                      <div className="w-10 h-10 bg-green-500 rounded-lg flex items-center justify-center group-hover:bg-green-600 transition">
+                        <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 8h14M5 8a2 2 0 110-4h14a2 2 0 110 4M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8m-9 4h4" />
+                        </svg>
+                      </div>
+                      <div>
+                        <span className="font-semibold text-green-800 block">Dossier</span>
+                        <span className="text-xs text-green-600">Profil, compétences, objectifs, préférences, PPA...</span>
+                      </div>
+                    </div>
+                    <svg className="w-5 h-5 text-green-600 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                    </svg>
+                  </Link>
                 </div>
               </div>
             ))}
@@ -436,7 +460,7 @@ export default function ChildrenPage() {
                 </div>
               )}
 
-              {/* Prénom et âge */}
+              {/* Prénom et date de naissance */}
               <div className="grid grid-cols-2 gap-4">
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">Prénom *</label>
@@ -450,31 +474,14 @@ export default function ChildrenPage() {
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">Âge</label>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">Date de naissance</label>
                   <input
-                    type="number"
-                    min="0"
-                    max="30"
-                    value={formData.age}
-                    onChange={(e) => setFormData({ ...formData, age: e.target.value })}
+                    type="date"
+                    value={formData.birth_date}
+                    onChange={(e) => setFormData({ ...formData, birth_date: e.target.value })}
                     className="w-full border border-gray-300 rounded-lg py-2 px-3 focus:ring-primary-500 focus:border-primary-500"
-                    placeholder="Âge"
                   />
                 </div>
-              </div>
-
-              {/* Niveau de support */}
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">Niveau de soutien</label>
-                <select
-                  value={formData.support_level_needed}
-                  onChange={(e) => setFormData({ ...formData, support_level_needed: e.target.value })}
-                  className="w-full border border-gray-300 rounded-lg py-2 px-3 focus:ring-primary-500 focus:border-primary-500"
-                >
-                  <option value="level_1">Niveau 1 - Nécessite un soutien</option>
-                  <option value="level_2">Niveau 2 - Nécessite un soutien important</option>
-                  <option value="level_3">Niveau 3 - Nécessite un soutien très important</option>
-                </select>
               </div>
 
               {/* Description */}
