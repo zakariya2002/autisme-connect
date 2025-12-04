@@ -3,6 +3,9 @@
 import { useTnd } from '@/contexts/TndContext';
 
 export default function TndToggle() {
+  // Mode TND temporairement désactivé
+  return null;
+
   const { tndMode, toggleTndMode } = useTnd();
 
   return (
