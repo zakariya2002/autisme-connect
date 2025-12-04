@@ -733,17 +733,17 @@ export default function SearchPage() {
                           <div className="flex-shrink-0 relative">
                             {educator.avatar_url ? (
                               <div className="relative group/avatar">
-                                <div className="absolute -inset-1 bg-gradient-to-r from-primary-500 to-purple-500 rounded-3xl blur opacity-25 group-hover/avatar:opacity-50 transition-opacity"></div>
+                                <div className="absolute -inset-1 bg-gradient-to-r from-primary-500 to-purple-500 rounded-full blur opacity-25 group-hover/avatar:opacity-50 transition-opacity"></div>
                                 <img
                                   src={educator.avatar_url}
                                   alt={`${educator.first_name} ${educator.last_name}`}
-                                  className="relative w-20 h-20 sm:w-28 sm:h-28 rounded-3xl object-cover border-3 border-white shadow-xl ring-2 ring-primary-100 group-hover:ring-primary-300 transition-all"
+                                  className="relative w-20 h-20 sm:w-28 sm:h-28 rounded-full object-cover border-3 border-white shadow-xl ring-2 ring-primary-100 group-hover:ring-primary-300 transition-all"
                                 />
                               </div>
                             ) : (
                               <div className="relative group/avatar">
-                                <div className="absolute -inset-1 bg-gradient-to-r from-primary-500 to-purple-500 rounded-3xl blur opacity-25 group-hover/avatar:opacity-50 transition-opacity"></div>
-                                <div className="relative w-20 h-20 sm:w-28 sm:h-28 rounded-3xl bg-gradient-to-br from-primary-100 via-purple-50 to-pink-100 flex items-center justify-center border-3 border-white shadow-xl ring-2 ring-primary-100 group-hover:ring-primary-300 transition-all">
+                                <div className="absolute -inset-1 bg-gradient-to-r from-primary-500 to-purple-500 rounded-full blur opacity-25 group-hover/avatar:opacity-50 transition-opacity"></div>
+                                <div className="relative w-20 h-20 sm:w-28 sm:h-28 rounded-full bg-gradient-to-br from-primary-100 via-purple-50 to-pink-100 flex items-center justify-center border-3 border-white shadow-xl ring-2 ring-primary-100 group-hover:ring-primary-300 transition-all">
                                   <svg className="w-10 h-10 sm:w-14 sm:h-14 text-primary-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
                                   </svg>
