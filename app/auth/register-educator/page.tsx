@@ -46,7 +46,7 @@ export default function RegisterEducatorPage() {
     bio: '',
     phone: '',
     location: '',
-    years_of_experience: 0,
+    years_of_experience: 1,
     hourly_rate: '',
     siret: '',
     sap_number: '',
@@ -286,8 +286,8 @@ export default function RegisterEducatorPage() {
       }
     }
 
-    if (educatorData.years_of_experience === undefined || educatorData.years_of_experience < 0) {
-      setError('Les années d\'expérience sont obligatoires');
+    if (educatorData.years_of_experience === undefined || educatorData.years_of_experience < 1) {
+      setError('Minimum 1 an d\'expérience requis pour s\'inscrire');
       return false;
     }
 
@@ -1112,11 +1112,12 @@ export default function RegisterEducatorPage() {
 
                   {/* Expérience */}
                   <div>
-                    <label className="block text-sm font-semibold text-gray-700 mb-2">Années d'expérience *</label>
+                    <label className="block text-sm font-semibold text-gray-700 mb-2">Années d'expérience * (minimum 1 an)</label>
                     <input
                       type="number"
                       required
-                      min="0"
+                      min="1"
+                      placeholder="Minimum 1 an"
                       value={educatorData.years_of_experience}
                       onChange={(e) => setEducatorData({ ...educatorData, years_of_experience: parseInt(e.target.value) })}
                       className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-all"

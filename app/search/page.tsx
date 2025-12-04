@@ -192,6 +192,7 @@ export default function SearchPage() {
           )
         `)
         .eq('verification_badge', true) // IMPORTANT: Seuls les profils vérifiés
+        .gte('years_of_experience', 1) // Minimum 1 an d'expérience requis
         .order('rating', { ascending: false });
 
       // Appliquer les filtres (sauf location si rayon est défini)
