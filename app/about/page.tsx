@@ -53,10 +53,10 @@ export default function AboutPage() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between h-20 items-center">
             <Logo />
-            <div className="md:hidden">
+            <div className="xl:hidden">
               <MobileMenu />
             </div>
-            <div className="hidden md:flex items-center gap-2 lg:gap-3">
+            <div className="hidden xl:flex items-center gap-2 lg:gap-3">
               <Link href="/about" className="text-primary-600 bg-primary-50 px-3 py-2 rounded-md font-medium transition-colors text-sm">
                 À propos
               </Link>
