@@ -137,10 +137,16 @@ export default function MobileMenu() {
               <Link
                 href="/search"
                 onClick={closeMenu}
-                className="flex items-center gap-3 px-3 py-2.5 rounded-xl font-medium transition-all focus:outline-none focus:ring-2 focus:ring-violet-500 focus:ring-offset-2 bg-gradient-to-r from-violet-600 to-blue-500 text-white shadow-md"
+                className={`flex items-center gap-3 px-3 py-2.5 rounded-xl font-medium transition-all focus:outline-none focus:ring-2 focus:ring-violet-500 focus:ring-offset-2 ${
+                  pathname === '/search'
+                    ? 'bg-gradient-to-r from-violet-600 to-blue-500 text-white shadow-md'
+                    : 'text-gray-700 hover:bg-gray-50'
+                }`}
               >
-                <div className="w-9 h-9 rounded-lg flex items-center justify-center bg-white/20">
-                  <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                <div className={`w-9 h-9 rounded-lg flex items-center justify-center ${
+                  pathname === '/search' ? 'bg-white/20' : 'bg-gray-100'
+                }`}>
+                  <svg className={`w-5 h-5 ${pathname === '/search' ? 'text-white' : 'text-gray-500'}`} fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
                   </svg>
                 </div>
