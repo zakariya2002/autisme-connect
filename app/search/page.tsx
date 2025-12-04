@@ -737,6 +737,17 @@ export default function SearchPage() {
                       }
                     }}
                   >
+                    {/* Bouton favori mobile - position absolue en haut à droite */}
+                    {userRole === 'family' && (
+                      <div className="absolute top-3 right-3 z-10 sm:hidden">
+                        <FavoriteButton
+                          educatorId={educator.id}
+                          familyId={familyId}
+                          isFavorite={favorites.has(educator.id)}
+                          onToggle={handleFavoriteToggle}
+                        />
+                      </div>
+                    )}
                     <div className="p-5 sm:p-6">
                       <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-4">
                         <div className="flex gap-4 sm:gap-5">
@@ -874,9 +885,9 @@ export default function SearchPage() {
                       </div>
 
                       <div className="flex sm:flex-col gap-3 w-full sm:w-auto sm:ml-4 mt-4 sm:mt-0">
-                        {/* Bouton favori - visible uniquement pour les familles connectées */}
+                        {/* Bouton favori desktop - caché sur mobile */}
                         {userRole === 'family' && (
-                          <div className="flex justify-end sm:justify-center mb-1">
+                          <div className="hidden sm:flex justify-center mb-1">
                             <FavoriteButton
                               educatorId={educator.id}
                               familyId={familyId}
