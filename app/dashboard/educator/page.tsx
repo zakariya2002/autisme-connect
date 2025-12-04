@@ -444,108 +444,106 @@ export default function EducatorDashboard() {
         )}
 
         {/* Actions rapides */}
-        <div className="bg-white rounded-2xl shadow-sm p-5 sm:p-6">
+        <div className="bg-white rounded-2xl shadow-sm p-4 sm:p-6">
           <h2 className="text-lg font-bold text-gray-900 mb-4">Actions rapides</h2>
-          <div className="grid grid-cols-2 gap-3 sm:gap-4">
+          <div className="grid grid-cols-2 gap-2 sm:gap-4">
             {/* Mon profil */}
             <Link
               href="/dashboard/educator/profile"
-              className="flex items-center gap-3 p-4 bg-blue-50 hover:bg-blue-100 rounded-xl transition group"
+              className="flex items-center gap-2 sm:gap-3 p-3 sm:p-4 bg-blue-50 hover:bg-blue-100 rounded-xl transition group"
             >
-              <div className="w-10 h-10 bg-blue-500 rounded-xl flex items-center justify-center flex-shrink-0 group-hover:scale-105 transition">
-                <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <div className="w-8 h-8 sm:w-10 sm:h-10 bg-blue-500 rounded-lg sm:rounded-xl flex items-center justify-center flex-shrink-0 group-hover:scale-105 transition">
+                <svg className="w-4 h-4 sm:w-5 sm:h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
                 </svg>
               </div>
-              <span className="font-semibold text-gray-900 text-sm sm:text-base">Mon profil</span>
+              <span className="font-semibold text-gray-900 text-xs sm:text-base truncate">Mon profil</span>
             </Link>
 
             {/* Vérification */}
             <Link
               href="/dashboard/educator/verification"
-              className={`flex items-center gap-3 p-4 rounded-xl transition group ${
+              className={`flex items-center gap-2 sm:gap-3 p-3 sm:p-4 rounded-xl transition group ${
                 profile?.verification_badge
                   ? 'bg-green-50 hover:bg-green-100'
                   : 'bg-amber-50 hover:bg-amber-100'
               }`}
             >
-              <div className={`w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0 group-hover:scale-105 transition ${
+              <div className={`w-8 h-8 sm:w-10 sm:h-10 rounded-lg sm:rounded-xl flex items-center justify-center flex-shrink-0 group-hover:scale-105 transition ${
                 profile?.verification_badge ? 'bg-green-500' : 'bg-amber-500'
               }`}>
-                <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg className="w-4 h-4 sm:w-5 sm:h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
                 </svg>
               </div>
-              <span className="font-semibold text-gray-900 text-sm sm:text-base">
-                {profile?.verification_badge ? 'Vérification' : 'Vérification'}
-              </span>
+              <span className="font-semibold text-gray-900 text-xs sm:text-base truncate">Vérification</span>
             </Link>
 
             {/* Disponibilités */}
             <Link
               href="/dashboard/educator/availability"
-              className="flex items-center gap-3 p-4 bg-indigo-50 hover:bg-indigo-100 rounded-xl transition group"
+              className="flex items-center gap-2 sm:gap-3 p-3 sm:p-4 bg-indigo-50 hover:bg-indigo-100 rounded-xl transition group"
             >
-              <div className="w-10 h-10 bg-indigo-500 rounded-xl flex items-center justify-center flex-shrink-0 group-hover:scale-105 transition">
-                <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <div className="w-8 h-8 sm:w-10 sm:h-10 bg-indigo-500 rounded-lg sm:rounded-xl flex items-center justify-center flex-shrink-0 group-hover:scale-105 transition">
+                <svg className="w-4 h-4 sm:w-5 sm:h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
                 </svg>
               </div>
-              <span className="font-semibold text-gray-900 text-sm sm:text-base">Disponibilités</span>
+              <span className="font-semibold text-gray-900 text-xs sm:text-base truncate">Disponibilités</span>
             </Link>
 
             {/* Messages */}
             <Link
               href="/messages"
-              className="flex items-center gap-3 p-4 bg-pink-50 hover:bg-pink-100 rounded-xl transition group"
+              className="flex items-center gap-2 sm:gap-3 p-3 sm:p-4 bg-pink-50 hover:bg-pink-100 rounded-xl transition group"
             >
-              <div className="w-10 h-10 bg-pink-500 rounded-xl flex items-center justify-center flex-shrink-0 group-hover:scale-105 transition">
-                <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <div className="w-8 h-8 sm:w-10 sm:h-10 bg-pink-500 rounded-lg sm:rounded-xl flex items-center justify-center flex-shrink-0 group-hover:scale-105 transition">
+                <svg className="w-4 h-4 sm:w-5 sm:h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z" />
                 </svg>
               </div>
-              <span className="font-semibold text-gray-900 text-sm sm:text-base">Messages</span>
+              <span className="font-semibold text-gray-900 text-xs sm:text-base truncate">Messages</span>
             </Link>
 
             {/* Rendez-vous */}
             <Link
               href="/dashboard/educator/appointments"
-              className="flex items-center gap-3 p-4 bg-green-50 hover:bg-green-100 rounded-xl transition group"
+              className="flex items-center gap-2 sm:gap-3 p-3 sm:p-4 bg-green-50 hover:bg-green-100 rounded-xl transition group"
             >
-              <div className="w-10 h-10 bg-green-500 rounded-xl flex items-center justify-center flex-shrink-0 group-hover:scale-105 transition">
-                <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <div className="w-8 h-8 sm:w-10 sm:h-10 bg-green-500 rounded-lg sm:rounded-xl flex items-center justify-center flex-shrink-0 group-hover:scale-105 transition">
+                <svg className="w-4 h-4 sm:w-5 sm:h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4" />
                 </svg>
               </div>
-              <span className="font-semibold text-gray-900 text-sm sm:text-base">Mes rendez-vous</span>
+              <span className="font-semibold text-gray-900 text-xs sm:text-base truncate">Rendez-vous</span>
             </Link>
 
             {/* Factures */}
             <Link
               href="/dashboard/educator/invoices"
-              className="flex items-center gap-3 p-4 bg-purple-50 hover:bg-purple-100 rounded-xl transition group"
+              className="flex items-center gap-2 sm:gap-3 p-3 sm:p-4 bg-purple-50 hover:bg-purple-100 rounded-xl transition group"
             >
-              <div className="w-10 h-10 bg-purple-500 rounded-xl flex items-center justify-center flex-shrink-0 group-hover:scale-105 transition">
-                <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <div className="w-8 h-8 sm:w-10 sm:h-10 bg-purple-500 rounded-lg sm:rounded-xl flex items-center justify-center flex-shrink-0 group-hover:scale-105 transition">
+                <svg className="w-4 h-4 sm:w-5 sm:h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
                 </svg>
               </div>
-              <span className="font-semibold text-gray-900 text-sm sm:text-base">Mes factures</span>
+              <span className="font-semibold text-gray-900 text-xs sm:text-base truncate">Factures</span>
             </Link>
 
             {/* Agrément SAP */}
             <Link
               href="/educators/sap-accreditation"
-              className="flex items-center gap-3 p-4 bg-cyan-50 hover:bg-cyan-100 rounded-xl transition group col-span-2 sm:col-span-1"
+              className="flex items-center gap-2 sm:gap-3 p-3 sm:p-4 bg-cyan-50 hover:bg-cyan-100 rounded-xl transition group col-span-2 sm:col-span-1"
             >
-              <div className="w-10 h-10 bg-cyan-500 rounded-xl flex items-center justify-center flex-shrink-0 group-hover:scale-105 transition">
-                <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <div className="w-8 h-8 sm:w-10 sm:h-10 bg-cyan-500 rounded-lg sm:rounded-xl flex items-center justify-center flex-shrink-0 group-hover:scale-105 transition">
+                <svg className="w-4 h-4 sm:w-5 sm:h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
                 </svg>
               </div>
-              <div className="flex items-center gap-2">
-                <span className="font-semibold text-gray-900 text-sm sm:text-base">Agrément SAP</span>
-                <span className="text-cyan-600 text-xs font-semibold px-2 py-0.5 bg-cyan-100 rounded-full">Info</span>
+              <div className="flex items-center gap-1 sm:gap-2 min-w-0">
+                <span className="font-semibold text-gray-900 text-xs sm:text-base truncate">Agrément SAP</span>
+                <span className="text-cyan-600 text-[10px] sm:text-xs font-semibold px-1.5 sm:px-2 py-0.5 bg-cyan-100 rounded-full flex-shrink-0">Info</span>
               </div>
             </Link>
           </div>

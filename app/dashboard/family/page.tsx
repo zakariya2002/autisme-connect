@@ -8,15 +8,73 @@ import { signOut } from '@/lib/auth';
 import Logo from '@/components/Logo';
 import FamilyMobileMenu from '@/components/FamilyMobileMenu';
 
+// Mapping des emojis par profession
+const professionEmojis: { [key: string]: string } = {
+  educator: '👨‍🏫',
+  moniteur_educateur: '👥',
+  psychologist: '🧠',
+  psychomotricist: '🤸',
+  occupational_therapist: '🖐️',
+  speech_therapist: '🗣️',
+  physiotherapist: '💪',
+  apa_teacher: '🏃',
+  music_therapist: '🎵',
+};
+
+// Labels des professions
+const professionLabels: { [key: string]: string } = {
+  educator: 'Éducateur spécialisé',
+  moniteur_educateur: 'Moniteur éducateur',
+  psychologist: 'Psychologue',
+  psychomotricist: 'Psychomotricien',
+  occupational_therapist: 'Ergothérapeute',
+  speech_therapist: 'Orthophoniste',
+  physiotherapist: 'Kinésithérapeute',
+  apa_teacher: 'Enseignant APA',
+  music_therapist: 'Musicothérapeute',
+};
+
+// Couleurs des statuts
+const statusColors: { [key: string]: { bg: string; text: string; label: string } } = {
+  pending: { bg: 'bg-yellow-100', text: 'text-yellow-800', label: 'En attente' },
+  accepted: { bg: 'bg-green-100', text: 'text-green-800', label: 'Confirmé' },
+  rejected: { bg: 'bg-red-100', text: 'text-red-800', label: 'Refusé' },
+  cancelled: { bg: 'bg-gray-100', text: 'text-gray-800', label: 'Annulé' },
+  completed: { bg: 'bg-blue-100', text: 'text-blue-800', label: 'Terminé' },
+};
+
+interface CalendarAppointment {
+  id: string;
+  appointment_date: string;
+  start_time: string;
+  end_time: string;
+  status: string;
+  educator: {
+    id: string;
+    first_name: string;
+    last_name: string;
+    profession_type: string;
+    avatar_url?: string;
+  };
+}
+
 export default function FamilyDashboard() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const [profile, setProfile] = useState<any>(null);
+  const [familyId, setFamilyId] = useState<string | null>(null);
   const [stats, setStats] = useState({
     appointments: 0,
     messages: 0,
   });
   const [showSuccessMessage, setShowSuccessMessage] = useState(false);
+
+  // États pour le calendrier
+  const [currentMonth, setCurrentMonth] = useState(new Date());
+  const [calendarAppointments, setCalendarAppointments] = useState<CalendarAppointment[]>([]);
+  const [selectedDayAppointments, setSelectedDayAppointments] = useState<CalendarAppointment[]>([]);
+  const [showPopup, setShowPopup] = useState(false);
+  const [selectedDate, setSelectedDate] = useState<Date | null>(null);
 
   useEffect(() => {
     fetchProfile();
@@ -27,6 +85,13 @@ export default function FamilyDashboard() {
       setShowSuccessMessage(true);
     }
   }, []);
+
+  // Charger les rendez-vous quand le mois change ou quand familyId est disponible
+  useEffect(() => {
+    if (familyId) {
+      fetchCalendarAppointments(familyId);
+    }
+  }, [currentMonth, familyId]);
 
   const handleCloseSuccessMessage = () => {
     setShowSuccessMessage(false);
@@ -61,6 +126,8 @@ export default function FamilyDashboard() {
       .single();
 
     if (familyProfile) {
+      setFamilyId(familyProfile.id);
+
       const { count: appointmentsCount } = await supabase
         .from('appointments')
         .select('*', { count: 'exact', head: true })
@@ -76,6 +143,77 @@ export default function FamilyDashboard() {
         messages: messagesCount || 0,
       });
     }
+  };
+
+  const fetchCalendarAppointments = async (fId: string) => {
+    if (!fId) return;
+
+    // Calculer le premier et dernier jour du mois
+    const firstDay = new Date(currentMonth.getFullYear(), currentMonth.getMonth(), 1);
+    const lastDay = new Date(currentMonth.getFullYear(), currentMonth.getMonth() + 1, 0);
+
+    const { data, error } = await supabase
+      .from('appointments')
+      .select(`
+        id,
+        appointment_date,
+        start_time,
+        end_time,
+        status,
+        educator:educator_profiles!educator_id (
+          id,
+          first_name,
+          last_name,
+          profession_type,
+          avatar_url
+        )
+      `)
+      .eq('family_id', fId)
+      .gte('appointment_date', firstDay.toISOString().split('T')[0])
+      .lte('appointment_date', lastDay.toISOString().split('T')[0])
+      .in('status', ['pending', 'accepted', 'completed'])
+      .order('appointment_date', { ascending: true });
+
+    if (!error && data) {
+      setCalendarAppointments(data as unknown as CalendarAppointment[]);
+    }
+  };
+
+  // Fonctions utilitaires pour le calendrier
+  const getDaysInMonth = (date: Date) => {
+    const year = date.getFullYear();
+    const month = date.getMonth();
+    const firstDay = new Date(year, month, 1);
+    const lastDay = new Date(year, month + 1, 0);
+    const daysInMonth = lastDay.getDate();
+    const startingDay = firstDay.getDay() === 0 ? 6 : firstDay.getDay() - 1; // Lundi = 0
+    return { daysInMonth, startingDay };
+  };
+
+  const getAppointmentsForDay = (day: number) => {
+    const dateStr = `${currentMonth.getFullYear()}-${String(currentMonth.getMonth() + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+    return calendarAppointments.filter(apt => apt.appointment_date === dateStr);
+  };
+
+  const handleDayClick = (day: number) => {
+    const appointments = getAppointmentsForDay(day);
+    if (appointments.length > 0) {
+      setSelectedDayAppointments(appointments);
+      setSelectedDate(new Date(currentMonth.getFullYear(), currentMonth.getMonth(), day));
+      setShowPopup(true);
+    }
+  };
+
+  const goToPreviousMonth = () => {
+    setCurrentMonth(prev => new Date(prev.getFullYear(), prev.getMonth() - 1, 1));
+  };
+
+  const goToNextMonth = () => {
+    setCurrentMonth(prev => new Date(prev.getFullYear(), prev.getMonth() + 1, 1));
+  };
+
+  const formatMonthYear = (date: Date) => {
+    return date.toLocaleDateString('fr-FR', { month: 'long', year: 'numeric' });
   };
 
   const handleLogout = async () => {
@@ -309,8 +447,192 @@ export default function FamilyDashboard() {
             </Link>
           </div>
         </div>
+
+        {/* Calendrier prévisionnel */}
+        <div className="bg-white rounded-lg sm:rounded-xl shadow-sm border border-gray-100">
+          <div className="px-4 sm:px-6 py-3 sm:py-4 border-b border-gray-100">
+            <div className="flex items-center justify-between">
+              <h2 className="text-base sm:text-lg font-semibold text-gray-900">Calendrier prévisionnel</h2>
+              <div className="flex items-center gap-2">
+                <button
+                  onClick={goToPreviousMonth}
+                  className="p-1.5 sm:p-2 hover:bg-gray-100 rounded-lg transition-colors"
+                  aria-label="Mois précédent"
+                >
+                  <svg className="w-4 h-4 sm:w-5 sm:h-5 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+                  </svg>
+                </button>
+                <span className="text-sm sm:text-base font-medium text-gray-700 min-w-[120px] sm:min-w-[150px] text-center capitalize">
+                  {formatMonthYear(currentMonth)}
+                </span>
+                <button
+                  onClick={goToNextMonth}
+                  className="p-1.5 sm:p-2 hover:bg-gray-100 rounded-lg transition-colors"
+                  aria-label="Mois suivant"
+                >
+                  <svg className="w-4 h-4 sm:w-5 sm:h-5 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                  </svg>
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <div className="p-3 sm:p-4">
+            {/* En-têtes des jours */}
+            <div className="grid grid-cols-7 gap-1 mb-2">
+              {['Lun', 'Mar', 'Mer', 'Jeu', 'Ven', 'Sam', 'Dim'].map((day) => (
+                <div key={day} className="text-center text-[10px] sm:text-xs font-medium text-gray-500 py-1">
+                  {day}
+                </div>
+              ))}
+            </div>
+
+            {/* Grille du calendrier */}
+            <div className="grid grid-cols-7 gap-1">
+              {(() => {
+                const { daysInMonth, startingDay } = getDaysInMonth(currentMonth);
+                const today = new Date();
+                const isCurrentMonth = today.getMonth() === currentMonth.getMonth() && today.getFullYear() === currentMonth.getFullYear();
+                const cells = [];
+
+                // Cellules vides pour les jours avant le 1er du mois
+                for (let i = 0; i < startingDay; i++) {
+                  cells.push(<div key={`empty-${i}`} className="aspect-square"></div>);
+                }
+
+                // Jours du mois
+                for (let day = 1; day <= daysInMonth; day++) {
+                  const dayAppointments = getAppointmentsForDay(day);
+                  const hasAppointments = dayAppointments.length > 0;
+                  const isToday = isCurrentMonth && today.getDate() === day;
+
+                  cells.push(
+                    <button
+                      key={day}
+                      onClick={() => handleDayClick(day)}
+                      disabled={!hasAppointments}
+                      className={`
+                        aspect-square rounded-lg sm:rounded-xl flex flex-col items-center justify-center relative transition-all
+                        ${isToday ? 'ring-2 ring-purple-500 ring-offset-1' : ''}
+                        ${hasAppointments ? 'bg-purple-50 hover:bg-purple-100 cursor-pointer' : 'hover:bg-gray-50'}
+                      `}
+                    >
+                      <span className={`text-xs sm:text-sm font-medium ${isToday ? 'text-purple-600' : 'text-gray-700'}`}>
+                        {day}
+                      </span>
+                      {hasAppointments && (
+                        <div className="flex items-center justify-center gap-0.5 mt-0.5">
+                          {dayAppointments.slice(0, 2).map((apt, idx) => (
+                            <span key={idx} className="text-[10px] sm:text-xs">
+                              {professionEmojis[apt.educator?.profession_type] || '📅'}
+                            </span>
+                          ))}
+                          {dayAppointments.length > 2 && (
+                            <span className="text-[8px] sm:text-[10px] text-gray-500">+{dayAppointments.length - 2}</span>
+                          )}
+                        </div>
+                      )}
+                    </button>
+                  );
+                }
+
+                return cells;
+              })()}
+            </div>
+
+            {/* Légende des emojis */}
+            <div className="mt-4 pt-3 border-t border-gray-100">
+              <p className="text-[10px] sm:text-xs text-gray-500 mb-2">Légende :</p>
+              <div className="flex flex-wrap gap-2 sm:gap-3">
+                {Object.entries(professionEmojis).slice(0, 5).map(([key, emoji]) => (
+                  <div key={key} className="flex items-center gap-1">
+                    <span className="text-xs sm:text-sm">{emoji}</span>
+                    <span className="text-[9px] sm:text-[10px] text-gray-600">{professionLabels[key]?.split(' ')[0]}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        </div>
         </div>
       </div>
+
+      {/* Popup des détails du jour */}
+      {showPopup && selectedDate && (
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4" onClick={() => setShowPopup(false)}>
+          <div
+            className="bg-white rounded-2xl shadow-xl max-w-md w-full max-h-[80vh] overflow-hidden"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="px-5 py-4 border-b border-gray-100 flex items-center justify-between bg-gradient-to-r from-purple-500 to-fuchsia-500">
+              <div>
+                <h3 className="text-lg font-bold text-white">
+                  {selectedDate.toLocaleDateString('fr-FR', { weekday: 'long', day: 'numeric', month: 'long' })}
+                </h3>
+                <p className="text-white/80 text-sm">
+                  {selectedDayAppointments.length} rendez-vous
+                </p>
+              </div>
+              <button
+                onClick={() => setShowPopup(false)}
+                className="p-2 hover:bg-white/20 rounded-lg transition-colors"
+                aria-label="Fermer"
+              >
+                <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              </button>
+            </div>
+
+            <div className="p-4 overflow-y-auto max-h-[60vh] space-y-3">
+              {selectedDayAppointments.map((apt) => (
+                <div key={apt.id} className="bg-gray-50 rounded-xl p-4">
+                  <div className="flex items-start gap-3">
+                    <div className="w-12 h-12 rounded-full bg-purple-100 flex items-center justify-center flex-shrink-0">
+                      <span className="text-2xl">
+                        {professionEmojis[apt.educator?.profession_type] || '📅'}
+                      </span>
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-center gap-2 mb-1">
+                        <p className="font-semibold text-gray-900 truncate">
+                          {apt.educator?.first_name} {apt.educator?.last_name}
+                        </p>
+                        <span className={`px-2 py-0.5 rounded-full text-[10px] font-medium ${statusColors[apt.status]?.bg} ${statusColors[apt.status]?.text}`}>
+                          {statusColors[apt.status]?.label}
+                        </span>
+                      </div>
+                      <p className="text-sm text-gray-600">
+                        {professionLabels[apt.educator?.profession_type] || 'Professionnel'}
+                      </p>
+                      <div className="flex items-center gap-1 mt-2 text-sm text-gray-700">
+                        <svg className="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        </svg>
+                        <span className="font-medium">
+                          {apt.start_time?.slice(0, 5)} - {apt.end_time?.slice(0, 5)}
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            <div className="px-4 py-3 border-t border-gray-100 bg-gray-50">
+              <Link
+                href="/bookings"
+                className="block w-full text-center py-2.5 bg-purple-600 text-white rounded-xl font-medium hover:bg-purple-700 transition-colors"
+                onClick={() => setShowPopup(false)}
+              >
+                Voir tous mes rendez-vous
+              </Link>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
