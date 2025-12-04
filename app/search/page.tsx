@@ -726,9 +726,6 @@ export default function SearchPage() {
               <div className="space-y-5">
                 {paginatedEducators.map((educator) => (
                   <div key={educator.id} className="bg-white rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-500 border border-gray-100 overflow-hidden group hover:-translate-y-1 relative">
-                    {/* Barre supérieure colorée */}
-                    <div className="h-1.5 bg-gradient-to-r from-primary-500 via-purple-500 to-pink-500"></div>
-
                     <div className="p-5 sm:p-6">
                       <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-4">
                         <div className="flex gap-4 sm:gap-5">
@@ -794,7 +791,7 @@ export default function SearchPage() {
                           </div>
 
                           {/* Note moyenne avec étoiles améliorées */}
-                          {educator.rating > 0 ? (
+                          {educator.rating > 0 && (
                             <div className="flex items-center gap-2 mb-3 bg-gradient-to-r from-amber-50 to-yellow-50 px-3 py-1.5 rounded-xl w-fit border border-amber-100">
                               <div className="flex items-center gap-0.5">
                                 {[...Array(5)].map((_, i) => (
@@ -819,10 +816,6 @@ export default function SearchPage() {
                                 ({educator.total_reviews} avis)
                               </span>
                             </div>
-                          ) : (
-                            <div className="flex items-center gap-2 mb-3 bg-gray-50 px-3 py-1.5 rounded-xl w-fit border border-gray-100">
-                              <span className="text-xs sm:text-sm text-gray-500">Nouveau professionnel</span>
-                            </div>
                           )}
 
                           {/* Localisation avec style amélioré */}
@@ -834,9 +827,9 @@ export default function SearchPage() {
                             <span className="text-sm sm:text-base">{educator.location}</span>
                           </div>
 
-                          {/* Badges d'informations avec style glassmorphism */}
-                          <div className="flex items-center gap-2 sm:gap-3 text-xs sm:text-sm flex-wrap">
-                            {educator.distance !== undefined && (
+                          {/* Badge distance si recherche par rayon */}
+                          {educator.distance !== undefined && (
+                            <div className="flex items-center gap-2 sm:gap-3 text-xs sm:text-sm flex-wrap">
                               <span className="inline-flex items-center gap-1.5 px-3 py-2 bg-gradient-to-r from-emerald-500 to-green-500 text-white rounded-xl font-semibold shadow-sm">
                                 <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
@@ -844,22 +837,8 @@ export default function SearchPage() {
                                 </svg>
                                 {educator.distance} km
                               </span>
-                            )}
-                            <span className="inline-flex items-center gap-1.5 px-3 py-2 bg-gradient-to-r from-blue-50 to-indigo-50 text-blue-700 rounded-xl font-semibold border border-blue-200 shadow-sm">
-                              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-                              </svg>
-                              {educator.years_of_experience} ans
-                            </span>
-                            {educator.hourly_rate && (
-                              <span className="inline-flex items-center gap-1.5 px-3 py-2 bg-gradient-to-r from-purple-50 to-pink-50 text-purple-700 rounded-xl font-semibold border border-purple-200 shadow-sm">
-                                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                                </svg>
-                                {educator.hourly_rate}€/h
-                              </span>
-                            )}
-                          </div>
+                            </div>
+                          )}
                         </div>
                       </div>
 
