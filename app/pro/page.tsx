@@ -1,10 +1,9 @@
 'use client';
 
 import Link from 'next/link';
-import { useState } from 'react';
+import MobileMenuPro from '@/components/MobileMenuPro';
 
 export default function ProLandingPage() {
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   return (
     <div className="min-h-screen bg-white">
@@ -48,42 +47,10 @@ export default function ProLandingPage() {
             </div>
 
             {/* Mobile menu button */}
-            <button
-              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className="xl:hidden p-2 rounded-lg hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-teal-500 focus:ring-offset-2"
-              aria-expanded={mobileMenuOpen}
-              aria-controls="mobile-menu"
-              aria-label={mobileMenuOpen ? "Fermer le menu" : "Ouvrir le menu"}
-            >
-              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                {mobileMenuOpen ? (
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                ) : (
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
-                )}
-              </svg>
-            </button>
-          </div>
-
-          {/* Mobile Navigation */}
-          {mobileMenuOpen && (
-            <div id="mobile-menu" className="xl:hidden py-4 border-t border-gray-100" role="menu">
-              <div className="flex flex-col gap-3">
-                <Link href="/pro/pricing" className="text-gray-600 font-medium py-2 focus:outline-none focus:ring-2 focus:ring-teal-500 rounded" role="menuitem">Tarifs</Link>
-                <Link href="/pro/how-it-works" className="text-gray-600 font-medium py-2 focus:outline-none focus:ring-2 focus:ring-teal-500 rounded" role="menuitem">Comment ça marche</Link>
-                <Link href="/pro/sap-accreditation" className="text-gray-600 font-medium py-2 focus:outline-none focus:ring-2 focus:ring-teal-500 rounded" role="menuitem">Guide SAP</Link>
-                <Link href="/" className="text-gray-500 text-sm py-2 focus:outline-none focus:ring-2 focus:ring-teal-500 rounded" role="menuitem">Vous êtes un aidant ?</Link>
-                <div className="flex gap-3 pt-3 border-t border-gray-100">
-                  <Link href="/auth/login" className="flex-1 text-center py-2.5 border border-gray-300 rounded-xl font-medium focus:outline-none focus:ring-2 focus:ring-teal-500" role="menuitem">
-                    Connexion
-                  </Link>
-                  <Link href="/auth/register-educator" className="flex-1 text-center py-2.5 bg-gradient-to-r from-emerald-500 via-teal-500 to-cyan-500 text-white rounded-xl font-semibold focus:outline-none focus:ring-2 focus:ring-teal-500" role="menuitem">
-                    S'inscrire
-                  </Link>
-                </div>
-              </div>
+            <div className="xl:hidden">
+              <MobileMenuPro />
             </div>
-          )}
+          </div>
         </div>
       </nav>
 

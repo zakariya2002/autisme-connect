@@ -9,41 +9,62 @@ interface LogoProps {
 
 export default function Logo({ href = '/', className = '', iconSize = 'md', showText = true }: LogoProps) {
   const sizeClasses = {
-    sm: 'w-8 h-8',
-    md: 'w-10 h-10',
-    lg: 'w-12 h-12'
-  };
-
-  const iconSizeClasses = {
-    sm: 'w-4 h-4',
-    md: 'w-6 h-6',
-    lg: 'w-8 h-8'
+    sm: 'w-9 h-9',
+    md: 'w-11 h-11',
+    lg: 'w-14 h-14'
   };
 
   const textSizeClasses = {
-    sm: 'text-lg',
+    sm: 'text-xl',
     md: 'text-2xl',
     lg: 'text-3xl'
   };
 
-  const initialsSize = {
-    sm: 'text-xs',
-    md: 'text-sm',
-    lg: 'text-base'
+  const iconScale = {
+    sm: 'scale-90',
+    md: 'scale-100',
+    lg: 'scale-110'
   };
 
   return (
     <Link href={href} className={`flex items-center group ${className}`}>
-      {/* Logo professionnel médico-social : cercle avec initiales AC */}
-      <div className={`${sizeClasses[iconSize]} bg-gradient-to-br from-primary-600 to-blue-600 rounded-full flex items-center justify-center shadow-md group-hover:shadow-lg transition-all border-2 border-white ${showText ? 'mr-2.5' : ''}`}>
-        <span className={`text-white font-extrabold ${initialsSize[iconSize]}`}>AC</span>
+      {/* Logo neurocare - icône avec onde neurologique */}
+      <div className={`${sizeClasses[iconSize]} relative flex items-center justify-center ${showText ? 'mr-2.5' : ''}`}>
+        <svg
+          viewBox="0 0 40 40"
+          className={`w-full h-full ${iconScale[iconSize]}`}
+          fill="none"
+        >
+          <defs>
+            <linearGradient id="logoGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stopColor="#7c3aed" />
+              <stop offset="100%" stopColor="#3b82f6" />
+            </linearGradient>
+          </defs>
+          {/* Cercle externe */}
+          <circle
+            cx="20"
+            cy="20"
+            r="16"
+            stroke="url(#logoGradient)"
+            strokeWidth="3.5"
+            fill="none"
+          />
+          {/* Onde neurologique avec pics arrondis */}
+          <path
+            d="M9 20 L12 20 Q14 20 15 12 Q16 8 17 12 L20 20 L23 28 Q24 32 25 28 Q26 20 28 20 L31 20"
+            stroke="url(#logoGradient)"
+            strokeWidth="3"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            fill="none"
+          />
+        </svg>
       </div>
       {showText && (
-        <div className="flex flex-col leading-tight">
-          <span className={`${textSizeClasses[iconSize]} font-bold text-primary-700 group-hover:text-primary-800 transition-colors`}>
-            Autisme Connect
-          </span>
-        </div>
+        <span className={`${textSizeClasses[iconSize]} font-bold bg-gradient-to-r from-violet-600 to-purple-500 bg-clip-text text-transparent group-hover:from-violet-700 group-hover:to-purple-600 transition-all tracking-tight`}>
+          neurocare
+        </span>
       )}
     </Link>
   );

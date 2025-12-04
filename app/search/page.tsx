@@ -740,7 +740,7 @@ export default function SearchPage() {
                   >
                     {/* Bouton favori mobile - position absolue en haut à droite */}
                     {userRole === 'family' && (
-                      <div className="absolute top-3 right-3 z-10 sm:hidden">
+                      <div className="absolute top-4 right-4 z-10 sm:hidden">
                         <FavoriteButton
                           educatorId={educator.id}
                           familyId={familyId}
@@ -749,9 +749,9 @@ export default function SearchPage() {
                         />
                       </div>
                     )}
-                    <div className="p-5 sm:p-6">
-                      <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-4">
-                        <div className="flex gap-4 sm:gap-5">
+                    <div className="p-4 sm:p-6 pr-14 sm:pr-6">
+                      <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-3 sm:gap-4">
+                        <div className="flex gap-3 sm:gap-5">
                           {/* Photo de profil avec effet */}
                           <div className="flex-shrink-0 relative">
                             {educator.avatar_url ? (
@@ -760,14 +760,14 @@ export default function SearchPage() {
                                 <img
                                   src={educator.avatar_url}
                                   alt={`${educator.first_name} ${educator.last_name}`}
-                                  className="relative w-20 h-20 sm:w-28 sm:h-28 rounded-full object-cover border-3 border-white shadow-xl ring-2 ring-primary-100 group-hover:ring-primary-300 transition-all"
+                                  className="relative w-16 h-16 sm:w-28 sm:h-28 rounded-full object-cover border-2 sm:border-3 border-white shadow-xl ring-2 ring-primary-100 group-hover:ring-primary-300 transition-all"
                                 />
                               </div>
                             ) : (
                               <div className="relative group/avatar">
                                 <div className="absolute -inset-1 bg-gradient-to-r from-primary-500 to-purple-500 rounded-full blur opacity-25 group-hover/avatar:opacity-50 transition-opacity"></div>
-                                <div className="relative w-20 h-20 sm:w-28 sm:h-28 rounded-full bg-gradient-to-br from-primary-100 via-purple-50 to-pink-100 flex items-center justify-center border-3 border-white shadow-xl ring-2 ring-primary-100 group-hover:ring-primary-300 transition-all">
-                                  <svg className="w-10 h-10 sm:w-14 sm:h-14 text-primary-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                                <div className="relative w-16 h-16 sm:w-28 sm:h-28 rounded-full bg-gradient-to-br from-primary-100 via-purple-50 to-pink-100 flex items-center justify-center border-2 sm:border-3 border-white shadow-xl ring-2 ring-primary-100 group-hover:ring-primary-300 transition-all">
+                                  <svg className="w-8 h-8 sm:w-14 sm:h-14 text-primary-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
                                   </svg>
                                 </div>
@@ -791,13 +791,13 @@ export default function SearchPage() {
                           </div>
 
                         <div className="flex-1 min-w-0">
-                          <div className="flex items-center gap-2 flex-wrap mb-2">
-                            <h3 className="text-lg sm:text-xl font-bold text-gray-900 group-hover:text-primary-700 transition-colors">
+                          <div className="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-2 mb-2">
+                            <h3 className="text-base sm:text-xl font-bold text-gray-900 group-hover:text-primary-700 transition-colors truncate">
                               {educator.first_name} {educator.last_name}
                             </h3>
                             {educator.verification_badge && (
-                              <span className="inline-flex items-center gap-1 px-2 py-0.5 bg-gradient-to-r from-emerald-500 to-green-500 text-white text-xs font-bold rounded-full shadow-sm">
-                                <svg className="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
+                              <span className="inline-flex items-center gap-1 px-2 py-0.5 bg-gradient-to-r from-emerald-500 to-green-500 text-white text-[10px] sm:text-xs font-bold rounded-full shadow-sm w-fit flex-shrink-0">
+                                <svg className="w-3 h-3 sm:w-3.5 sm:h-3.5" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
                                   <path fillRule="evenodd" d="M6.267 3.455a3.066 3.066 0 001.745-.723 3.066 3.066 0 013.976 0 3.066 3.066 0 001.745.723 3.066 3.066 0 012.812 2.812c.051.643.304 1.254.723 1.745a3.066 3.066 0 010 3.976 3.066 3.066 0 00-.723 1.745 3.066 3.066 0 01-2.812 2.812 3.066 3.066 0 00-1.745.723 3.066 3.066 0 01-3.976 0 3.066 3.066 0 00-1.745-.723 3.066 3.066 0 01-2.812-2.812 3.066 3.066 0 00-.723-1.745 3.066 3.066 0 010-3.976 3.066 3.066 0 00.723-1.745 3.066 3.066 0 012.812-2.812zm7.44 5.252a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
                                 </svg>
                                 Vérifié
@@ -806,21 +806,21 @@ export default function SearchPage() {
                           </div>
 
                           {/* Badge profession avec style amélioré */}
-                          <div className="mb-3">
-                            <span className="inline-flex items-center gap-2 px-3 py-1.5 bg-gradient-to-r from-primary-50 to-purple-50 text-primary-700 text-sm font-semibold rounded-xl border border-primary-200 shadow-sm">
-                              <span className="w-2 h-2 bg-primary-500 rounded-full animate-pulse"></span>
-                              {getProfessionLabel(educator.profession_type)}
+                          <div className="mb-2 sm:mb-3">
+                            <span className="inline-flex items-center gap-1.5 sm:gap-2 px-2 sm:px-3 py-1 sm:py-1.5 bg-gradient-to-r from-primary-50 to-purple-50 text-primary-700 text-xs sm:text-sm font-semibold rounded-lg sm:rounded-xl border border-primary-200 shadow-sm">
+                              <span className="w-1.5 h-1.5 sm:w-2 sm:h-2 bg-primary-500 rounded-full animate-pulse"></span>
+                              <span className="truncate max-w-[150px] sm:max-w-none">{getProfessionLabel(educator.profession_type)}</span>
                             </span>
                           </div>
 
                           {/* Note moyenne avec étoiles améliorées */}
                           {educator.rating > 0 && (
-                            <div className="flex items-center gap-2 mb-3 bg-gradient-to-r from-amber-50 to-yellow-50 px-3 py-1.5 rounded-xl w-fit border border-amber-100">
+                            <div className="flex items-center gap-1.5 sm:gap-2 mb-2 sm:mb-3 bg-gradient-to-r from-amber-50 to-yellow-50 px-2 sm:px-3 py-1 sm:py-1.5 rounded-lg sm:rounded-xl w-fit border border-amber-100">
                               <div className="flex items-center gap-0.5">
                                 {[...Array(5)].map((_, i) => (
                                   <svg
                                     key={i}
-                                    className={`w-4 h-4 sm:w-5 sm:h-5 ${
+                                    className={`w-3.5 h-3.5 sm:w-5 sm:h-5 ${
                                       i < Math.round(educator.rating)
                                         ? 'text-amber-400'
                                         : 'text-gray-300'
@@ -832,37 +832,37 @@ export default function SearchPage() {
                                   </svg>
                                 ))}
                               </div>
-                              <span className="text-sm sm:text-base font-bold text-amber-700">
+                              <span className="text-xs sm:text-base font-bold text-amber-700">
                                 {educator.rating.toFixed(1)}
                               </span>
-                              <span className="text-xs sm:text-sm text-amber-600 font-medium">
+                              <span className="text-[10px] sm:text-sm text-amber-600 font-medium">
                                 ({educator.total_reviews} avis)
                               </span>
                             </div>
                           )}
 
                           {/* Localisation avec style amélioré */}
-                          <div className="flex items-center gap-2 mb-3 text-gray-600">
-                            <svg className="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <div className="flex items-center gap-1.5 sm:gap-2 mb-2 sm:mb-3 text-gray-600">
+                            <svg className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-gray-400 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
                               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
                             </svg>
-                            <span className="text-sm sm:text-base">{educator.location}</span>
+                            <span className="text-xs sm:text-base truncate">{educator.location}</span>
                           </div>
 
                           {/* Badges expérience et taux horaire */}
-                          <div className="flex items-center gap-2 sm:gap-3 text-xs sm:text-sm flex-wrap mb-3">
+                          <div className="flex items-center gap-1.5 sm:gap-3 text-[10px] sm:text-sm flex-wrap mb-2 sm:mb-3">
                             {educator.years_of_experience && educator.years_of_experience > 0 && (
-                              <span className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-blue-50 text-blue-700 rounded-lg font-medium border border-blue-100">
-                                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <span className="inline-flex items-center gap-1 sm:gap-1.5 px-2 sm:px-3 py-1 sm:py-1.5 bg-blue-50 text-blue-700 rounded-md sm:rounded-lg font-medium border border-blue-100">
+                                <svg className="w-3 h-3 sm:w-4 sm:h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
                                 </svg>
                                 {educator.years_of_experience} ans
                               </span>
                             )}
                             {educator.hourly_rate && educator.hourly_rate > 0 && (
-                              <span className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-green-50 text-green-700 rounded-lg font-medium border border-green-100">
-                                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <span className="inline-flex items-center gap-1 sm:gap-1.5 px-2 sm:px-3 py-1 sm:py-1.5 bg-green-50 text-green-700 rounded-md sm:rounded-lg font-medium border border-green-100">
+                                <svg className="w-3 h-3 sm:w-4 sm:h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                                 </svg>
                                 {educator.hourly_rate}€/h
@@ -872,9 +872,9 @@ export default function SearchPage() {
 
                           {/* Badge distance si recherche par rayon */}
                           {educator.distance !== undefined && (
-                            <div className="flex items-center gap-2 sm:gap-3 text-xs sm:text-sm flex-wrap">
-                              <span className="inline-flex items-center gap-1.5 px-3 py-2 bg-gradient-to-r from-emerald-500 to-green-500 text-white rounded-xl font-semibold shadow-sm">
-                                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                            <div className="flex items-center gap-1.5 sm:gap-3 text-[10px] sm:text-sm flex-wrap">
+                              <span className="inline-flex items-center gap-1 sm:gap-1.5 px-2 sm:px-3 py-1 sm:py-2 bg-gradient-to-r from-emerald-500 to-green-500 text-white rounded-lg sm:rounded-xl font-semibold shadow-sm">
+                                <svg className="w-3 h-3 sm:w-4 sm:h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
                                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
                                 </svg>

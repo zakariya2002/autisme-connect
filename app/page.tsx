@@ -697,7 +697,7 @@ export default function Home() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-8">
             <div>
-              <h3 className="text-white font-bold text-lg mb-4">Autisme Connect</h3>
+              <h3 className="text-white font-semibold text-lg mb-4">neurocare</h3>
               <p className="text-gray-400 leading-relaxed">
                 Une plateforme humaine qui connecte les aidants avec des professionnels spécialisés passionnés.
               </p>
@@ -736,7 +736,7 @@ export default function Home() {
                 CGU
               </Link>
             </div>
-            <p className="text-center text-gray-400">© 2024 Autisme Connect. Tous droits réservés. Fait avec ❤️ pour les aidants et les professionnels.</p>
+            <p className="text-center text-gray-400">© 2024 neurocare. Tous droits réservés.</p>
           </div>
         </div>
       </footer>
