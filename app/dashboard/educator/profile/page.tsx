@@ -13,21 +13,6 @@ import CertificationDocumentUpload from '@/components/CertificationDocumentUploa
 import Logo from '@/components/Logo';
 import EducatorMobileMenu from '@/components/EducatorMobileMenu';
 
-const specializationOptions = [
-  { value: 'comportement', label: 'Gestion du comportement' },
-  { value: 'communication', label: 'Communication' },
-  { value: 'autonomie', label: 'Autonomie' },
-  { value: 'socialisation', label: 'Socialisation' },
-  { value: 'scolaire', label: 'Soutien scolaire' },
-  { value: 'motricite', label: 'Motricité' },
-  { value: 'sensoriel', label: 'Sensoriel' },
-  { value: 'loisirs', label: 'Loisirs adaptés' },
-  { value: 'inclusion', label: 'Inclusion sociale' },
-  { value: 'petite_enfance', label: 'Petite enfance (0-6 ans)' },
-  { value: 'enfance', label: 'Enfance (6-12 ans)' },
-  { value: 'adolescence', label: 'Adolescence (12-18 ans)' },
-  { value: 'adultes', label: 'Adultes' },
-];
 
 export default function EducatorProfilePage() {
   const router = useRouter();
@@ -58,7 +43,7 @@ export default function EducatorProfilePage() {
     location: '',
     years_of_experience: 0,
     hourly_rate: '',
-    specializations: [] as string[],
+    skills: '',
     languages: '',
     show_email: false,
     show_phone: false,
@@ -132,7 +117,7 @@ export default function EducatorProfilePage() {
           location: profile.location || '',
           years_of_experience: profile.years_of_experience || 0,
           hourly_rate: profile.hourly_rate?.toString() || '',
-          specializations: profile.specializations || [],
+          skills: profile.skills || '',
           languages: (profile.languages || []).join(', '),
           show_email: profile.show_email || false,
           show_phone: profile.show_phone || false,
@@ -246,7 +231,7 @@ export default function EducatorProfilePage() {
           location: profileData.location,
           years_of_experience: profileData.years_of_experience,
           hourly_rate: profileData.hourly_rate ? parseFloat(profileData.hourly_rate) : null,
-          specializations: profileData.specializations,
+          skills: profileData.skills || null,
           languages: profileData.languages.split(',').map(l => l.trim()).filter(Boolean),
           show_email: profileData.show_email,
           show_phone: profileData.show_phone,
@@ -850,38 +835,23 @@ export default function EducatorProfilePage() {
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-3">Spécialisations</label>
-              <div className="flex flex-wrap gap-2">
-                {specializationOptions.map((option) => (
-                  <button
-                    key={option.value}
-                    type="button"
-                    onClick={() => {
-                      const current = profileData.specializations;
-                      if (current.includes(option.value)) {
-                        setProfileData({
-                          ...profileData,
-                          specializations: current.filter(s => s !== option.value)
-                        });
-                      } else {
-                        setProfileData({
-                          ...profileData,
-                          specializations: [...current, option.value]
-                        });
-                      }
-                    }}
-                    className={`px-3 py-1.5 text-sm rounded-full border transition-all ${
-                      profileData.specializations.includes(option.value)
-                        ? 'bg-primary-600 text-white border-primary-600'
-                        : 'bg-white text-gray-700 border-gray-300 hover:border-primary-400'
-                    }`}
-                  >
-                    {option.label}
-                  </button>
-                ))}
-              </div>
-              <p className="mt-2 text-sm text-gray-500">
-                {profileData.specializations.length} spécialisation(s) sélectionnée(s)
+              <label className="block text-sm font-medium text-gray-700 mb-2">Compétences</label>
+              <textarea
+                rows={4}
+                value={profileData.skills}
+                onChange={(e) => setProfileData({ ...profileData, skills: e.target.value })}
+                placeholder="Décrivez vos compétences, atouts et spécialités...
+
+Exemples :
+• Expertise en méthode ABA et TEACCH
+• Spécialisé dans l'accompagnement des enfants de 3 à 12 ans
+• Communication augmentée (PECS, Makaton)
+• Gestion des troubles du comportement
+• Soutien scolaire adapté"
+                className="w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:ring-primary-500 focus:border-primary-500"
+              />
+              <p className="mt-1 text-sm text-gray-500">
+                Décrivez librement vos compétences, vos spécialités et ce qui vous distingue
               </p>
             </div>
 

@@ -59,7 +59,7 @@ export default function CGU() {
                 <h3 className="font-medium text-gray-800 mb-2">3.1 Pour les familles (gratuit) :</h3>
                 <ul className="list-disc list-inside space-y-1 ml-4">
                   <li>Création d'un profil famille</li>
-                  <li>Recherche d'éducateurs spécialisés par localisation et spécialités</li>
+                  <li>Recherche d'éducateurs spécialisés par localisation et compétences</li>
                   <li>Consultation des profils d'éducateurs vérifiés</li>
                   <li>Prise de contact et messagerie avec les éducateurs</li>
                   <li>Prise de rendez-vous en ligne</li>

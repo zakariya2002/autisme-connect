@@ -739,16 +739,14 @@ export default function SearchPage() {
                     }}
                   >
                     {/* Bouton favori mobile - position absolue en haut à droite */}
-                    {userRole === 'family' && (
-                      <div className="absolute top-4 right-4 z-10 sm:hidden">
-                        <FavoriteButton
-                          educatorId={educator.id}
-                          familyId={familyId}
-                          isFavorite={favorites.has(educator.id)}
-                          onToggle={handleFavoriteToggle}
-                        />
-                      </div>
-                    )}
+                    <div className="absolute top-4 right-4 z-10 sm:hidden">
+                      <FavoriteButton
+                        educatorId={educator.id}
+                        familyId={familyId}
+                        isFavorite={favorites.has(educator.id)}
+                        onToggle={handleFavoriteToggle}
+                      />
+                    </div>
                     <div className="p-4 sm:p-6 pr-14 sm:pr-6">
                       <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-3 sm:gap-4">
                         <div className="flex gap-3 sm:gap-5">
@@ -887,16 +885,14 @@ export default function SearchPage() {
 
                       <div className="flex sm:flex-col gap-3 w-full sm:w-auto sm:ml-4 mt-4 sm:mt-0">
                         {/* Bouton favori desktop - caché sur mobile */}
-                        {userRole === 'family' && (
-                          <div className="hidden sm:flex justify-center mb-1">
-                            <FavoriteButton
-                              educatorId={educator.id}
-                              familyId={familyId}
-                              isFavorite={favorites.has(educator.id)}
-                              onToggle={handleFavoriteToggle}
-                            />
-                          </div>
-                        )}
+                        <div className="hidden sm:flex justify-center mb-1">
+                          <FavoriteButton
+                            educatorId={educator.id}
+                            familyId={familyId}
+                            isFavorite={favorites.has(educator.id)}
+                            onToggle={handleFavoriteToggle}
+                          />
+                        </div>
                         <Link
                           href={`/educator/${educator.id}`}
                           className="hidden sm:inline-flex flex-1 sm:flex-none items-center justify-center gap-2 px-5 py-3 bg-gradient-to-r from-primary-600 via-primary-600 to-purple-600 text-white rounded-xl hover:from-primary-700 hover:via-primary-700 hover:to-purple-700 text-center text-sm sm:text-base font-bold shadow-lg hover:shadow-xl transition-all whitespace-nowrap group/btn"

@@ -13,6 +13,8 @@ interface ChildProfile {
   first_name: string;
   age: number | null;
   birth_date: string | null;
+  tnd_types: string[];
+  tnd_other: string | null;
   support_level_needed: string | null;
   description: string | null;
   accompaniment_types: string[];
@@ -22,6 +24,36 @@ interface ChildProfile {
   is_active: boolean;
   created_at: string;
 }
+
+const tndTypeOptions = [
+  { value: 'tsa', label: 'TSA', fullName: 'Trouble du Spectre de l\'Autisme' },
+  { value: 'tdah', label: 'TDAH', fullName: 'Trouble Déficit de l\'Attention avec ou sans Hyperactivité' },
+  { value: 'dyslexie', label: 'Dyslexie', fullName: 'Trouble de la lecture' },
+  { value: 'dyspraxie', label: 'Dyspraxie', fullName: 'Trouble de la coordination motrice' },
+  { value: 'dyscalculie', label: 'Dyscalculie', fullName: 'Trouble du calcul' },
+  { value: 'dysorthographie', label: 'Dysorthographie', fullName: 'Trouble de l\'écriture' },
+  { value: 'dysphasie', label: 'Dysphasie', fullName: 'Trouble du langage oral' },
+  { value: 'tdi', label: 'TDI', fullName: 'Trouble du Développement Intellectuel' },
+  { value: 'tdc', label: 'TDC', fullName: 'Trouble Développemental de la Coordination' },
+  { value: 'hpi', label: 'HPI', fullName: 'Haut Potentiel Intellectuel' },
+  { value: 'trouble_anxieux', label: 'Trouble anxieux', fullName: 'Trouble anxieux' },
+  { value: 'autre', label: 'Autre', fullName: 'Autre trouble' },
+];
+
+const tndTypeLabels: Record<string, string> = {
+  tsa: 'TSA',
+  tdah: 'TDAH',
+  dyslexie: 'Dyslexie',
+  dyspraxie: 'Dyspraxie',
+  dyscalculie: 'Dyscalculie',
+  dysorthographie: 'Dysorthographie',
+  dysphasie: 'Dysphasie',
+  tdi: 'TDI',
+  tdc: 'TDC',
+  hpi: 'HPI',
+  trouble_anxieux: 'Trouble anxieux',
+  autre: 'Autre',
+};
 
 const accompanimentTypeLabels: Record<string, string> = {
   scolaire: 'Soutien scolaire',
@@ -67,6 +99,8 @@ export default function ChildrenPage() {
   const [formData, setFormData] = useState({
     first_name: '',
     birth_date: '',
+    tnd_types: [] as string[],
+    tnd_other: '',
     support_level_needed: 'level_1',
     description: '',
     accompaniment_types: [] as string[],
@@ -129,6 +163,8 @@ export default function ChildrenPage() {
     setFormData({
       first_name: '',
       birth_date: '',
+      tnd_types: [],
+      tnd_other: '',
       support_level_needed: 'level_1',
       description: '',
       accompaniment_types: [],
@@ -164,6 +200,8 @@ export default function ChildrenPage() {
     setFormData({
       first_name: child.first_name,
       birth_date: child.birth_date || '',
+      tnd_types: child.tnd_types || [],
+      tnd_other: child.tnd_other || '',
       support_level_needed: child.support_level_needed || 'level_1',
       description: child.description || '',
       accompaniment_types: child.accompaniment_types || [],
@@ -178,6 +216,15 @@ export default function ChildrenPage() {
   const closeModal = () => {
     setShowAddModal(false);
     resetForm();
+  };
+
+  const handleTndTypeToggle = (type: string) => {
+    const current = formData.tnd_types;
+    if (current.includes(type)) {
+      setFormData({ ...formData, tnd_types: current.filter(t => t !== type) });
+    } else {
+      setFormData({ ...formData, tnd_types: [...current, type] });
+    }
   };
 
   const handleAccompanimentTypeToggle = (type: string) => {
@@ -213,6 +260,8 @@ export default function ChildrenPage() {
         family_id: profile.id,
         first_name: formData.first_name.trim(),
         birth_date: formData.birth_date || null,
+        tnd_types: formData.tnd_types,
+        tnd_other: formData.tnd_types.includes('autre') ? formData.tnd_other.trim() || null : null,
         support_level_needed: formData.support_level_needed,
         description: formData.description || null,
         accompaniment_types: formData.accompaniment_types,
@@ -370,8 +419,20 @@ export default function ChildrenPage() {
                         )}
                       </div>
 
-                      {child.accompaniment_types && child.accompaniment_types.length > 0 && (
+                      {child.tnd_types && child.tnd_types.length > 0 && (
                         <div className="flex flex-wrap gap-1 mt-3">
+                          {child.tnd_types.map((type) => (
+                            <span key={type} className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-purple-50 text-purple-700 border border-purple-200">
+                              {type === 'autre' && child.tnd_other
+                                ? `Autre: ${child.tnd_other}`
+                                : tndTypeLabels[type] || type}
+                            </span>
+                          ))}
+                        </div>
+                      )}
+
+                      {child.accompaniment_types && child.accompaniment_types.length > 0 && (
+                        <div className="flex flex-wrap gap-1 mt-2">
                           {child.accompaniment_types.map((type) => (
                             <span key={type} className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-primary-50 text-primary-700">
                               {accompanimentTypeLabels[type] || type}
@@ -492,6 +553,59 @@ export default function ChildrenPage() {
                   className="w-full border border-gray-300 rounded-lg py-2 px-3 focus:ring-primary-500 focus:border-primary-500"
                   placeholder="Personnalité, centres d'intérêt, forces..."
                 />
+              </div>
+
+              {/* Types de TND */}
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Troubles du Neurodéveloppement (TND)
+                  <span className="text-xs text-gray-500 font-normal ml-2">(sélection multiple)</span>
+                </label>
+                <p className="text-xs text-gray-500 mb-3">
+                  Sélectionnez le ou les troubles diagnostiqués ou suspectés
+                </p>
+                <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
+                  {tndTypeOptions.map((option) => (
+                    <label
+                      key={option.value}
+                      className={`flex items-center p-3 border rounded-lg cursor-pointer transition-all ${
+                        formData.tnd_types.includes(option.value)
+                          ? 'border-purple-500 bg-purple-50'
+                          : 'border-gray-200 hover:border-gray-300'
+                      }`}
+                      title={option.fullName}
+                    >
+                      <input
+                        type="checkbox"
+                        checked={formData.tnd_types.includes(option.value)}
+                        onChange={() => handleTndTypeToggle(option.value)}
+                        className="h-4 w-4 text-purple-600 focus:ring-purple-500 border-gray-300 rounded"
+                      />
+                      <span className="ml-2 text-sm text-gray-700 font-medium">{option.label}</span>
+                    </label>
+                  ))}
+                </div>
+                {formData.tnd_types.length > 0 && (
+                  <p className="mt-2 text-xs text-purple-600">
+                    {formData.tnd_types.length} trouble(s) sélectionné(s)
+                  </p>
+                )}
+
+                {/* Champ texte si "Autre" est sélectionné */}
+                {formData.tnd_types.includes('autre') && (
+                  <div className="mt-3">
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Précisez le trouble
+                    </label>
+                    <input
+                      type="text"
+                      value={formData.tnd_other}
+                      onChange={(e) => setFormData({ ...formData, tnd_other: e.target.value })}
+                      className="w-full border border-purple-300 rounded-lg py-2 px-3 focus:ring-purple-500 focus:border-purple-500"
+                      placeholder="Ex: Syndrome de Gilles de la Tourette, trouble de l'attachement..."
+                    />
+                  </div>
+                )}
               </div>
 
               {/* Types d'accompagnement */}

@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { supabase } from '@/lib/supabase';
 import Logo from '@/components/Logo';
-import PublicMobileMenu from '@/components/PublicMobileMenu';
+import MobileMenu from '@/components/MobileMenu';
 import HelpButton from '@/components/HelpButton';
 
 interface EducatorProfile {
@@ -342,36 +342,50 @@ export default function EducatorPublicProfile({ params }: { params: { id: string
           <div className="flex justify-between h-16 items-center">
             <Logo />
 
-            {/* Menu hamburger - visible uniquement sur mobile */}
-            <div className="md:hidden">
-              <PublicMobileMenu
-                isAuthenticated={isAuthenticated}
-                userRole={userRole}
-              />
+            {/* Menu hamburger */}
+            <div className="xl:hidden">
+              <MobileMenu />
             </div>
 
-            {/* Navigation desktop - cachée sur mobile */}
-            <div className="hidden md:flex gap-2">
-              <Link
-                href="/search"
-                className="text-gray-700 hover:bg-gray-100 hover:text-primary-600 px-4 py-2 rounded-lg transition-all duration-200 font-medium"
-              >
-                Rechercher
+            {/* Navigation desktop */}
+            <div className="hidden xl:flex items-center gap-2 lg:gap-3">
+              <Link href="/about" className="text-gray-700 hover:text-primary-600 px-3 py-2 rounded-md font-medium transition-colors text-sm">
+                À propos
+              </Link>
+              <Link href="/search" className="text-primary-600 bg-primary-50 px-3 py-2 rounded-md font-medium transition-colors text-sm inline-flex items-center justify-center gap-1.5">
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                </svg>
+                Recherche
+              </Link>
+              <Link href="/familles/aides-financieres" className="text-gray-700 hover:text-primary-600 px-3 py-2 rounded-md font-medium transition-colors text-sm inline-flex items-center justify-center gap-1.5">
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+                </svg>
+                Aides
+              </Link>
+              <Link href="/contact" className="text-gray-700 hover:text-primary-600 px-3 py-2 rounded-md font-medium transition-colors text-sm">
+                Contact
               </Link>
               {isAuthenticated && userRole ? (
                 <Link
                   href={userRole === 'educator' ? '/dashboard/educator' : '/dashboard/family'}
-                  className="bg-primary-600 text-white hover:bg-primary-700 px-4 py-2 rounded-lg transition-all duration-200 font-medium shadow-sm"
+                  className="ml-4 inline-flex items-center gap-2 text-white px-6 py-2.5 rounded-lg font-semibold transition-all duration-200 shadow-md hover:shadow-lg bg-gradient-to-r from-primary-500 to-purple-600 hover:from-primary-600 hover:to-purple-700"
                 >
-                  Mon dashboard
+                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
+                  </svg>
+                  Tableau de bord
                 </Link>
               ) : (
-                <Link
-                  href="/auth/login"
-                  className="bg-primary-600 text-white hover:bg-primary-700 px-4 py-2 rounded-lg transition-all duration-200 font-medium shadow-sm"
-                >
-                  Se connecter
-                </Link>
+                <>
+                  <Link href="/auth/login" className="ml-4 text-gray-700 hover:text-primary-600 px-3 py-2 rounded-md font-medium transition-colors text-sm">
+                    Connexion
+                  </Link>
+                  <Link href="/auth/signup" className="bg-primary-600 text-white px-5 py-2.5 rounded-md hover:bg-primary-700 font-medium transition-colors shadow-sm text-sm">
+                    Inscription
+                  </Link>
+                </>
               )}
             </div>
           </div>
@@ -582,8 +596,8 @@ export default function EducatorPublicProfile({ params }: { params: { id: string
               </div>
             )}
 
-            {/* Spécialités */}
-            {educator.specializations && educator.specializations.length > 0 && (
+            {/* Compétences */}
+            {educator.skills && (
               <div className="bg-white rounded-xl shadow-lg p-8 border border-gray-100 hover:shadow-xl transition-shadow duration-300">
                 <div className="flex items-center mb-6">
                   <div className="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center mr-3">
@@ -591,20 +605,12 @@ export default function EducatorPublicProfile({ params }: { params: { id: string
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4" />
                     </svg>
                   </div>
-                  <h2 className="text-2xl font-bold text-gray-900">Spécialités</h2>
+                  <h2 className="text-2xl font-bold text-gray-900">Compétences</h2>
                 </div>
-                <div className="flex flex-wrap gap-2">
-                  {educator.specializations.map((spec: string, index: number) => (
-                    <span
-                      key={index}
-                      className="inline-flex items-center px-4 py-2 bg-gradient-to-r from-blue-50 to-blue-100 text-blue-700 rounded-lg text-sm font-semibold border border-blue-200 hover:shadow-md transition-all duration-200"
-                    >
-                      <svg className="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 20 20">
-                        <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
-                      </svg>
-                      {spec.trim()}
-                    </span>
-                  ))}
+                <div className="prose prose-gray max-w-none">
+                  <p className="text-gray-700 whitespace-pre-line leading-relaxed">
+                    {educator.skills}
+                  </p>
                 </div>
               </div>
             )}
