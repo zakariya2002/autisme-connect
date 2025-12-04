@@ -110,6 +110,8 @@ const professionCategories = [
 
 type EducatorWithDistance = EducatorProfile & { distance?: number };
 
+const ITEMS_PER_PAGE = 10;
+
 export default function SearchPage() {
   const { tndMode } = useTnd();
   const [educators, setEducators] = useState<EducatorWithDistance[]>([]);
@@ -120,6 +122,7 @@ export default function SearchPage() {
   const [familyId, setFamilyId] = useState<string | null>(null);
   const [favorites, setFavorites] = useState<Set<string>>(new Set());
   const [showFilters, setShowFilters] = useState(false);
+  const [currentPage, setCurrentPage] = useState(1);
   const [filters, setFilters] = useState({
     location: '',
     professionTypes: [] as string[],
@@ -207,8 +210,14 @@ export default function SearchPage() {
 
       if (error) throw error;
 
+      // Filtrer les éducateurs suspendus
+      let filtered = (data || []).filter(educator => {
+        const suspendedUntil = (educator as any).suspended_until;
+        if (!suspendedUntil) return true; // Non suspendu
+        return new Date(suspendedUntil) < new Date(); // Suspension expirée
+      });
+
       // Filtrer par type de profession
-      let filtered = data || [];
       if (filters.professionTypes.length > 0) {
         filtered = filtered.filter(educator =>
           filters.professionTypes.includes(educator.profession_type || 'educator')
@@ -304,7 +313,19 @@ export default function SearchPage() {
   };
 
   const handleSearch = () => {
+    setCurrentPage(1); // Réinitialiser à la page 1 lors d'une nouvelle recherche
     fetchEducators();
+  };
+
+  // Calcul de la pagination
+  const totalPages = Math.ceil(educators.length / ITEMS_PER_PAGE);
+  const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
+  const endIndex = startIndex + ITEMS_PER_PAGE;
+  const paginatedEducators = educators.slice(startIndex, endIndex);
+
+  const goToPage = (page: number) => {
+    setCurrentPage(page);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
   const handleGetLocation = async () => {
@@ -332,6 +353,7 @@ export default function SearchPage() {
       minRating: '',
       radius: '',
     });
+    setCurrentPage(1);
     setTimeout(fetchEducators, 100);
   };
 
@@ -363,7 +385,11 @@ export default function SearchPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-primary-50 via-white to-blue-50">
+    <div className="min-h-screen bg-gradient-to-br from-primary-50 via-white to-blue-50 relative overflow-hidden">
+      {/* Éléments décoratifs de fond */}
+      <div className="absolute top-0 right-0 w-96 h-96 bg-gradient-to-br from-purple-200/30 to-pink-200/30 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2 pointer-events-none"></div>
+      <div className="absolute bottom-0 left-0 w-80 h-80 bg-gradient-to-tr from-primary-200/30 to-blue-200/30 rounded-full blur-3xl translate-y-1/2 -translate-x-1/2 pointer-events-none"></div>
+      <div className="absolute top-1/2 left-1/4 w-64 h-64 bg-gradient-to-r from-green-100/20 to-teal-100/20 rounded-full blur-3xl pointer-events-none"></div>
       {/* Navigation */}
       <nav className="bg-white shadow-sm border-b border-gray-200 sticky top-0 z-50 backdrop-blur-sm bg-white/95">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -423,58 +449,53 @@ export default function SearchPage() {
         </div>
       </nav>
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-10 lg:py-12">
-        {/* Header Section Amélioré */}
-        <div className="text-center mb-8 sm:mb-12">
-          <div className="inline-flex items-center gap-2 bg-white shadow-lg text-primary-700 px-4 sm:px-6 py-2.5 sm:py-3 rounded-full text-xs sm:text-sm font-bold mb-4 sm:mb-6 border-2 border-primary-200">
-            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-            </svg>
-            <span>Recherche de professionnels qualifiés</span>
-          </div>
-          <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-gray-900 mb-3 sm:mb-4">
-            Trouvez les professionnels
-            <span className="text-primary-600 block mt-1 sm:mt-2">qui correspondent à vos besoins</span>
-          </h1>
-          <p className="text-sm sm:text-base lg:text-lg text-gray-600 max-w-2xl mx-auto">
-            Parcourez notre réseau de professionnels vérifiés et trouvez celui qui saura accompagner votre famille avec expertise et bienveillance.
-          </p>
-        </div>
-
-        {/* Bouton filtres mobile */}
-        <div className="lg:hidden mb-4">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8 relative z-10">
+        {/* Bouton filtres mobile amélioré */}
+        <div className="lg:hidden mb-5">
           <button
             onClick={() => setShowFilters(!showFilters)}
             aria-expanded={showFilters}
             aria-controls="filters-panel"
-            className="w-full flex items-center justify-between bg-white rounded-xl shadow-md px-4 py-3 border border-gray-200 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2"
+            className="w-full flex items-center justify-between bg-white rounded-2xl shadow-lg px-5 py-4 border border-gray-100 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 group hover:shadow-xl transition-all"
           >
-            <span className="flex items-center gap-2 font-semibold text-gray-700">
-              <svg className="w-5 h-5 text-primary-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4" />
-              </svg>
-              Filtres
-              {getActiveFiltersCount() > 0 && (
-                <span className="bg-primary-600 text-white text-xs px-2 py-0.5 rounded-full">
-                  {getActiveFiltersCount()}
-                </span>
-              )}
+            <span className="flex items-center gap-3 font-bold text-gray-800">
+              <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-primary-500 to-purple-500 flex items-center justify-center shadow-md group-hover:scale-105 transition-transform">
+                <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4" />
+                </svg>
+              </div>
+              <div className="text-left">
+                <span className="block">Filtrer les résultats</span>
+                {getActiveFiltersCount() > 0 && (
+                  <span className="text-xs font-medium text-primary-600">{getActiveFiltersCount()} filtre(s) actif(s)</span>
+                )}
+              </div>
             </span>
-            <svg className={`w-5 h-5 text-gray-500 transition-transform ${showFilters ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-            </svg>
+            <div className={`w-8 h-8 rounded-full bg-gray-100 flex items-center justify-center transition-all ${showFilters ? 'bg-primary-100' : ''}`}>
+              <svg className={`w-5 h-5 transition-transform duration-300 ${showFilters ? 'rotate-180 text-primary-600' : 'text-gray-500'}`} fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+              </svg>
+            </div>
           </button>
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-4 gap-6 sm:gap-8">
-          {/* Filtres */}
+          {/* Filtres avec design amélioré */}
           <div id="filters-panel" className={`lg:col-span-1 ${showFilters ? 'block' : 'hidden lg:block'}`}>
-            <div className="bg-white rounded-xl shadow-lg p-5 sm:p-6 lg:sticky lg:top-24 border border-gray-100">
-              <div className="flex items-center gap-2 mb-4 sm:mb-5">
-                <svg className="w-5 h-5 text-primary-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4" />
-                </svg>
-                <h2 className="text-base sm:text-lg font-bold text-gray-900">Affiner ma recherche</h2>
+            <div className="bg-white rounded-2xl shadow-xl p-5 sm:p-6 lg:sticky lg:top-24 border border-gray-100 overflow-hidden relative">
+              {/* Barre décorative supérieure */}
+              <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-primary-500 via-purple-500 to-pink-500"></div>
+
+              <div className="flex items-center gap-3 mb-5 sm:mb-6 pt-2">
+                <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-primary-500 to-purple-500 flex items-center justify-center shadow-lg">
+                  <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4" />
+                  </svg>
+                </div>
+                <div>
+                  <h2 className="text-lg font-bold text-gray-900">Filtrer</h2>
+                  <p className="text-xs text-gray-500">Affinez votre recherche</p>
+                </div>
               </div>
 
               <div className="space-y-5">
@@ -648,21 +669,21 @@ export default function SearchPage() {
                 <div className="pt-5 space-y-3 border-t border-gray-200">
                   <button
                     onClick={handleSearch}
-                    className="w-full bg-gradient-to-r from-primary-600 to-primary-700 text-white py-3 px-4 rounded-lg hover:from-primary-700 hover:to-primary-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 font-semibold shadow-md hover:shadow-lg transition-all flex items-center justify-center gap-2"
+                    className="w-full bg-gradient-to-r from-primary-600 via-purple-600 to-pink-600 text-white py-3.5 px-4 rounded-xl hover:from-primary-700 hover:via-purple-700 hover:to-pink-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 font-bold shadow-lg hover:shadow-xl transition-all flex items-center justify-center gap-2 group"
                   >
-                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                    <svg className="w-5 h-5 group-hover:scale-110 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
                     </svg>
                     Rechercher
                   </button>
                   <button
                     onClick={resetFilters}
-                    className="w-full bg-white text-gray-700 py-2.5 px-4 rounded-lg border-2 border-gray-300 hover:bg-gray-50 hover:border-gray-400 font-medium transition-all flex items-center justify-center gap-2"
+                    className="w-full bg-gray-50 text-gray-700 py-3 px-4 rounded-xl border border-gray-200 hover:bg-gray-100 hover:border-gray-300 font-medium transition-all flex items-center justify-center gap-2 group"
                   >
-                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                    <svg className="w-4 h-4 group-hover:rotate-180 transition-transform duration-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
                     </svg>
-                    Réinitialiser
+                    Réinitialiser les filtres
                   </button>
                 </div>
               </div>
@@ -672,140 +693,151 @@ export default function SearchPage() {
           {/* Résultats */}
           <div className="lg:col-span-3" role="region" aria-label="Résultats de recherche" aria-live="polite">
             {loading ? (
-              <div className="text-center py-16 bg-white rounded-xl shadow-lg">
-                <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary-600 mx-auto mb-4"></div>
-                <p className="text-gray-600 font-medium">Recherche en cours...</p>
+              <div className="text-center py-20 bg-white rounded-2xl shadow-xl border border-gray-100">
+                <div className="relative">
+                  <div className="absolute inset-0 flex items-center justify-center">
+                    <div className="w-20 h-20 rounded-full border-4 border-primary-100"></div>
+                  </div>
+                  <div className="animate-spin rounded-full h-20 w-20 border-4 border-t-primary-600 border-r-purple-500 border-b-pink-500 border-l-primary-200 mx-auto"></div>
+                </div>
+                <p className="text-gray-700 font-semibold mt-6 text-lg">Recherche en cours...</p>
+                <p className="text-gray-500 text-sm mt-1">Nous trouvons les meilleurs professionnels pour vous</p>
               </div>
             ) : educators.length === 0 ? (
-              <div className="text-center py-16 bg-white rounded-xl shadow-lg border border-gray-100">
-                <svg className="w-16 h-16 text-gray-300 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                </svg>
-                <p className="text-gray-600 font-medium mb-2">Aucun professionnel trouvé</p>
-                <p className="text-sm text-gray-500">Essayez de modifier vos critères de recherche</p>
+              <div className="text-center py-20 bg-white rounded-2xl shadow-xl border border-gray-100">
+                <div className="w-24 h-24 mx-auto mb-6 bg-gradient-to-br from-gray-100 to-gray-200 rounded-full flex items-center justify-center">
+                  <svg className="w-12 h-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                  </svg>
+                </div>
+                <h3 className="text-xl font-bold text-gray-700 mb-2">Aucun professionnel trouvé</h3>
+                <p className="text-gray-500 mb-6 max-w-md mx-auto">Nous n'avons pas trouvé de professionnels correspondant à vos critères. Essayez de modifier vos filtres.</p>
+                <button
+                  onClick={resetFilters}
+                  className="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-primary-600 to-purple-600 text-white font-semibold rounded-xl shadow-lg hover:shadow-xl transition-all"
+                >
+                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                  </svg>
+                  Réinitialiser les filtres
+                </button>
               </div>
             ) : (
-              <div className="space-y-4 sm:space-y-5">
-                <div className="bg-white rounded-lg shadow-sm px-4 py-3 border border-gray-100">
-                  <p className="text-sm sm:text-base font-semibold text-gray-700 flex items-center gap-2">
-                    <svg className="w-5 h-5 text-primary-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-                    </svg>
-                    {educators.length} professionnel(s) trouvé(s)
-                  </p>
-                </div>
-                {educators.map((educator) => (
-                  <div key={educator.id} className="bg-white rounded-xl shadow-md hover:shadow-xl transition-all duration-300 border border-gray-100 overflow-hidden group">
+              <div className="space-y-5">
+                {paginatedEducators.map((educator) => (
+                  <div key={educator.id} className="bg-white rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-500 border border-gray-100 overflow-hidden group hover:-translate-y-1 relative">
+                    {/* Barre supérieure colorée */}
+                    <div className="h-1.5 bg-gradient-to-r from-primary-500 via-purple-500 to-pink-500"></div>
+
                     <div className="p-5 sm:p-6">
                       <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-4">
                         <div className="flex gap-4 sm:gap-5">
-                          {/* Photo de profil */}
-                          <div className="flex-shrink-0">
+                          {/* Photo de profil avec effet */}
+                          <div className="flex-shrink-0 relative">
                             {educator.avatar_url ? (
-                              <img
-                                src={educator.avatar_url}
-                                alt={`${educator.first_name} ${educator.last_name}`}
-                                className="w-20 h-20 sm:w-28 sm:h-28 rounded-2xl object-cover border-4 border-primary-100 shadow-lg group-hover:border-primary-200 transition-all"
-                              />
+                              <div className="relative group/avatar">
+                                <div className="absolute -inset-1 bg-gradient-to-r from-primary-500 to-purple-500 rounded-3xl blur opacity-25 group-hover/avatar:opacity-50 transition-opacity"></div>
+                                <img
+                                  src={educator.avatar_url}
+                                  alt={`${educator.first_name} ${educator.last_name}`}
+                                  className="relative w-20 h-20 sm:w-28 sm:h-28 rounded-3xl object-cover border-3 border-white shadow-xl ring-2 ring-primary-100 group-hover:ring-primary-300 transition-all"
+                                />
+                              </div>
                             ) : (
-                              <div className="w-20 h-20 sm:w-28 sm:h-28 rounded-2xl bg-gradient-to-br from-primary-100 to-primary-200 flex items-center justify-center border-4 border-primary-100 shadow-lg group-hover:border-primary-200 transition-all">
-                                <svg className="w-10 h-10 sm:w-14 sm:h-14 text-primary-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-                                </svg>
+                              <div className="relative group/avatar">
+                                <div className="absolute -inset-1 bg-gradient-to-r from-primary-500 to-purple-500 rounded-3xl blur opacity-25 group-hover/avatar:opacity-50 transition-opacity"></div>
+                                <div className="relative w-20 h-20 sm:w-28 sm:h-28 rounded-3xl bg-gradient-to-br from-primary-100 via-purple-50 to-pink-100 flex items-center justify-center border-3 border-white shadow-xl ring-2 ring-primary-100 group-hover:ring-primary-300 transition-all">
+                                  <svg className="w-10 h-10 sm:w-14 sm:h-14 text-primary-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                                  </svg>
+                                </div>
                               </div>
                             )}
+                            {/* Badge en ligne pour les professionnels premium */}
+                            {(() => {
+                              const subs = (educator as any).subscriptions;
+                              if (!subs) return null;
+                              const isPremium = Array.isArray(subs)
+                                ? subs.some((sub: any) => ['active', 'trialing'].includes(sub.status))
+                                : (typeof subs === 'object' && subs.status && ['active', 'trialing'].includes(subs.status));
+                              return isPremium ? (
+                                <div className="absolute -bottom-2 -right-2 w-8 h-8 bg-gradient-to-r from-yellow-400 to-amber-500 rounded-full flex items-center justify-center shadow-lg border-2 border-white">
+                                  <svg className="w-4 h-4 text-white" fill="currentColor" viewBox="0 0 20 20">
+                                    <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                                  </svg>
+                                </div>
+                              ) : null;
+                            })()}
                           </div>
 
                         <div className="flex-1 min-w-0">
-                          <div className="flex items-center gap-2 flex-wrap">
-                            <h3 className="text-lg sm:text-xl font-semibold text-gray-900">
+                          <div className="flex items-center gap-2 flex-wrap mb-2">
+                            <h3 className="text-lg sm:text-xl font-bold text-gray-900 group-hover:text-primary-700 transition-colors">
                               {educator.first_name} {educator.last_name}
                             </h3>
                             {educator.verification_badge && (
-                              <span className="inline-flex items-center gap-1 px-2.5 py-1 bg-green-600 text-white text-xs font-bold rounded-full">
+                              <span className="inline-flex items-center gap-1 px-2 py-0.5 bg-gradient-to-r from-emerald-500 to-green-500 text-white text-xs font-bold rounded-full shadow-sm">
                                 <svg className="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
                                   <path fillRule="evenodd" d="M6.267 3.455a3.066 3.066 0 001.745-.723 3.066 3.066 0 013.976 0 3.066 3.066 0 001.745.723 3.066 3.066 0 012.812 2.812c.051.643.304 1.254.723 1.745a3.066 3.066 0 010 3.976 3.066 3.066 0 00-.723 1.745 3.066 3.066 0 01-2.812 2.812 3.066 3.066 0 00-1.745.723 3.066 3.066 0 01-3.976 0 3.066 3.066 0 00-1.745-.723 3.066 3.066 0 01-2.812-2.812 3.066 3.066 0 00-.723-1.745 3.066 3.066 0 010-3.976 3.066 3.066 0 00.723-1.745 3.066 3.066 0 012.812-2.812zm7.44 5.252a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
                                 </svg>
                                 Vérifié
                               </span>
                             )}
-                            {(() => {
-                              const subs = (educator as any).subscriptions;
-                              if (!subs) return false;
-
-                              // Si c'est un tableau
-                              if (Array.isArray(subs)) {
-                                return subs.some((sub: any) => ['active', 'trialing'].includes(sub.status));
-                              }
-
-                              // Si c'est un objet unique
-                              if (typeof subs === 'object' && subs.status) {
-                                return ['active', 'trialing'].includes(subs.status);
-                              }
-
-                              return false;
-                            })() && (
-                              <span className="inline-flex items-center gap-1.5 px-3 py-1 bg-gradient-to-r from-yellow-400 to-yellow-500 text-white text-sm font-bold rounded-full shadow-lg border-2 border-yellow-300">
-                                <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
-                                  <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-                                </svg>
-                                PREMIUM
-                              </span>
-                            )}
                           </div>
 
-                          {/* Badge profession */}
-                          <div className="mt-1.5 mb-2">
-                            <span className="inline-flex items-center gap-1.5 px-3 py-1 bg-primary-50 text-primary-700 text-sm font-semibold rounded-full border border-primary-200">
+                          {/* Badge profession avec style amélioré */}
+                          <div className="mb-3">
+                            <span className="inline-flex items-center gap-2 px-3 py-1.5 bg-gradient-to-r from-primary-50 to-purple-50 text-primary-700 text-sm font-semibold rounded-xl border border-primary-200 shadow-sm">
+                              <span className="w-2 h-2 bg-primary-500 rounded-full animate-pulse"></span>
                               {getProfessionLabel(educator.profession_type)}
                             </span>
                           </div>
 
-                          {/* Note moyenne avec étoiles */}
+                          {/* Note moyenne avec étoiles améliorées */}
                           {educator.rating > 0 ? (
-                            <div className="flex items-center gap-1 mb-2">
-                              <div className="flex items-center">
+                            <div className="flex items-center gap-2 mb-3 bg-gradient-to-r from-amber-50 to-yellow-50 px-3 py-1.5 rounded-xl w-fit border border-amber-100">
+                              <div className="flex items-center gap-0.5">
                                 {[...Array(5)].map((_, i) => (
                                   <svg
                                     key={i}
                                     className={`w-4 h-4 sm:w-5 sm:h-5 ${
                                       i < Math.round(educator.rating)
-                                        ? 'text-yellow-400 fill-current'
+                                        ? 'text-amber-400'
                                         : 'text-gray-300'
                                     }`}
-                                    fill="none"
-                                    stroke="currentColor"
-                                    viewBox="0 0 24 24"
+                                    fill="currentColor"
+                                    viewBox="0 0 20 20"
                                   >
-                                    <path
-                                      strokeLinecap="round"
-                                      strokeLinejoin="round"
-                                      strokeWidth={2}
-                                      d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z"
-                                    />
+                                    <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
                                   </svg>
                                 ))}
                               </div>
-                              <span className="text-sm sm:text-base font-bold text-gray-800">
+                              <span className="text-sm sm:text-base font-bold text-amber-700">
                                 {educator.rating.toFixed(1)}
                               </span>
-                              <span className="text-xs sm:text-sm text-gray-500">
+                              <span className="text-xs sm:text-sm text-amber-600 font-medium">
                                 ({educator.total_reviews} avis)
                               </span>
                             </div>
                           ) : (
-                            <p className="text-xs sm:text-sm text-gray-500 mb-2">Aucun avis pour le moment</p>
+                            <div className="flex items-center gap-2 mb-3 bg-gray-50 px-3 py-1.5 rounded-xl w-fit border border-gray-100">
+                              <span className="text-xs sm:text-sm text-gray-500">Nouveau professionnel</span>
+                            </div>
                           )}
 
-                          <p className="text-sm sm:text-base text-gray-600">{educator.location}</p>
+                          {/* Localisation avec style amélioré */}
+                          <div className="flex items-center gap-2 mb-3 text-gray-600">
+                            <svg className="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                            </svg>
+                            <span className="text-sm sm:text-base">{educator.location}</span>
+                          </div>
 
-                          {educator.bio && (
-                            <p className="text-sm sm:text-base text-gray-700 mt-2 sm:mt-3 line-clamp-2 sm:line-clamp-3">{educator.bio}</p>
-                          )}
-
-                          <div className="mt-3 sm:mt-4 flex items-center gap-2 sm:gap-3 text-xs sm:text-sm flex-wrap">
+                          {/* Badges d'informations avec style glassmorphism */}
+                          <div className="flex items-center gap-2 sm:gap-3 text-xs sm:text-sm flex-wrap">
                             {educator.distance !== undefined && (
-                              <span className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-green-50 text-green-700 rounded-lg font-semibold border border-green-200">
+                              <span className="inline-flex items-center gap-1.5 px-3 py-2 bg-gradient-to-r from-emerald-500 to-green-500 text-white rounded-xl font-semibold shadow-sm">
                                 <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
                                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
@@ -813,14 +845,14 @@ export default function SearchPage() {
                                 {educator.distance} km
                               </span>
                             )}
-                            <span className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-blue-50 text-blue-700 rounded-lg font-medium border border-blue-200">
+                            <span className="inline-flex items-center gap-1.5 px-3 py-2 bg-gradient-to-r from-blue-50 to-indigo-50 text-blue-700 rounded-xl font-semibold border border-blue-200 shadow-sm">
                               <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
                               </svg>
                               {educator.years_of_experience} ans
                             </span>
                             {educator.hourly_rate && (
-                              <span className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-purple-50 text-purple-700 rounded-lg font-medium border border-purple-200">
+                              <span className="inline-flex items-center gap-1.5 px-3 py-2 bg-gradient-to-r from-purple-50 to-pink-50 text-purple-700 rounded-xl font-semibold border border-purple-200 shadow-sm">
                                 <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                                 </svg>
@@ -828,26 +860,10 @@ export default function SearchPage() {
                               </span>
                             )}
                           </div>
-
-                          {educator.specializations && educator.specializations.length > 0 && (
-                            <div className="mt-2 sm:mt-3">
-                              <span className="text-xs sm:text-sm text-gray-600">
-                                Spécialisations: {educator.specializations.join(', ')}
-                              </span>
-                            </div>
-                          )}
-
-                          {educator.languages && educator.languages.length > 0 && (
-                            <div className="mt-1 sm:mt-2">
-                              <span className="text-xs sm:text-sm text-gray-600">
-                                Langues: {educator.languages.join(', ')}
-                              </span>
-                            </div>
-                          )}
                         </div>
                       </div>
 
-                      <div className="flex sm:flex-col gap-2.5 w-full sm:w-auto sm:ml-4">
+                      <div className="flex sm:flex-col gap-3 w-full sm:w-auto sm:ml-4 mt-4 sm:mt-0">
                         {/* Bouton favori - visible uniquement pour les familles connectées */}
                         {userRole === 'family' && (
                           <div className="flex justify-end sm:justify-center mb-1">
@@ -861,18 +877,18 @@ export default function SearchPage() {
                         )}
                         <Link
                           href={`/educator/${educator.id}`}
-                          className="flex-1 sm:flex-none inline-flex items-center justify-center gap-2 px-4 sm:px-5 py-2.5 bg-gradient-to-r from-primary-600 to-primary-700 text-white rounded-lg hover:from-primary-700 hover:to-primary-800 text-center text-sm sm:text-base font-semibold shadow-md hover:shadow-lg transition-all whitespace-nowrap"
+                          className="flex-1 sm:flex-none inline-flex items-center justify-center gap-2 px-5 py-3 bg-gradient-to-r from-primary-600 via-primary-600 to-purple-600 text-white rounded-xl hover:from-primary-700 hover:via-primary-700 hover:to-purple-700 text-center text-sm sm:text-base font-bold shadow-lg hover:shadow-xl transition-all whitespace-nowrap group/btn"
                         >
-                          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <svg className="w-5 h-5 group-hover/btn:scale-110 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
                           </svg>
                           Voir le profil
                         </Link>
                         <Link
                           href={`/messages?educator=${educator.id}`}
-                          className="flex-1 sm:flex-none inline-flex items-center justify-center gap-2 px-4 sm:px-5 py-2.5 bg-white text-primary-600 border-2 border-primary-600 rounded-lg hover:bg-primary-50 text-center text-sm sm:text-base font-semibold transition-all whitespace-nowrap"
+                          className="flex-1 sm:flex-none inline-flex items-center justify-center gap-2 px-5 py-3 bg-white text-primary-600 border-2 border-primary-300 rounded-xl hover:border-primary-500 hover:bg-primary-50 text-center text-sm sm:text-base font-bold transition-all whitespace-nowrap shadow-sm hover:shadow-md group/btn2"
                         >
-                          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <svg className="w-5 h-5 group-hover/btn2:scale-110 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
                           </svg>
                           Contacter
@@ -882,6 +898,80 @@ export default function SearchPage() {
                     </div>
                   </div>
                 ))}
+
+                {/* Pagination améliorée */}
+                {totalPages > 1 && (
+                  <div className="bg-white rounded-2xl shadow-lg p-4 sm:p-6 border border-gray-100 mt-6">
+                    <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
+                      {/* Info pagination */}
+                      <p className="text-sm text-gray-500 order-2 sm:order-1">
+                        Affichage {startIndex + 1} - {Math.min(endIndex, educators.length)} sur {educators.length} résultats
+                      </p>
+
+                      {/* Contrôles de pagination */}
+                      <div className="flex items-center gap-2 order-1 sm:order-2">
+                        {/* Bouton Précédent */}
+                        <button
+                          onClick={() => goToPage(currentPage - 1)}
+                          disabled={currentPage === 1}
+                          className="flex items-center gap-1.5 px-4 py-2.5 text-sm font-semibold text-gray-700 bg-gray-50 border border-gray-200 rounded-xl hover:bg-gray-100 hover:border-gray-300 disabled:opacity-40 disabled:cursor-not-allowed transition-all group"
+                        >
+                          <svg className="w-4 h-4 group-hover:-translate-x-0.5 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+                          </svg>
+                          <span className="hidden sm:inline">Précédent</span>
+                        </button>
+
+                        {/* Numéros de page */}
+                        <div className="flex items-center gap-1">
+                          {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => {
+                            if (
+                              page === 1 ||
+                              page === totalPages ||
+                              (page >= currentPage - 1 && page <= currentPage + 1)
+                            ) {
+                              return (
+                                <button
+                                  key={page}
+                                  onClick={() => goToPage(page)}
+                                  className={`min-w-[44px] h-11 px-3 py-2 text-sm font-bold rounded-xl transition-all ${
+                                    currentPage === page
+                                      ? 'bg-gradient-to-r from-primary-600 to-purple-600 text-white shadow-lg scale-105'
+                                      : 'text-gray-600 bg-gray-50 border border-gray-200 hover:bg-gray-100 hover:border-primary-300 hover:text-primary-600'
+                                  }`}
+                                >
+                                  {page}
+                                </button>
+                              );
+                            } else if (
+                              page === currentPage - 2 ||
+                              page === currentPage + 2
+                            ) {
+                              return (
+                                <span key={page} className="px-1 text-gray-300 font-bold">
+                                  ...
+                                </span>
+                              );
+                            }
+                            return null;
+                          })}
+                        </div>
+
+                        {/* Bouton Suivant */}
+                        <button
+                          onClick={() => goToPage(currentPage + 1)}
+                          disabled={currentPage === totalPages}
+                          className="flex items-center gap-1.5 px-4 py-2.5 text-sm font-semibold text-white bg-gradient-to-r from-primary-600 to-purple-600 rounded-xl hover:from-primary-700 hover:to-purple-700 disabled:opacity-40 disabled:cursor-not-allowed transition-all shadow-md hover:shadow-lg group"
+                        >
+                          <span className="hidden sm:inline">Suivant</span>
+                          <svg className="w-4 h-4 group-hover:translate-x-0.5 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                          </svg>
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                )}
               </div>
             )}
           </div>

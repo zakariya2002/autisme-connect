@@ -151,12 +151,13 @@ export default function MessagesPage() {
           return;
         }
 
-        // Créer la conversation
+        // Créer la conversation avec statut "pending"
         const { data: newConv, error: insertError } = await supabase
           .from('conversations')
           .insert({
             educator_id: educatorId,
             family_id: userProfile.id,
+            status: 'pending',
           })
           .select('*, educator_profiles(*), family_profiles(*)')
           .single();
@@ -246,6 +247,33 @@ export default function MessagesPage() {
     e.preventDefault();
     if (!newMessage.trim() || !selectedConversation || !currentUser) return;
 
+    // Vérifier si la conversation est acceptée
+    if (selectedConversation.status === 'pending' && userProfile.role === 'family') {
+      // C'est le premier message - il sera stocké comme message de demande
+      try {
+        const { error } = await supabase
+          .from('conversations')
+          .update({ request_message: newMessage.trim() })
+          .eq('id', selectedConversation.id);
+
+        if (error) throw error;
+
+        setNewMessage('');
+        setSelectedConversation({ ...selectedConversation, request_message: newMessage.trim() });
+        alert('Votre demande de contact a été envoyée ! L\'éducateur doit l\'accepter avant que vous puissiez échanger des messages.');
+        fetchConversations();
+      } catch (error) {
+        console.error('Erreur:', error);
+      }
+      return;
+    }
+
+    // Si la conversation n'est pas acceptée et c'est un éducateur, on ne peut pas envoyer
+    if (selectedConversation.status !== 'accepted') {
+      alert('Cette conversation doit être acceptée avant de pouvoir échanger des messages.');
+      return;
+    }
+
     const isEducator = userProfile.role === 'educator';
     const receiverId = isEducator
       ? selectedConversation.family_profiles.user_id
@@ -272,6 +300,54 @@ export default function MessagesPage() {
       setNewMessage('');
       fetchConversations();
       fetchMessages();
+    } catch (error) {
+      console.error('Erreur:', error);
+    }
+  };
+
+  const handleAcceptConversation = async () => {
+    if (!selectedConversation) return;
+
+    try {
+      const { error } = await supabase
+        .from('conversations')
+        .update({
+          status: 'accepted',
+          responded_at: new Date().toISOString()
+        })
+        .eq('id', selectedConversation.id);
+
+      if (error) throw error;
+
+      setSelectedConversation({ ...selectedConversation, status: 'accepted' });
+      fetchConversations();
+      alert('Demande acceptée ! Vous pouvez maintenant échanger des messages.');
+    } catch (error) {
+      console.error('Erreur:', error);
+    }
+  };
+
+  const handleRejectConversation = async () => {
+    if (!selectedConversation) return;
+
+    if (!confirm('Êtes-vous sûr de vouloir refuser cette demande de contact ?')) {
+      return;
+    }
+
+    try {
+      const { error } = await supabase
+        .from('conversations')
+        .update({
+          status: 'rejected',
+          responded_at: new Date().toISOString()
+        })
+        .eq('id', selectedConversation.id);
+
+      if (error) throw error;
+
+      setSelectedConversation(null);
+      fetchConversations();
+      alert('Demande refusée.');
     } catch (error) {
       console.error('Erreur:', error);
     }
@@ -388,32 +464,49 @@ export default function MessagesPage() {
                   conversations.map((conv) => {
                     const other = getOtherParticipant(conv);
                     if (!other) return null; // Ignorer les conversations sans profil valide
+                    // Ne pas afficher les conversations refusées
+                    if (conv.status === 'rejected') return null;
                     // Vérifier si l'autre personne est un éducateur ou une famille
                     const isOtherEducator = conv.educator_profiles?.id === other?.id;
                     const isOtherFamily = conv.family_profiles?.id === other?.id;
                     const profileUrl = isOtherEducator ? `/educator/${other?.id}` : (isOtherFamily ? `/family/${other?.id}` : null);
+                    const isPending = conv.status === 'pending';
 
                     return (
                       <div
                         key={conv.id}
                         className={`w-full p-4 hover:bg-gray-50 border-b border-gray-100 cursor-pointer ${
                           selectedConversation?.id === conv.id ? 'bg-primary-50' : ''
-                        }`}
+                        } ${isPending ? 'bg-yellow-50' : ''}`}
                         onClick={() => {
                           setSelectedConversation(conv);
                           setShowConversationList(false); // Masquer la liste sur mobile
                         }}
                       >
                         <div className="flex items-center gap-3">
-                          <div className="flex-shrink-0">
+                          <div className="flex-shrink-0 relative">
                             <Avatar participant={other} size="md" />
+                            {isPending && (
+                              <span className="absolute -top-1 -right-1 w-4 h-4 bg-yellow-500 rounded-full flex items-center justify-center">
+                                <svg className="w-2.5 h-2.5 text-white" fill="currentColor" viewBox="0 0 20 20">
+                                  <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z" clipRule="evenodd" />
+                                </svg>
+                              </span>
+                            )}
                           </div>
                           <div className="flex-1 min-w-0">
-                            <p className="font-medium text-gray-900">
-                              {other.first_name || 'Utilisateur'} {other.last_name || ''}
-                            </p>
+                            <div className="flex items-center gap-2">
+                              <p className="font-medium text-gray-900">
+                                {other.first_name || 'Utilisateur'} {other.last_name || ''}
+                              </p>
+                              {isPending && (
+                                <span className="text-xs px-2 py-0.5 bg-yellow-100 text-yellow-700 rounded-full font-medium">
+                                  En attente
+                                </span>
+                              )}
+                            </div>
                             <p className="text-sm text-gray-500 truncate">
-                              {other.location || 'Localisation non renseignée'}
+                              {isPending ? (conv.request_message || 'Demande de contact') : (other.location || 'Localisation non renseignée')}
                             </p>
                           </div>
                         </div>
@@ -493,62 +586,163 @@ export default function MessagesPage() {
                     })()}
                   </div>
 
-                  {/* Messages */}
-                  <div className="flex-1 overflow-y-auto p-4 space-y-4">
-                    {messages.map((message) => {
-                      const isSender = message.sender_id === currentUser?.id;
-                      const other = getOtherParticipant(selectedConversation);
-                      return (
-                        <div
-                          key={message.id}
-                          className={`flex items-end gap-2 ${isSender ? 'justify-end' : 'justify-start'}`}
-                        >
-                          {/* Avatar pour les messages reçus */}
-                          {!isSender && <Avatar participant={other} size="sm" />}
-
-                          <div
-                            className={`max-w-xs lg:max-w-md px-4 py-2 rounded-lg ${
-                              isSender
-                                ? 'bg-primary-600 text-white'
-                                : 'bg-gray-200 text-gray-900'
-                            }`}
-                          >
-                            <p>{message.content}</p>
-                            <p
-                              className={`text-xs mt-1 ${
-                                isSender ? 'text-primary-100' : 'text-gray-500'
-                              }`}
-                            >
-                              {new Date(message.created_at).toLocaleTimeString('fr-FR', {
-                                hour: '2-digit',
-                                minute: '2-digit',
-                              })}
-                            </p>
-                          </div>
+                  {/* Messages ou zone de demande en attente */}
+                  {selectedConversation.status === 'pending' ? (
+                    <div className="flex-1 flex flex-col">
+                      {/* Zone de demande en attente */}
+                      <div className="flex-1 flex items-center justify-center p-6">
+                        <div className="text-center max-w-md">
+                          {userProfile.role === 'educator' ? (
+                            <>
+                              <div className="w-16 h-16 bg-yellow-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                                <svg className="w-8 h-8 text-yellow-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                </svg>
+                              </div>
+                              <h3 className="text-xl font-bold text-gray-900 mb-2">
+                                Nouvelle demande de contact
+                              </h3>
+                              <p className="text-gray-600 mb-4">
+                                {getOtherParticipant(selectedConversation)?.first_name} souhaite vous contacter.
+                              </p>
+                              {selectedConversation.request_message && (
+                                <div className="bg-gray-50 rounded-lg p-4 mb-6 text-left">
+                                  <p className="text-sm text-gray-500 mb-1">Message de présentation :</p>
+                                  <p className="text-gray-800 italic">"{selectedConversation.request_message}"</p>
+                                </div>
+                              )}
+                              <div className="flex gap-3 justify-center">
+                                <button
+                                  onClick={handleAcceptConversation}
+                                  className="px-6 py-3 bg-green-600 text-white rounded-lg hover:bg-green-700 font-semibold transition flex items-center gap-2"
+                                >
+                                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                                  </svg>
+                                  Accepter
+                                </button>
+                                <button
+                                  onClick={handleRejectConversation}
+                                  className="px-6 py-3 bg-red-600 text-white rounded-lg hover:bg-red-700 font-semibold transition flex items-center gap-2"
+                                >
+                                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                                  </svg>
+                                  Refuser
+                                </button>
+                              </div>
+                            </>
+                          ) : (
+                            <>
+                              <div className="w-16 h-16 bg-yellow-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                                <svg className="w-8 h-8 text-yellow-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                </svg>
+                              </div>
+                              <h3 className="text-xl font-bold text-gray-900 mb-2">
+                                {selectedConversation.request_message ? 'Demande envoyée' : 'Envoyez votre demande'}
+                              </h3>
+                              {selectedConversation.request_message ? (
+                                <>
+                                  <p className="text-gray-600 mb-4">
+                                    Votre demande de contact est en attente de validation par l'éducateur.
+                                  </p>
+                                  <div className="bg-gray-50 rounded-lg p-4 text-left">
+                                    <p className="text-sm text-gray-500 mb-1">Votre message :</p>
+                                    <p className="text-gray-800 italic">"{selectedConversation.request_message}"</p>
+                                  </div>
+                                </>
+                              ) : (
+                                <p className="text-gray-600">
+                                  Présentez-vous à l'éducateur pour qu'il puisse accepter votre demande de contact.
+                                </p>
+                              )}
+                            </>
+                          )}
                         </div>
-                      );
-                    })}
-                    <div ref={messagesEndRef} />
-                  </div>
+                      </div>
 
-                  {/* Formulaire d'envoi */}
-                  <div className="p-4 border-t border-gray-200">
-                    <form onSubmit={sendMessage} className="flex gap-2 mb-2">
-                      <input
-                        type="text"
-                        value={newMessage}
-                        onChange={(e) => setNewMessage(e.target.value)}
-                        placeholder="Écrivez votre message..."
-                        className="flex-1 border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:ring-primary-500 focus:border-primary-500"
-                      />
-                      <button
-                        type="submit"
-                        className="px-6 py-2 bg-primary-600 text-white rounded-md hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500"
-                      >
-                        Envoyer
-                      </button>
-                    </form>
-                  </div>
+                      {/* Formulaire d'envoi pour les familles en attente */}
+                      {userProfile.role === 'family' && !selectedConversation.request_message && (
+                        <div className="p-4 border-t border-gray-200">
+                          <form onSubmit={sendMessage} className="flex gap-2">
+                            <input
+                              type="text"
+                              value={newMessage}
+                              onChange={(e) => setNewMessage(e.target.value)}
+                              placeholder="Présentez-vous et expliquez votre demande..."
+                              className="flex-1 border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:ring-primary-500 focus:border-primary-500"
+                            />
+                            <button
+                              type="submit"
+                              className="px-6 py-2 bg-primary-600 text-white rounded-md hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500"
+                            >
+                              Envoyer
+                            </button>
+                          </form>
+                        </div>
+                      )}
+                    </div>
+                  ) : (
+                    <>
+                      {/* Messages normaux pour les conversations acceptées */}
+                      <div className="flex-1 overflow-y-auto p-4 space-y-4">
+                        {messages.map((message) => {
+                          const isSender = message.sender_id === currentUser?.id;
+                          const other = getOtherParticipant(selectedConversation);
+                          return (
+                            <div
+                              key={message.id}
+                              className={`flex items-end gap-2 ${isSender ? 'justify-end' : 'justify-start'}`}
+                            >
+                              {/* Avatar pour les messages reçus */}
+                              {!isSender && <Avatar participant={other} size="sm" />}
+
+                              <div
+                                className={`max-w-xs lg:max-w-md px-4 py-2 rounded-lg ${
+                                  isSender
+                                    ? 'bg-primary-600 text-white'
+                                    : 'bg-gray-200 text-gray-900'
+                                }`}
+                              >
+                                <p>{message.content}</p>
+                                <p
+                                  className={`text-xs mt-1 ${
+                                    isSender ? 'text-primary-100' : 'text-gray-500'
+                                  }`}
+                                >
+                                  {new Date(message.created_at).toLocaleTimeString('fr-FR', {
+                                    hour: '2-digit',
+                                    minute: '2-digit',
+                                  })}
+                                </p>
+                              </div>
+                            </div>
+                          );
+                        })}
+                        <div ref={messagesEndRef} />
+                      </div>
+
+                      {/* Formulaire d'envoi */}
+                      <div className="p-4 border-t border-gray-200">
+                        <form onSubmit={sendMessage} className="flex gap-2 mb-2">
+                          <input
+                            type="text"
+                            value={newMessage}
+                            onChange={(e) => setNewMessage(e.target.value)}
+                            placeholder="Écrivez votre message..."
+                            className="flex-1 border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:ring-primary-500 focus:border-primary-500"
+                          />
+                          <button
+                            type="submit"
+                            className="px-6 py-2 bg-primary-600 text-white rounded-md hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500"
+                          >
+                            Envoyer
+                          </button>
+                        </form>
+                      </div>
+                    </>
+                  )}
                 </>
               )}
             </div>

@@ -5,13 +5,15 @@ import { getPremiumWelcomeEmail } from './email-templates/premium-welcome';
 
 const resend = new Resend(process.env.RESEND_API_KEY);
 
-export async function sendEducatorWelcomeEmail(email: string, firstName: string) {
+export async function sendEducatorWelcomeEmail(email: string, firstName: string, confirmationUrl?: string) {
   try {
     const { data, error } = await resend.emails.send({
       from: 'Autisme Connect <admin@autismeconnect.fr>',
       to: [email],
-      subject: `Bienvenue sur Autisme Connect, ${firstName} !`,
-      html: getEducatorWelcomeEmail(firstName),
+      subject: confirmationUrl
+        ? `Confirmez votre email - Bienvenue sur Autisme Connect, ${firstName} !`
+        : `Bienvenue sur Autisme Connect, ${firstName} !`,
+      html: getEducatorWelcomeEmail(firstName, confirmationUrl),
     });
 
     if (error) {
@@ -27,13 +29,15 @@ export async function sendEducatorWelcomeEmail(email: string, firstName: string)
   }
 }
 
-export async function sendFamilyWelcomeEmail(email: string, firstName: string) {
+export async function sendFamilyWelcomeEmail(email: string, firstName: string, confirmationUrl?: string) {
   try {
     const { data, error } = await resend.emails.send({
       from: 'Autisme Connect <admin@autismeconnect.fr>',
       to: [email],
-      subject: `Bienvenue sur Autisme Connect, ${firstName} !`,
-      html: getFamilyWelcomeEmail(firstName),
+      subject: confirmationUrl
+        ? `Confirmez votre email - Bienvenue sur Autisme Connect, ${firstName} !`
+        : `Bienvenue sur Autisme Connect, ${firstName} !`,
+      html: getFamilyWelcomeEmail(firstName, confirmationUrl),
     });
 
     if (error) {

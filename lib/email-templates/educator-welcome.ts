@@ -1,4 +1,4 @@
-export function getEducatorWelcomeEmail(firstName: string): string {
+export function getEducatorWelcomeEmail(firstName: string, confirmationUrl?: string): string {
   return `
 <!DOCTYPE html>
 <html lang="fr">
@@ -28,12 +28,38 @@ export function getEducatorWelcomeEmail(firstName: string): string {
                 Bonjour ${firstName},
               </p>
 
+              ${confirmationUrl ? `
+              <!-- Email Confirmation Section -->
+              <div style="background: linear-gradient(135deg, #e0e7ff 0%, #c7d2fe 50%, #ddd6fe 100%); border: 2px solid #7c3aed; border-radius: 12px; padding: 25px; margin: 0 0 30px 0; text-align: center;">
+                <div style="font-size: 40px; margin-bottom: 15px;">✉️</div>
+                <h2 style="margin: 0 0 15px 0; color: #5b21b6; font-size: 20px; font-weight: bold;">
+                  Confirmez votre adresse email
+                </h2>
+                <p style="margin: 0 0 20px 0; font-size: 15px; line-height: 1.6; color: #4c1d95;">
+                  Pour activer votre compte et accéder à toutes les fonctionnalités, veuillez confirmer votre adresse email en cliquant sur le bouton ci-dessous.
+                </p>
+                <table role="presentation" style="margin: 0 auto;">
+                  <tr>
+                    <td style="border-radius: 8px; background: linear-gradient(135deg, #7c3aed 0%, #4f46e5 100%); box-shadow: 0 4px 6px rgba(124, 58, 237, 0.3);">
+                      <a href="${confirmationUrl}"
+                         style="display: inline-block; padding: 16px 40px; color: #ffffff; text-decoration: none; font-weight: bold; font-size: 16px;">
+                        ✓ Confirmer mon email
+                      </a>
+                    </td>
+                  </tr>
+                </table>
+                <p style="margin: 20px 0 0 0; font-size: 13px; color: #5b21b6;">
+                  Ce lien expire dans 24 heures.
+                </p>
+              </div>
+              ` : ''}
+
               <p style="margin: 0 0 20px 0; font-size: 16px; line-height: 1.6; color: #555555;">
                 Nous sommes ravis de vous accueillir en tant qu'<strong>éducateur spécialisé</strong> sur Autisme Connect ! Vous faites maintenant partie d'une communauté dédiée à accompagner les familles d'enfants autistes.
               </p>
 
               <p style="margin: 0 0 30px 0; font-size: 16px; line-height: 1.6; color: #555555;">
-                Votre profil est désormais visible par les familles qui recherchent un accompagnement de qualité. Vous pouvez dès maintenant :
+                ${confirmationUrl ? 'Une fois votre email confirmé, votre profil sera visible par les familles. Vous pourrez' : 'Votre profil est désormais visible par les familles qui recherchent un accompagnement de qualité. Vous pouvez dès maintenant'} :
               </p>
 
               <div style="background-color: #f8f9fa; border-left: 4px solid #667eea; padding: 20px; margin: 0 0 30px 0; border-radius: 4px;">

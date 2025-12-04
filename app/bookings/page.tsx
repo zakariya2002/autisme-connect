@@ -10,7 +10,7 @@ import { signOut } from '@/lib/auth';
 import EducatorMobileMenu from '@/components/EducatorMobileMenu';
 import FamilyMobileMenu from '@/components/FamilyMobileMenu';
 
-type AppointmentStatus = 'pending' | 'accepted' | 'rejected' | 'completed' | 'cancelled';
+type AppointmentStatus = 'pending' | 'accepted' | 'rejected' | 'completed' | 'cancelled' | 'no_show';
 
 interface Appointment {
   id: string;
@@ -43,6 +43,12 @@ export default function AppointmentsPage() {
   const [userProfile, setUserProfile] = useState<any>(null);
   const [subscription, setSubscription] = useState<any>(null);
   const [activeFilter, setActiveFilter] = useState<'all' | 'pending' | 'upcoming' | 'past' | null>(null);
+
+  // États pour le signalement no-show
+  const [showReportModal, setShowReportModal] = useState(false);
+  const [reportingAppointment, setReportingAppointment] = useState<Appointment | null>(null);
+  const [reportDescription, setReportDescription] = useState('');
+  const [reportLoading, setReportLoading] = useState(false);
 
   const selectFilter = (filter: 'all' | 'pending' | 'upcoming' | 'past') => {
     setActiveFilter(prev => prev === filter ? null : filter);
@@ -179,9 +185,53 @@ export default function AppointmentsPage() {
       accepted: { bg: 'bg-emerald-100', text: 'text-emerald-800', label: 'Confirmé', icon: '✓' },
       rejected: { bg: 'bg-red-100', text: 'text-red-800', label: 'Refusé', icon: '✗' },
       cancelled: { bg: 'bg-gray-100', text: 'text-gray-800', label: 'Annulé', icon: '−' },
-      completed: { bg: 'bg-blue-100', text: 'text-blue-800', label: 'Terminé', icon: '✓' }
+      completed: { bg: 'bg-blue-100', text: 'text-blue-800', label: 'Terminé', icon: '✓' },
+      no_show: { bg: 'bg-red-100', text: 'text-red-800', label: 'Non présenté', icon: '⚠' }
     };
     return configs[status] || configs.pending;
+  };
+
+  // Fonction pour signaler un no-show
+  const handleReportNoShow = async () => {
+    if (!reportingAppointment || !userProfile) return;
+
+    setReportLoading(true);
+    try {
+      const response = await fetch('/api/report-noshow', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          appointmentId: reportingAppointment.id,
+          reporterId: userProfile.id,
+          description: reportDescription
+        })
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.error || 'Erreur lors du signalement');
+      }
+
+      alert(data.message);
+      setShowReportModal(false);
+      setReportingAppointment(null);
+      setReportDescription('');
+      fetchAppointments();
+    } catch (error: any) {
+      alert('Erreur: ' + error.message);
+    } finally {
+      setReportLoading(false);
+    }
+  };
+
+  // Vérifier si un rendez-vous peut être signalé comme no-show
+  const canReportNoShow = (appointment: Appointment): boolean => {
+    if (appointment.status !== 'accepted') return false;
+    const appointmentEnd = new Date(appointment.appointment_date + 'T' + appointment.end_time);
+    const now = new Date();
+    // On peut signaler si le rendez-vous est passé (fin dépassée)
+    return appointmentEnd < now;
   };
 
   const formatDate = (dateStr: string) => {
@@ -202,12 +252,24 @@ export default function AppointmentsPage() {
     });
   };
 
+  // Vérifier si l'annulation est possible (48h avant le rendez-vous)
+  const canCancelAppointment = (appointment: Appointment): { canCancel: boolean; hoursRemaining: number } => {
+    const appointmentDateTime = new Date(appointment.appointment_date + 'T' + appointment.start_time);
+    const now = new Date();
+    const hoursUntilAppointment = (appointmentDateTime.getTime() - now.getTime()) / (1000 * 60 * 60);
+    return {
+      canCancel: hoursUntilAppointment >= 48,
+      hoursRemaining: Math.max(0, Math.floor(hoursUntilAppointment))
+    };
+  };
+
   const AppointmentCard = ({ appointment }: { appointment: Appointment }) => {
     const isEducator = userProfile?.role === 'educator';
     const otherParty = isEducator ? appointment.family : appointment.educator;
     const statusConfig = getStatusConfig(appointment.status);
     const appointmentDate = new Date(appointment.appointment_date);
     const isPast = appointmentDate < today;
+    const cancelInfo = canCancelAppointment(appointment);
 
     return (
       <div className={`bg-white rounded-xl border ${isPast ? 'border-gray-200 opacity-75' : 'border-gray-100'} shadow-sm hover:shadow-md transition-all p-4`}>
@@ -308,13 +370,53 @@ export default function AppointmentsPage() {
           </div>
         )}
 
-        {isEducator && appointment.status === 'accepted' && !isPast && (
+        {appointment.status === 'accepted' && !isPast && (
+          <div className="mt-4 pt-3 border-t border-gray-100 space-y-2">
+            {isEducator && (
+              <button
+                onClick={() => updateAppointmentStatus(appointment.id, 'completed')}
+                className="w-full px-3 py-2 bg-blue-50 text-blue-700 rounded-lg hover:bg-blue-100 text-sm font-medium transition"
+              >
+                Marquer comme terminé
+              </button>
+            )}
+            {cancelInfo.canCancel ? (
+              <button
+                onClick={() => {
+                  if (confirm('Êtes-vous sûr de vouloir annuler ce rendez-vous ?')) {
+                    updateAppointmentStatus(appointment.id, 'cancelled');
+                  }
+                }}
+                className="w-full px-3 py-2 bg-red-50 text-red-700 rounded-lg hover:bg-red-100 text-sm font-medium transition"
+              >
+                Annuler le rendez-vous
+              </button>
+            ) : (
+              <div className="text-center">
+                <p className="text-xs text-gray-500 bg-gray-50 rounded-lg p-2">
+                  Annulation impossible moins de 48h avant le rendez-vous
+                  <br />
+                  <span className="text-gray-400">({cancelInfo.hoursRemaining}h restantes)</span>
+                </p>
+              </div>
+            )}
+          </div>
+        )}
+
+        {/* Bouton de signalement no-show pour les familles (rendez-vous passés) */}
+        {!isEducator && canReportNoShow(appointment) && appointment.status !== 'no_show' && (
           <div className="mt-4 pt-3 border-t border-gray-100">
             <button
-              onClick={() => updateAppointmentStatus(appointment.id, 'completed')}
-              className="w-full px-3 py-2 bg-blue-50 text-blue-700 rounded-lg hover:bg-blue-100 text-sm font-medium transition"
+              onClick={() => {
+                setReportingAppointment(appointment);
+                setShowReportModal(true);
+              }}
+              className="w-full px-3 py-2 bg-orange-50 text-orange-700 rounded-lg hover:bg-orange-100 text-sm font-medium transition flex items-center justify-center gap-2"
             >
-              Marquer comme terminé
+              <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+              </svg>
+              Le professionnel ne s'est pas présenté
             </button>
           </div>
         )}
@@ -550,6 +652,86 @@ export default function AppointmentsPage() {
           </div>
         )}
       </div>
+
+      {/* Modal de signalement no-show */}
+      {showReportModal && reportingAppointment && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4">
+          <div className="bg-white rounded-2xl max-w-md w-full p-6 shadow-xl">
+            <div className="flex items-center gap-3 mb-4">
+              <div className="w-12 h-12 bg-orange-100 rounded-full flex items-center justify-center">
+                <svg className="h-6 w-6 text-orange-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                </svg>
+              </div>
+              <div>
+                <h3 className="text-lg font-semibold text-gray-900">Signaler un problème</h3>
+                <p className="text-sm text-gray-500">Le professionnel ne s'est pas présenté</p>
+              </div>
+            </div>
+
+            <div className="bg-orange-50 border border-orange-200 rounded-lg p-3 mb-4">
+              <p className="text-sm text-orange-800">
+                <strong>Rendez-vous avec:</strong> {reportingAppointment.educator?.first_name} {reportingAppointment.educator?.last_name}
+              </p>
+              <p className="text-sm text-orange-700 mt-1">
+                {new Date(reportingAppointment.appointment_date).toLocaleDateString('fr-FR', {
+                  weekday: 'long',
+                  day: 'numeric',
+                  month: 'long'
+                })} de {reportingAppointment.start_time} à {reportingAppointment.end_time}
+              </p>
+            </div>
+
+            <div className="mb-4">
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                Description (optionnel)
+              </label>
+              <textarea
+                value={reportDescription}
+                onChange={(e) => setReportDescription(e.target.value)}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500 text-sm"
+                rows={3}
+                placeholder="Décrivez la situation si vous le souhaitez..."
+              />
+            </div>
+
+            <div className="bg-gray-50 rounded-lg p-3 mb-4">
+              <p className="text-xs text-gray-600">
+                Ce signalement sera transmis à notre équipe. Si ce professionnel accumule 3 signalements,
+                il sera temporairement suspendu de la plateforme.
+              </p>
+            </div>
+
+            <div className="flex gap-3">
+              <button
+                onClick={() => {
+                  setShowReportModal(false);
+                  setReportingAppointment(null);
+                  setReportDescription('');
+                }}
+                className="flex-1 px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 font-medium transition"
+                disabled={reportLoading}
+              >
+                Annuler
+              </button>
+              <button
+                onClick={handleReportNoShow}
+                className="flex-1 px-4 py-2 bg-orange-600 text-white rounded-lg hover:bg-orange-700 font-medium transition flex items-center justify-center gap-2"
+                disabled={reportLoading}
+              >
+                {reportLoading ? (
+                  <>
+                    <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div>
+                    Envoi...
+                  </>
+                ) : (
+                  'Confirmer le signalement'
+                )}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

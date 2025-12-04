@@ -7,6 +7,7 @@ import { supabase } from '@/lib/supabase';
 import { signOut } from '@/lib/auth';
 import Logo from '@/components/Logo';
 import EducatorMobileMenu from '@/components/EducatorMobileMenu';
+import NotificationBell from '@/components/NotificationBell';
 import { getEducatorUsageStats, FREE_PLAN_LIMITS } from '@/lib/subscription-utils';
 import { getProfessionByValue } from '@/lib/professions-config';
 
@@ -14,6 +15,7 @@ export default function EducatorDashboard() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const [profile, setProfile] = useState<any>(null);
+  const [userId, setUserId] = useState<string>('');
   const [subscription, setSubscription] = useState<any>(null);
   const [stats, setStats] = useState({
     bookings: 0,
@@ -23,6 +25,7 @@ export default function EducatorDashboard() {
   });
   const [usageStats, setUsageStats] = useState<any>(null);
   const [syncingSubscription, setSyncingSubscription] = useState(false);
+  const [pendingRequests, setPendingRequests] = useState<any[]>([]);
 
   useEffect(() => {
     fetchProfile();
@@ -34,6 +37,8 @@ export default function EducatorDashboard() {
       router.push('/auth/login');
       return;
     }
+
+    setUserId(session.user.id);
 
     const { data } = await supabase
       .from('educator_profiles')
@@ -69,6 +74,18 @@ export default function EducatorDashboard() {
 
       const usage = await getEducatorUsageStats(data.id);
       setUsageStats(usage);
+
+      // Récupérer les demandes de contact en attente
+      const { data: pendingConvs } = await supabase
+        .from('conversations')
+        .select('*, family_profiles(*)')
+        .eq('educator_id', data.id)
+        .eq('status', 'pending')
+        .order('created_at', { ascending: false });
+
+      if (pendingConvs) {
+        setPendingRequests(pendingConvs);
+      }
 
       if (searchParams.get('subscription') === 'success' && !subscriptionData && data?.id) {
         syncSubscription(data.id);
@@ -120,14 +137,20 @@ export default function EducatorDashboard() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between h-16 items-center">
             <div className="flex items-center gap-3">
-              <div className="md:hidden">
+              <div className="md:hidden flex items-center gap-2">
                 <EducatorMobileMenu profile={profile} isPremium={isPremium} onLogout={handleLogout} />
+                {profile?.id && userId && (
+                  <NotificationBell educatorId={profile.id} userId={userId} />
+                )}
               </div>
               <div className="hidden md:block">
                 <Logo />
               </div>
             </div>
             <div className="hidden md:flex items-center space-x-4">
+              {profile?.id && userId && (
+                <NotificationBell educatorId={profile.id} userId={userId} />
+              )}
               <Link href="/dashboard/educator/profile" className="text-gray-700 hover:text-primary-600 px-3 py-2 font-medium transition">
                 Mon profil
               </Link>
@@ -277,6 +300,80 @@ export default function EducatorDashboard() {
                 <p className="text-green-700 text-sm">
                   Votre profil est visible des familles avec le badge de confiance.
                 </p>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Demandes de contact en attente */}
+        {pendingRequests.length > 0 && (
+          <div className="mb-6 bg-gradient-to-r from-yellow-50 to-orange-50 border-2 border-yellow-200 rounded-2xl p-5 sm:p-6 shadow-sm">
+            <div className="flex items-start gap-4">
+              <div className="w-12 h-12 bg-yellow-500 rounded-xl flex items-center justify-center flex-shrink-0">
+                <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z" />
+                </svg>
+              </div>
+              <div className="flex-1">
+                <h3 className="text-lg font-bold text-gray-900 mb-2 flex items-center gap-2">
+                  Demandes de contact en attente
+                  <span className="inline-flex items-center px-2.5 py-0.5 bg-yellow-500 text-white text-xs font-bold rounded-full">
+                    {pendingRequests.length}
+                  </span>
+                </h3>
+                <p className="text-gray-700 text-sm mb-4">
+                  {pendingRequests.length === 1
+                    ? 'Une famille souhaite vous contacter.'
+                    : `${pendingRequests.length} familles souhaitent vous contacter.`}
+                </p>
+                <div className="space-y-3">
+                  {pendingRequests.slice(0, 3).map((request) => (
+                    <div key={request.id} className="bg-white rounded-xl p-4 border border-yellow-200 shadow-sm">
+                      <div className="flex items-center justify-between gap-3">
+                        <div className="flex items-center gap-3">
+                          {request.family_profiles?.avatar_url ? (
+                            <img
+                              src={request.family_profiles.avatar_url}
+                              alt=""
+                              className="w-10 h-10 rounded-full object-cover"
+                            />
+                          ) : (
+                            <div className="w-10 h-10 rounded-full bg-yellow-100 flex items-center justify-center">
+                              <span className="text-yellow-600 font-semibold text-sm">
+                                {request.family_profiles?.first_name?.[0]}{request.family_profiles?.last_name?.[0]}
+                              </span>
+                            </div>
+                          )}
+                          <div>
+                            <p className="font-semibold text-gray-900">
+                              {request.family_profiles?.first_name} {request.family_profiles?.last_name}
+                            </p>
+                            <p className="text-sm text-gray-500 line-clamp-1">
+                              {request.request_message || 'Demande de contact'}
+                            </p>
+                          </div>
+                        </div>
+                        <Link
+                          href="/messages"
+                          className="px-4 py-2 bg-yellow-500 text-white rounded-lg hover:bg-yellow-600 font-medium text-sm transition whitespace-nowrap"
+                        >
+                          Voir
+                        </Link>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+                {pendingRequests.length > 3 && (
+                  <Link
+                    href="/messages"
+                    className="inline-flex items-center gap-2 mt-4 text-yellow-700 hover:text-yellow-800 font-semibold text-sm"
+                  >
+                    Voir toutes les demandes ({pendingRequests.length})
+                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                    </svg>
+                  </Link>
+                )}
               </div>
             </div>
           </div>

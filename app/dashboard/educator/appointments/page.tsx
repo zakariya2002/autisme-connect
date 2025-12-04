@@ -363,7 +363,27 @@ export default function EducatorAppointmentsPage() {
     }
   };
 
+  // Vérifier si l'annulation est possible (48h avant le rendez-vous)
+  const canCancelAppointment = (appointment: Appointment): { canCancel: boolean; hoursRemaining: number } => {
+    const appointmentDateTime = new Date(appointment.appointment_date + 'T' + appointment.start_time);
+    const now = new Date();
+    const hoursUntilAppointment = (appointmentDateTime.getTime() - now.getTime()) / (1000 * 60 * 60);
+    return {
+      canCancel: hoursUntilAppointment >= 48,
+      hoursRemaining: Math.max(0, Math.floor(hoursUntilAppointment))
+    };
+  };
+
   const handleCancel = async (appointmentId: string) => {
+    const appointment = appointments.find(a => a.id === appointmentId);
+    if (!appointment) return;
+
+    const cancelInfo = canCancelAppointment(appointment);
+    if (!cancelInfo.canCancel) {
+      alert(`Annulation impossible moins de 48h avant le rendez-vous (${cancelInfo.hoursRemaining}h restantes)`);
+      return;
+    }
+
     if (!confirm('Annuler ce rendez-vous ?')) return;
 
     setActionLoading(true);
@@ -714,13 +734,19 @@ export default function EducatorAppointmentsPage() {
                   actionLoading={actionLoading}
                 />
               )}
-              <button
-                onClick={() => handleCancel(appointment.id)}
-                disabled={actionLoading}
-                className="px-3 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 text-sm font-medium transition"
-              >
-                Annuler
-              </button>
+              {canCancelAppointment(appointment).canCancel ? (
+                <button
+                  onClick={() => handleCancel(appointment.id)}
+                  disabled={actionLoading}
+                  className="px-3 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 text-sm font-medium transition"
+                >
+                  Annuler
+                </button>
+              ) : (
+                <span className="px-3 py-2 bg-gray-50 text-gray-400 rounded-lg text-xs" title={`Annulation impossible moins de 48h avant (${canCancelAppointment(appointment).hoursRemaining}h restantes)`}>
+                  Annulation impossible
+                </span>
+              )}
             </>
           )}
 

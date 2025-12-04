@@ -1,7 +1,7 @@
 'use client';
 
-import { useState } from 'react';
-import { useRouter } from 'next/navigation';
+import { useState, useEffect } from 'react';
+import { useRouter, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import { signIn } from '@/lib/auth';
 
@@ -11,7 +11,19 @@ export default function LoginPage() {
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
+  const [showConfirmationPopup, setShowConfirmationPopup] = useState(false);
   const router = useRouter();
+  const searchParams = useSearchParams();
+
+  // Vérifier si l'utilisateur vient de confirmer son email
+  useEffect(() => {
+    const confirmed = searchParams.get('confirmed');
+    if (confirmed === 'true') {
+      setShowConfirmationPopup(true);
+      // Retirer le paramètre de l'URL sans recharger la page
+      window.history.replaceState({}, '', '/auth/login');
+    }
+  }, [searchParams]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -198,6 +210,40 @@ export default function LoginPage() {
           </div>
         </div>
       </div>
+
+      {/* Popup de confirmation d'email */}
+      {showConfirmationPopup && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4">
+          <div className="bg-white rounded-2xl max-w-md w-full p-8 shadow-2xl animate-in fade-in zoom-in duration-300">
+            <div className="text-center">
+              {/* Icône de succès */}
+              <div className="mx-auto w-20 h-20 bg-green-100 rounded-full flex items-center justify-center mb-6">
+                <svg className="w-10 h-10 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                </svg>
+              </div>
+
+              {/* Titre */}
+              <h3 className="text-2xl font-bold text-gray-900 mb-3">
+                Email vérifié !
+              </h3>
+
+              {/* Message */}
+              <p className="text-gray-600 mb-6">
+                Votre adresse email a bien été confirmée. Vous pouvez maintenant vous connecter à votre compte.
+              </p>
+
+              {/* Bouton de fermeture */}
+              <button
+                onClick={() => setShowConfirmationPopup(false)}
+                className="w-full py-3 px-4 bg-gradient-to-r from-green-600 to-green-700 text-white rounded-lg font-semibold hover:from-green-700 hover:to-green-800 transition-all shadow-md hover:shadow-lg"
+              >
+                C&apos;est compris !
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

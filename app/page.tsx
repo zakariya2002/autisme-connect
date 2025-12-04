@@ -45,55 +45,55 @@ export default function Home() {
     return '/auth/login';
   };
 
-  // Si mode TND activé, afficher la version simplifiée
-  if (tndMode) {
-    return (
-      <>
-        <HomeTnd />
-        <TndToggle />
-      </>
-    );
-  }
+  // Mode TND temporairement masqué (code conservé pour réactivation future)
+  // if (tndMode) {
+  //   return (
+  //     <>
+  //       <HomeTnd />
+  //       <TndToggle />
+  //     </>
+  //   );
+  // }
 
   // Sinon, afficher la version normale
   return (
     <>
-    <div className="min-h-screen bg-gradient-to-br from-primary-50 via-white to-blue-50">
+    <div className="min-h-screen bg-gradient-to-br from-violet-50/30 via-white to-blue-50/30">
       {/* Navigation */}
-      <nav className="bg-white shadow-sm border-b border-gray-200 sticky top-0 z-50 backdrop-blur-sm bg-white/95">
+      <nav className="bg-white shadow-sm border-b border-gray-200 sticky top-0 z-50 backdrop-blur-sm bg-white/95" role="navigation" aria-label="Navigation principale">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between h-20 items-center">
+          <div className="flex justify-between h-16 lg:h-20 items-center">
             <Logo />
-            <div className="md:hidden">
+            <div className="xl:hidden">
               <MobileMenu />
             </div>
-            <div className="hidden md:flex items-center gap-2 lg:gap-3">
-              <Link href="/about" className="text-gray-700 hover:text-primary-600 px-3 py-2 rounded-md font-medium transition-colors text-sm inline-flex items-center justify-center">
+            <div className="hidden xl:flex items-center gap-2 2xl:gap-3">
+              <Link href="/about" className="text-gray-700 hover:text-primary-600 px-2 xl:px-3 py-2 rounded-md font-medium transition-colors text-sm inline-flex items-center justify-center whitespace-nowrap focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2">
                 À propos
               </Link>
-              <Link href="/search" className="text-gray-700 hover:text-primary-600 px-3 py-2 rounded-md font-medium transition-colors text-sm inline-flex items-center justify-center gap-1.5">
+              <Link href="/search" className="text-gray-700 hover:text-primary-600 px-2 xl:px-3 py-2 rounded-md font-medium transition-colors text-sm inline-flex items-center justify-center gap-1 whitespace-nowrap focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2">
                 <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
                 </svg>
                 Recherche
               </Link>
-              <Link href="/pricing" className="text-gray-700 hover:text-primary-600 px-3 py-2 rounded-md font-medium transition-colors text-sm inline-flex items-center justify-center gap-1.5">
+              <Link href="/pro" className="text-teal-600 bg-teal-50 px-2 xl:px-3 py-2 rounded-md font-medium transition-colors text-sm inline-flex items-center justify-center gap-1 whitespace-nowrap focus:outline-none focus:ring-2 focus:ring-teal-500 focus:ring-offset-2 hover:bg-teal-100">
                 <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
                 </svg>
-                Tarifs
+                Espace Pro
               </Link>
-              <Link href="/familles/aides-financieres" className="text-primary-600 bg-primary-50 px-3 py-2 rounded-md font-medium transition-colors text-sm inline-flex items-center justify-center gap-1.5">
+              <Link href="/familles/aides-financieres" className="text-primary-600 bg-primary-50 px-2 xl:px-3 py-2 rounded-md font-medium transition-colors text-sm inline-flex items-center justify-center gap-1 whitespace-nowrap focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2">
                 <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
                 </svg>
                 Aides
               </Link>
-              <Link href="/contact" className="text-gray-700 hover:text-primary-600 px-3 py-2 rounded-md font-medium transition-colors text-sm inline-flex items-center justify-center">
+              <Link href="/contact" className="text-gray-700 hover:text-primary-600 px-2 xl:px-3 py-2 rounded-md font-medium transition-colors text-sm inline-flex items-center justify-center whitespace-nowrap focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2">
                 Contact
               </Link>
               {user ? (
-                <Link href={getDashboardLink()} className="ml-4 bg-primary-600 text-white px-5 py-2.5 rounded-md hover:bg-primary-700 font-medium transition-colors shadow-sm text-sm lg:text-base inline-flex items-center gap-2">
+                <Link href={getDashboardLink()} className="ml-2 xl:ml-4 bg-primary-600 text-white px-4 xl:px-5 py-2.5 rounded-md hover:bg-primary-700 font-medium transition-colors shadow-sm text-sm inline-flex items-center gap-2 whitespace-nowrap focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2">
                   <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z" />
                   </svg>
@@ -101,10 +101,10 @@ export default function Home() {
                 </Link>
               ) : (
                 <>
-                  <Link href="/auth/login" className="ml-4 text-gray-700 hover:text-primary-600 px-2 lg:px-4 py-2 rounded-md font-medium transition-colors text-sm lg:text-base focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2">
+                  <Link href="/auth/login" className="ml-2 xl:ml-4 text-gray-700 hover:text-primary-600 px-2 xl:px-4 py-2 rounded-md font-medium transition-colors text-sm focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 whitespace-nowrap">
                     Connexion
                   </Link>
-                  <Link href="/auth/signup" className="bg-gradient-to-r from-violet-600 to-blue-500 hover:from-violet-700 hover:to-blue-600 text-white px-5 py-2.5 rounded-md font-medium transition-all shadow-sm text-sm lg:text-base">
+                  <Link href="/auth/signup" className="bg-gradient-to-r from-violet-600 to-blue-500 hover:from-violet-700 hover:to-blue-600 text-white px-4 xl:px-5 py-2.5 rounded-md font-medium transition-all shadow-sm text-sm whitespace-nowrap focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2">
                     Inscription
                   </Link>
                 </>
@@ -114,153 +114,175 @@ export default function Home() {
         </div>
       </nav>
 
-      {/* Hero Section */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-10 lg:py-16 mt-2 sm:mt-4">
+      {/* Hero Section - Version humaine et chaleureuse */}
+      <div className="min-h-[calc(100vh-80px)] flex items-center justify-center px-4 sm:px-6 lg:px-8">
         <div className="text-center max-w-4xl mx-auto">
-          <div className="bg-white/95 backdrop-blur-sm rounded-2xl sm:rounded-3xl p-6 sm:p-8 lg:p-10 shadow-2xl border-2 border-gray-100 mb-6 sm:mb-10">
-            <h1 className="text-2xl sm:text-4xl lg:text-6xl xl:text-7xl font-bold text-gray-900 mb-4 sm:mb-6 leading-tight">
-              Trouvez les professionnels
-              <span className="bg-gradient-to-r from-violet-600 via-purple-500 to-blue-500 bg-clip-text text-transparent block mt-2 sm:mt-3">qui comprend vos besoins</span>
-            </h1>
-            <p className="text-sm sm:text-lg lg:text-xl xl:text-2xl text-gray-700 leading-relaxed max-w-3xl mx-auto font-medium px-2 sm:px-0">
-              Nous comprenons vos défis quotidiens. C'est pourquoi nous vous aidons à trouver
-              des professionnels passionnés et qualifiés, prêts à vous accompagner avec bienveillance.
-            </p>
-          </div>
+          <h1 className="text-4xl sm:text-5xl lg:text-6xl xl:text-7xl font-bold text-gray-900 mb-8 sm:mb-10 leading-tight">
+            Vous n'êtes
+            <span className="bg-gradient-to-r from-violet-600 to-blue-500 bg-clip-text text-transparent"> plus seul(e)</span>
+            <br className="hidden sm:block" />
+            <span className="text-3xl sm:text-4xl lg:text-5xl xl:text-6xl text-gray-600 font-medium mt-3 block">
+              dans votre parcours d'aidant
+            </span>
+          </h1>
 
-          <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center items-center px-2 sm:px-0">
+          {/* Bouton principal avec style chaleureux */}
+          <div className="flex flex-col items-center gap-4 px-2 sm:px-0">
             <Link
               href="/search"
-              className="w-full sm:w-auto inline-flex items-center justify-center px-6 sm:px-8 py-3 sm:py-4 bg-gradient-to-r from-violet-600 to-blue-500 hover:from-violet-700 hover:to-blue-600 text-white rounded-xl font-bold text-base sm:text-lg shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-1"
+              className="w-full sm:w-auto inline-flex items-center justify-center px-8 sm:px-10 py-4 sm:py-5 bg-gradient-to-r from-violet-600 to-blue-500 hover:from-violet-700 hover:to-blue-600 text-white rounded-2xl font-bold text-lg sm:text-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1"
             >
-              <svg className="w-5 h-5 sm:w-6 sm:h-6 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+              <svg className="w-6 h-6 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
               </svg>
-              Je cherche un professionnel
+              Trouver un professionnel près de chez moi
             </Link>
-            <Link
-              href="/auth/signup"
-              className="w-full sm:w-auto inline-flex items-center justify-center px-6 sm:px-8 py-3 sm:py-4 bg-white text-primary-600 border-2 border-primary-600 rounded-xl hover:bg-primary-50 font-bold text-base sm:text-lg shadow-lg hover:shadow-xl transition-all duration-300"
-            >
-              <svg className="w-5 h-5 sm:w-6 sm:h-6 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z" />
+
+            {/* Badge gratuit */}
+            <div className="inline-flex items-center gap-2 text-violet-700 font-medium text-sm sm:text-base">
+              <svg className="w-5 h-5 text-green-600" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
+                <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
               </svg>
-              Je suis un professionnel
-            </Link>
+              Service 100% gratuit pour les aidants
+            </div>
           </div>
 
-          {/* Badge "Gratuit pour les familles" */}
-          <div className="mt-6 sm:mt-8 inline-flex items-center px-4 sm:px-6 py-2.5 sm:py-3 bg-green-100 text-green-800 rounded-full font-semibold text-sm sm:text-base">
-            <svg className="w-4 h-4 sm:w-5 sm:h-5 mr-2" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
-              <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
-            </svg>
-            100% gratuit pour les aidants
-          </div>
         </div>
       </div>
 
       {/* Notre Mission - Version humanisée */}
-      <div className="bg-white py-12 sm:py-16 lg:py-20">
+      <div className="bg-gradient-to-b from-white to-violet-50/30 py-12 sm:py-16 lg:py-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-10 sm:mb-12 lg:mb-16">
-            <h2 className="text-2xl sm:text-3xl lg:text-4xl xl:text-5xl font-bold text-gray-900 mb-4 sm:mb-6">
-              Pourquoi Autisme Connect existe ?
+            <div className="inline-flex items-center gap-2 bg-violet-100 text-violet-800 px-4 py-2 rounded-full text-sm font-medium mb-4">
+              <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
+                <path d="M9 6a3 3 0 11-6 0 3 3 0 016 0zM17 6a3 3 0 11-6 0 3 3 0 016 0zM12.93 17c.046-.327.07-.66.07-1a6.97 6.97 0 00-1.5-4.33A5 5 0 0119 16v1h-6.07zM6 11a5 5 0 015 5v1H1v-1a5 5 0 015-5z" />
+              </svg>
+              Ensemble, faisons la différence
+            </div>
+            <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-900 mb-4 sm:mb-6">
+              Une communauté qui vous <span className="text-violet-600">comprend</span>
             </h2>
-            <p className="text-base sm:text-lg lg:text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed px-4 sm:px-0">
-              Parce que nous croyons que chaque aidant mérite d'avoir accès facilement à un accompagnement de qualité,
-              et que chaque enfant a le droit à une prise en charge adaptée à ses besoins uniques.
+            <p className="text-base sm:text-lg text-gray-600 max-w-2xl mx-auto leading-relaxed px-4 sm:px-0">
+              Parce que derrière chaque recherche, il y a une histoire, des espoirs et le désir profond
+              d'offrir le meilleur à son proche.
             </p>
           </div>
 
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 sm:gap-10 lg:gap-12 items-center max-w-6xl mx-auto">
             {/* Colonne gauche - Texte principal */}
-            <div className="space-y-5 sm:space-y-6">
-              <div className="flex items-start gap-3 sm:gap-4">
-                <div className="flex-shrink-0 w-10 h-10 sm:w-12 sm:h-12 bg-primary-100 rounded-lg flex items-center justify-center">
-                  <svg className="w-5 h-5 sm:w-6 sm:h-6 text-primary-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
-                  </svg>
-                </div>
-                <div>
-                  <h3 className="text-lg sm:text-xl font-bold text-gray-900 mb-1.5 sm:mb-2">Pour vous, les aidants</h3>
-                  <p className="text-sm sm:text-base text-gray-600 leading-relaxed">
-                    Nous savons à quel point il peut être difficile de trouver le bon professionnel.
-                    C'est pourquoi nous avons créé un espace où vous pouvez découvrir des professionnels passionnés,
-                    consulter leurs parcours et échanger avec eux en toute confiance.
-                  </p>
-                </div>
-              </div>
-
-              <div className="flex items-start gap-3 sm:gap-4">
-                <div className="flex-shrink-0 w-10 h-10 sm:w-12 sm:h-12 bg-green-100 rounded-lg flex items-center justify-center">
-                  <svg className="w-5 h-5 sm:w-6 sm:h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
-                  </svg>
-                </div>
-                <div>
-                  <h3 className="text-lg sm:text-xl font-bold text-gray-900 mb-1.5 sm:mb-2">Pour vous, les professionnels</h3>
-                  <p className="text-sm sm:text-base text-gray-700 mb-2 leading-relaxed">
-                    <span className="font-semibold text-gray-900">Éducateurs spécialisés (ES) • Moniteurs éducateurs (ME)</span>
-                  </p>
-                  <p className="text-sm sm:text-base text-gray-600 leading-relaxed">
-                    Votre métier est une vocation. Nous vous donnons les moyens de développer votre activité
-                    tout en gardant du temps pour ce qui compte vraiment : accompagner les enfants et leurs aidants
-                    avec bienveillance et professionnalisme.
-                  </p>
+            <div className="space-y-6 sm:space-y-8">
+              <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100 hover:shadow-md transition-shadow">
+                <div className="flex items-start gap-4">
+                  <div className="flex-shrink-0 w-12 h-12 bg-rose-100 rounded-xl flex items-center justify-center">
+                    <svg className="w-6 h-6 text-rose-600" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
+                      <path fillRule="evenodd" d="M3.172 5.172a4 4 0 015.656 0L10 6.343l1.172-1.171a4 4 0 115.656 5.656L10 17.657l-6.828-6.829a4 4 0 010-5.656z" clipRule="evenodd" />
+                    </svg>
+                  </div>
+                  <div>
+                    <h3 className="text-lg sm:text-xl font-bold text-gray-900 mb-2">Nous vous écoutons</h3>
+                    <p className="text-gray-600 leading-relaxed">
+                      Chaque aidant a son histoire. Nous avons créé cet espace pour que vous puissiez
+                      trouver <strong className="text-gray-800">le bon professionnel</strong>, celui qui saura écouter
+                      et comprendre vos besoins uniques.
+                    </p>
+                  </div>
                 </div>
               </div>
 
-              <div className="flex items-start gap-3 sm:gap-4">
-                <div className="flex-shrink-0 w-10 h-10 sm:w-12 sm:h-12 bg-blue-100 rounded-lg flex items-center justify-center">
-                  <svg className="w-5 h-5 sm:w-6 sm:h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
-                  </svg>
+              <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100 hover:shadow-md transition-shadow">
+                <div className="flex items-start gap-4">
+                  <div className="flex-shrink-0 w-12 h-12 bg-blue-100 rounded-xl flex items-center justify-center">
+                    <svg className="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+                    </svg>
+                  </div>
+                  <div>
+                    <h3 className="text-lg sm:text-xl font-bold text-gray-900 mb-2">Des professionnels vérifiés</h3>
+                    <p className="text-gray-600 leading-relaxed">
+                      Chaque professionnel sur notre plateforme est vérifié. Diplômes, expériences, motivations...
+                      <strong className="text-gray-800"> Vous pouvez avoir confiance.</strong>
+                    </p>
+                  </div>
                 </div>
-                <div>
-                  <h3 className="text-lg sm:text-xl font-bold text-gray-900 mb-1.5 sm:mb-2">Notre engagement</h3>
-                  <p className="text-sm sm:text-base text-gray-600 leading-relaxed">
-                    Transparence totale, sécurité maximale et accompagnement humain.
-                    Chaque profil est vérifié, chaque échange est sécurisé, et notre équipe est toujours là pour vous aider.
-                  </p>
+              </div>
+
+              <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100 hover:shadow-md transition-shadow">
+                <div className="flex items-start gap-4">
+                  <div className="flex-shrink-0 w-12 h-12 bg-amber-100 rounded-xl flex items-center justify-center">
+                    <svg className="w-6 h-6 text-amber-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                  </div>
+                  <div>
+                    <h3 className="text-lg sm:text-xl font-bold text-gray-900 mb-2">Toujours là pour vous</h3>
+                    <p className="text-gray-600 leading-relaxed">
+                      Une question ? Un doute ? Notre équipe est disponible pour vous accompagner
+                      à chaque étape de votre recherche.
+                    </p>
+                  </div>
                 </div>
               </div>
             </div>
 
             {/* Colonne droite - Stats/Highlights */}
-            <div className="bg-gradient-to-br from-primary-50 to-blue-50 rounded-xl sm:rounded-2xl p-6 sm:p-8 lg:p-10 shadow-lg">
-              <div className="space-y-8">
-                <div className="text-center pb-6 border-b border-primary-200">
-                  <p className="text-primary-600 font-semibold mb-2">Une plateforme pensée pour vous</p>
-                  <h3 className="text-3xl font-bold text-gray-900">
-                    Simple, humaine et efficace
+            <div className="bg-gradient-to-br from-violet-50 to-blue-50 rounded-2xl p-6 sm:p-8 lg:p-10 shadow-sm border border-violet-100">
+              <div className="space-y-6">
+                <div className="text-center pb-5 border-b border-violet-200">
+                  <div className="w-14 h-14 bg-white rounded-full flex items-center justify-center mx-auto mb-3 shadow-sm">
+                    <svg className="w-7 h-7 text-violet-600" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
+                      <path fillRule="evenodd" d="M3.172 5.172a4 4 0 015.656 0L10 6.343l1.172-1.171a4 4 0 115.656 5.656L10 17.657l-6.828-6.829a4 4 0 010-5.656z" clipRule="evenodd" />
+                    </svg>
+                  </div>
+                  <h3 className="text-xl sm:text-2xl font-bold text-gray-900">
+                    Nos engagements envers vous
                   </h3>
                 </div>
 
-                <div className="grid grid-cols-2 gap-6">
-                  <div className="bg-white rounded-xl p-6 text-center shadow-sm hover:shadow-md transition-shadow">
-                    <div className="text-4xl font-bold text-primary-600 mb-2">100%</div>
-                    <p className="text-sm text-gray-600">Gratuit aidants</p>
+                <div className="space-y-4">
+                  <div className="bg-white rounded-xl p-4 flex items-center gap-4 shadow-sm">
+                    <div className="w-10 h-10 bg-green-100 rounded-lg flex items-center justify-center flex-shrink-0">
+                      <svg className="w-5 h-5 text-green-600" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
+                        <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                      </svg>
+                    </div>
+                    <div>
+                      <p className="font-semibold text-gray-900">100% gratuit pour les aidants</p>
+                      <p className="text-sm text-gray-500">Aucun frais, jamais</p>
+                    </div>
                   </div>
-                  <div className="bg-white rounded-xl p-6 text-center shadow-sm hover:shadow-md transition-shadow">
-                    <div className="text-4xl font-bold text-green-600 mb-2">30j</div>
-                    <p className="text-sm text-gray-600">Essai gratuit</p>
+
+                  <div className="bg-white rounded-xl p-4 flex items-center gap-4 shadow-sm">
+                    <div className="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center flex-shrink-0">
+                      <svg className="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+                      </svg>
+                    </div>
+                    <div>
+                      <p className="font-semibold text-gray-900">Données sécurisées</p>
+                      <p className="text-sm text-gray-500">Conforme RGPD</p>
+                    </div>
                   </div>
-                  <div className="bg-white rounded-xl p-6 text-center shadow-sm hover:shadow-md transition-shadow">
-                    <div className="text-4xl font-bold text-blue-600 mb-2">24/7</div>
-                    <p className="text-sm text-gray-600">Disponible</p>
-                  </div>
-                  <div className="bg-white rounded-xl p-6 text-center shadow-sm hover:shadow-md transition-shadow">
-                    <div className="text-4xl font-bold text-purple-600 mb-2">0€</div>
-                    <p className="text-sm text-gray-600">Frais cachés</p>
+
+                  <div className="bg-white rounded-xl p-4 flex items-center gap-4 shadow-sm">
+                    <div className="w-10 h-10 bg-violet-100 rounded-lg flex items-center justify-center flex-shrink-0">
+                      <svg className="w-5 h-5 text-violet-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M18.364 5.636l-3.536 3.536m0 5.656l3.536 3.536M9.172 9.172L5.636 5.636m3.536 9.192l-3.536 3.536M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-5 0a4 4 0 11-8 0 4 4 0 018 0z" />
+                      </svg>
+                    </div>
+                    <div>
+                      <p className="font-semibold text-gray-900">Support humain</p>
+                      <p className="text-sm text-gray-500">Une vraie équipe à votre écoute</p>
+                    </div>
                   </div>
                 </div>
 
-                <div className="pt-4">
+                <div className="pt-2">
                   <Link
-                    href="/auth/signup"
-                    className="block w-full text-center px-6 py-4 bg-primary-600 text-white rounded-xl hover:bg-primary-700 font-bold text-lg shadow-md transition-colors"
+                    href="/search"
+                    className="block w-full text-center px-6 py-4 bg-gradient-to-r from-violet-600 to-blue-500 text-white rounded-xl hover:from-violet-700 hover:to-blue-600 font-bold text-lg shadow-md transition-all"
                   >
-                    Rejoignez-nous gratuitement
+                    Commencer ma recherche
                   </Link>
                 </div>
               </div>
@@ -270,21 +292,21 @@ export default function Home() {
       </div>
 
       {/* Section Sécurité et Confiance */}
-      <div className="bg-gradient-to-br from-gray-50 to-slate-100 py-12 sm:py-16 lg:py-20">
+      <div className="bg-white py-12 sm:py-16 lg:py-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-10 sm:mb-12 lg:mb-16">
-            <div className="inline-flex items-center gap-2 bg-green-100 text-green-800 px-4 py-2 rounded-full text-sm font-semibold mb-4">
+            <div className="inline-flex items-center gap-2 bg-green-100 text-green-800 px-4 py-2 rounded-full text-sm font-medium mb-4">
               <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
                 <path fillRule="evenodd" d="M2.166 4.999A11.954 11.954 0 0010 1.944 11.954 11.954 0 0017.834 5c.11.65.166 1.32.166 2.001 0 5.225-3.34 9.67-8 11.317C5.34 16.67 2 12.225 2 7c0-.682.057-1.35.166-2.001zm11.541 3.708a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
               </svg>
-              Votre sécurité, notre priorité
+              Votre tranquillité d'esprit
             </div>
-            <h2 className="text-2xl sm:text-3xl lg:text-4xl xl:text-5xl font-bold text-gray-900 mb-4 sm:mb-6">
-              Un processus de recrutement rigoureux
+            <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-900 mb-4 sm:mb-6">
+              Des professionnels de <span className="text-green-600">confiance</span>
             </h2>
-            <p className="text-base sm:text-lg lg:text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed px-4 sm:px-0">
-              Chaque professionnel sur notre plateforme passe par un processus de vérification complet
-              avant de pouvoir accompagner votre enfant.
+            <p className="text-base sm:text-lg text-gray-600 max-w-2xl mx-auto leading-relaxed px-4 sm:px-0">
+              Nous savons à quel point il est important pour vous de confier votre proche à quelqu'un de fiable.
+              C'est pourquoi chaque professionnel est soigneusement vérifié.
             </p>
           </div>
 
@@ -548,9 +570,9 @@ export default function Home() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16 lg:py-20">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 sm:gap-8 lg:gap-12">
           {/* Pour les familles */}
-          <div className="bg-gradient-to-br from-blue-50 to-blue-100 rounded-xl sm:rounded-2xl p-5 sm:p-6 lg:p-10 shadow-lg hover:shadow-xl transition-shadow">
+          <div className="bg-gradient-to-br from-violet-50 to-blue-50 rounded-xl sm:rounded-2xl p-5 sm:p-6 lg:p-10 shadow-lg hover:shadow-xl transition-shadow border border-violet-100">
             <div className="flex items-center mb-4 sm:mb-6">
-              <div className="w-10 h-10 sm:w-12 sm:h-12 lg:w-14 lg:h-14 bg-blue-600 rounded-lg sm:rounded-xl flex items-center justify-center mr-3 sm:mr-4">
+              <div className="w-10 h-10 sm:w-12 sm:h-12 lg:w-14 lg:h-14 bg-gradient-to-r from-violet-600 to-blue-500 rounded-lg sm:rounded-xl flex items-center justify-center mr-3 sm:mr-4">
                 <svg className="w-5 h-5 sm:w-6 sm:h-6 lg:w-8 lg:h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
                 </svg>
@@ -585,16 +607,16 @@ export default function Home() {
             </ul>
             <Link
               href="/search"
-              className="inline-block w-full text-center px-5 sm:px-6 py-2.5 sm:py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 font-semibold transition-colors shadow-md text-sm sm:text-base"
+              className="inline-block w-full text-center px-5 sm:px-6 py-2.5 sm:py-3 bg-gradient-to-r from-violet-600 to-blue-500 hover:from-violet-700 hover:to-blue-600 text-white rounded-lg font-semibold transition-all shadow-md text-sm sm:text-base"
             >
               Commencer ma recherche
             </Link>
           </div>
 
           {/* Pour les éducateurs */}
-          <div className="bg-gradient-to-br from-primary-50 to-primary-100 rounded-xl sm:rounded-2xl p-5 sm:p-6 lg:p-10 shadow-lg hover:shadow-xl transition-shadow">
+          <div className="bg-gradient-to-br from-emerald-50 to-cyan-50 rounded-xl sm:rounded-2xl p-5 sm:p-6 lg:p-10 shadow-lg hover:shadow-xl transition-shadow border border-teal-100">
             <div className="flex items-center mb-4 sm:mb-6">
-              <div className="w-10 h-10 sm:w-12 sm:h-12 lg:w-14 lg:h-14 bg-primary-600 rounded-lg sm:rounded-xl flex items-center justify-center mr-3 sm:mr-4">
+              <div className="w-10 h-10 sm:w-12 sm:h-12 lg:w-14 lg:h-14 bg-gradient-to-r from-emerald-500 via-teal-500 to-cyan-500 rounded-lg sm:rounded-xl flex items-center justify-center mr-3 sm:mr-4">
                 <svg className="w-5 h-5 sm:w-6 sm:h-6 lg:w-8 lg:h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
                 </svg>
@@ -629,7 +651,7 @@ export default function Home() {
             </ul>
             <Link
               href="/pricing"
-              className="inline-block w-full text-center px-5 sm:px-6 py-2.5 sm:py-3 bg-primary-600 text-white rounded-lg hover:bg-primary-700 font-semibold transition-colors shadow-md text-sm sm:text-base"
+              className="inline-block w-full text-center px-5 sm:px-6 py-2.5 sm:py-3 bg-gradient-to-r from-emerald-500 via-teal-500 to-cyan-500 hover:from-emerald-600 hover:via-teal-600 hover:to-cyan-600 text-white rounded-lg font-semibold transition-all shadow-md text-sm sm:text-base"
             >
               Découvrir les offres
             </Link>
@@ -719,7 +741,8 @@ export default function Home() {
         </div>
       </footer>
     </div>
-    <TndToggle />
+    {/* TndToggle masqué temporairement */}
+    {/* <TndToggle /> */}
     </>
   );
 }
