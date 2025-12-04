@@ -545,11 +545,19 @@ export default function FamilyDashboard() {
             {/* Légende des emojis */}
             <div className="mt-4 pt-3 border-t border-gray-100">
               <p className="text-[10px] sm:text-xs text-gray-500 mb-2">Légende :</p>
-              <div className="flex flex-wrap gap-2 sm:gap-3">
-                {Object.entries(professionEmojis).slice(0, 5).map(([key, emoji]) => (
+              <div className="flex flex-wrap gap-x-3 gap-y-1.5 sm:gap-3">
+                {Object.entries(professionEmojis).map(([key, emoji]) => (
                   <div key={key} className="flex items-center gap-1">
                     <span className="text-xs sm:text-sm">{emoji}</span>
-                    <span className="text-[9px] sm:text-[10px] text-gray-600">{professionLabels[key]?.split(' ')[0]}</span>
+                    <span className="text-[9px] sm:text-[10px] text-gray-600">
+                      {key === 'apa_teacher' ? 'Sport adapté' :
+                       key === 'music_therapist' ? 'Musico.' :
+                       key === 'occupational_therapist' ? 'Ergo.' :
+                       key === 'speech_therapist' ? 'Ortho.' :
+                       key === 'physiotherapist' ? 'Kiné' :
+                       key === 'moniteur_educateur' ? 'Moniteur' :
+                       professionLabels[key]?.split(' ')[0]}
+                    </span>
                   </div>
                 ))}
               </div>
