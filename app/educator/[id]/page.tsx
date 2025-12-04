@@ -19,6 +19,7 @@ interface EducatorProfile {
   years_of_experience: number;
   hourly_rate: number;
   specializations: string[];
+  skills: string | null;
   languages: string[];
   avatar_url: string | null;
   avatar_moderation_status: string;
