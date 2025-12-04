@@ -220,13 +220,11 @@ export default function EducatorAvailability() {
       <nav className="bg-white shadow-sm">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between h-16 items-center">
-            <div className="flex items-center gap-3">
-              <div className="md:hidden">
-                <EducatorMobileMenu profile={profile} isPremium={isPremium} onLogout={handleLogout} />
-              </div>
-              <div className="hidden md:block">
-                <Logo />
-              </div>
+            <div className="hidden md:block">
+              <Logo />
+            </div>
+            <div className="md:hidden ml-auto">
+              <EducatorMobileMenu profile={profile} isPremium={isPremium} onLogout={handleLogout} />
             </div>
             <div className="hidden md:flex items-center space-x-4">
               <Link
@@ -243,11 +241,11 @@ export default function EducatorAvailability() {
         </div>
       </nav>
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <div className="mb-8">
-          <h1 className="text-3xl font-bold text-gray-900">Mes disponibilités</h1>
-          <p className="text-gray-600 mt-2">
-            Ajoutez vos créneaux disponibles jour par jour pour que les familles puissent réserver.
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-8">
+        <div className="mb-6 sm:mb-8">
+          <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">Mes disponibilités</h1>
+          <p className="text-gray-600 mt-1 sm:mt-2 text-sm sm:text-base">
+            Ajoutez vos créneaux disponibles pour que les familles puissent réserver.
           </p>
         </div>
 
@@ -367,32 +365,57 @@ export default function EducatorAvailability() {
                           {groupedAvailabilities[date].map(slot => (
                             <div
                               key={slot.id}
-                              className={`flex items-center justify-between p-4 rounded-lg border-2 transition ${
+                              className={`p-4 rounded-lg border-2 transition ${
                                 slot.is_available
                                   ? 'border-green-200 bg-green-50'
                                   : 'border-gray-200 bg-gray-50'
                               }`}
                             >
-                              <div className="flex items-center gap-4">
-                                <div className={`w-3 h-3 rounded-full ${
-                                  slot.is_available ? 'bg-green-500' : 'bg-gray-400'
-                                }`}></div>
-                                <div>
-                                  <p className="font-medium text-gray-900">
-                                    {slot.start_time} - {slot.end_time}
-                                  </p>
-                                  <p className={`text-xs ${
-                                    slot.is_available ? 'text-green-600' : 'text-gray-500'
-                                  }`}>
-                                    {slot.is_available ? 'Disponible' : 'Désactivé'}
-                                  </p>
+                              <div className="flex items-center justify-between">
+                                <div className="flex items-center gap-3">
+                                  <div className={`w-3 h-3 rounded-full flex-shrink-0 ${
+                                    slot.is_available ? 'bg-green-500' : 'bg-gray-400'
+                                  }`}></div>
+                                  <div>
+                                    <p className="font-medium text-gray-900">
+                                      {slot.start_time} - {slot.end_time}
+                                    </p>
+                                    <p className={`text-xs ${
+                                      slot.is_available ? 'text-green-600' : 'text-gray-500'
+                                    }`}>
+                                      {slot.is_available ? 'Disponible' : 'Désactivé'}
+                                    </p>
+                                  </div>
+                                </div>
+
+                                {/* Actions - visible uniquement sur desktop */}
+                                <div className="hidden sm:flex items-center gap-2">
+                                  <button
+                                    onClick={() => handleToggleAvailability(slot.id, slot.is_available)}
+                                    className={`px-3 py-1 rounded text-sm font-medium transition ${
+                                      slot.is_available
+                                        ? 'bg-yellow-100 text-yellow-700 hover:bg-yellow-200'
+                                        : 'bg-green-100 text-green-700 hover:bg-green-200'
+                                    }`}
+                                  >
+                                    {slot.is_available ? 'Désactiver' : 'Activer'}
+                                  </button>
+                                  <button
+                                    onClick={() => handleDeleteAvailability(slot.id)}
+                                    className="p-2 text-red-600 hover:bg-red-50 rounded transition"
+                                  >
+                                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                                    </svg>
+                                  </button>
                                 </div>
                               </div>
 
-                              <div className="flex items-center gap-2">
+                              {/* Actions mobile - en dessous */}
+                              <div className="sm:hidden flex items-center gap-2 mt-3 pt-3 border-t border-gray-200">
                                 <button
                                   onClick={() => handleToggleAvailability(slot.id, slot.is_available)}
-                                  className={`px-3 py-1 rounded text-sm font-medium transition ${
+                                  className={`flex-1 px-3 py-2 rounded text-sm font-medium transition ${
                                     slot.is_available
                                       ? 'bg-yellow-100 text-yellow-700 hover:bg-yellow-200'
                                       : 'bg-green-100 text-green-700 hover:bg-green-200'
@@ -402,11 +425,9 @@ export default function EducatorAvailability() {
                                 </button>
                                 <button
                                   onClick={() => handleDeleteAvailability(slot.id)}
-                                  className="p-2 text-red-600 hover:bg-red-50 rounded transition"
+                                  className="px-4 py-2 text-red-600 bg-red-50 hover:bg-red-100 rounded transition text-sm font-medium"
                                 >
-                                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-                                  </svg>
+                                  Supprimer
                                 </button>
                               </div>
                             </div>

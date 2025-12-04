@@ -112,13 +112,11 @@ export default function EducatorInvoices() {
       <nav className="bg-white shadow-sm">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between h-16 items-center">
-            <div className="flex items-center gap-3">
-              <div className="md:hidden">
-                <EducatorMobileMenu profile={profile} isPremium={isPremium} onLogout={handleLogout} />
-              </div>
-              <div className="hidden md:block">
-                <Logo />
-              </div>
+            <div className="hidden md:block">
+              <Logo />
+            </div>
+            <div className="md:hidden ml-auto">
+              <EducatorMobileMenu profile={profile} isPremium={isPremium} onLogout={handleLogout} />
             </div>
             <div className="hidden md:flex items-center space-x-4">
               <Link
@@ -144,15 +142,15 @@ export default function EducatorInvoices() {
         </div>
       </nav>
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <div className="mb-8">
-          <h1 className="text-3xl font-bold text-gray-900 flex items-center gap-3">
-            <svg className="h-8 w-8 text-primary-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-8">
+        <div className="mb-6 sm:mb-8">
+          <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 flex items-center gap-2 sm:gap-3">
+            <svg className="h-6 w-6 sm:h-8 sm:w-8 text-primary-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
             </svg>
             Mes factures
           </h1>
-          <p className="text-gray-600 mt-2">
+          <p className="text-gray-600 mt-1 sm:mt-2 text-sm sm:text-base">
             Toutes vos factures pour vos déclarations URSSAF
           </p>
         </div>

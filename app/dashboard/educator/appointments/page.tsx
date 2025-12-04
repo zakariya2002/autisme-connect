@@ -802,13 +802,11 @@ export default function EducatorAppointmentsPage() {
       <nav className="bg-white shadow-sm sticky top-0 z-40">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between h-16 items-center">
-            <div className="flex items-center gap-3">
-              <div className="md:hidden">
-                <EducatorMobileMenu profile={profile} isPremium={isPremium} onLogout={handleLogout} />
-              </div>
-              <div className="hidden md:block">
-                <Logo />
-              </div>
+            <div className="hidden md:block">
+              <Logo />
+            </div>
+            <div className="md:hidden ml-auto">
+              <EducatorMobileMenu profile={profile} isPremium={isPremium} onLogout={handleLogout} />
             </div>
             <div className="hidden md:flex items-center space-x-4">
               <Link
@@ -836,11 +834,11 @@ export default function EducatorAppointmentsPage() {
         </div>
 
         {/* Résumé rapide - cliquable pour filtrer */}
-        <div className="grid grid-cols-5 gap-2 mb-8">
+        <div className="grid grid-cols-3 sm:grid-cols-5 gap-2 mb-8">
           <button
             onClick={() => appointments.length > 0 && selectFilter('all')}
             disabled={appointments.length === 0}
-            className={`rounded-xl p-3 text-center transition-all ${
+            className={`rounded-xl p-2 sm:p-3 text-center transition-all ${
               appointments.length === 0
                 ? 'bg-gray-100 opacity-60 cursor-not-allowed'
                 : activeFilter === 'all'
@@ -848,13 +846,13 @@ export default function EducatorAppointmentsPage() {
                   : 'bg-gray-100 hover:bg-gray-200 cursor-pointer'
             }`}
           >
-            <p className="text-2xl font-bold text-gray-600">{appointments.length}</p>
-            <p className="text-xs text-gray-700 mt-0.5">Tous</p>
+            <p className="text-xl sm:text-2xl font-bold text-gray-600">{appointments.length}</p>
+            <p className="text-[10px] sm:text-xs text-gray-700 mt-0.5">Tous</p>
           </button>
           <button
             onClick={() => pendingAppointments.length > 0 && selectFilter('pending')}
             disabled={pendingAppointments.length === 0}
-            className={`rounded-xl p-3 text-center transition-all ${
+            className={`rounded-xl p-2 sm:p-3 text-center transition-all ${
               pendingAppointments.length === 0
                 ? 'bg-amber-50 opacity-60 cursor-not-allowed'
                 : activeFilter === 'pending'
@@ -862,13 +860,13 @@ export default function EducatorAppointmentsPage() {
                   : 'bg-amber-50 hover:bg-amber-100 cursor-pointer'
             }`}
           >
-            <p className="text-2xl font-bold text-amber-600">{pendingAppointments.length}</p>
-            <p className="text-xs text-amber-700 mt-0.5">En attente</p>
+            <p className="text-xl sm:text-2xl font-bold text-amber-600">{pendingAppointments.length}</p>
+            <p className="text-[10px] sm:text-xs text-amber-700 mt-0.5">Attente</p>
           </button>
           <button
             onClick={() => inProgressAppointments.length > 0 && selectFilter('in_progress')}
             disabled={inProgressAppointments.length === 0}
-            className={`rounded-xl p-3 text-center transition-all ${
+            className={`rounded-xl p-2 sm:p-3 text-center transition-all ${
               inProgressAppointments.length === 0
                 ? 'bg-indigo-50 opacity-60 cursor-not-allowed'
                 : activeFilter === 'in_progress'
@@ -876,13 +874,13 @@ export default function EducatorAppointmentsPage() {
                   : 'bg-indigo-50 hover:bg-indigo-100 cursor-pointer'
             }`}
           >
-            <p className="text-2xl font-bold text-indigo-600">{inProgressAppointments.length}</p>
-            <p className="text-xs text-indigo-700 mt-0.5">En cours</p>
+            <p className="text-xl sm:text-2xl font-bold text-indigo-600">{inProgressAppointments.length}</p>
+            <p className="text-[10px] sm:text-xs text-indigo-700 mt-0.5">En cours</p>
           </button>
           <button
             onClick={() => upcomingAppointments.length > 0 && selectFilter('upcoming')}
             disabled={upcomingAppointments.length === 0}
-            className={`rounded-xl p-3 text-center transition-all ${
+            className={`rounded-xl p-2 sm:p-3 text-center transition-all col-span-1 ${
               upcomingAppointments.length === 0
                 ? 'bg-emerald-50 opacity-60 cursor-not-allowed'
                 : activeFilter === 'upcoming'
@@ -890,13 +888,13 @@ export default function EducatorAppointmentsPage() {
                   : 'bg-emerald-50 hover:bg-emerald-100 cursor-pointer'
             }`}
           >
-            <p className="text-2xl font-bold text-emerald-600">{upcomingAppointments.length}</p>
-            <p className="text-xs text-emerald-700 mt-0.5">À venir</p>
+            <p className="text-xl sm:text-2xl font-bold text-emerald-600">{upcomingAppointments.length}</p>
+            <p className="text-[10px] sm:text-xs text-emerald-700 mt-0.5">À venir</p>
           </button>
           <button
             onClick={() => completedAppointments.length > 0 && selectFilter('completed')}
             disabled={completedAppointments.length === 0}
-            className={`rounded-xl p-3 text-center transition-all ${
+            className={`rounded-xl p-2 sm:p-3 text-center transition-all col-span-2 sm:col-span-1 ${
               completedAppointments.length === 0
                 ? 'bg-blue-50 opacity-60 cursor-not-allowed'
                 : activeFilter === 'completed'
@@ -904,8 +902,8 @@ export default function EducatorAppointmentsPage() {
                   : 'bg-blue-50 hover:bg-blue-100 cursor-pointer'
             }`}
           >
-            <p className="text-2xl font-bold text-blue-600">{completedAppointments.length}</p>
-            <p className="text-xs text-blue-700 mt-0.5">Terminés</p>
+            <p className="text-xl sm:text-2xl font-bold text-blue-600">{completedAppointments.length}</p>
+            <p className="text-[10px] sm:text-xs text-blue-700 mt-0.5">Terminés</p>
           </button>
         </div>
 

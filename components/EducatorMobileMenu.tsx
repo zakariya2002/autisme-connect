@@ -51,10 +51,10 @@ export default function EducatorMobileMenu({ profile, isPremium, onLogout }: Edu
             onClick={handleClose}
           />
 
-          {/* Menu latéral avec animation de slide depuis la gauche */}
+          {/* Menu latéral avec animation de slide depuis la droite */}
           <div
-            className={`fixed top-0 left-0 h-full w-72 bg-white shadow-2xl z-50 p-6 transform transition-transform duration-300 ease-out overflow-y-auto ${
-              isAnimating ? 'translate-x-0' : '-translate-x-full'
+            className={`fixed top-0 right-0 h-full w-72 bg-white shadow-2xl z-50 p-6 transform transition-transform duration-300 ease-out overflow-y-auto ${
+              isAnimating ? 'translate-x-0' : 'translate-x-full'
             }`}
           >
             {/* En-tête du menu */}

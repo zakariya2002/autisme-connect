@@ -281,13 +281,11 @@ export default function ChildrenPage() {
       <nav className="bg-white shadow-sm">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between h-16 items-center">
-            <div className="flex items-center gap-3">
-              <div className="md:hidden">
-                <FamilyMobileMenu profile={profile} onLogout={handleLogout} />
-              </div>
-              <div className="hidden md:block">
-                <Logo />
-              </div>
+            <div className="hidden md:block">
+              <Logo />
+            </div>
+            <div className="md:hidden ml-auto">
+              <FamilyMobileMenu profile={profile} onLogout={handleLogout} />
             </div>
             <div className="hidden md:flex items-center gap-4">
               <Link
