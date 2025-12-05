@@ -106,7 +106,7 @@ export default function EducatorMobileMenu({ profile, isPremium, onLogout }: Edu
               <Link
                 href="/dashboard/educator"
                 onClick={handleClose}
-                className="bg-gradient-to-r from-primary-500 to-green-500 text-white hover:from-primary-600 hover:to-green-600 py-3 px-4 rounded-xl font-bold transition-all duration-200 flex items-center gap-3 shadow-lg"
+                className="bg-gradient-to-r from-emerald-500 via-teal-500 to-cyan-500 text-white hover:from-emerald-600 hover:via-teal-600 hover:to-cyan-600 py-3 px-4 rounded-xl font-bold transition-all duration-200 flex items-center gap-3 shadow-lg"
               >
                 <div className="w-8 h-8 bg-white/20 rounded-lg flex items-center justify-center">
                   <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">

@@ -5,6 +5,9 @@ import { supabase } from '@/lib/supabase';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { getProfessionByValue, ProfessionConfig } from '@/lib/professions-config';
+import { signOut } from '@/lib/auth';
+import Logo from '@/components/Logo';
+import EducatorMobileMenu from '@/components/EducatorMobileMenu';
 
 type DocumentType = 'diploma' | 'criminal_record' | 'id_card' | 'insurance';
 
@@ -30,10 +33,19 @@ export default function VerificationPage() {
   const [loading, setLoading] = useState(true);
   const [uploading, setUploading] = useState<DocumentType | null>(null);
   const [educatorProfile, setEducatorProfile] = useState<EducatorProfile | null>(null);
+  const [fullProfile, setFullProfile] = useState<any>(null);
+  const [subscription, setSubscription] = useState<any>(null);
   const [professionConfig, setProfessionConfig] = useState<ProfessionConfig | null>(null);
   const [documents, setDocuments] = useState<VerificationDocument[]>([]);
   const [error, setError] = useState('');
   const [successMessage, setSuccessMessage] = useState('');
+
+  const isPremium = subscription && ['active', 'trialing'].includes(subscription.status);
+
+  const handleLogout = async () => {
+    await signOut();
+    window.location.href = '/';
+  };
 
   useEffect(() => {
     fetchVerificationData();
@@ -47,15 +59,27 @@ export default function VerificationPage() {
         return;
       }
 
-      // Récupérer le profil éducateur
+      // Récupérer le profil éducateur complet
       const { data: profile, error: profileError } = await supabase
         .from('educator_profiles')
-        .select('id, verification_status, verification_badge, profession_type')
+        .select('*')
         .eq('user_id', session.user.id)
         .single();
 
       if (profileError) throw profileError;
       setEducatorProfile(profile);
+      setFullProfile(profile);
+
+      // Récupérer l'abonnement
+      const { data: subscriptionData } = await supabase
+        .from('subscriptions')
+        .select('*')
+        .eq('educator_id', profile.id)
+        .in('status', ['active', 'trialing'])
+        .limit(1)
+        .maybeSingle();
+
+      setSubscription(subscriptionData);
 
       // Charger la configuration de la profession
       const profConfig = getProfessionByValue(profile.profession_type || 'educator');
@@ -502,12 +526,49 @@ export default function VerificationPage() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 via-blue-50 to-indigo-50">
+      {/* Navigation */}
+      <nav className="bg-white shadow-sm">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex justify-between h-16 items-center">
+            {/* Logo - visible sur mobile et desktop */}
+            <Logo />
+            {/* Menu mobile (hamburger) */}
+            <div className="md:hidden flex items-center gap-2">
+              <EducatorMobileMenu profile={fullProfile} isPremium={isPremium} onLogout={handleLogout} />
+            </div>
+            <div className="hidden md:flex items-center space-x-4">
+              <Link href="/dashboard/educator/profile" className="text-gray-700 hover:text-primary-600 px-3 py-2 font-medium transition">
+                Mon profil
+              </Link>
+              {isPremium ? (
+                <Link href="/dashboard/educator/subscription" className="text-gray-700 hover:text-primary-600 px-3 py-2 font-medium transition flex items-center gap-2">
+                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z" />
+                  </svg>
+                  Mon abonnement
+                </Link>
+              ) : (
+                <Link href="/pricing" className="text-gray-700 hover:text-primary-600 px-3 py-2 font-medium transition flex items-center gap-2">
+                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                  </svg>
+                  Tarifs
+                </Link>
+              )}
+              <button onClick={handleLogout} className="text-gray-700 hover:text-primary-600 px-3 py-2 font-medium transition">
+                Déconnexion
+              </button>
+            </div>
+          </div>
+        </div>
+      </nav>
+
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Header */}
         <div className="mb-8">
           <Link
             href="/dashboard/educator"
-            className="inline-flex items-center gap-2 bg-gradient-to-r from-primary-500 to-green-500 text-white hover:from-primary-600 hover:to-green-600 px-6 py-2.5 rounded-lg font-semibold transition-all duration-200 shadow-md hover:shadow-lg mb-6"
+            className="inline-flex items-center gap-2 bg-gradient-to-r from-emerald-500 via-teal-500 to-cyan-500 text-white hover:from-emerald-600 hover:via-teal-600 hover:to-cyan-600 px-6 py-2.5 rounded-lg font-semibold transition-all duration-200 shadow-md hover:shadow-lg mb-6"
           >
             <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
@@ -573,7 +634,7 @@ export default function VerificationPage() {
                     <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 20 20">
                       <path fillRule="evenodd" d="M6.267 3.455a3.066 3.066 0 001.745-.723 3.066 3.066 0 013.976 0 3.066 3.066 0 001.745.723 3.066 3.066 0 012.812 2.812c.051.643.304 1.254.723 1.745a3.066 3.066 0 010 3.976 3.066 3.066 0 00-.723 1.745 3.066 3.066 0 01-2.812 2.812 3.066 3.066 0 00-1.745.723 3.066 3.066 0 01-3.976 0 3.066 3.066 0 00-1.745-.723 3.066 3.066 0 01-2.812-2.812 3.066 3.066 0 00-.723-1.745 3.066 3.066 0 010-3.976 3.066 3.066 0 00.723-1.745 3.066 3.066 0 012.812-2.812zm7.44 5.252a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
                     </svg>
-                    Badge "Vérifié Autisme Connect" actif
+                    Badge "Vérifié" actif
                   </div>
                 )}
               </div>
@@ -659,7 +720,7 @@ export default function VerificationPage() {
             </li>
             <li className="flex items-start gap-2">
               <span className="text-green-600 font-bold">✓</span>
-              <span>Badge "Vérifié Autisme Connect" 🏅</span>
+              <span>Badge "Vérifié" 🏅</span>
             </li>
             <li className="flex items-start gap-2">
               <span className="text-green-600 font-bold">✓</span>
