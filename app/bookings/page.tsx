@@ -9,6 +9,7 @@ import { supabase } from '@/lib/supabase';
 import { signOut } from '@/lib/auth';
 import EducatorMobileMenu from '@/components/EducatorMobileMenu';
 import FamilyMobileMenu from '@/components/FamilyMobileMenu';
+import Logo from '@/components/Logo';
 
 type AppointmentStatus = 'pending' | 'accepted' | 'rejected' | 'completed' | 'cancelled' | 'no_show';
 
@@ -160,7 +161,7 @@ export default function AppointmentsPage() {
 
   const handleLogout = async () => {
     await signOut();
-    router.push('/');
+    window.location.href = '/';
   };
 
   const isPremium = !!(subscription && ['active', 'trialing'].includes(subscription.status));
@@ -447,25 +448,21 @@ export default function AppointmentsPage() {
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Navigation */}
-      <nav className="bg-white shadow-sm border-b border-gray-200 sticky top-0 z-50">
+      <nav className="bg-white shadow-sm">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between h-16 items-center">
-            <Link href="/" className="text-2xl font-bold text-primary-600 flex items-center hidden md:flex">
-                <div className="w-10 h-10 bg-gradient-to-br from-primary-500 to-primary-600 rounded-lg items-center justify-center mr-2 hidden md:flex">
-                  <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
-                  </svg>
-                </div>
-                <span>Autisme Connect</span>
-              </Link>
-            <div className="md:hidden ml-auto">
+            {/* Logo - visible sur mobile et desktop */}
+            <Logo  />
+            {/* Menu mobile (hamburger) */}
+            <div className="md:hidden">
               {userProfile?.role === 'educator' ? (
                 <EducatorMobileMenu profile={userProfile} isPremium={isPremium} onLogout={handleLogout} />
               ) : (
                 <FamilyMobileMenu profile={userProfile} onLogout={handleLogout} />
               )}
             </div>
-            <div className="hidden md:flex space-x-4">
+            {/* Menu desktop - caché sur mobile */}
+            <div className="hidden md:flex space-x-4 items-center">
               <Link
                 href={userProfile?.role === 'educator' ? '/dashboard/educator' : '/dashboard/family'}
                 className={`inline-flex items-center gap-2 text-white px-6 py-2.5 rounded-lg font-semibold transition-all duration-200 shadow-md hover:shadow-lg ${
@@ -479,6 +476,15 @@ export default function AppointmentsPage() {
                 </svg>
                 Tableau de bord
               </Link>
+              <Link
+                href={userProfile?.role === 'educator' ? '/dashboard/educator/profile' : '/dashboard/family/profile'}
+                className="text-gray-700 hover:text-primary-600 px-3 py-2 font-medium transition"
+              >
+                Mon profil
+              </Link>
+              <button onClick={handleLogout} className="text-gray-700 hover:text-primary-600 px-3 py-2 font-medium transition">
+                Déconnexion
+              </button>
             </div>
           </div>
         </div>

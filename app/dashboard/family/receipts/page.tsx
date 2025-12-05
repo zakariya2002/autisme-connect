@@ -91,7 +91,6 @@ export default function FamilyReceiptsPage() {
         if (error) {
           console.error('Error fetching receipts:', error);
         } else {
-          // Mapper les données pour transformer les tableaux en objets
           const mappedData = (data || []).map((receipt: any) => ({
             ...receipt,
             appointment: Array.isArray(receipt.appointment) && receipt.appointment.length > 0
@@ -115,7 +114,7 @@ export default function FamilyReceiptsPage() {
 
   const handleLogout = async () => {
     await signOut();
-    router.push('/');
+    window.location.href = '/';
   };
 
   const formatAmount = (amountInCents: number) => {
@@ -133,16 +132,25 @@ export default function FamilyReceiptsPage() {
     });
   };
 
+  const formatDateShort = (dateString: string) => {
+    return new Date(dateString).toLocaleDateString('fr-FR', {
+      day: '2-digit',
+      month: 'short',
+      year: 'numeric'
+    });
+  };
+
   return (
     <div className="min-h-screen bg-gray-50">
+      {/* Navigation */}
       <nav className="bg-white shadow-sm">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between h-16 items-center">
-            <Logo iconSize="sm" />
+            <Logo  />
             <div className="md:hidden">
               <FamilyMobileMenu profile={profile} onLogout={handleLogout} />
             </div>
-            <div className="hidden md:flex space-x-4">
+            <div className="hidden md:flex space-x-4 items-center">
               <Link href="/dashboard/family" className="inline-flex items-center gap-2 bg-gradient-to-r from-blue-500 to-purple-600 text-white hover:from-blue-600 hover:to-purple-700 px-6 py-2.5 rounded-lg font-semibold transition-all duration-200 shadow-md hover:shadow-lg">
                 <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
@@ -160,131 +168,136 @@ export default function FamilyReceiptsPage() {
         </div>
       </nav>
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-8">
         {/* Header */}
-        <div className="mb-8">
-          <div className="flex items-center justify-between">
-            <div>
-              <h1 className="text-3xl font-bold text-gray-900">Mes reçus</h1>
-              <p className="text-gray-600 mt-1">Téléchargez vos reçus de paiement</p>
-            </div>
-            <Link
-              href="/dashboard/family"
-              className="inline-flex items-center px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 transition"
-            >
-              <svg className="mr-2 h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+        <div className="mb-4 sm:mb-8">
+          {/* Bouton retour - mobile */}
+          <Link
+            href="/dashboard/family"
+            className="inline-flex items-center gap-2 text-gray-600 hover:text-primary-600 mb-3 sm:mb-4"
+          >
+            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+            </svg>
+            <span className="text-sm font-medium">Retour au tableau de bord</span>
+          </Link>
+
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 sm:w-12 sm:h-12 bg-pink-100 rounded-xl flex items-center justify-center flex-shrink-0">
+              <svg className="w-5 h-5 sm:w-6 sm:h-6 text-pink-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
               </svg>
-              Retour
-            </Link>
+            </div>
+            <div>
+              <h1 className="text-xl sm:text-2xl font-bold text-gray-900">Mes reçus</h1>
+              <p className="text-sm text-gray-500">Téléchargez vos reçus de paiement</p>
+            </div>
           </div>
         </div>
 
         {/* Liste des reçus */}
-        <div className="bg-white rounded-lg shadow">
-          <div className="px-6 py-4 border-b border-gray-200">
-            <h2 className="text-lg font-semibold text-gray-900">
-              Historique des reçus ({receipts.length})
+        <div className="bg-white rounded-xl shadow-sm border border-gray-100">
+          <div className="px-4 sm:px-6 py-3 sm:py-4 border-b border-gray-100">
+            <h2 className="text-base sm:text-lg font-semibold text-gray-900">
+              Historique ({receipts.length})
             </h2>
           </div>
 
-          <div className="p-6">
+          <div className="p-3 sm:p-6">
             {loading ? (
-              <div className="text-center py-12">
-                <div className="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-primary-600"></div>
-                <p className="mt-4 text-gray-600">Chargement des reçus...</p>
+              <div className="text-center py-8 sm:py-12">
+                <div className="inline-block animate-spin rounded-full h-10 w-10 sm:h-12 sm:w-12 border-b-2 border-primary-600"></div>
+                <p className="mt-3 sm:mt-4 text-gray-600 text-sm sm:text-base">Chargement des reçus...</p>
               </div>
             ) : receipts.length === 0 ? (
-              <div className="text-center py-12">
-                <svg className="mx-auto h-12 w-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-                </svg>
-                <h3 className="mt-2 text-sm font-medium text-gray-900">Aucun reçu</h3>
-                <p className="mt-1 text-sm text-gray-500">
+              <div className="text-center py-8 sm:py-12">
+                <div className="w-14 h-14 sm:w-16 sm:h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto">
+                  <svg className="w-7 h-7 sm:w-8 sm:h-8 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                  </svg>
+                </div>
+                <h3 className="mt-3 text-base font-medium text-gray-900">Aucun reçu</h3>
+                <p className="mt-1 text-sm text-gray-500 px-4">
                   Vos reçus apparaîtront ici après chaque séance complétée.
                 </p>
-                <div className="mt-6">
+                <div className="mt-5">
                   <Link
                     href="/search"
-                    className="inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-primary-600 hover:bg-primary-700"
+                    className="inline-flex items-center gap-2 px-4 py-2.5 bg-primary-600 text-white rounded-lg font-medium hover:bg-primary-700 transition text-sm"
                   >
-                    Chercher un éducateur
+                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                    </svg>
+                    Chercher un professionnel
                   </Link>
                 </div>
               </div>
             ) : (
-              <div className="space-y-4">
+              <div className="space-y-3 sm:space-y-4">
                 {receipts.map((receipt) => (
                   <div
                     key={receipt.id}
-                    className="border border-gray-200 rounded-lg p-6 hover:shadow-md transition"
+                    className="border border-gray-200 rounded-lg sm:rounded-xl p-4 sm:p-5 hover:shadow-md transition-all"
                   >
-                    <div className="flex items-start justify-between">
-                      <div className="flex-1">
-                        <div className="flex items-center gap-3 mb-3">
-                          <div className="flex-shrink-0">
-                            <div className="h-12 w-12 rounded-full bg-green-100 flex items-center justify-center">
-                              <svg className="h-6 w-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-                              </svg>
-                            </div>
-                          </div>
-                          <div>
-                            <h3 className="text-lg font-semibold text-gray-900">
-                              Reçu {receipt.invoice_number}
-                            </h3>
-                            <p className="text-sm text-gray-500">
-                              Émis le {formatDate(receipt.invoice_date)}
-                            </p>
+                    {/* En-tête du reçu */}
+                    <div className="flex items-start justify-between gap-3 mb-3">
+                      <div className="flex items-center gap-3 min-w-0 flex-1">
+                        <div className="flex-shrink-0">
+                          <div className="h-10 w-10 sm:h-12 sm:w-12 rounded-full bg-green-100 flex items-center justify-center">
+                            <svg className="h-5 w-5 sm:h-6 sm:w-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                            </svg>
                           </div>
                         </div>
-
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
-                          <div>
-                            <p className="text-sm font-medium text-gray-500">Éducateur</p>
-                            <p className="text-sm text-gray-900 mt-1">
-                              {receipt.appointment?.educator?.first_name} {receipt.appointment?.educator?.last_name}
-                            </p>
-                          </div>
-
-                          <div>
-                            <p className="text-sm font-medium text-gray-500">Date de la séance</p>
-                            <p className="text-sm text-gray-900 mt-1">
-                              {receipt.appointment?.appointment_date && formatDate(receipt.appointment.appointment_date)}
-                              {receipt.appointment?.start_time && ` à ${receipt.appointment.start_time}`}
-                            </p>
-                          </div>
-
-                          <div>
-                            <p className="text-sm font-medium text-gray-500">Montant payé</p>
-                            <p className="text-lg font-bold text-green-600 mt-1">
-                              {formatAmount(receipt.amount_total)}
-                            </p>
-                          </div>
-
-                          <div>
-                            <p className="text-sm font-medium text-gray-500">Statut</p>
-                            <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800 mt-1">
-                              {receipt.status === 'generated' ? 'Généré' : receipt.status}
-                            </span>
-                          </div>
+                        <div className="min-w-0 flex-1">
+                          <h3 className="text-sm sm:text-base font-semibold text-gray-900 truncate">
+                            Reçu {receipt.invoice_number}
+                          </h3>
+                          <p className="text-xs sm:text-sm text-gray-500">
+                            {formatDateShort(receipt.invoice_date)}
+                          </p>
                         </div>
                       </div>
-
-                      <div className="ml-6 flex-shrink-0">
-                        <a
-                          href={receipt.pdf_url}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-primary-600 hover:bg-primary-700 transition"
-                        >
-                          <svg className="mr-2 h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-                          </svg>
-                          Télécharger
-                        </a>
+                      <div className="flex-shrink-0 text-right">
+                        <p className="text-base sm:text-lg font-bold text-green-600">
+                          {formatAmount(receipt.amount_total)}
+                        </p>
+                        <span className="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-700">
+                          Payé
+                        </span>
                       </div>
                     </div>
+
+                    {/* Détails du reçu */}
+                    <div className="bg-gray-50 rounded-lg p-3 mb-3">
+                      <div className="grid grid-cols-2 gap-3 text-sm">
+                        <div>
+                          <p className="text-xs text-gray-500">Professionnel</p>
+                          <p className="font-medium text-gray-900 truncate">
+                            {receipt.appointment?.educator?.first_name} {receipt.appointment?.educator?.last_name}
+                          </p>
+                        </div>
+                        <div>
+                          <p className="text-xs text-gray-500">Séance du</p>
+                          <p className="font-medium text-gray-900">
+                            {receipt.appointment?.appointment_date && formatDateShort(receipt.appointment.appointment_date)}
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Bouton télécharger - pleine largeur sur mobile */}
+                    <a
+                      href={receipt.pdf_url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="w-full inline-flex items-center justify-center gap-2 px-4 py-2.5 bg-primary-600 text-white rounded-lg font-medium hover:bg-primary-700 transition text-sm"
+                    >
+                      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                      </svg>
+                      Télécharger le reçu PDF
+                    </a>
                   </div>
                 ))}
               </div>
@@ -294,22 +307,29 @@ export default function FamilyReceiptsPage() {
 
         {/* Info box */}
         {receipts.length > 0 && (
-          <div className="mt-6 bg-blue-50 border border-blue-200 rounded-lg p-6">
-            <div className="flex">
+          <div className="mt-4 sm:mt-6 bg-blue-50 border border-blue-200 rounded-xl p-4 sm:p-5">
+            <div className="flex gap-3">
               <div className="flex-shrink-0">
-                <svg className="h-5 w-5 text-blue-400" fill="currentColor" viewBox="0 0 20 20">
+                <svg className="h-5 w-5 text-blue-500" fill="currentColor" viewBox="0 0 20 20">
                   <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd" />
                 </svg>
               </div>
-              <div className="ml-3">
-                <h3 className="text-sm font-medium text-blue-800">À propos de vos reçus</h3>
-                <div className="mt-2 text-sm text-blue-700">
-                  <ul className="list-disc list-inside space-y-1">
-                    <li>Les reçus sont générés automatiquement après chaque séance</li>
-                    <li>Vous pouvez les télécharger au format PDF à tout moment</li>
-                    <li>Conservez-les pour votre comptabilité personnelle</li>
-                  </ul>
-                </div>
+              <div>
+                <h3 className="text-sm font-semibold text-blue-800">À propos de vos reçus</h3>
+                <ul className="mt-2 text-xs sm:text-sm text-blue-700 space-y-1">
+                  <li className="flex items-start gap-2">
+                    <span className="text-blue-400 mt-0.5">•</span>
+                    <span>Générés automatiquement après chaque séance</span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <span className="text-blue-400 mt-0.5">•</span>
+                    <span>Téléchargeables au format PDF</span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <span className="text-blue-400 mt-0.5">•</span>
+                    <span>Conservez-les pour votre comptabilité</span>
+                  </li>
+                </ul>
               </div>
             </div>
           </div>

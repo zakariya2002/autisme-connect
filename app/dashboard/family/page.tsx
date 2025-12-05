@@ -218,16 +218,17 @@ export default function FamilyDashboard() {
 
   const handleLogout = async () => {
     await signOut();
-    router.push('/');
+    // Forcer un rechargement complet pour vider le cache
+    window.location.href = '/';
   };
 
   return (
-    <div className="h-screen bg-gray-50 flex flex-col overflow-hidden">
-      <nav className="bg-white shadow-sm flex-shrink-0">
+    <div className="min-h-screen min-h-[100dvh] bg-gray-50 flex flex-col">
+      <nav className="bg-white shadow-sm flex-shrink-0 sticky top-0 z-40">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between h-14 sm:h-16 items-center">
             {/* Logo - visible sur mobile et desktop */}
-            <Logo iconSize="sm" />
+            <Logo  />
             {/* Menu mobile (hamburger) */}
             <div className="md:hidden">
               <FamilyMobileMenu profile={profile} onLogout={handleLogout} />
@@ -245,7 +246,7 @@ export default function FamilyDashboard() {
         </div>
       </nav>
 
-      <div className="flex-1 overflow-y-auto overscroll-none">
+      <div className="flex-1 pb-8">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-8">
         {/* Message de succès après paiement */}
         {showSuccessMessage && (
@@ -353,7 +354,7 @@ export default function FamilyDashboard() {
               <span className="font-medium text-gray-900 text-sm sm:text-base">Mon profil</span>
             </Link>
 
-            {/* Mes enfants */}
+            {/* Mes accompagnements */}
             <Link
               href="/dashboard/family/children"
               className="flex items-center gap-2 sm:gap-3 p-3 sm:p-4 bg-purple-50 rounded-lg sm:rounded-xl hover:bg-purple-100 transition-colors"
@@ -363,7 +364,7 @@ export default function FamilyDashboard() {
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" />
                 </svg>
               </div>
-              <span className="font-medium text-gray-900 text-sm sm:text-base">Mes enfants</span>
+              <span className="font-medium text-gray-900 text-sm sm:text-base">Accompagnements</span>
             </Link>
 
             {/* Chercher un éducateur */}
@@ -384,9 +385,9 @@ export default function FamilyDashboard() {
               href="/dashboard/family/favorites"
               className="flex items-center gap-2 sm:gap-3 p-3 sm:p-4 bg-red-50 rounded-lg sm:rounded-xl hover:bg-red-100 transition-colors"
             >
-              <div className="w-8 h-8 sm:w-10 sm:h-10 bg-red-500 rounded-lg flex items-center justify-center flex-shrink-0">
-                <svg className="h-4 w-4 sm:h-5 sm:w-5 text-white" fill="currentColor" viewBox="0 0 20 20">
-                  <path fillRule="evenodd" d="M3.172 5.172a4 4 0 015.656 0L10 6.343l1.172-1.171a4 4 0 115.656 5.656L10 17.657l-6.828-6.829a4 4 0 010-5.656z" clipRule="evenodd" />
+              <div className="w-8 h-8 sm:w-10 sm:h-10 bg-red-100 rounded-lg flex items-center justify-center flex-shrink-0">
+                <svg className="h-4 w-4 sm:h-5 sm:w-5 text-red-500" fill="currentColor" viewBox="0 0 24 24">
+                  <path d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
                 </svg>
               </div>
               <span className="font-medium text-gray-900 text-sm sm:text-base">Mes favoris</span>
@@ -433,7 +434,7 @@ export default function FamilyDashboard() {
 
             {/* Aides financières */}
             <Link
-              href="/familles/aides-financieres"
+              href="/dashboard/family/aides"
               className="flex items-center gap-2 sm:gap-3 p-3 sm:p-4 bg-violet-50 rounded-lg sm:rounded-xl hover:bg-violet-100 transition-colors"
             >
               <div className="w-8 h-8 sm:w-10 sm:h-10 bg-violet-500 rounded-lg flex items-center justify-center flex-shrink-0">
@@ -541,7 +542,7 @@ export default function FamilyDashboard() {
             </div>
 
             {/* Légende des emojis */}
-            <div className="mt-4 pt-3 border-t border-gray-100">
+            <div className="mt-4 pt-3 border-t border-gray-100 pb-4">
               <p className="text-[10px] sm:text-xs text-gray-500 mb-2">Légende :</p>
               <div className="flex flex-wrap gap-x-3 gap-y-1.5 sm:gap-3">
                 {Object.entries(professionEmojis).map(([key, emoji]) => (
@@ -562,6 +563,8 @@ export default function FamilyDashboard() {
             </div>
           </div>
         </div>
+        {/* Espace supplémentaire pour iOS */}
+        <div className="h-16 sm:h-0"></div>
         </div>
       </div>
 

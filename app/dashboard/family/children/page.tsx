@@ -156,7 +156,7 @@ export default function ChildrenPage() {
 
   const handleLogout = async () => {
     await signOut();
-    router.push('/');
+    window.location.href = '/';
   };
 
   const resetForm = () => {
@@ -298,7 +298,7 @@ export default function ChildrenPage() {
   };
 
   const handleDelete = async (childId: string) => {
-    if (!confirm('Voulez-vous vraiment supprimer ce profil enfant ?')) return;
+    if (!confirm('Voulez-vous vraiment supprimer cet accompagnement ?')) return;
 
     try {
       const { error: deleteError } = await supabase
@@ -331,7 +331,7 @@ export default function ChildrenPage() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between h-16 items-center">
             {/* Logo - visible sur mobile et desktop */}
-            <Logo iconSize="sm" />
+            <Logo  />
             {/* Menu mobile (hamburger) */}
             <div className="md:hidden">
               <FamilyMobileMenu profile={profile} onLogout={handleLogout} />
@@ -351,142 +351,167 @@ export default function ChildrenPage() {
         </div>
       </nav>
 
-      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-8">
         {/* Header */}
-        <div className="flex items-center justify-between mb-8">
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6 sm:mb-8">
           <div>
-            <h1 className="text-2xl font-bold text-gray-900">Mes enfants</h1>
-            <p className="text-gray-600 mt-1">Gérez les profils de vos enfants pour personnaliser l'accompagnement</p>
+            <h1 className="text-xl sm:text-2xl font-bold text-gray-900">Mes accompagnements</h1>
+            <p className="text-sm sm:text-base text-gray-600 mt-1">Gérez vos accompagnements personnalisés</p>
           </div>
           <button
             onClick={openAddModal}
-            className="flex items-center gap-2 px-4 py-2 bg-primary-600 text-white rounded-lg hover:bg-primary-700 transition"
+            className="flex items-center justify-center gap-2 px-4 py-2.5 bg-primary-600 text-white rounded-lg hover:bg-primary-700 transition text-sm sm:text-base font-medium w-full sm:w-auto"
           >
             <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
             </svg>
-            Ajouter un enfant
+            Ajouter un accompagnement
           </button>
         </div>
 
         {/* Liste des enfants */}
         {children.length === 0 ? (
-          <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-12 text-center">
-            <div className="w-16 h-16 bg-primary-100 rounded-full flex items-center justify-center mx-auto mb-4">
-              <svg className="w-8 h-8 text-primary-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6 sm:p-12 text-center">
+            <div className="w-14 h-14 sm:w-16 sm:h-16 bg-primary-100 rounded-full flex items-center justify-center mx-auto mb-4">
+              <svg className="w-7 h-7 sm:w-8 sm:h-8 text-primary-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" />
               </svg>
             </div>
-            <h3 className="text-lg font-medium text-gray-900 mb-2">Aucun profil enfant</h3>
-            <p className="text-gray-500 mb-6">Créez un profil pour chaque enfant afin de personnaliser leur accompagnement.</p>
+            <h3 className="text-base sm:text-lg font-medium text-gray-900 mb-2">Aucun accompagnement</h3>
+            <p className="text-sm sm:text-base text-gray-500 mb-6">Créez un accompagnement pour personnaliser le suivi.</p>
             <button
               onClick={openAddModal}
-              className="inline-flex items-center gap-2 px-4 py-2 bg-primary-600 text-white rounded-lg hover:bg-primary-700 transition"
+              className="inline-flex items-center gap-2 px-4 py-2.5 bg-primary-600 text-white rounded-lg hover:bg-primary-700 transition text-sm sm:text-base"
             >
               <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
               </svg>
-              Ajouter mon premier enfant
+              Ajouter mon premier accompagnement
             </button>
           </div>
         ) : (
           <div className="space-y-4">
             {children.map((child) => (
-              <div key={child.id} className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
-                <div className="flex items-start justify-between">
-                  <div className="flex items-start gap-4">
-                    <div className="w-12 h-12 bg-primary-100 rounded-full flex items-center justify-center flex-shrink-0">
-                      <span className="text-lg font-semibold text-primary-600">
-                        {child.first_name[0].toUpperCase()}
-                      </span>
-                    </div>
-                    <div>
-                      <h3 className="text-lg font-semibold text-gray-900">{child.first_name}</h3>
-                      <div className="flex flex-wrap items-center gap-2 mt-1">
-                        {child.birth_date && (
-                          <span className="text-sm text-gray-500">
-                            Né(e) le {new Date(child.birth_date).toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' })}
-                          </span>
-                        )}
-                        {!child.birth_date && child.age && (
-                          <span className="text-sm text-gray-500">{child.age} ans</span>
-                        )}
-                        {child.location_preference && (
-                          <span className="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-700">
-                            {child.location_preference === 'domicile' ? 'Domicile' :
-                             child.location_preference === 'exterieur' ? 'Extérieur' : 'Domicile/Extérieur'}
-                          </span>
-                        )}
+              <div key={child.id} className="bg-white rounded-xl shadow-sm border border-gray-100 p-4 sm:p-6 relative">
+                {/* Actions en position absolue sur mobile */}
+                <div className="absolute top-3 right-3 flex items-center gap-1 sm:hidden">
+                  <button
+                    onClick={() => openEditModal(child)}
+                    className="p-2 text-gray-400 hover:text-primary-600 hover:bg-primary-50 rounded-lg transition"
+                    title="Modifier"
+                  >
+                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                    </svg>
+                  </button>
+                  <button
+                    onClick={() => handleDelete(child.id)}
+                    className="p-2 text-gray-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition"
+                    title="Supprimer"
+                  >
+                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                    </svg>
+                  </button>
+                </div>
+
+                <div className="flex items-start gap-3 sm:gap-4 pr-16 sm:pr-0">
+                  <div className="w-10 h-10 sm:w-12 sm:h-12 bg-primary-100 rounded-full flex items-center justify-center flex-shrink-0">
+                    <span className="text-base sm:text-lg font-semibold text-primary-600">
+                      {child.first_name[0].toUpperCase()}
+                    </span>
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between">
+                      <div>
+                        <h3 className="text-base sm:text-lg font-semibold text-gray-900">{child.first_name}</h3>
+                        <div className="flex flex-wrap items-center gap-1.5 sm:gap-2 mt-1">
+                          {child.birth_date && (
+                            <span className="text-xs sm:text-sm text-gray-500">
+                              Né(e) le {new Date(child.birth_date).toLocaleDateString('fr-FR', { day: 'numeric', month: 'short', year: 'numeric' })}
+                            </span>
+                          )}
+                          {!child.birth_date && child.age && (
+                            <span className="text-xs sm:text-sm text-gray-500">{child.age} ans</span>
+                          )}
+                          {child.location_preference && (
+                            <span className="inline-flex items-center px-1.5 sm:px-2 py-0.5 rounded-full text-[10px] sm:text-xs font-medium bg-gray-100 text-gray-700">
+                              {child.location_preference === 'domicile' ? 'Domicile' :
+                               child.location_preference === 'exterieur' ? 'Extérieur' : 'Dom./Ext.'}
+                            </span>
+                          )}
+                        </div>
                       </div>
 
-                      {child.tnd_types && child.tnd_types.length > 0 && (
-                        <div className="flex flex-wrap gap-1 mt-3">
-                          {child.tnd_types.map((type) => (
-                            <span key={type} className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-purple-50 text-purple-700 border border-purple-200">
-                              {type === 'autre' && child.tnd_other
-                                ? `Autre: ${child.tnd_other}`
-                                : tndTypeLabels[type] || type}
-                            </span>
-                          ))}
-                        </div>
-                      )}
-
-                      {child.accompaniment_types && child.accompaniment_types.length > 0 && (
-                        <div className="flex flex-wrap gap-1 mt-2">
-                          {child.accompaniment_types.map((type) => (
-                            <span key={type} className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-primary-50 text-primary-700">
-                              {accompanimentTypeLabels[type] || type}
-                            </span>
-                          ))}
-                        </div>
-                      )}
-
-                      {child.description && (
-                        <p className="text-sm text-gray-600 mt-3 line-clamp-2">{child.description}</p>
-                      )}
+                      {/* Actions desktop */}
+                      <div className="hidden sm:flex items-center gap-2 mt-2 sm:mt-0">
+                        <button
+                          onClick={() => openEditModal(child)}
+                          className="p-2 text-gray-400 hover:text-primary-600 hover:bg-primary-50 rounded-lg transition"
+                          title="Modifier les infos de base"
+                        >
+                          <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                          </svg>
+                        </button>
+                        <button
+                          onClick={() => handleDelete(child.id)}
+                          className="p-2 text-gray-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition"
+                          title="Supprimer"
+                        >
+                          <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                          </svg>
+                        </button>
+                      </div>
                     </div>
-                  </div>
 
-                  <div className="flex items-center gap-2">
-                    <button
-                      onClick={() => openEditModal(child)}
-                      className="p-2 text-gray-400 hover:text-primary-600 hover:bg-primary-50 rounded-lg transition"
-                      title="Modifier les infos de base"
-                    >
-                      <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
-                      </svg>
-                    </button>
-                    <button
-                      onClick={() => handleDelete(child.id)}
-                      className="p-2 text-gray-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition"
-                      title="Supprimer"
-                    >
-                      <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-                      </svg>
-                    </button>
+                    {child.tnd_types && child.tnd_types.length > 0 && (
+                      <div className="flex flex-wrap gap-1 mt-2 sm:mt-3">
+                        {child.tnd_types.map((type) => (
+                          <span key={type} className="inline-flex items-center px-1.5 sm:px-2 py-0.5 rounded text-[10px] sm:text-xs font-medium bg-purple-50 text-purple-700 border border-purple-200">
+                            {type === 'autre' && child.tnd_other
+                              ? `Autre: ${child.tnd_other}`
+                              : tndTypeLabels[type] || type}
+                          </span>
+                        ))}
+                      </div>
+                    )}
+
+                    {child.accompaniment_types && child.accompaniment_types.length > 0 && (
+                      <div className="flex flex-wrap gap-1 mt-1.5 sm:mt-2">
+                        {child.accompaniment_types.map((type) => (
+                          <span key={type} className="inline-flex items-center px-1.5 sm:px-2 py-0.5 rounded text-[10px] sm:text-xs font-medium bg-primary-50 text-primary-700">
+                            {accompanimentTypeLabels[type] || type}
+                          </span>
+                        ))}
+                      </div>
+                    )}
+
+                    {child.description && (
+                      <p className="text-xs sm:text-sm text-gray-600 mt-2 sm:mt-3 line-clamp-2">{child.description}</p>
+                    )}
                   </div>
                 </div>
 
                 {/* Bouton dossier - bien visible */}
-                <div className="mt-4 pt-4 border-t border-gray-100">
+                <div className="mt-3 sm:mt-4 pt-3 sm:pt-4 border-t border-gray-100">
                   <Link
                     href={`/dashboard/family/children/${child.id}/dossier`}
-                    className="flex items-center justify-between w-full p-3 bg-gradient-to-r from-green-50 to-emerald-50 hover:from-green-100 hover:to-emerald-100 border border-green-300 rounded-xl transition-all group"
+                    className="flex items-center justify-between w-full p-2.5 sm:p-3 bg-gradient-to-r from-green-50 to-emerald-50 hover:from-green-100 hover:to-emerald-100 border border-green-300 rounded-xl transition-all group"
                   >
-                    <div className="flex items-center gap-3">
-                      <div className="w-10 h-10 bg-green-500 rounded-lg flex items-center justify-center group-hover:bg-green-600 transition">
-                        <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <div className="flex items-center gap-2 sm:gap-3">
+                      <div className="w-8 h-8 sm:w-10 sm:h-10 bg-green-500 rounded-lg flex items-center justify-center group-hover:bg-green-600 transition flex-shrink-0">
+                        <svg className="w-4 h-4 sm:w-5 sm:h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 8h14M5 8a2 2 0 110-4h14a2 2 0 110 4M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8m-9 4h4" />
                         </svg>
                       </div>
                       <div>
-                        <span className="font-semibold text-green-800 block">Dossier</span>
-                        <span className="text-xs text-green-600">Profil, compétences, objectifs, préférences, PPA...</span>
+                        <span className="font-semibold text-green-800 block text-sm sm:text-base">Dossier</span>
+                        <span className="text-[10px] sm:text-xs text-green-600 hidden sm:block">Profil, compétences, objectifs, PPA...</span>
                       </div>
                     </div>
-                    <svg className="w-5 h-5 text-green-600 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <svg className="w-4 h-4 sm:w-5 sm:h-5 text-green-600 group-hover:translate-x-1 transition-transform flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
                     </svg>
                   </Link>
@@ -499,11 +524,11 @@ export default function ChildrenPage() {
 
       {/* Modal Ajout/Edition */}
       {showAddModal && (
-        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
-          <div className="bg-white rounded-2xl shadow-xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
-            <div className="px-6 py-4 border-b border-gray-100 flex items-center justify-between">
-              <h2 className="text-xl font-semibold text-gray-900">
-                {editingChild ? 'Modifier le profil' : 'Ajouter un enfant'}
+        <div className="fixed inset-0 bg-black/50 flex items-end sm:items-center justify-center z-50 sm:p-4">
+          <div className="bg-white rounded-t-2xl sm:rounded-2xl shadow-xl w-full sm:max-w-2xl max-h-[90vh] overflow-y-auto">
+            <div className="px-4 sm:px-6 py-3 sm:py-4 border-b border-gray-100 flex items-center justify-between sticky top-0 bg-white z-10">
+              <h2 className="text-lg sm:text-xl font-semibold text-gray-900">
+                {editingChild ? 'Modifier le profil' : 'Ajouter un accompagnement'}
               </h2>
               <button onClick={closeModal} className="p-2 hover:bg-gray-100 rounded-lg transition">
                 <svg className="w-5 h-5 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -512,63 +537,62 @@ export default function ChildrenPage() {
               </button>
             </div>
 
-            <form onSubmit={handleSubmit} className="p-6 space-y-6">
+            <form onSubmit={handleSubmit} className="p-4 sm:p-6 space-y-5 sm:space-y-6">
               {error && (
-                <div className="bg-red-50 border border-red-200 text-red-600 px-4 py-3 rounded-lg text-sm">
+                <div className="bg-red-50 border border-red-200 text-red-600 px-3 sm:px-4 py-2.5 sm:py-3 rounded-lg text-sm">
                   {error}
                 </div>
               )}
 
               {/* Prénom et date de naissance */}
-              <div className="grid grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">Prénom *</label>
+                  <label className="block text-sm font-medium text-gray-700 mb-1.5 sm:mb-2">Prénom *</label>
                   <input
                     type="text"
                     required
                     value={formData.first_name}
                     onChange={(e) => setFormData({ ...formData, first_name: e.target.value })}
-                    className="w-full border border-gray-300 rounded-lg py-2 px-3 focus:ring-primary-500 focus:border-primary-500"
-                    placeholder="Prénom de l'enfant"
+                    className="w-full border border-gray-300 rounded-lg py-2.5 px-3 focus:ring-primary-500 focus:border-primary-500 text-base"
+                    placeholder="Prénom de l'accompagné"
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">Date de naissance</label>
+                  <label className="block text-sm font-medium text-gray-700 mb-1.5 sm:mb-2">Date de naissance</label>
                   <input
                     type="date"
                     value={formData.birth_date}
                     onChange={(e) => setFormData({ ...formData, birth_date: e.target.value })}
-                    className="w-full border border-gray-300 rounded-lg py-2 px-3 focus:ring-primary-500 focus:border-primary-500"
+                    className="w-full border border-gray-300 rounded-lg py-2.5 px-3 focus:ring-primary-500 focus:border-primary-500 text-base"
                   />
                 </div>
               </div>
 
               {/* Description */}
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">Description</label>
+                <label className="block text-sm font-medium text-gray-700 mb-1.5 sm:mb-2">Description</label>
                 <textarea
                   rows={3}
                   value={formData.description}
                   onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-                  className="w-full border border-gray-300 rounded-lg py-2 px-3 focus:ring-primary-500 focus:border-primary-500"
+                  className="w-full border border-gray-300 rounded-lg py-2.5 px-3 focus:ring-primary-500 focus:border-primary-500 text-base"
                   placeholder="Personnalité, centres d'intérêt, forces..."
                 />
               </div>
 
               {/* Types de TND */}
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
+                <label className="block text-sm font-medium text-gray-700 mb-1.5 sm:mb-2">
                   Troubles du Neurodéveloppement (TND)
-                  <span className="text-xs text-gray-500 font-normal ml-2">(sélection multiple)</span>
                 </label>
-                <p className="text-xs text-gray-500 mb-3">
-                  Sélectionnez le ou les troubles diagnostiqués ou suspectés
+                <p className="text-xs text-gray-500 mb-2 sm:mb-3">
+                  Sélectionnez le ou les troubles diagnostiqués
                 </p>
-                <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
+                <div className="grid grid-cols-2 gap-1.5 sm:gap-2">
                   {tndTypeOptions.map((option) => (
                     <label
                       key={option.value}
-                      className={`flex items-center p-3 border rounded-lg cursor-pointer transition-all ${
+                      className={`flex items-center p-2 sm:p-3 border rounded-lg cursor-pointer transition-all ${
                         formData.tnd_types.includes(option.value)
                           ? 'border-purple-500 bg-purple-50'
                           : 'border-gray-200 hover:border-gray-300'
@@ -579,9 +603,9 @@ export default function ChildrenPage() {
                         type="checkbox"
                         checked={formData.tnd_types.includes(option.value)}
                         onChange={() => handleTndTypeToggle(option.value)}
-                        className="h-4 w-4 text-purple-600 focus:ring-purple-500 border-gray-300 rounded"
+                        className="h-4 w-4 text-purple-600 focus:ring-purple-500 border-gray-300 rounded flex-shrink-0"
                       />
-                      <span className="ml-2 text-sm text-gray-700 font-medium">{option.label}</span>
+                      <span className="ml-2 text-xs sm:text-sm text-gray-700 font-medium truncate">{option.label}</span>
                     </label>
                   ))}
                 </div>
@@ -594,15 +618,15 @@ export default function ChildrenPage() {
                 {/* Champ texte si "Autre" est sélectionné */}
                 {formData.tnd_types.includes('autre') && (
                   <div className="mt-3">
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                    <label className="block text-sm font-medium text-gray-700 mb-1.5 sm:mb-2">
                       Précisez le trouble
                     </label>
                     <input
                       type="text"
                       value={formData.tnd_other}
                       onChange={(e) => setFormData({ ...formData, tnd_other: e.target.value })}
-                      className="w-full border border-purple-300 rounded-lg py-2 px-3 focus:ring-purple-500 focus:border-purple-500"
-                      placeholder="Ex: Syndrome de Gilles de la Tourette, trouble de l'attachement..."
+                      className="w-full border border-purple-300 rounded-lg py-2.5 px-3 focus:ring-purple-500 focus:border-purple-500 text-base"
+                      placeholder="Ex: Syndrome de Gilles de la Tourette..."
                     />
                   </div>
                 )}
@@ -610,12 +634,12 @@ export default function ChildrenPage() {
 
               {/* Types d'accompagnement */}
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-3">Types d'accompagnement recherchés</label>
-                <div className="grid grid-cols-2 gap-2">
+                <label className="block text-sm font-medium text-gray-700 mb-2 sm:mb-3">Accompagnement recherché</label>
+                <div className="grid grid-cols-2 gap-1.5 sm:gap-2">
                   {Object.entries(accompanimentTypeLabels).map(([value, label]) => (
                     <label
                       key={value}
-                      className={`flex items-center p-3 border rounded-lg cursor-pointer transition-all ${
+                      className={`flex items-center p-2 sm:p-3 border rounded-lg cursor-pointer transition-all ${
                         formData.accompaniment_types.includes(value)
                           ? 'border-primary-500 bg-primary-50'
                           : 'border-gray-200 hover:border-gray-300'
@@ -625,9 +649,9 @@ export default function ChildrenPage() {
                         type="checkbox"
                         checked={formData.accompaniment_types.includes(value)}
                         onChange={() => handleAccompanimentTypeToggle(value)}
-                        className="h-4 w-4 text-primary-600 focus:ring-primary-500 border-gray-300 rounded"
+                        className="h-4 w-4 text-primary-600 focus:ring-primary-500 border-gray-300 rounded flex-shrink-0"
                       />
-                      <span className="ml-2 text-sm text-gray-700">{label}</span>
+                      <span className="ml-2 text-xs sm:text-sm text-gray-700 truncate">{label}</span>
                     </label>
                   ))}
                 </div>
@@ -635,30 +659,30 @@ export default function ChildrenPage() {
 
               {/* Objectifs */}
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">Objectifs d'accompagnement</label>
+                <label className="block text-sm font-medium text-gray-700 mb-1.5 sm:mb-2">Objectifs d'accompagnement</label>
                 <textarea
                   rows={2}
                   value={formData.accompaniment_goals}
                   onChange={(e) => setFormData({ ...formData, accompaniment_goals: e.target.value })}
-                  className="w-full border border-gray-300 rounded-lg py-2 px-3 focus:ring-primary-500 focus:border-primary-500"
-                  placeholder="Quels sont vos objectifs pour cet enfant ?"
+                  className="w-full border border-gray-300 rounded-lg py-2.5 px-3 focus:ring-primary-500 focus:border-primary-500 text-base"
+                  placeholder="Quels sont vos objectifs pour cet accompagnement ?"
                 />
               </div>
 
               {/* Préférences horaires */}
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-3">Préférences horaires</label>
+                <label className="block text-sm font-medium text-gray-700 mb-2 sm:mb-3">Préférences horaires</label>
                 <div className="space-y-3">
                   {/* Jours */}
                   <div>
                     <p className="text-xs text-gray-500 mb-2">Jours préférés</p>
-                    <div className="flex flex-wrap gap-2">
+                    <div className="flex flex-wrap gap-1.5 sm:gap-2">
                       {scheduleOptions.slice(0, 7).map((option) => (
                         <button
                           key={option.value}
                           type="button"
                           onClick={() => handleScheduleToggle(option.value)}
-                          className={`px-3 py-1.5 text-sm rounded-full border transition-all ${
+                          className={`px-2.5 sm:px-3 py-1.5 text-xs sm:text-sm rounded-full border transition-all ${
                             formData.schedule_preferences.includes(option.value)
                               ? 'bg-primary-600 text-white border-primary-600'
                               : 'bg-white text-gray-700 border-gray-300 hover:border-primary-400'
@@ -672,13 +696,13 @@ export default function ChildrenPage() {
                   {/* Créneaux */}
                   <div>
                     <p className="text-xs text-gray-500 mb-2">Créneaux préférés</p>
-                    <div className="flex flex-wrap gap-2">
+                    <div className="flex flex-wrap gap-1.5 sm:gap-2">
                       {scheduleOptions.slice(7).map((option) => (
                         <button
                           key={option.value}
                           type="button"
                           onClick={() => handleScheduleToggle(option.value)}
-                          className={`px-3 py-1.5 text-sm rounded-full border transition-all ${
+                          className={`px-2.5 sm:px-3 py-1.5 text-xs sm:text-sm rounded-full border transition-all ${
                             formData.schedule_preferences.includes(option.value)
                               ? 'bg-primary-600 text-white border-primary-600'
                               : 'bg-white text-gray-700 border-gray-300 hover:border-primary-400'
@@ -694,8 +718,8 @@ export default function ChildrenPage() {
 
               {/* Préférence de lieu */}
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">Préférence de lieu</label>
-                <div className="grid grid-cols-3 gap-3">
+                <label className="block text-sm font-medium text-gray-700 mb-1.5 sm:mb-2">Préférence de lieu</label>
+                <div className="grid grid-cols-3 gap-2 sm:gap-3">
                   {[
                     { value: 'domicile', label: 'Domicile', icon: 'M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6' },
                     { value: 'exterieur', label: 'Extérieur', icon: 'M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z M15 11a3 3 0 11-6 0 3 3 0 016 0z' },
@@ -703,7 +727,7 @@ export default function ChildrenPage() {
                   ].map((option) => (
                     <label
                       key={option.value}
-                      className={`flex flex-col items-center p-3 border rounded-lg cursor-pointer transition-all ${
+                      className={`flex flex-col items-center p-2 sm:p-3 border rounded-lg cursor-pointer transition-all ${
                         formData.location_preference === option.value
                           ? 'border-primary-500 bg-primary-50'
                           : 'border-gray-200 hover:border-gray-300'
@@ -717,28 +741,28 @@ export default function ChildrenPage() {
                         onChange={(e) => setFormData({ ...formData, location_preference: e.target.value })}
                         className="sr-only"
                       />
-                      <svg className="w-6 h-6 text-gray-600 mb-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <svg className="w-5 h-5 sm:w-6 sm:h-6 text-gray-600 mb-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d={option.icon} />
                       </svg>
-                      <span className="text-sm font-medium text-gray-700">{option.label}</span>
+                      <span className="text-xs sm:text-sm font-medium text-gray-700">{option.label}</span>
                     </label>
                   ))}
                 </div>
               </div>
 
               {/* Boutons */}
-              <div className="flex justify-end gap-3 pt-4 border-t border-gray-100">
+              <div className="flex flex-col-reverse sm:flex-row justify-end gap-2 sm:gap-3 pt-4 border-t border-gray-100 sticky bottom-0 bg-white pb-2 sm:pb-0">
                 <button
                   type="button"
                   onClick={closeModal}
-                  className="px-4 py-2 text-gray-700 bg-gray-100 rounded-lg hover:bg-gray-200 transition"
+                  className="w-full sm:w-auto px-4 py-2.5 text-gray-700 bg-gray-100 rounded-lg hover:bg-gray-200 transition text-sm sm:text-base font-medium"
                 >
                   Annuler
                 </button>
                 <button
                   type="submit"
                   disabled={saving}
-                  className="px-4 py-2 bg-primary-600 text-white rounded-lg hover:bg-primary-700 disabled:opacity-50 transition"
+                  className="w-full sm:w-auto px-4 py-2.5 bg-primary-600 text-white rounded-lg hover:bg-primary-700 disabled:opacity-50 transition text-sm sm:text-base font-medium"
                 >
                   {saving ? 'Enregistrement...' : (editingChild ? 'Enregistrer' : 'Ajouter')}
                 </button>

@@ -11,6 +11,7 @@ import { Conversation, Message } from '@/types';
 import { canEducatorCreateConversation } from '@/lib/subscription-utils';
 import EducatorMobileMenu from '@/components/EducatorMobileMenu';
 import FamilyMobileMenu from '@/components/FamilyMobileMenu';
+import Logo from '@/components/Logo';
 
 export default function MessagesPage() {
   const router = useRouter();
@@ -362,7 +363,7 @@ export default function MessagesPage() {
 
   const handleLogout = async () => {
     await signOut();
-    router.push('/');
+    window.location.href = '/';
   };
 
   const isPremium = !!(subscription && ['active', 'trialing'].includes(subscription.status));
@@ -409,13 +410,8 @@ export default function MessagesPage() {
       <nav className="bg-white shadow-sm">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between h-16 items-center">
-            {/* Logo */}
-            <Link
-              href={userProfile?.role === 'educator' ? '/dashboard/educator' : '/dashboard/family'}
-              className="text-2xl font-bold text-primary-600 hidden md:block"
-            >
-              Autisme Connect
-            </Link>
+            {/* Logo - visible sur mobile et desktop */}
+            <Logo  />
             {/* Menu mobile (hamburger) */}
             <div className="md:hidden">
               {userProfile?.role === 'educator' ? (
@@ -425,7 +421,7 @@ export default function MessagesPage() {
               )}
             </div>
             {/* Menu desktop - caché sur mobile */}
-            <div className="hidden md:flex space-x-4">
+            <div className="hidden md:flex space-x-4 items-center">
               <Link
                 href={userProfile?.role === 'educator' ? '/dashboard/educator' : '/dashboard/family'}
                 className={`inline-flex items-center gap-2 text-white px-6 py-2.5 rounded-lg font-semibold transition-all duration-200 shadow-md hover:shadow-lg ${
@@ -439,6 +435,15 @@ export default function MessagesPage() {
                 </svg>
                 Tableau de bord
               </Link>
+              <Link
+                href={userProfile?.role === 'educator' ? '/dashboard/educator/profile' : '/dashboard/family/profile'}
+                className="text-gray-700 hover:text-primary-600 px-3 py-2 font-medium transition"
+              >
+                Mon profil
+              </Link>
+              <button onClick={handleLogout} className="text-gray-700 hover:text-primary-600 px-3 py-2 font-medium transition">
+                Déconnexion
+              </button>
             </div>
           </div>
         </div>
