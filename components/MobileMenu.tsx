@@ -176,10 +176,10 @@ export default function MobileMenu() {
               <Link
                 href="/pro"
                 onClick={closeMenu}
-                className={`flex items-center gap-3 px-3 py-2.5 rounded-xl font-medium transition-all focus:outline-none focus:ring-2 focus:ring-teal-500 focus:ring-offset-2 border-2 ${
+                className={`flex items-center gap-3 px-3 py-2.5 rounded-xl font-medium transition-all focus:outline-none focus:ring-2 focus:ring-teal-500 focus:ring-offset-2 ${
                   pathname?.startsWith('/pro')
-                    ? 'bg-gradient-to-r from-emerald-500 via-teal-500 to-cyan-500 text-white shadow-md border-transparent'
-                    : 'text-teal-700 border-teal-400 bg-teal-50 hover:bg-teal-100'
+                    ? 'bg-gradient-to-r from-emerald-500 via-teal-500 to-cyan-500 text-white shadow-md'
+                    : 'text-teal-700 bg-teal-50 hover:bg-teal-100'
                 }`}
               >
                 <div className={`w-9 h-9 rounded-lg flex items-center justify-center ${
