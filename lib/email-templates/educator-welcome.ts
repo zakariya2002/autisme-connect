@@ -5,7 +5,7 @@ export function getEducatorWelcomeEmail(firstName: string, confirmationUrl?: str
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Bienvenue sur Autisme Connect</title>
+  <title>Bienvenue sur neurocare Pro</title>
 </head>
 <body style="margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f5f7fa;">
   <table role="presentation" style="width: 100%; border-collapse: collapse;">
@@ -14,9 +14,9 @@ export function getEducatorWelcomeEmail(firstName: string, confirmationUrl?: str
         <table role="presentation" style="width: 600px; border-collapse: collapse; background-color: #ffffff; border-radius: 12px; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
           <!-- Header -->
           <tr>
-            <td style="padding: 40px 40px 30px 40px; text-align: center; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border-radius: 12px 12px 0 0;">
+            <td style="padding: 40px 40px 30px 40px; text-align: center; background: linear-gradient(135deg, #10b981 0%, #0d9488 50%, #06b6d4 100%); border-radius: 12px 12px 0 0;">
               <h1 style="margin: 0; color: #ffffff; font-size: 32px; font-weight: bold;">
-                Bienvenue sur Autisme Connect !
+                Bienvenue sur neurocare Pro !
               </h1>
             </td>
           </tr>
@@ -55,14 +55,14 @@ export function getEducatorWelcomeEmail(firstName: string, confirmationUrl?: str
               ` : ''}
 
               <p style="margin: 0 0 20px 0; font-size: 16px; line-height: 1.6; color: #555555;">
-                Nous sommes ravis de vous accueillir en tant qu'<strong>éducateur spécialisé</strong> sur Autisme Connect ! Vous faites maintenant partie d'une communauté dédiée à accompagner les familles d'enfants autistes.
+                Nous sommes ravis de vous accueillir en tant que <strong>professionnel</strong> sur neurocare Pro ! Vous faites maintenant partie d'une communauté dédiée à accompagner les familles et personnes avec des troubles neurodéveloppementaux.
               </p>
 
               <p style="margin: 0 0 30px 0; font-size: 16px; line-height: 1.6; color: #555555;">
                 ${confirmationUrl ? 'Une fois votre email confirmé, votre profil sera visible par les familles. Vous pourrez' : 'Votre profil est désormais visible par les familles qui recherchent un accompagnement de qualité. Vous pouvez dès maintenant'} :
               </p>
 
-              <div style="background-color: #f8f9fa; border-left: 4px solid #667eea; padding: 20px; margin: 0 0 30px 0; border-radius: 4px;">
+              <div style="background-color: #f8f9fa; border-left: 4px solid #0d9488; padding: 20px; margin: 0 0 30px 0; border-radius: 4px;">
                 <ul style="margin: 0; padding-left: 20px;">
                   <li style="margin-bottom: 12px; color: #555555; font-size: 15px;">
                     ✅ <strong>Compléter votre profil</strong> avec vos certifications et expériences
@@ -109,7 +109,7 @@ export function getEducatorWelcomeEmail(firstName: string, confirmationUrl?: str
               <!-- CTA Button -->
               <table role="presentation" style="margin: 0 auto;">
                 <tr>
-                  <td style="border-radius: 8px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
+                  <td style="border-radius: 8px; background: linear-gradient(135deg, #10b981 0%, #0d9488 50%, #06b6d4 100%);">
                     <a href="https://www.autismeconnect.fr/dashboard/educator"
                        style="display: inline-block; padding: 16px 40px; color: #ffffff; text-decoration: none; font-weight: bold; font-size: 16px;">
                       Accéder à mon tableau de bord
@@ -123,7 +123,7 @@ export function getEducatorWelcomeEmail(firstName: string, confirmationUrl?: str
               </p>
 
               <p style="margin: 20px 0 0 0; font-size: 16px; color: #555555;">
-                L'équipe <strong>Autisme Connect</strong>
+                L'équipe <strong>neurocare Pro</strong>
               </p>
             </td>
           </tr>
@@ -132,10 +132,10 @@ export function getEducatorWelcomeEmail(firstName: string, confirmationUrl?: str
           <tr>
             <td style="padding: 30px; text-align: center; background-color: #f8f9fa; border-radius: 0 0 12px 12px;">
               <p style="margin: 0 0 10px 0; font-size: 14px; color: #888888;">
-                Vous recevez cet email car vous vous êtes inscrit sur Autisme Connect
+                Vous recevez cet email car vous vous êtes inscrit sur neurocare Pro
               </p>
               <p style="margin: 0; font-size: 14px; color: #888888;">
-                © 2025 Autisme Connect - Tous droits réservés
+                © 2025 neurocare - Tous droits réservés
               </p>
             </td>
           </tr>

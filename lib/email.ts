@@ -8,11 +8,11 @@ const resend = new Resend(process.env.RESEND_API_KEY);
 export async function sendEducatorWelcomeEmail(email: string, firstName: string, confirmationUrl?: string) {
   try {
     const { data, error } = await resend.emails.send({
-      from: 'Autisme Connect <admin@autismeconnect.fr>',
+      from: 'neurocare Pro <admin@autismeconnect.fr>',
       to: [email],
       subject: confirmationUrl
-        ? `Confirmez votre email - Bienvenue sur Autisme Connect, ${firstName} !`
-        : `Bienvenue sur Autisme Connect, ${firstName} !`,
+        ? `Confirmez votre email - Bienvenue sur neurocare Pro, ${firstName} !`
+        : `Bienvenue sur neurocare Pro, ${firstName} !`,
       html: getEducatorWelcomeEmail(firstName, confirmationUrl),
     });
 
@@ -32,11 +32,11 @@ export async function sendEducatorWelcomeEmail(email: string, firstName: string,
 export async function sendFamilyWelcomeEmail(email: string, firstName: string, confirmationUrl?: string) {
   try {
     const { data, error } = await resend.emails.send({
-      from: 'Autisme Connect <admin@autismeconnect.fr>',
+      from: 'neurocare <admin@autismeconnect.fr>',
       to: [email],
       subject: confirmationUrl
-        ? `Confirmez votre email - Bienvenue sur Autisme Connect, ${firstName} !`
-        : `Bienvenue sur Autisme Connect, ${firstName} !`,
+        ? `Confirmez votre email - Bienvenue sur neurocare, ${firstName} !`
+        : `Bienvenue sur neurocare, ${firstName} !`,
       html: getFamilyWelcomeEmail(firstName, confirmationUrl),
     });
 
@@ -56,9 +56,9 @@ export async function sendFamilyWelcomeEmail(email: string, firstName: string, c
 export async function sendPremiumWelcomeEmail(email: string, firstName: string) {
   try {
     const { data, error } = await resend.emails.send({
-      from: 'Autisme Connect <admin@autismeconnect.fr>',
+      from: 'neurocare Pro <admin@autismeconnect.fr>',
       to: [email],
-      subject: `🌟 Bienvenue dans la famille Premium, ${firstName} !`,
+      subject: `🌟 Bienvenue dans la famille Premium neurocare Pro, ${firstName} !`,
       html: getPremiumWelcomeEmail(firstName),
     });
 

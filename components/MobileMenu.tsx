@@ -138,10 +138,10 @@ export default function MobileMenu() {
               <Link
                 href="/about"
                 onClick={closeMenu}
-                className={`flex items-center gap-3 px-3 py-2.5 rounded-xl font-medium transition-all focus:outline-none focus:ring-2 focus:ring-violet-500 focus:ring-offset-2 ${
+                className={`flex items-center gap-3 px-3 py-2.5 rounded-xl font-medium transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-violet-500 focus:ring-offset-2 ${
                   pathname === '/about'
                     ? 'bg-gradient-to-r from-violet-600 to-blue-500 text-white shadow-md'
-                    : 'text-gray-700 hover:bg-gray-50'
+                    : 'text-gray-700 hover:bg-violet-50 hover:shadow-sm hover:scale-[1.02]'
                 }`}
               >
                 <div className={`w-9 h-9 rounded-lg flex items-center justify-center ${
@@ -157,10 +157,10 @@ export default function MobileMenu() {
               <Link
                 href="/search"
                 onClick={closeMenu}
-                className={`flex items-center gap-3 px-3 py-2.5 rounded-xl font-medium transition-all focus:outline-none focus:ring-2 focus:ring-violet-500 focus:ring-offset-2 ${
+                className={`flex items-center gap-3 px-3 py-2.5 rounded-xl font-medium transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-violet-500 focus:ring-offset-2 ${
                   pathname === '/search'
                     ? 'bg-gradient-to-r from-violet-600 to-blue-500 text-white shadow-md'
-                    : 'text-gray-700 hover:bg-gray-50'
+                    : 'text-gray-700 hover:bg-violet-50 hover:shadow-sm hover:scale-[1.02]'
                 }`}
               >
                 <div className={`w-9 h-9 rounded-lg flex items-center justify-center ${
@@ -176,10 +176,10 @@ export default function MobileMenu() {
               <Link
                 href="/pro"
                 onClick={closeMenu}
-                className={`flex items-center gap-3 px-3 py-2.5 rounded-xl font-medium transition-all focus:outline-none focus:ring-2 focus:ring-teal-500 focus:ring-offset-2 ${
+                className={`flex items-center gap-3 px-3 py-2.5 rounded-xl font-medium transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-teal-500 focus:ring-offset-2 ${
                   pathname?.startsWith('/pro')
                     ? 'bg-gradient-to-r from-emerald-500 via-teal-500 to-cyan-500 text-white shadow-md'
-                    : 'text-teal-700 bg-teal-50 hover:bg-teal-100'
+                    : 'text-teal-700 bg-teal-50 hover:bg-teal-100 hover:shadow-sm hover:scale-[1.02]'
                 }`}
               >
                 <div className={`w-9 h-9 rounded-lg flex items-center justify-center ${
@@ -195,10 +195,10 @@ export default function MobileMenu() {
               <Link
                 href="/familles/aides-financieres"
                 onClick={closeMenu}
-                className={`flex items-center gap-3 px-3 py-2.5 rounded-xl font-medium transition-all focus:outline-none focus:ring-2 focus:ring-violet-500 focus:ring-offset-2 ${
+                className={`flex items-center gap-3 px-3 py-2.5 rounded-xl font-medium transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-violet-500 focus:ring-offset-2 ${
                   pathname === '/familles/aides-financieres'
                     ? 'bg-gradient-to-r from-violet-600 to-blue-500 text-white shadow-md'
-                    : 'text-gray-700 hover:bg-gray-50'
+                    : 'text-gray-700 hover:bg-violet-50 hover:shadow-sm hover:scale-[1.02]'
                 }`}
               >
                 <div className={`w-9 h-9 rounded-lg flex items-center justify-center ${
@@ -214,10 +214,10 @@ export default function MobileMenu() {
               <Link
                 href="/contact"
                 onClick={closeMenu}
-                className={`flex items-center gap-3 px-3 py-2.5 rounded-xl font-medium transition-all focus:outline-none focus:ring-2 focus:ring-violet-500 focus:ring-offset-2 ${
+                className={`flex items-center gap-3 px-3 py-2.5 rounded-xl font-medium transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-violet-500 focus:ring-offset-2 ${
                   pathname === '/contact'
                     ? 'bg-gradient-to-r from-violet-600 to-blue-500 text-white shadow-md'
-                    : 'text-gray-700 hover:bg-gray-50'
+                    : 'text-gray-700 hover:bg-violet-50 hover:shadow-sm hover:scale-[1.02]'
                 }`}
               >
                 <div className={`w-9 h-9 rounded-lg flex items-center justify-center ${
@@ -254,7 +254,7 @@ export default function MobileMenu() {
                   <Link
                     href="/auth/login"
                     onClick={closeMenu}
-                    className="flex items-center gap-3 px-3 py-2.5 rounded-xl font-medium text-gray-700 hover:bg-gray-50 transition-colors focus:outline-none focus:ring-2 focus:ring-violet-500 focus:ring-offset-2"
+                    className="flex items-center gap-3 px-3 py-2.5 rounded-xl font-medium text-gray-700 hover:bg-violet-50 hover:shadow-sm hover:scale-[1.02] transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-violet-500 focus:ring-offset-2"
                   >
                     <div className="w-9 h-9 bg-gray-100 rounded-lg flex items-center justify-center">
                       <svg className="w-5 h-5 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
@@ -265,7 +265,7 @@ export default function MobileMenu() {
                   </Link>
 
                   <Link
-                    href="/auth/signup"
+                    href="/auth/register-family"
                     onClick={closeMenu}
                     className="flex items-center justify-center gap-2 bg-gradient-to-r from-violet-600 to-blue-500 text-white px-4 py-3 rounded-xl font-semibold shadow-md hover:shadow-lg transition-shadow focus:outline-none focus:ring-2 focus:ring-violet-500 focus:ring-offset-2"
                   >

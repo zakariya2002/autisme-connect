@@ -41,7 +41,7 @@ export async function sendDiplomaStatusEmail(
     const resend = new Resend(process.env.RESEND_API_KEY);
 
     await resend.emails.send({
-      from: 'Autisme Connect <noreply@autismeconnect.fr>',
+      from: 'neurocare Pro <noreply@autismeconnect.fr>',
       to: educator.email,
       subject: getEmailSubject(status),
       html: getEmailHtml(educator, status),
@@ -123,10 +123,10 @@ function getEmailHtml(educator: EducatorEmailData, status: DiplomaStatusChange):
             <p>Vous recevrez un email dès que la vérification sera terminée.</p>
             <a href="${process.env.NEXT_PUBLIC_APP_URL}/dashboard/educator/diploma" class="button">Voir le statut</a>
             <p>Merci de votre patience !</p>
-            <p>L'équipe Autisme Connect</p>
+            <p>L'équipe neurocare Pro</p>
           </div>
           <div class="footer">
-            <p>Autisme Connect - Plateforme de mise en relation familles-éducateurs</p>
+            <p>neurocare Pro - Plateforme de mise en relation familles-professionnels</p>
           </div>
         </div>
       `;
@@ -150,10 +150,10 @@ function getEmailHtml(educator: EducatorEmailData, status: DiplomaStatusChange):
             </ul>
             <a href="${process.env.NEXT_PUBLIC_APP_URL}/dashboard/educator" class="button">Accéder à mon tableau de bord</a>
             <p>Bonne chance dans vos accompagnements !</p>
-            <p>L'équipe Autisme Connect</p>
+            <p>L'équipe neurocare Pro</p>
           </div>
           <div class="footer">
-            <p>Autisme Connect - Plateforme de mise en relation familles-éducateurs</p>
+            <p>neurocare Pro - Plateforme de mise en relation familles-professionnels</p>
           </div>
         </div>
       `;
@@ -179,10 +179,10 @@ function getEmailHtml(educator: EducatorEmailData, status: DiplomaStatusChange):
             </ul>
             <a href="${process.env.NEXT_PUBLIC_APP_URL}/dashboard/educator/diploma" class="button">Re-soumettre mon diplôme</a>
             <p>Notre équipe reste à votre disposition si vous avez des questions.</p>
-            <p>L'équipe Autisme Connect</p>
+            <p>L'équipe neurocare Pro</p>
           </div>
           <div class="footer">
-            <p>Autisme Connect - Plateforme de mise en relation familles-éducateurs</p>
+            <p>neurocare Pro - Plateforme de mise en relation familles-professionnels</p>
           </div>
         </div>
       `;

@@ -5,7 +5,7 @@ export function getPremiumWelcomeEmail(firstName: string): string {
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Bienvenue dans la famille Premium</title>
+  <title>Bienvenue dans la famille Premium neurocare Pro</title>
 </head>
 <body style="margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f5f7fa;">
   <table role="presentation" style="width: 100%; border-collapse: collapse;">
@@ -33,7 +33,7 @@ export function getPremiumWelcomeEmail(firstName: string): string {
               </p>
 
               <p style="margin: 0 0 20px 0; font-size: 16px; line-height: 1.6; color: #555555;">
-                C'est officiel : vous faites désormais partie de la <strong style="color: #d97706;">famille Premium Autisme Connect</strong> ! Nous sommes ravis de vous compter parmi nos membres d'élite.
+                C'est officiel : vous faites désormais partie de la <strong style="color: #d97706;">famille Premium neurocare Pro</strong> ! Nous sommes ravis de vous compter parmi nos membres d'élite.
               </p>
 
               <p style="margin: 0 0 30px 0; font-size: 16px; line-height: 1.6; color: #555555;">
@@ -87,12 +87,12 @@ export function getPremiumWelcomeEmail(firstName: string): string {
 
               <div style="border-top: 2px solid #fde68a; padding-top: 25px;">
                 <p style="margin: 0 0 15px 0; font-size: 16px; line-height: 1.6; color: #555555;">
-                  Merci de votre confiance et de votre engagement envers notre communauté. Ensemble, nous faisons la différence dans la vie des enfants autistes et de leurs familles.
+                  Merci de votre confiance et de votre engagement envers notre communauté. Ensemble, nous faisons la différence dans la vie des personnes avec des troubles neurodéveloppementaux et de leurs familles.
                 </p>
 
                 <p style="margin: 0; font-size: 16px; color: #555555;">
                   Bienvenue dans la famille Premium ! 🤝<br>
-                  L'équipe <strong>Autisme Connect</strong>
+                  L'équipe <strong>neurocare Pro</strong>
                 </p>
               </div>
             </td>
@@ -108,7 +108,7 @@ export function getPremiumWelcomeEmail(firstName: string): string {
                 Gérez votre abonnement dans <a href="https://www.autismeconnect.fr/dashboard/educator/subscription" style="color: #d97706; text-decoration: underline;">votre espace</a>
               </p>
               <p style="margin: 0; font-size: 14px; color: #92400e;">
-                © 2025 Autisme Connect - Tous droits réservés
+                © 2025 neurocare Pro - Tous droits réservés
               </p>
             </td>
           </tr>

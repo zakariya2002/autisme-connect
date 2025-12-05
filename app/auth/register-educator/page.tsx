@@ -7,7 +7,7 @@ import { useRouter, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import { supabase } from '@/lib/supabase';
 import { getCurrentPosition, reverseGeocode } from '@/lib/geolocation';
-import Logo from '@/components/Logo';
+import LogoPro from '@/components/LogoPro';
 
 interface PasswordCriteria {
   minLength: boolean;
@@ -638,12 +638,12 @@ export default function RegisterEducatorPage() {
   // Si l'inscription a réussi, afficher le message de confirmation
   if (registrationSuccess) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-primary-50 via-white to-blue-50 flex items-center justify-center px-4">
+      <div className="min-h-screen bg-gradient-to-br from-teal-50 via-white to-cyan-50 flex items-center justify-center px-4">
         <div className="max-w-md w-full">
           <div className="bg-white rounded-2xl shadow-xl p-8 text-center">
             {/* Icône email */}
-            <div className="mx-auto w-20 h-20 bg-primary-100 rounded-full flex items-center justify-center mb-6">
-              <svg className="w-10 h-10 text-primary-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <div className="mx-auto w-20 h-20 bg-teal-100 rounded-full flex items-center justify-center mb-6">
+              <svg className="w-10 h-10 text-teal-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
               </svg>
             </div>
@@ -659,12 +659,12 @@ export default function RegisterEducatorPage() {
             </p>
 
             <p className="text-gray-500 text-sm mb-8">
-              Cliquez sur le lien dans l'email pour activer votre compte et finaliser votre inscription sur Autisme Connect.
+              Cliquez sur le lien dans l'email pour activer votre compte et finaliser votre inscription sur neurocare.
             </p>
 
             {/* Note CV */}
-            <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-4">
-              <p className="text-sm text-blue-800">
+            <div className="bg-teal-50 border border-teal-200 rounded-lg p-4 mb-4">
+              <p className="text-sm text-teal-800">
                 <strong>Important :</strong> Après validation de votre email, vous pourrez uploader votre CV et vos diplômes depuis votre tableau de bord.
               </p>
             </div>
@@ -679,8 +679,8 @@ export default function RegisterEducatorPage() {
 
             {/* Bouton retour */}
             <Link
-              href="/auth/login"
-              className="inline-flex items-center justify-center w-full py-3 px-4 bg-primary-600 text-white rounded-lg font-semibold hover:bg-primary-700 transition-all"
+              href="/pro/login"
+              className="inline-flex items-center justify-center w-full py-3 px-4 bg-gradient-to-r from-emerald-600 via-teal-600 to-cyan-600 text-white rounded-lg font-semibold hover:from-emerald-700 hover:via-teal-700 hover:to-cyan-700 transition-all"
             >
               Aller à la page de connexion
             </Link>
@@ -691,17 +691,17 @@ export default function RegisterEducatorPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-primary-50 via-white to-blue-50">
+    <div className="min-h-screen bg-gradient-to-br from-teal-50 via-white to-cyan-50">
       {/* Header */}
       <header className="bg-white/80 backdrop-blur-sm border-b border-gray-100 sticky top-0 z-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-16">
-            <Logo />
+            <LogoPro href="/pro" />
             <div className="flex items-center gap-4">
               <span className="hidden sm:block text-sm text-gray-600">Déjà inscrit ?</span>
               <Link
-                href="/auth/login"
-                className="text-primary-600 hover:text-primary-700 font-semibold text-sm transition-colors"
+                href="/pro/login"
+                className="text-teal-600 hover:text-teal-700 font-semibold text-sm transition-colors"
               >
                 Se connecter
               </Link>
@@ -713,15 +713,15 @@ export default function RegisterEducatorPage() {
       <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12">
         {/* Hero Section */}
         <div className="text-center mb-8 sm:mb-12">
-          <div className="inline-flex items-center gap-2 bg-gradient-to-r from-primary-100 to-blue-100 text-primary-700 px-4 py-2 rounded-full text-sm font-semibold mb-4">
+          <div className="inline-flex items-center gap-2 bg-gradient-to-r from-emerald-100 to-cyan-100 text-teal-700 px-4 py-2 rounded-full text-sm font-semibold mb-4">
             <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
             </svg>
-            Espace Professionnel
+            neurocare Pro
           </div>
           <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-gray-900 mb-4">
             Rejoignez notre réseau de
-            <span className="bg-gradient-to-r from-primary-600 to-blue-600 bg-clip-text text-transparent"> professionnels</span>
+            <span className="bg-gradient-to-r from-emerald-600 via-teal-600 to-cyan-600 bg-clip-text text-transparent"> professionnels</span>
           </h1>
           <p className="text-gray-600 text-lg max-w-2xl mx-auto">
             Développez votre activité et accompagnez des familles qui ont besoin de vous
@@ -731,27 +731,27 @@ export default function RegisterEducatorPage() {
         {/* Étapes */}
         <div className="flex justify-center mb-8">
           <div className="flex items-center gap-2 sm:gap-4 bg-white rounded-full shadow-lg px-4 sm:px-6 py-3">
-            <div className={`flex items-center gap-2 ${currentStep >= 1 ? 'text-primary-600' : 'text-gray-400'}`}>
+            <div className={`flex items-center gap-2 ${currentStep >= 1 ? 'text-teal-600' : 'text-gray-400'}`}>
               <div className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold transition-all ${
-                currentStep >= 1 ? 'bg-primary-600 text-white' : 'bg-gray-200 text-gray-500'
+                currentStep >= 1 ? 'bg-teal-600 text-white' : 'bg-gray-200 text-gray-500'
               }`}>
                 {currentStep > 1 ? '✓' : '1'}
               </div>
               <span className="hidden sm:block text-sm font-medium">Profession</span>
             </div>
-            <div className={`w-8 sm:w-16 h-1 rounded-full ${currentStep >= 2 ? 'bg-primary-600' : 'bg-gray-200'}`}></div>
-            <div className={`flex items-center gap-2 ${currentStep >= 2 ? 'text-primary-600' : 'text-gray-400'}`}>
+            <div className={`w-8 sm:w-16 h-1 rounded-full ${currentStep >= 2 ? 'bg-teal-600' : 'bg-gray-200'}`}></div>
+            <div className={`flex items-center gap-2 ${currentStep >= 2 ? 'text-teal-600' : 'text-gray-400'}`}>
               <div className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold transition-all ${
-                currentStep >= 2 ? 'bg-primary-600 text-white' : 'bg-gray-200 text-gray-500'
+                currentStep >= 2 ? 'bg-teal-600 text-white' : 'bg-gray-200 text-gray-500'
               }`}>
                 {currentStep > 2 ? '✓' : '2'}
               </div>
               <span className="hidden sm:block text-sm font-medium">Informations</span>
             </div>
-            <div className={`w-8 sm:w-16 h-1 rounded-full ${currentStep >= 3 ? 'bg-primary-600' : 'bg-gray-200'}`}></div>
-            <div className={`flex items-center gap-2 ${currentStep >= 3 ? 'text-primary-600' : 'text-gray-400'}`}>
+            <div className={`w-8 sm:w-16 h-1 rounded-full ${currentStep >= 3 ? 'bg-teal-600' : 'bg-gray-200'}`}></div>
+            <div className={`flex items-center gap-2 ${currentStep >= 3 ? 'text-teal-600' : 'text-gray-400'}`}>
               <div className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold transition-all ${
-                currentStep >= 3 ? 'bg-primary-600 text-white' : 'bg-gray-200 text-gray-500'
+                currentStep >= 3 ? 'bg-teal-600 text-white' : 'bg-gray-200 text-gray-500'
               }`}>
                 3
               </div>
@@ -789,14 +789,14 @@ export default function RegisterEducatorPage() {
                           onClick={() => setProfessionType(profession.value)}
                           className={`relative p-4 rounded-xl border-2 text-left transition-all duration-200 hover:shadow-md ${
                             professionType === profession.value
-                              ? 'border-primary-500 bg-primary-50 ring-2 ring-primary-200 shadow-md'
-                              : 'border-gray-200 hover:border-primary-300 hover:bg-gray-50'
+                              ? 'border-teal-500 bg-teal-50 ring-2 ring-teal-200 shadow-md'
+                              : 'border-gray-200 hover:border-teal-300 hover:bg-gray-50'
                           }`}
                         >
                           <div className="flex items-center gap-3">
                             <span className="text-2xl">{profession.icon}</span>
                             <div className="flex-1">
-                              <span className={`font-semibold block ${professionType === profession.value ? 'text-primary-700' : 'text-gray-900'}`}>
+                              <span className={`font-semibold block ${professionType === profession.value ? 'text-teal-700' : 'text-gray-900'}`}>
                                 {profession.label}
                               </span>
                               {profession.requiresRpps && (
@@ -806,7 +806,7 @@ export default function RegisterEducatorPage() {
                               )}
                             </div>
                             {professionType === profession.value && (
-                              <svg className="w-6 h-6 text-primary-600" fill="currentColor" viewBox="0 0 20 20">
+                              <svg className="w-6 h-6 text-teal-600" fill="currentColor" viewBox="0 0 20 20">
                                 <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
                               </svg>
                             )}
@@ -820,7 +820,7 @@ export default function RegisterEducatorPage() {
 
               {/* Bouton suivant */}
               <div className="mt-8 flex justify-between items-center">
-                <Link href="/auth/signup" className="text-gray-600 hover:text-primary-600 text-sm font-medium flex items-center gap-2">
+                <Link href="/auth/signup" className="text-gray-600 hover:text-teal-600 text-sm font-medium flex items-center gap-2">
                   <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
                   </svg>
@@ -830,7 +830,7 @@ export default function RegisterEducatorPage() {
                   type="button"
                   onClick={() => goToStep(2)}
                   disabled={!professionType}
-                  className="px-8 py-3 bg-gradient-to-r from-primary-600 to-primary-700 text-white rounded-xl font-semibold shadow-lg hover:shadow-xl disabled:opacity-50 disabled:cursor-not-allowed transition-all hover:from-primary-700 hover:to-primary-800 flex items-center gap-2"
+                  className="px-8 py-3 bg-gradient-to-r from-emerald-600 via-teal-600 to-cyan-600 text-white rounded-xl font-semibold shadow-lg hover:shadow-xl disabled:opacity-50 disabled:cursor-not-allowed transition-all hover:from-emerald-700 hover:via-teal-700 hover:to-cyan-700 flex items-center gap-2"
                 >
                   Continuer
                   <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -845,7 +845,7 @@ export default function RegisterEducatorPage() {
           {currentStep === 2 && (
             <div className="space-y-6">
               {/* Badge profession sélectionnée */}
-              <div className="bg-gradient-to-r from-primary-500 to-blue-500 text-white rounded-2xl p-4 shadow-lg">
+              <div className="bg-gradient-to-r from-emerald-500 via-teal-500 to-cyan-500 text-white rounded-2xl p-4 shadow-lg">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-3">
                     <span className="text-3xl">{selectedProfession?.icon}</span>
@@ -867,7 +867,7 @@ export default function RegisterEducatorPage() {
               {/* Formulaire */}
               <div className="bg-white rounded-2xl shadow-xl p-6 sm:p-8 border border-gray-100">
                 <h2 className="text-xl font-bold text-gray-900 mb-6 flex items-center gap-2">
-                  <svg className="w-6 h-6 text-primary-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <svg className="w-6 h-6 text-teal-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
                   </svg>
                   Vos informations
@@ -882,7 +882,7 @@ export default function RegisterEducatorPage() {
                       required
                       value={authData.email}
                       onChange={(e) => setAuthData({ ...authData, email: e.target.value })}
-                      className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-all"
+                      className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition-all"
                       placeholder="votre@email.com"
                     />
                   </div>
@@ -896,7 +896,7 @@ export default function RegisterEducatorPage() {
                         required
                         value={authData.password}
                         onChange={handlePasswordChange}
-                        className="w-full px-4 py-3 pr-12 border border-gray-300 rounded-xl focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-all"
+                        className="w-full px-4 py-3 pr-12 border border-gray-300 rounded-xl focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition-all"
                         placeholder="••••••••"
                       />
                       <button
@@ -943,7 +943,7 @@ export default function RegisterEducatorPage() {
                         required
                         value={authData.confirmPassword}
                         onChange={(e) => setAuthData({ ...authData, confirmPassword: e.target.value })}
-                        className="w-full px-4 py-3 pr-12 border border-gray-300 rounded-xl focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-all"
+                        className="w-full px-4 py-3 pr-12 border border-gray-300 rounded-xl focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition-all"
                         placeholder="••••••••"
                       />
                       <button
@@ -973,7 +973,7 @@ export default function RegisterEducatorPage() {
                       required
                       value={educatorData.first_name}
                       onChange={(e) => setEducatorData({ ...educatorData, first_name: e.target.value })}
-                      className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-all"
+                      className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition-all"
                       placeholder="Jean"
                     />
                   </div>
@@ -986,7 +986,7 @@ export default function RegisterEducatorPage() {
                       required
                       value={educatorData.last_name}
                       onChange={(e) => setEducatorData({ ...educatorData, last_name: e.target.value })}
-                      className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-all"
+                      className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition-all"
                       placeholder="Dupont"
                     />
                   </div>
@@ -998,7 +998,7 @@ export default function RegisterEducatorPage() {
                       type="tel"
                       value={educatorData.phone}
                       onChange={(e) => setEducatorData({ ...educatorData, phone: e.target.value })}
-                      className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-all"
+                      className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition-all"
                       placeholder="06 12 34 56 78"
                     />
                   </div>
@@ -1012,7 +1012,7 @@ export default function RegisterEducatorPage() {
                         required
                         value={educatorData.location}
                         onChange={(e) => setEducatorData({ ...educatorData, location: e.target.value })}
-                        className="flex-1 px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-all"
+                        className="flex-1 px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition-all"
                         placeholder="Paris, France"
                       />
                       <button
@@ -1023,7 +1023,7 @@ export default function RegisterEducatorPage() {
                         title="Ma position"
                       >
                         {geolocating ? (
-                          <div className="animate-spin h-5 w-5 border-2 border-primary-600 border-t-transparent rounded-full"></div>
+                          <div className="animate-spin h-5 w-5 border-2 border-teal-600 border-t-transparent rounded-full"></div>
                         ) : (
                           <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
@@ -1041,7 +1041,7 @@ export default function RegisterEducatorPage() {
                       required
                       value={educatorData.diploma_type}
                       onChange={(e) => setEducatorData({ ...educatorData, diploma_type: e.target.value })}
-                      className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-all"
+                      className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition-all"
                     >
                       <option value="">Sélectionnez votre diplôme</option>
                       {selectedProfession?.diplomas.map((diploma) => (
@@ -1084,12 +1084,12 @@ export default function RegisterEducatorPage() {
                               ? 'border-green-500 bg-green-50 focus:ring-green-500'
                               : rppsValidationState.isValid === false && educatorData.rpps_number.length === 11
                               ? 'border-red-500 bg-red-50'
-                              : 'border-gray-300 focus:ring-primary-500 focus:border-primary-500'
+                              : 'border-gray-300 focus:ring-teal-500 focus:border-teal-500'
                           }`}
                         />
                         <div className="absolute inset-y-0 right-0 pr-4 flex items-center">
                           {rppsValidationState.loading ? (
-                            <div className="animate-spin h-5 w-5 border-2 border-primary-500 border-t-transparent rounded-full"></div>
+                            <div className="animate-spin h-5 w-5 border-2 border-teal-500 border-t-transparent rounded-full"></div>
                           ) : rppsValidationState.isValid === true ? (
                             <svg className="h-5 w-5 text-green-500" fill="currentColor" viewBox="0 0 20 20">
                               <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
@@ -1120,7 +1120,7 @@ export default function RegisterEducatorPage() {
                       placeholder="Minimum 1 an"
                       value={educatorData.years_of_experience}
                       onChange={(e) => setEducatorData({ ...educatorData, years_of_experience: parseInt(e.target.value) })}
-                      className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-all"
+                      className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition-all"
                     />
                   </div>
 
@@ -1133,7 +1133,7 @@ export default function RegisterEducatorPage() {
                       min="0"
                       value={educatorData.hourly_rate}
                       onChange={(e) => setEducatorData({ ...educatorData, hourly_rate: e.target.value })}
-                      className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-all"
+                      className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition-all"
                       placeholder="40"
                     />
                   </div>
@@ -1145,7 +1145,7 @@ export default function RegisterEducatorPage() {
                       rows={4}
                       value={educatorData.bio}
                       onChange={(e) => setEducatorData({ ...educatorData, bio: e.target.value })}
-                      className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-all resize-none"
+                      className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition-all resize-none"
                       placeholder="Décrivez votre parcours, vos motivations et votre approche..."
                     />
                   </div>
@@ -1156,7 +1156,7 @@ export default function RegisterEducatorPage() {
                   <button
                     type="button"
                     onClick={() => goToStep(1)}
-                    className="text-gray-600 hover:text-primary-600 font-medium flex items-center gap-2"
+                    className="text-gray-600 hover:text-teal-600 font-medium flex items-center gap-2"
                   >
                     <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
@@ -1166,7 +1166,7 @@ export default function RegisterEducatorPage() {
                   <button
                     type="button"
                     onClick={() => goToStep(3)}
-                    className="px-8 py-3 bg-gradient-to-r from-primary-600 to-primary-700 text-white rounded-xl font-semibold shadow-lg hover:shadow-xl transition-all hover:from-primary-700 hover:to-primary-800 flex items-center gap-2"
+                    className="px-8 py-3 bg-gradient-to-r from-emerald-600 via-teal-600 to-cyan-600 text-white rounded-xl font-semibold shadow-lg hover:shadow-xl transition-all hover:from-emerald-700 hover:via-teal-700 hover:to-cyan-700 flex items-center gap-2"
                   >
                     Continuer
                     <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -1182,7 +1182,7 @@ export default function RegisterEducatorPage() {
           {currentStep === 3 && (
             <div className="space-y-6">
               {/* Badge profession */}
-              <div className="bg-gradient-to-r from-primary-500 to-blue-500 text-white rounded-2xl p-4 shadow-lg">
+              <div className="bg-gradient-to-r from-emerald-500 via-teal-500 to-cyan-500 text-white rounded-2xl p-4 shadow-lg">
                 <div className="flex items-center gap-3">
                   <span className="text-3xl">{selectedProfession?.icon}</span>
                   <div>
@@ -1195,7 +1195,7 @@ export default function RegisterEducatorPage() {
               {/* Informations professionnelles */}
               <div className="bg-white rounded-2xl shadow-xl p-6 sm:p-8 border border-gray-100">
                 <h2 className="text-xl font-bold text-gray-900 mb-6 flex items-center gap-2">
-                  <svg className="w-6 h-6 text-primary-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <svg className="w-6 h-6 text-teal-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
                   </svg>
                   Informations administratives
@@ -1233,12 +1233,12 @@ export default function RegisterEducatorPage() {
                             ? 'border-green-500 bg-green-50 focus:ring-green-500'
                             : siretValidationState.isValid === false && educatorData.siret.length === 14
                             ? 'border-red-500 bg-red-50'
-                            : 'border-gray-300 focus:ring-primary-500 focus:border-primary-500'
+                            : 'border-gray-300 focus:ring-teal-500 focus:border-teal-500'
                         }`}
                       />
                       <div className="absolute inset-y-0 right-0 pr-4 flex items-center">
                         {siretValidationState.loading ? (
-                          <div className="animate-spin h-5 w-5 border-2 border-primary-500 border-t-transparent rounded-full"></div>
+                          <div className="animate-spin h-5 w-5 border-2 border-teal-500 border-t-transparent rounded-full"></div>
                         ) : siretValidationState.isValid === true ? (
                           <svg className="h-5 w-5 text-green-500" fill="currentColor" viewBox="0 0 20 20">
                             <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
@@ -1269,13 +1269,13 @@ export default function RegisterEducatorPage() {
                       value={educatorData.sap_number}
                       onChange={(e) => setEducatorData({ ...educatorData, sap_number: e.target.value.toUpperCase() })}
                       placeholder="SAP123456789"
-                      className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-all"
+                      className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition-all"
                     />
-                    <div className="mt-3 bg-gradient-to-r from-blue-50 to-primary-50 border border-blue-200 rounded-xl p-4">
-                      <p className="text-sm text-blue-800 font-semibold mb-1">
+                    <div className="mt-3 bg-gradient-to-r from-teal-50 to-cyan-50 border border-teal-200 rounded-xl p-4">
+                      <p className="text-sm text-teal-800 font-semibold mb-1">
                         💡 Avantage : Crédit d'impôt 50% pour vos clients
                       </p>
-                      <p className="text-xs text-blue-700">
+                      <p className="text-xs text-teal-700">
                         Avec l'agrément SAP, vos clients bénéficient du CESU préfinancé et du crédit d'impôt !
                       </p>
                     </div>
@@ -1286,12 +1286,12 @@ export default function RegisterEducatorPage() {
               {/* Spécialisations */}
               <div className="bg-white rounded-2xl shadow-xl p-6 sm:p-8 border border-gray-100">
                 <h2 className="text-xl font-bold text-gray-900 mb-6 flex items-center gap-2">
-                  <svg className="w-6 h-6 text-primary-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <svg className="w-6 h-6 text-teal-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
                   </svg>
                   Spécialisations
                   {selectedSpecializations.length > 0 && (
-                    <span className="ml-2 bg-primary-100 text-primary-700 text-sm px-2 py-1 rounded-full">
+                    <span className="ml-2 bg-teal-100 text-teal-700 text-sm px-2 py-1 rounded-full">
                       {selectedSpecializations.length}
                     </span>
                   )}
@@ -1305,8 +1305,8 @@ export default function RegisterEducatorPage() {
                       onClick={() => toggleSpecialization(spec)}
                       className={`px-4 py-2 text-sm rounded-full border-2 transition-all ${
                         selectedSpecializations.includes(spec)
-                          ? 'bg-primary-100 border-primary-500 text-primary-700 font-semibold'
-                          : 'bg-gray-50 border-gray-200 text-gray-600 hover:border-primary-300 hover:bg-primary-50'
+                          ? 'bg-teal-100 border-teal-500 text-teal-700 font-semibold'
+                          : 'bg-gray-50 border-gray-200 text-gray-600 hover:border-teal-300 hover:bg-teal-50'
                       }`}
                     >
                       {selectedSpecializations.includes(spec) && (
@@ -1323,7 +1323,7 @@ export default function RegisterEducatorPage() {
               {/* Langues */}
               <div className="bg-white rounded-2xl shadow-xl p-6 sm:p-8 border border-gray-100">
                 <h2 className="text-xl font-bold text-gray-900 mb-6 flex items-center gap-2">
-                  <svg className="w-6 h-6 text-primary-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <svg className="w-6 h-6 text-teal-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 5h12M9 3v2m1.048 9.5A18.022 18.022 0 016.412 9m6.088 9h7M11 21l5-10 5 10M12.751 5C11.783 10.77 8.07 15.61 3 18.129" />
                   </svg>
                   Langues parlées
@@ -1355,7 +1355,7 @@ export default function RegisterEducatorPage() {
               {/* CV Upload */}
               <div className="bg-white rounded-2xl shadow-xl p-6 sm:p-8 border border-gray-100">
                 <h2 className="text-xl font-bold text-gray-900 mb-6 flex items-center gap-2">
-                  <svg className="w-6 h-6 text-primary-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <svg className="w-6 h-6 text-teal-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
                   </svg>
                   CV *
@@ -1363,7 +1363,7 @@ export default function RegisterEducatorPage() {
 
                 <label className="cursor-pointer block">
                   <div className={`border-2 border-dashed rounded-xl p-8 text-center transition-all ${
-                    cvFile ? 'border-green-500 bg-green-50' : 'border-gray-300 hover:border-primary-500 hover:bg-primary-50'
+                    cvFile ? 'border-green-500 bg-green-50' : 'border-gray-300 hover:border-teal-500 hover:bg-teal-50'
                   }`}>
                     {cvFile ? (
                       <div className="flex items-center justify-center gap-3 text-green-700">
@@ -1426,15 +1426,15 @@ export default function RegisterEducatorPage() {
                     <input
                       type="checkbox"
                       required
-                      className="mt-1 h-5 w-5 text-primary-600 focus:ring-primary-500 border-gray-300 rounded cursor-pointer"
+                      className="mt-1 h-5 w-5 text-teal-600 focus:ring-teal-500 border-gray-300 rounded cursor-pointer"
                     />
                     <span className="text-sm text-gray-700 group-hover:text-gray-900">
                       J'accepte les{' '}
-                      <a href="/cgu" target="_blank" className="text-primary-600 hover:underline font-medium">
+                      <a href="/cgu" target="_blank" className="text-teal-600 hover:underline font-medium">
                         conditions générales d'utilisation
                       </a>{' '}
                       et la{' '}
-                      <a href="/politique-confidentialite" target="_blank" className="text-primary-600 hover:underline font-medium">
+                      <a href="/politique-confidentialite" target="_blank" className="text-teal-600 hover:underline font-medium">
                         politique de confidentialité
                       </a>. <span className="text-red-500">*</span>
                     </span>
@@ -1443,7 +1443,7 @@ export default function RegisterEducatorPage() {
                     <input
                       type="checkbox"
                       required
-                      className="mt-1 h-5 w-5 text-primary-600 focus:ring-primary-500 border-gray-300 rounded cursor-pointer"
+                      className="mt-1 h-5 w-5 text-teal-600 focus:ring-teal-500 border-gray-300 rounded cursor-pointer"
                     />
                     <span className="text-sm text-gray-700 group-hover:text-gray-900">
                       Je consens au traitement de mes données personnelles pour la mise en relation avec des familles et la vérification de mes diplômes. <span className="text-red-500">*</span>
@@ -1457,7 +1457,7 @@ export default function RegisterEducatorPage() {
                 <button
                   type="button"
                   onClick={() => goToStep(2)}
-                  className="w-full sm:w-auto text-gray-600 hover:text-primary-600 font-medium flex items-center justify-center gap-2 py-3"
+                  className="w-full sm:w-auto text-gray-600 hover:text-teal-600 font-medium flex items-center justify-center gap-2 py-3"
                 >
                   <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
@@ -1476,7 +1476,7 @@ export default function RegisterEducatorPage() {
                     }
                   }}
                   disabled={loading}
-                  className="w-full sm:w-auto px-10 py-4 bg-gradient-to-r from-primary-600 to-blue-600 text-white rounded-xl font-bold text-lg shadow-xl hover:shadow-2xl disabled:opacity-50 disabled:cursor-not-allowed transition-all hover:from-primary-700 hover:to-blue-700 flex items-center justify-center gap-3"
+                  className="w-full sm:w-auto px-10 py-4 bg-gradient-to-r from-emerald-600 via-teal-600 to-cyan-600 text-white rounded-xl font-bold text-lg shadow-xl hover:shadow-2xl disabled:opacity-50 disabled:cursor-not-allowed transition-all hover:from-emerald-700 hover:via-teal-700 hover:to-cyan-700 flex items-center justify-center gap-3"
                 >
                   {loading ? (
                     <>
@@ -1503,12 +1503,12 @@ export default function RegisterEducatorPage() {
         <div className="max-w-5xl mx-auto px-4 text-center">
           <p className="text-sm text-gray-600">
             Besoin d'aide ?{' '}
-            <Link href="/contact" className="text-primary-600 hover:underline font-medium">
+            <Link href="/contact" className="text-teal-600 hover:underline font-medium">
               Contactez-nous
             </Link>
           </p>
           <p className="text-xs text-gray-500 mt-2">
-            © 2024 Autisme Connect. Tous droits réservés.
+            © 2024 neurocare. Tous droits réservés.
           </p>
         </div>
       </footer>

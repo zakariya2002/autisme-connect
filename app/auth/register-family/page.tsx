@@ -7,6 +7,7 @@ import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { supabase } from '@/lib/supabase';
 import { getCurrentPosition, reverseGeocode } from '@/lib/geolocation';
+import Logo from '@/components/Logo';
 
 interface PasswordCriteria {
   minLength: boolean;
@@ -213,7 +214,7 @@ export default function RegisterFamilyPage() {
             </p>
 
             <p className="text-gray-500 text-sm mb-8">
-              Cliquez sur le lien dans l'email pour activer votre compte et commencer à utiliser Autisme Connect.
+              Cliquez sur le lien dans l'email pour activer votre compte et commencer à utiliser neurocare.
             </p>
 
             {/* Note */}
@@ -242,10 +243,10 @@ export default function RegisterFamilyPage() {
       <div className="max-w-3xl mx-auto">
         {/* Header */}
         <div className="text-center mb-8">
-          <Link href="/" className="text-3xl font-bold text-primary-600">
-            Autisme Connect
-          </Link>
-          <h2 className="mt-4 text-2xl font-extrabold text-gray-900">
+          <div className="flex justify-center mb-4">
+            <Logo />
+          </div>
+          <h2 className="text-2xl font-extrabold text-gray-900">
             Inscription Aidant
           </h2>
           <p className="mt-2 text-sm text-gray-600">
