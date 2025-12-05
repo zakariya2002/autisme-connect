@@ -539,7 +539,7 @@ export default function EducatorAppointmentsPage() {
 
   const handleLogout = async () => {
     await signOut();
-    router.push('/');
+    window.location.href = '/';
   };
 
   const isPremium = subscription && ['active', 'trialing'].includes(subscription.status);

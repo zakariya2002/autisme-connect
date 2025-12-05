@@ -127,7 +127,7 @@ export default function EducatorDashboard() {
 
   const handleLogout = async () => {
     await signOut();
-    router.push('/');
+    window.location.href = '/';
   };
 
   return (

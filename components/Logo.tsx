@@ -1,4 +1,8 @@
+'use client';
+
 import Link from 'next/link';
+import { useEffect, useState } from 'react';
+import { supabase } from '@/lib/supabase';
 
 interface LogoProps {
   href?: string;
@@ -7,7 +11,41 @@ interface LogoProps {
   showText?: boolean;
 }
 
-export default function Logo({ href = '/', className = '', iconSize = 'md', showText = true }: LogoProps) {
+export default function Logo({ href, className = '', iconSize = 'md', showText = true }: LogoProps) {
+  const [dashboardUrl, setDashboardUrl] = useState('/');
+
+  useEffect(() => {
+    const checkAuth = async () => {
+      const { data: { session } } = await supabase.auth.getSession();
+      if (session?.user) {
+        const role = session.user.user_metadata?.role;
+        if (role === 'educator') {
+          setDashboardUrl('/dashboard/educator');
+        } else if (role === 'family') {
+          setDashboardUrl('/dashboard/family');
+        }
+      }
+    };
+
+    checkAuth();
+
+    // Écouter les changements d'auth
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
+      if (session?.user) {
+        const role = session.user.user_metadata?.role;
+        if (role === 'educator') {
+          setDashboardUrl('/dashboard/educator');
+        } else if (role === 'family') {
+          setDashboardUrl('/dashboard/family');
+        }
+      } else {
+        setDashboardUrl('/');
+      }
+    });
+
+    return () => subscription.unsubscribe();
+  }, []);
+
   const sizeClasses = {
     sm: 'w-9 h-9',
     md: 'w-11 h-11',
@@ -26,8 +64,11 @@ export default function Logo({ href = '/', className = '', iconSize = 'md', show
     lg: 'scale-110'
   };
 
+  // Utiliser href si fourni, sinon utiliser dashboardUrl
+  const finalHref = href !== undefined ? href : dashboardUrl;
+
   return (
-    <Link href={href} className={`flex items-center group ${className}`}>
+    <Link href={finalHref} className={`flex items-center group ${className}`}>
       {/* Logo neurocare - icône avec onde neurologique */}
       <div className={`${sizeClasses[iconSize]} relative flex items-center justify-center ${showText ? 'mr-2.5' : ''}`}>
         <svg

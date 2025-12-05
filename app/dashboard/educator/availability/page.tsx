@@ -185,7 +185,7 @@ export default function EducatorAvailability() {
 
   const handleLogout = async () => {
     await signOut();
-    router.push('/');
+    window.location.href = '/';
   };
 
   const formatDate = (dateStr: string) => {

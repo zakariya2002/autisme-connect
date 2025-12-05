@@ -83,7 +83,7 @@ export default function EducatorInvoices() {
 
   const handleLogout = async () => {
     await signOut();
-    router.push('/');
+    window.location.href = '/';
   };
 
   const formatDate = (dateString: string) => {

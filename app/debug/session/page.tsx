@@ -42,8 +42,17 @@ export default function DebugSessionPage() {
   };
 
   const handleLogout = async () => {
+    // Forcer la déconnexion complète
     await supabase.auth.signOut();
-    window.location.reload();
+    // Vider aussi le localStorage Supabase
+    const keys = Object.keys(localStorage);
+    keys.forEach(key => {
+      if (key.startsWith('sb-')) {
+        localStorage.removeItem(key);
+      }
+    });
+    // Rediriger avec rechargement complet
+    window.location.href = '/';
   };
 
   return (

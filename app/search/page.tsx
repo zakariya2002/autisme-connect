@@ -8,6 +8,7 @@ import { EducatorProfile } from '@/types';
 import { getCurrentPosition, reverseGeocode, geocodeAddress, calculateDistance } from '@/lib/geolocation';
 import Logo from '@/components/Logo';
 import MobileMenu from '@/components/MobileMenu';
+import FamilyMobileMenu from '@/components/FamilyMobileMenu';
 import TndToggle from '@/components/TndToggle';
 import { useTnd } from '@/contexts/TndContext';
 import { professions, getProfessionByValue } from '@/lib/professions-config';
@@ -122,6 +123,7 @@ export default function SearchPage() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [userRole, setUserRole] = useState<string | null>(null);
   const [familyId, setFamilyId] = useState<string | null>(null);
+  const [familyProfile, setFamilyProfile] = useState<any>(null);
   const [favorites, setFavorites] = useState<Set<string>>(new Set());
   const [showFilters, setShowFilters] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
@@ -146,20 +148,21 @@ export default function SearchPage() {
 
     // Récupérer le familyId et les favoris si c'est une famille
     if (session?.user && session.user.user_metadata?.role === 'family') {
-      const { data: familyProfile } = await supabase
+      const { data: familyProfileData } = await supabase
         .from('family_profiles')
-        .select('id')
+        .select('*')
         .eq('user_id', session.user.id)
         .single();
 
-      if (familyProfile) {
-        setFamilyId(familyProfile.id);
+      if (familyProfileData) {
+        setFamilyId(familyProfileData.id);
+        setFamilyProfile(familyProfileData);
 
         // Récupérer les favoris
         const { data: favoritesData } = await supabase
           .from('favorite_educators')
           .select('educator_id')
-          .eq('family_id', familyProfile.id);
+          .eq('family_id', familyProfileData.id);
 
         if (favoritesData) {
           setFavorites(new Set(favoritesData.map(f => f.educator_id)));
@@ -178,6 +181,17 @@ export default function SearchPage() {
       }
       return newFavorites;
     });
+  };
+
+  const handleLogout = async () => {
+    await supabase.auth.signOut();
+    setIsAuthenticated(false);
+    setUserRole(null);
+    setFamilyId(null);
+    setFamilyProfile(null);
+    setFavorites(new Set());
+    // Forcer un rechargement complet pour vider le cache
+    window.location.href = '/';
   };
 
   const fetchEducators = async () => {
@@ -399,7 +413,11 @@ export default function SearchPage() {
           <div className="flex justify-between h-20 items-center">
             <Logo />
             <div className="xl:hidden">
-              <MobileMenu />
+              {isAuthenticated && userRole === 'family' && familyProfile ? (
+                <FamilyMobileMenu profile={familyProfile} onLogout={handleLogout} />
+              ) : (
+                <MobileMenu />
+              )}
             </div>
             <div className="hidden xl:flex items-center gap-2 lg:gap-3">
               {isAuthenticated ? (

@@ -16,26 +16,44 @@ export default function Home() {
 
   useEffect(() => {
     checkUser();
+
+    // Écouter les changements d'état d'authentification
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
+      if (event === 'SIGNED_OUT' || !session) {
+        setUser(null);
+        setUserType(null);
+      } else if (session?.user) {
+        setUser(session.user);
+        // Vérifier le type d'utilisateur
+        checkUserType(session.user.id);
+      }
+    });
+
+    return () => subscription.unsubscribe();
   }, []);
+
+  const checkUserType = async (userId: string) => {
+    const { data: educator } = await supabase
+      .from('educator_profiles')
+      .select('id')
+      .eq('user_id', userId)
+      .single();
+
+    if (educator) {
+      setUserType('educator');
+    } else {
+      setUserType('family');
+    }
+  };
 
   const checkUser = async () => {
     const { data: { session } } = await supabase.auth.getSession();
     if (session?.user) {
       setUser(session.user);
-
-      // Vérifier si c'est un éducateur
-      const { data: educator } = await supabase
-        .from('educator_profiles')
-        .select('id')
-        .eq('user_id', session.user.id)
-        .single();
-
-      if (educator) {
-        setUserType('educator');
-      } else {
-        // Sinon c'est une famille
-        setUserType('family');
-      }
+      checkUserType(session.user.id);
+    } else {
+      setUser(null);
+      setUserType(null);
     }
   };
 

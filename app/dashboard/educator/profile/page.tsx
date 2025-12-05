@@ -493,7 +493,7 @@ export default function EducatorProfilePage() {
 
   const handleLogout = async () => {
     await signOut();
-    router.push('/');
+    window.location.href = '/';
   };
 
   const handleDeleteAccount = async () => {

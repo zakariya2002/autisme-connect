@@ -28,14 +28,31 @@ export async function signIn(email: string, password: string) {
 
 export async function signOut() {
   try {
-    // Forcer la déconnexion locale même si la session distante a expiré
-    const { error } = await supabase.auth.signOut({ scope: 'local' });
+    // Déconnexion globale (supprime la session côté serveur et local)
+    const { error } = await supabase.auth.signOut();
     if (error) {
       console.error('Erreur lors de la déconnexion:', error);
+      // En cas d'erreur, forcer la déconnexion locale
+      await supabase.auth.signOut({ scope: 'local' });
     }
   } catch (err) {
-    // Ignorer les erreurs de déconnexion
+    // En cas d'erreur, forcer la déconnexion locale
     console.error('Erreur lors de la déconnexion:', err);
+    try {
+      await supabase.auth.signOut({ scope: 'local' });
+    } catch {
+      // Ignorer
+    }
+  }
+
+  // Nettoyer aussi le localStorage Supabase pour être sûr
+  if (typeof window !== 'undefined') {
+    const keys = Object.keys(localStorage);
+    keys.forEach(key => {
+      if (key.startsWith('sb-')) {
+        localStorage.removeItem(key);
+      }
+    });
   }
 }
 
