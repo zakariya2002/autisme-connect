@@ -145,9 +145,7 @@ export default function FamilyPublicProfile({ params }: { params: { id: string }
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between h-16 items-center">
             {/* Logo - visible sur desktop */}
-            <div className="hidden md:block">
-              <Logo />
-            </div>
+            <Logo iconSize="sm" />
 
             {/* Menu hamburger - visible uniquement sur mobile */}
             <div className="md:hidden">

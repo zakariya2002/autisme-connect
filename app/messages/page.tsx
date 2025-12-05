@@ -417,7 +417,7 @@ export default function MessagesPage() {
               Autisme Connect
             </Link>
             {/* Menu mobile (hamburger) */}
-            <div className="md:hidden ml-auto">
+            <div className="md:hidden">
               {userProfile?.role === 'educator' ? (
                 <EducatorMobileMenu profile={userProfile} isPremium={isPremium} onLogout={handleLogout} />
               ) : (

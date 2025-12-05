@@ -547,12 +547,10 @@ export default function EducatorProfilePage() {
       <nav className="bg-white shadow-sm">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between h-16 items-center">
-            {/* Logo */}
-            <div className="hidden md:block">
-              <Logo />
-            </div>
+            {/* Logo - visible sur mobile et desktop */}
+            <Logo iconSize="sm" />
             {/* Menu mobile (hamburger) */}
-            <div className="md:hidden ml-auto">
+            <div className="md:hidden">
               <EducatorMobileMenu profile={profile} isPremium={isPremium} onLogout={handleLogout} />
             </div>
             {/* Menu desktop - caché sur mobile */}

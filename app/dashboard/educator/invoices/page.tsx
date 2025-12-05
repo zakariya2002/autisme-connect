@@ -112,10 +112,8 @@ export default function EducatorInvoices() {
       <nav className="bg-white shadow-sm">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between h-16 items-center">
-            <div className="hidden md:block">
-              <Logo />
-            </div>
-            <div className="md:hidden ml-auto">
+            <Logo iconSize="sm" />
+            <div className="md:hidden">
               <EducatorMobileMenu profile={profile} isPremium={isPremium} onLogout={handleLogout} />
             </div>
             <div className="hidden md:flex items-center space-x-4">
