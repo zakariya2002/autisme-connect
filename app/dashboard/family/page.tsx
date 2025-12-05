@@ -364,7 +364,7 @@ export default function FamilyDashboard() {
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" />
                 </svg>
               </div>
-              <span className="font-medium text-gray-900 text-sm sm:text-base">Accompagnements</span>
+              <span className="font-medium text-gray-900 text-sm sm:text-base truncate">Accompagnements</span>
             </Link>
 
             {/* Chercher un éducateur */}
@@ -385,12 +385,12 @@ export default function FamilyDashboard() {
               href="/dashboard/family/favorites"
               className="flex items-center gap-2 sm:gap-3 p-3 sm:p-4 bg-red-50 rounded-lg sm:rounded-xl hover:bg-red-100 transition-colors"
             >
-              <div className="w-8 h-8 sm:w-10 sm:h-10 bg-red-100 rounded-lg flex items-center justify-center flex-shrink-0">
-                <svg className="h-4 w-4 sm:h-5 sm:w-5 text-red-500" fill="currentColor" viewBox="0 0 24 24">
+              <div className="w-8 h-8 sm:w-10 sm:h-10 bg-red-500 rounded-lg flex items-center justify-center flex-shrink-0">
+                <svg className="h-4 w-4 sm:h-5 sm:w-5 text-white" fill="currentColor" viewBox="0 0 24 24">
                   <path d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
                 </svg>
               </div>
-              <span className="font-medium text-gray-900 text-sm sm:text-base">Mes favoris</span>
+              <span className="font-medium text-gray-900 text-sm sm:text-base truncate">Mes favoris</span>
             </Link>
 
             {/* Messages */}

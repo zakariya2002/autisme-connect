@@ -126,7 +126,7 @@ export default function FamilyMobileMenu({ profile, onLogout }: FamilyMobileMenu
               <Link
                 href="/dashboard/family"
                 onClick={closeMenu}
-                className="bg-gradient-to-r from-blue-500 to-purple-600 text-white hover:from-blue-600 hover:to-purple-700 py-3 px-4 rounded-xl font-bold transition-all duration-200 flex items-center gap-3 shadow-lg"
+                className="bg-gradient-to-r from-violet-500 via-purple-500 to-fuchsia-500 text-white hover:from-violet-600 hover:via-purple-600 hover:to-fuchsia-600 py-3 px-4 rounded-xl font-bold transition-all duration-200 flex items-center gap-3 shadow-lg"
               >
                 <div className="w-8 h-8 bg-white/20 rounded-lg flex items-center justify-center">
                   <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
