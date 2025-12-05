@@ -5,7 +5,7 @@ import { useState, useEffect } from 'react';
 import { supabase } from '@/lib/supabase';
 import { signOut } from '@/lib/auth';
 import Logo from '@/components/Logo';
-import EducatorMobileMenu from '@/components/EducatorMobileMenu';
+import EducatorNavbar from '@/components/EducatorNavbar';
 
 export default function SAPAccreditationPage() {
   const [openFAQ, setOpenFAQ] = useState<number | null>(null);
@@ -96,65 +96,25 @@ export default function SAPAccreditationPage() {
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Navigation */}
-      <nav className="bg-white shadow-sm">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between h-16 items-center">
-            {/* Logo - visible sur mobile et desktop */}
-            <Logo />
-            {/* Menu mobile (hamburger) - uniquement si éducateur connecté */}
-            {isLoggedIn && userRole === 'educator' && profile && (
-              <div className="md:hidden flex items-center gap-2">
-                <EducatorMobileMenu profile={profile} isPremium={isPremium} onLogout={handleLogout} />
-              </div>
-            )}
-            {/* Menu desktop */}
-            <div className="hidden md:flex items-center space-x-4">
-              {isLoggedIn ? (
-                <>
-                  <Link href="/dashboard/educator/profile" className="text-gray-700 hover:text-primary-600 px-3 py-2 font-medium transition">
-                    Mon profil
-                  </Link>
-                  {isPremium ? (
-                    <Link href="/dashboard/educator/subscription" className="text-gray-700 hover:text-primary-600 px-3 py-2 font-medium transition flex items-center gap-2">
-                      <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z" />
-                      </svg>
-                      Mon abonnement
-                    </Link>
-                  ) : (
-                    <Link href="/pricing" className="text-gray-700 hover:text-primary-600 px-3 py-2 font-medium transition flex items-center gap-2">
-                      <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                      </svg>
-                      Tarifs
-                    </Link>
-                  )}
-                  <button onClick={handleLogout} className="text-gray-700 hover:text-primary-600 px-3 py-2 font-medium transition">
-                    Déconnexion
-                  </button>
-                </>
-              ) : (
-                <>
-                  <Link href="/auth/register-educator" className="text-gray-700 hover:text-primary-600 px-3 py-2 font-medium transition">
-                    Inscription éducateur
-                  </Link>
-                  <Link href="/auth/login" className="text-gray-700 hover:text-primary-600 px-3 py-2 font-medium transition">
-                    Connexion
-                  </Link>
-                </>
-              )}
-            </div>
-            {/* Menu mobile pour visiteurs non connectés */}
-            {(!isLoggedIn || userRole !== 'educator') && (
-              <div className="md:hidden flex items-center space-x-2">
-                <Link href="/auth/login" className="text-gray-700 hover:text-primary-600 px-3 py-2 font-medium text-sm transition">
+      {isLoggedIn && userRole === 'educator' ? (
+        <EducatorNavbar profile={profile} subscription={subscription} />
+      ) : (
+        <nav className="bg-white shadow-sm">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="flex justify-between h-16 items-center">
+              <Logo />
+              <div className="flex items-center space-x-4">
+                <Link href="/auth/register-educator" className="hidden md:block text-gray-700 hover:text-primary-600 px-3 py-2 font-medium transition">
+                  Inscription éducateur
+                </Link>
+                <Link href="/auth/login" className="text-gray-700 hover:text-primary-600 px-3 py-2 font-medium text-sm md:text-base transition">
                   Connexion
                 </Link>
               </div>
-            )}
+            </div>
           </div>
-        </div>
-      </nav>
+        </nav>
+      )}
 
       {/* Hero Section */}
       <div className="bg-gradient-to-br from-blue-600 to-primary-600 text-white">

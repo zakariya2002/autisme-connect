@@ -103,6 +103,10 @@ export async function POST(request: NextRequest) {
       educatorSiret: appointment.educator.siret || undefined,
       educatorSapNumber: appointment.educator.sap_number || undefined,
       educatorEmail,
+      // Données de profession pour adapter les descriptions de service
+      educatorProfession: appointment.educator.profession || 'educator',
+      educatorProfessionLabel: appointment.educator.profession_label || 'Éducateur spécialisé',
+      educatorRppsNumber: appointment.educator.rpps_number || undefined,
 
       familyName: `${appointment.family.first_name} ${appointment.family.last_name}`,
       familyAddress: appointment.family.location || '',

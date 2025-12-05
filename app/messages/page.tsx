@@ -9,9 +9,10 @@ import { supabase } from '@/lib/supabase';
 import { signOut } from '@/lib/auth';
 import { Conversation, Message } from '@/types';
 import { canEducatorCreateConversation } from '@/lib/subscription-utils';
-import EducatorMobileMenu from '@/components/EducatorMobileMenu';
+import EducatorNavbar from '@/components/EducatorNavbar';
 import FamilyMobileMenu from '@/components/FamilyMobileMenu';
 import Logo from '@/components/Logo';
+import { moderateMessage, generateWarningMessage } from '@/lib/moderation';
 
 export default function MessagesPage() {
   const router = useRouter();
@@ -27,6 +28,7 @@ export default function MessagesPage() {
   const [userProfile, setUserProfile] = useState<any>(null);
   const [subscription, setSubscription] = useState<any>(null);
   const [showConversationList, setShowConversationList] = useState(true); // Pour mobile: bascule entre liste et conversation
+  const [moderationWarning, setModerationWarning] = useState<string | null>(null);
 
   useEffect(() => {
     fetchCurrentUser();
@@ -248,6 +250,18 @@ export default function MessagesPage() {
     e.preventDefault();
     if (!newMessage.trim() || !selectedConversation || !currentUser) return;
 
+    // Vérification de modération
+    const isFirstMessage = selectedConversation.status === 'pending' || messages.length === 0;
+    const moderationResult = moderateMessage(newMessage.trim(), isFirstMessage);
+
+    if (!moderationResult.isAcceptable) {
+      setModerationWarning(generateWarningMessage(moderationResult));
+      return;
+    }
+
+    // Effacer l'avertissement précédent
+    setModerationWarning(null);
+
     // Vérifier si la conversation est acceptée
     if (selectedConversation.status === 'pending' && userProfile.role === 'family') {
       // C'est le premier message - il sera stocké comme message de demande
@@ -354,6 +368,21 @@ export default function MessagesPage() {
     }
   };
 
+  // Marquer une demande de contact comme vue par l'éducateur
+  const markConversationAsSeen = async (conversationId: string) => {
+    if (userProfile?.role !== 'educator') return;
+
+    try {
+      await supabase
+        .from('conversations')
+        .update({ educator_seen_at: new Date().toISOString() })
+        .eq('id', conversationId)
+        .is('educator_seen_at', null);
+    } catch (error) {
+      console.error('Erreur marquage conversation vue:', error);
+    }
+  };
+
   const getOtherParticipant = (conversation: any) => {
     const isEducator = userProfile.role === 'educator';
     return isEducator
@@ -407,51 +436,38 @@ export default function MessagesPage() {
   return (
     <div className="h-screen bg-gray-50 flex flex-col">
       {/* Navigation */}
-      <nav className="bg-white shadow-sm">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between h-16 items-center">
-            {/* Logo - visible sur mobile et desktop */}
-            <Logo  />
-            {/* Menu mobile (hamburger) */}
-            <div className="md:hidden">
-              {userProfile?.role === 'educator' ? (
-                <EducatorMobileMenu profile={userProfile} isPremium={isPremium} onLogout={handleLogout} />
-              ) : (
+      {userProfile?.role === 'educator' ? (
+        <EducatorNavbar profile={userProfile} subscription={subscription} />
+      ) : (
+        <nav className="bg-white shadow-sm">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="flex justify-between h-16 items-center">
+              <Logo href="/dashboard/family" />
+              <div className="md:hidden">
                 <FamilyMobileMenu profile={userProfile} onLogout={handleLogout} />
-              )}
-            </div>
-            {/* Menu desktop - caché sur mobile */}
-            <div className="hidden md:flex space-x-4 items-center">
-              <Link
-                href={userProfile?.role === 'educator' ? '/dashboard/educator' : '/dashboard/family'}
-                className={`inline-flex items-center gap-2 text-white px-6 py-2.5 rounded-lg font-semibold transition-all duration-200 shadow-md hover:shadow-lg ${
-                  userProfile?.role === 'educator'
-                    ? 'bg-gradient-to-r from-primary-500 to-green-500 hover:from-primary-600 hover:to-green-600'
-                    : 'bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700'
-                }`}
-              >
-                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
-                </svg>
-                Tableau de bord
-              </Link>
-              <Link
-                href={userProfile?.role === 'educator' ? '/dashboard/educator/profile' : '/dashboard/family/profile'}
-                className="text-gray-700 hover:text-primary-600 px-3 py-2 font-medium transition"
-              >
-                Mon profil
-              </Link>
-              <button onClick={handleLogout} className="text-gray-700 hover:text-primary-600 px-3 py-2 font-medium transition">
-                Déconnexion
-              </button>
+              </div>
+              <div className="hidden md:flex space-x-4 items-center">
+                <Link
+                  href="/dashboard/family"
+                  className="inline-flex items-center gap-2 text-white px-6 py-2.5 rounded-lg font-semibold transition-all duration-200 shadow-md hover:shadow-lg bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700"
+                >
+                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
+                  </svg>
+                  Tableau de bord
+                </Link>
+                <button onClick={handleLogout} className="text-gray-700 hover:text-primary-600 px-3 py-2 font-medium transition">
+                  Déconnexion
+                </button>
+              </div>
             </div>
           </div>
-        </div>
-      </nav>
+        </nav>
+      )}
 
       {/* Zone de messagerie */}
       <div className="flex-1 overflow-hidden">
-        <div className="max-w-7xl mx-auto h-full px-4 sm:px-6 lg:px-8 py-6">
+        <div className="max-w-7xl mx-auto h-full px-4 sm:px-6 lg:px-8 py-6 pb-10 sm:pb-12">
           <div className="h-full bg-white rounded-lg shadow flex">
             {/* Liste des conversations - affichée seulement sur desktop OU sur mobile quand aucune conversation sélectionnée */}
             <div className={`w-full lg:w-1/3 border-r border-gray-200 flex flex-col ${selectedConversation && !showConversationList ? 'hidden lg:flex' : 'flex'}`}>
@@ -484,6 +500,10 @@ export default function MessagesPage() {
                         onClick={() => {
                           setSelectedConversation(conv);
                           setShowConversationList(false); // Masquer la liste sur mobile
+                          // Marquer comme vue si c'est une demande pending vue par l'éducateur
+                          if (conv.status === 'pending' && userProfile?.role === 'educator') {
+                            markConversationAsSeen(conv.id);
+                          }
                         }}
                       >
                         <div className="flex items-center gap-3">
@@ -591,33 +611,134 @@ export default function MessagesPage() {
 
                   {/* Messages ou zone de demande en attente */}
                   {selectedConversation.status === 'pending' ? (
-                    <div className="flex-1 flex flex-col">
+                    <div className="flex-1 flex flex-col min-h-0">
                       {/* Zone de demande en attente */}
-                      <div className="flex-1 flex items-center justify-center p-6">
-                        <div className="text-center max-w-md">
+                      <div className="flex-1 overflow-y-auto p-4 sm:p-6 pb-8">
+                        <div className="text-center max-w-lg mx-auto pb-6">
                           {userProfile.role === 'educator' ? (
                             <>
-                              <div className="w-16 h-16 bg-yellow-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                                <svg className="w-8 h-8 text-yellow-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                                </svg>
+                              <div className="flex items-center justify-center gap-3 mb-4">
+                                <div className="w-10 h-10 bg-yellow-100 rounded-full flex items-center justify-center flex-shrink-0">
+                                  <svg className="w-5 h-5 text-yellow-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                  </svg>
+                                </div>
+                                <div>
+                                  <h3 className="text-lg font-bold text-gray-900">Nouvelle demande</h3>
+                                  <p className="text-sm text-gray-600">{getOtherParticipant(selectedConversation)?.first_name} souhaite vous contacter</p>
+                                </div>
                               </div>
-                              <h3 className="text-xl font-bold text-gray-900 mb-2">
-                                Nouvelle demande de contact
-                              </h3>
-                              <p className="text-gray-600 mb-4">
-                                {getOtherParticipant(selectedConversation)?.first_name} souhaite vous contacter.
-                              </p>
-                              {selectedConversation.request_message && (
-                                <div className="bg-gray-50 rounded-lg p-4 mb-6 text-left">
-                                  <p className="text-sm text-gray-500 mb-1">Message de présentation :</p>
-                                  <p className="text-gray-800 italic">"{selectedConversation.request_message}"</p>
+                              {/* Affichage des données du questionnaire */}
+                              {selectedConversation.questionnaire_data && (
+                                <div className="bg-gradient-to-br from-primary-50 to-blue-50 rounded-xl p-3 sm:p-4 mb-4 text-left border border-primary-200">
+                                  <p className="text-sm font-semibold text-primary-700 mb-2 flex items-center gap-2">
+                                    <svg className="w-4 h-4 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
+                                    </svg>
+                                    Informations de la demande
+                                  </p>
+
+                                  <div className="space-y-2 text-sm">
+                                    {/* Accompagnement */}
+                                    {selectedConversation.questionnaire_data.child_name && (
+                                      <div className="flex items-center gap-2">
+                                        <span className="flex-shrink-0">👤</span>
+                                        <span className="text-xs text-gray-500">Pour :</span>
+                                        <span className="font-medium text-gray-800">{selectedConversation.questionnaire_data.child_name}</span>
+                                      </div>
+                                    )}
+
+                                    {/* Suivi existant */}
+                                    {selectedConversation.questionnaire_data.existing_support && (
+                                      <div className="flex items-center gap-2 flex-wrap">
+                                        <span className="flex-shrink-0">{selectedConversation.questionnaire_data.existing_support.has_support ? '✅' : '❌'}</span>
+                                        <span className="text-xs text-gray-500">Suivi :</span>
+                                        <span className="font-medium text-gray-800 text-sm">
+                                          {selectedConversation.questionnaire_data.existing_support.has_support
+                                            ? `${selectedConversation.questionnaire_data.existing_support.types?.join(', ') || 'Oui'}`
+                                            : 'Aucun'}
+                                        </span>
+                                      </div>
+                                    )}
+
+                                    {/* Besoins */}
+                                    {selectedConversation.questionnaire_data.needs && (
+                                      <>
+                                        {selectedConversation.questionnaire_data.needs.accompaniment_types?.length > 0 && (
+                                          <div className="flex items-start gap-2">
+                                            <span className="flex-shrink-0">🎯</span>
+                                            <div className="min-w-0 flex-1">
+                                              <div className="flex flex-wrap gap-1">
+                                                {selectedConversation.questionnaire_data.needs.accompaniment_types.map((type: string) => (
+                                                  <span key={type} className="px-2 py-0.5 bg-primary-100 text-primary-700 rounded-full text-xs font-medium capitalize">
+                                                    {type.replace('_', ' ')}
+                                                  </span>
+                                                ))}
+                                              </div>
+                                            </div>
+                                          </div>
+                                        )}
+                                        {selectedConversation.questionnaire_data.needs.objectives?.length > 0 && (
+                                          <div className="flex items-start gap-2">
+                                            <span className="flex-shrink-0">💡</span>
+                                            <div className="min-w-0 flex-1">
+                                              <div className="flex flex-wrap gap-1">
+                                                {selectedConversation.questionnaire_data.needs.objectives.map((obj: string) => (
+                                                  <span key={obj} className="px-2 py-0.5 bg-green-100 text-green-700 rounded-full text-xs font-medium capitalize">
+                                                    {obj.replace('_', ' ')}
+                                                  </span>
+                                                ))}
+                                              </div>
+                                            </div>
+                                          </div>
+                                        )}
+                                      </>
+                                    )}
+
+                                    {/* Modalités */}
+                                    {selectedConversation.questionnaire_data.modalities && (
+                                      <div className="flex items-center gap-2 flex-wrap">
+                                        <span className="flex-shrink-0">📍</span>
+                                        <span className="font-medium text-gray-800 text-sm">
+                                          {selectedConversation.questionnaire_data.modalities.location && (
+                                            <span className="mr-1">
+                                              {selectedConversation.questionnaire_data.modalities.location === 'domicile' ? 'Domicile' :
+                                               selectedConversation.questionnaire_data.modalities.location === 'cabinet' ? 'Cabinet' :
+                                               selectedConversation.questionnaire_data.modalities.location === 'ecole' ? 'École' : 'Flexible'}
+                                            </span>
+                                          )}
+                                          {selectedConversation.questionnaire_data.modalities.frequency && (
+                                            <span className="text-gray-600">
+                                              • {selectedConversation.questionnaire_data.modalities.frequency === '1x_semaine' ? '1x/sem' :
+                                                 selectedConversation.questionnaire_data.modalities.frequency === '2x_semaine' ? '2x/sem' :
+                                                 selectedConversation.questionnaire_data.modalities.frequency === 'plus' ? '+2x/sem' : 'À définir'}
+                                            </span>
+                                          )}
+                                        </span>
+                                        {selectedConversation.questionnaire_data.modalities.availability?.length > 0 && (
+                                          <span className="text-xs text-gray-500">
+                                            ({selectedConversation.questionnaire_data.modalities.availability.map((a: string) =>
+                                              a === 'matin' ? 'Mat.' :
+                                              a === 'apres_midi' ? 'AM' :
+                                              a === 'soir' ? 'Soir' : 'WE'
+                                            ).join(', ')})
+                                          </span>
+                                        )}
+                                      </div>
+                                    )}
+                                  </div>
                                 </div>
                               )}
-                              <div className="flex gap-3 justify-center">
+
+                              {selectedConversation.request_message && (
+                                <div className="bg-gray-50 rounded-lg p-3 mb-4 text-left">
+                                  <p className="text-gray-800 italic text-sm break-words">"{selectedConversation.request_message}"</p>
+                                </div>
+                              )}
+                              <div className="flex flex-col sm:flex-row gap-3 justify-center mt-4 pt-4 border-t border-gray-100">
                                 <button
                                   onClick={handleAcceptConversation}
-                                  className="px-6 py-3 bg-green-600 text-white rounded-lg hover:bg-green-700 font-semibold transition flex items-center gap-2"
+                                  className="px-6 py-3 bg-green-600 text-white rounded-lg hover:bg-green-700 font-semibold transition flex items-center justify-center gap-2 w-full sm:w-auto shadow-md hover:shadow-lg"
                                 >
                                   <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
@@ -626,7 +747,7 @@ export default function MessagesPage() {
                                 </button>
                                 <button
                                   onClick={handleRejectConversation}
-                                  className="px-6 py-3 bg-red-600 text-white rounded-lg hover:bg-red-700 font-semibold transition flex items-center gap-2"
+                                  className="px-6 py-3 bg-red-600 text-white rounded-lg hover:bg-red-700 font-semibold transition flex items-center justify-center gap-2 w-full sm:w-auto shadow-md hover:shadow-lg"
                                 >
                                   <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
@@ -637,26 +758,54 @@ export default function MessagesPage() {
                             </>
                           ) : (
                             <>
-                              <div className="w-16 h-16 bg-yellow-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                                <svg className="w-8 h-8 text-yellow-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <div className="w-12 h-12 sm:w-16 sm:h-16 bg-yellow-100 rounded-full flex items-center justify-center mx-auto mb-3 sm:mb-4">
+                                <svg className="w-6 h-6 sm:w-8 sm:h-8 text-yellow-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
                                 </svg>
                               </div>
-                              <h3 className="text-xl font-bold text-gray-900 mb-2">
-                                {selectedConversation.request_message ? 'Demande envoyée' : 'Envoyez votre demande'}
+                              <h3 className="text-lg sm:text-xl font-bold text-gray-900 mb-2">
+                                {(selectedConversation.request_message || selectedConversation.questionnaire_data) ? 'Demande envoyée' : 'Envoyez votre demande'}
                               </h3>
-                              {selectedConversation.request_message ? (
+                              {selectedConversation.request_message || selectedConversation.questionnaire_data ? (
                                 <>
-                                  <p className="text-gray-600 mb-4">
+                                  <p className="text-sm sm:text-base text-gray-600 mb-4">
                                     Votre demande de contact est en attente de validation par l'éducateur.
                                   </p>
-                                  <div className="bg-gray-50 rounded-lg p-4 text-left">
-                                    <p className="text-sm text-gray-500 mb-1">Votre message :</p>
-                                    <p className="text-gray-800 italic">"{selectedConversation.request_message}"</p>
-                                  </div>
+                                  {/* Récapitulatif du questionnaire envoyé */}
+                                  {selectedConversation.questionnaire_data && (
+                                    <div className="bg-gradient-to-br from-green-50 to-blue-50 rounded-xl p-3 sm:p-4 mb-4 text-left border border-green-200">
+                                      <p className="text-sm font-semibold text-green-700 mb-3 flex items-center gap-2">
+                                        <svg className="w-4 h-4 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                                        </svg>
+                                        Votre demande envoyée
+                                      </p>
+                                      <div className="space-y-2 text-xs sm:text-sm">
+                                        {selectedConversation.questionnaire_data.child_name && (
+                                          <p className="break-words"><span className="text-gray-500">Pour :</span> <span className="font-medium">{selectedConversation.questionnaire_data.child_name}</span></p>
+                                        )}
+                                        {selectedConversation.questionnaire_data.needs?.accompaniment_types?.length > 0 && (
+                                          <p className="break-words"><span className="text-gray-500">Accompagnement :</span> <span className="font-medium">{selectedConversation.questionnaire_data.needs.accompaniment_types.map((t: string) => t.replace('_', ' ')).join(', ')}</span></p>
+                                        )}
+                                        {selectedConversation.questionnaire_data.modalities?.location && (
+                                          <p><span className="text-gray-500">Lieu :</span> <span className="font-medium">
+                                            {selectedConversation.questionnaire_data.modalities.location === 'domicile' ? 'À domicile' :
+                                             selectedConversation.questionnaire_data.modalities.location === 'cabinet' ? 'En cabinet' :
+                                             selectedConversation.questionnaire_data.modalities.location === 'ecole' ? 'À l\'école' : 'Peu importe'}
+                                          </span></p>
+                                        )}
+                                      </div>
+                                    </div>
+                                  )}
+                                  {selectedConversation.request_message && (
+                                    <div className="bg-gray-50 rounded-lg p-3 sm:p-4 text-left">
+                                      <p className="text-xs sm:text-sm text-gray-500 mb-1">Votre message :</p>
+                                      <p className="text-gray-800 italic text-sm sm:text-base break-words">"{selectedConversation.request_message}"</p>
+                                    </div>
+                                  )}
                                 </>
                               ) : (
-                                <p className="text-gray-600">
+                                <p className="text-sm sm:text-base text-gray-600">
                                   Présentez-vous à l'éducateur pour qu'il puisse accepter votre demande de contact.
                                 </p>
                               )}
@@ -666,19 +815,19 @@ export default function MessagesPage() {
                       </div>
 
                       {/* Formulaire d'envoi pour les familles en attente */}
-                      {userProfile.role === 'family' && !selectedConversation.request_message && (
-                        <div className="p-4 border-t border-gray-200">
-                          <form onSubmit={sendMessage} className="flex gap-2">
+                      {userProfile.role === 'family' && !selectedConversation.request_message && !selectedConversation.questionnaire_data && (
+                        <div className="p-3 sm:p-4 border-t border-gray-200">
+                          <form onSubmit={sendMessage} className="flex flex-col sm:flex-row gap-2">
                             <input
                               type="text"
                               value={newMessage}
                               onChange={(e) => setNewMessage(e.target.value)}
-                              placeholder="Présentez-vous et expliquez votre demande..."
-                              className="flex-1 border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:ring-primary-500 focus:border-primary-500"
+                              placeholder="Présentez-vous..."
+                              className="flex-1 border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:ring-primary-500 focus:border-primary-500 text-sm sm:text-base"
                             />
                             <button
                               type="submit"
-                              className="px-6 py-2 bg-primary-600 text-white rounded-md hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500"
+                              className="px-4 sm:px-6 py-2 bg-primary-600 text-white rounded-md hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 font-medium text-sm sm:text-base w-full sm:w-auto"
                             >
                               Envoyer
                             </button>
@@ -689,26 +838,26 @@ export default function MessagesPage() {
                   ) : (
                     <>
                       {/* Messages normaux pour les conversations acceptées */}
-                      <div className="flex-1 overflow-y-auto p-4 space-y-4">
+                      <div className="flex-1 overflow-y-auto p-3 sm:p-4 space-y-3 sm:space-y-4">
                         {messages.map((message) => {
                           const isSender = message.sender_id === currentUser?.id;
                           const other = getOtherParticipant(selectedConversation);
                           return (
                             <div
                               key={message.id}
-                              className={`flex items-end gap-2 ${isSender ? 'justify-end' : 'justify-start'}`}
+                              className={`flex items-end gap-1.5 sm:gap-2 ${isSender ? 'justify-end' : 'justify-start'}`}
                             >
                               {/* Avatar pour les messages reçus */}
                               {!isSender && <Avatar participant={other} size="sm" />}
 
                               <div
-                                className={`max-w-xs lg:max-w-md px-4 py-2 rounded-lg ${
+                                className={`max-w-[75%] sm:max-w-xs lg:max-w-md px-3 sm:px-4 py-2 rounded-lg ${
                                   isSender
                                     ? 'bg-primary-600 text-white'
                                     : 'bg-gray-200 text-gray-900'
                                 }`}
                               >
-                                <p>{message.content}</p>
+                                <p className="text-sm sm:text-base break-words">{message.content}</p>
                                 <p
                                   className={`text-xs mt-1 ${
                                     isSender ? 'text-primary-100' : 'text-gray-500'
@@ -727,20 +876,45 @@ export default function MessagesPage() {
                       </div>
 
                       {/* Formulaire d'envoi */}
-                      <div className="p-4 border-t border-gray-200">
-                        <form onSubmit={sendMessage} className="flex gap-2 mb-2">
+                      <div className="p-3 sm:p-4 border-t border-gray-200">
+                        {/* Avertissement de modération */}
+                        {moderationWarning && (
+                          <div className="mb-3 p-3 bg-red-50 border border-red-200 rounded-lg flex items-start gap-2">
+                            <svg className="w-5 h-5 text-red-500 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                            </svg>
+                            <div className="flex-1">
+                              <p className="text-sm text-red-700">{moderationWarning}</p>
+                              <button
+                                onClick={() => setModerationWarning(null)}
+                                className="text-xs text-red-600 hover:text-red-800 underline mt-1"
+                              >
+                                Fermer
+                              </button>
+                            </div>
+                          </div>
+                        )}
+                        <form onSubmit={sendMessage} className="flex gap-2">
                           <input
                             type="text"
                             value={newMessage}
-                            onChange={(e) => setNewMessage(e.target.value)}
-                            placeholder="Écrivez votre message..."
-                            className="flex-1 border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:ring-primary-500 focus:border-primary-500"
+                            onChange={(e) => {
+                              setNewMessage(e.target.value);
+                              if (moderationWarning) setModerationWarning(null);
+                            }}
+                            placeholder="Message..."
+                            className={`flex-1 border rounded-md shadow-sm py-2 px-3 focus:ring-primary-500 focus:border-primary-500 text-sm sm:text-base min-w-0 ${
+                              moderationWarning ? 'border-red-300 bg-red-50' : 'border-gray-300'
+                            }`}
                           />
                           <button
                             type="submit"
-                            className="px-6 py-2 bg-primary-600 text-white rounded-md hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500"
+                            className="px-3 sm:px-6 py-2 bg-primary-600 text-white rounded-md hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 flex-shrink-0 text-sm sm:text-base"
                           >
-                            Envoyer
+                            <span className="hidden sm:inline">Envoyer</span>
+                            <svg className="w-5 h-5 sm:hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" />
+                            </svg>
                           </button>
                         </form>
                       </div>

@@ -14,12 +14,15 @@ interface InvoiceData {
   startTime?: string; // Format HH:MM
   endTime?: string; // Format HH:MM
 
-  // Éducateur
+  // Professionnel
   educatorName: string;
   educatorAddress: string;
   educatorSiret?: string;
   educatorSapNumber?: string;
   educatorEmail: string;
+  educatorProfession?: string; // Code profession (educator, psychologist, etc.)
+  educatorProfessionLabel?: string; // Label affiché (Éducateur spécialisé, Psychologue, etc.)
+  educatorRppsNumber?: string; // Numéro RPPS pour professions de santé
 
   // Famille (client)
   familyName: string;
@@ -34,6 +37,38 @@ interface InvoiceData {
 
   // Type
   type: 'educator_invoice' | 'family_receipt';
+}
+
+// Descriptions de service selon la profession
+function getServiceDescription(profession?: string): string {
+  const descriptions: { [key: string]: string } = {
+    'educator': 'Séance d\'accompagnement éducatif spécialisé',
+    'moniteur_educateur': 'Séance d\'accompagnement éducatif',
+    'psychologist': 'Consultation psychologique',
+    'psychomotricist': 'Séance de psychomotricité',
+    'occupational_therapist': 'Séance d\'ergothérapie',
+    'speech_therapist': 'Séance d\'orthophonie',
+    'physiotherapist': 'Séance de kinésithérapie',
+    'apa_teacher': 'Séance d\'activité physique adaptée',
+    'music_therapist': 'Séance de musicothérapie',
+  };
+  return descriptions[profession || ''] || 'Séance d\'accompagnement';
+}
+
+// Description pour le reçu famille (PCH/MDPH)
+function getFamilyServiceDescription(profession?: string): string {
+  const descriptions: { [key: string]: string } = {
+    'educator': 'Accompagnement éducatif d\'une personne en situation de handicap',
+    'moniteur_educateur': 'Accompagnement éducatif d\'une personne en situation de handicap',
+    'psychologist': 'Accompagnement psychologique d\'une personne en situation de handicap',
+    'psychomotricist': 'Rééducation psychomotrice d\'une personne en situation de handicap',
+    'occupational_therapist': 'Rééducation ergothérapique d\'une personne en situation de handicap',
+    'speech_therapist': 'Rééducation orthophonique d\'une personne en situation de handicap',
+    'physiotherapist': 'Rééducation kinésithérapique d\'une personne en situation de handicap',
+    'apa_teacher': 'Activité physique adaptée pour personne en situation de handicap',
+    'music_therapist': 'Musicothérapie pour personne en situation de handicap',
+  };
+  return descriptions[profession || ''] || 'Accompagnement d\'une personne en situation de handicap';
 }
 
 // Fonction pour formater la durée en heures
@@ -82,13 +117,13 @@ export async function generateEducatorInvoicePDF(data: InvoiceData): Promise<Buf
         .fillColor(grayColor)
         .text('Émise via', 480, 50, { align: 'right' })
         .fontSize(14)
-        .fillColor(primaryColor)
+        .fillColor('#14b8a6') // teal-500 pour neurocare
         .font('Helvetica-Bold')
-        .text('Autisme Connect', 480, 65, { align: 'right' })
+        .text('neurocare', 480, 65, { align: 'right' })
         .fontSize(9)
         .fillColor(grayColor)
         .font('Helvetica')
-        .text('www.autismeconnect.fr', 480, 88, { align: 'right' });
+        .text('www.neurocare.fr', 480, 88, { align: 'right' });
 
       // Ligne séparatrice
       doc
@@ -127,6 +162,15 @@ export async function generateEducatorInvoicePDF(data: InvoiceData): Promise<Buf
           .fillColor(darkColor)
           .font('Helvetica-Bold')
           .text(`SIRET : ${data.educatorSiret}`, 50, y);
+        y += 14;
+      }
+
+      // RPPS pour professionnels de santé
+      if (data.educatorRppsNumber) {
+        doc
+          .fillColor('#7c3aed') // violet pour RPPS
+          .font('Helvetica-Bold')
+          .text(`N° RPPS : ${data.educatorRppsNumber}`, 50, y);
         y += 14;
       }
 
@@ -196,12 +240,13 @@ export async function generateEducatorInvoicePDF(data: InvoiceData): Promise<Buf
 
       y += 18;
 
-      // Ligne de prestation
+      // Ligne de prestation - description adaptée à la profession
+      const serviceDescription = getServiceDescription(data.educatorProfession);
       doc
         .fontSize(10)
         .fillColor(darkColor)
         .font('Helvetica')
-        .text('Séance d\'accompagnement éducatif', 50, y)
+        .text(serviceDescription, 50, y)
         .text(formatDate(data.appointmentDate), 280, y)
         .text(formatDuration(data.duration), 380, y)
         .text(formatAmount(data.amountTotal), 480, y, { align: 'right', width: 65 });
@@ -306,7 +351,7 @@ export async function generateEducatorInvoicePDF(data: InvoiceData): Promise<Buf
       y += 12;
       doc
         .font('Helvetica')
-        .text('Paiement effectué par carte bancaire via la plateforme Autisme Connect (Stripe).', 60, y, { width: 475 });
+        .text('Paiement effectué par carte bancaire via la plateforme neurocare (Stripe).', 60, y, { width: 475 });
 
       y += 18;
       doc
@@ -335,7 +380,7 @@ export async function generateEducatorInvoicePDF(data: InvoiceData): Promise<Buf
         .fontSize(7)
         .fillColor(grayColor)
         .font('Helvetica-Oblique')
-        .text('Document généré automatiquement par la plateforme Autisme Connect', 50, 780, { align: 'center', width: 495 });
+        .text('Document généré automatiquement par la plateforme neurocare', 50, 780, { align: 'center', width: 495 });
 
       doc.end();
     } catch (error) {
@@ -381,13 +426,13 @@ export async function generateFamilyReceiptPDF(data: InvoiceData): Promise<Buffe
       // Logo
       doc
         .fontSize(16)
-        .fillColor(primaryColor)
+        .fillColor('#14b8a6') // teal-500 pour neurocare
         .font('Helvetica-Bold')
-        .text('Autisme Connect', 400, 50, { align: 'right' })
+        .text('neurocare', 400, 50, { align: 'right' })
         .fontSize(9)
         .fillColor(grayColor)
         .font('Helvetica')
-        .text('www.autismeconnect.fr', 400, 70, { align: 'right' });
+        .text('www.neurocare.fr', 400, 70, { align: 'right' });
 
       // Ligne séparatrice
       doc
@@ -460,6 +505,22 @@ export async function generateFamilyReceiptPDF(data: InvoiceData): Promise<Buffe
           .fillColor(grayColor)
           .font('Helvetica')
           .text('Agréé Services à la Personne', 320, y);
+        y += 12;
+      }
+
+      // RPPS Number (pour professionnels de santé)
+      if (data.educatorRppsNumber) {
+        doc
+          .fontSize(9)
+          .fillColor('#7c3aed') // violet pour RPPS
+          .font('Helvetica-Bold')
+          .text(`N° RPPS: ${data.educatorRppsNumber}`, 320, y);
+        y += 12;
+        doc
+          .fontSize(8)
+          .fillColor(grayColor)
+          .font('Helvetica')
+          .text('Professionnel de santé enregistré', 320, y);
       }
 
       // ----- NATURE DU SERVICE -----
@@ -493,11 +554,13 @@ export async function generateFamilyReceiptPDF(data: InvoiceData): Promise<Buffe
         .text('Nature du service:', 60, y);
 
       y += 14;
+      // Description adaptée à la profession du professionnel
+      const familyServiceDescription = getFamilyServiceDescription(data.educatorProfession);
       doc
         .fontSize(10)
         .fillColor(darkColor)
         .font('Helvetica')
-        .text('Accompagnement éducatif d\'une personne en situation de handicap', 60, y);
+        .text(familyServiceDescription, 60, y);
 
       // ----- DÉTAILS HORAIRES (pour PCH) -----
       y += 40;
@@ -669,7 +732,7 @@ export async function generateFamilyReceiptPDF(data: InvoiceData): Promise<Buffe
       doc.text('Conservez ce document pour vos démarches administratives et fiscales.', 50, y, { align: 'center', width: 500 });
 
       y += 10;
-      doc.text('Contact: contact@autismeconnect.fr | www.autismeconnect.fr', 50, y, { align: 'center', width: 500 });
+      doc.text('Contact: contact@neurocare.fr | www.neurocare.fr', 50, y, { align: 'center', width: 500 });
 
       doc.end();
     } catch (error) {

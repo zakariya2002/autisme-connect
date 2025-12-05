@@ -5,8 +5,7 @@ import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { supabase } from '@/lib/supabase';
 import { signOut } from '@/lib/auth';
-import EducatorMobileMenu from '@/components/EducatorMobileMenu';
-import Logo from '@/components/Logo';
+import EducatorNavbar from '@/components/EducatorNavbar';
 import { ocrService, OCRResult } from '@/lib/ocr-service';
 import { getProfessionByValue, getDiplomaLabel, ProfessionConfig } from '@/lib/professions-config';
 
@@ -414,37 +413,7 @@ export default function DiplomePage() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-primary-50 via-white to-blue-50">
       {/* Navigation */}
-      <nav className="bg-white shadow-sm border-b border-gray-200">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between h-16 items-center">
-            <Logo iconSize="sm" />
-            <div className="md:hidden">
-              <EducatorMobileMenu profile={profile} isPremium={isPremium} onLogout={handleLogout} />
-            </div>
-
-            <div className="hidden md:flex items-center space-x-4">
-              <Link
-                href="/dashboard/educator"
-                className="bg-gradient-to-r from-primary-500 to-green-500 text-white hover:from-primary-600 hover:to-green-600 px-6 py-2.5 rounded-lg font-semibold transition-all duration-200 flex items-center gap-2 shadow-md hover:shadow-lg"
-              >
-                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
-                </svg>
-                Tableau de bord
-              </Link>
-              <Link href="/dashboard/educator/profile" className="text-gray-700 hover:text-primary-600 px-3 py-2 rounded-md font-medium transition">
-                Profil
-              </Link>
-              <button
-                onClick={handleLogout}
-                className="text-gray-700 hover:text-primary-600 px-3 py-2 rounded-md font-medium transition"
-              >
-                Déconnexion
-              </button>
-            </div>
-          </div>
-        </div>
-      </nav>
+      <EducatorNavbar profile={profile} subscription={subscription} />
 
       {/* Contenu principal */}
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">

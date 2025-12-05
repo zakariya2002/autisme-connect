@@ -33,7 +33,7 @@ export default function EducatorMobileMenu({ profile, isPremium, onLogout }: Edu
     <>
       <button
         onClick={() => setIsOpen(true)}
-        className="md:hidden p-2 text-gray-700 hover:text-primary-600 transition-colors duration-200"
+        className="md:hidden p-2 text-gray-700 hover:text-teal-600 transition-colors duration-200"
         aria-label="Ouvrir le menu"
       >
         <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -59,10 +59,10 @@ export default function EducatorMobileMenu({ profile, isPremium, onLogout }: Edu
           >
             {/* En-tête du menu */}
             <div className="flex items-center justify-between mb-6">
-              <h2 className="text-xl font-bold text-primary-600">Menu</h2>
+              <h2 className="text-xl font-bold text-teal-600">Menu</h2>
               <button
                 onClick={handleClose}
-                className="p-2 text-gray-500 hover:text-primary-600 hover:bg-primary-50 rounded-lg transition-all duration-200"
+                className="p-2 text-gray-500 hover:text-teal-600 hover:bg-teal-50 rounded-lg transition-all duration-200"
                 aria-label="Fermer le menu"
               >
                 <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -72,17 +72,17 @@ export default function EducatorMobileMenu({ profile, isPremium, onLogout }: Edu
             </div>
 
             {/* Profil utilisateur */}
-            <div className="mb-6 p-4 bg-gradient-to-br from-primary-50 to-blue-50 rounded-lg">
+            <div className="mb-6 p-4 bg-gradient-to-br from-emerald-50 to-cyan-50 rounded-lg">
               <div className="flex items-center gap-3 mb-2">
                 {profile?.avatar_url ? (
                   <img
                     src={profile.avatar_url}
                     alt={`${profile.first_name} ${profile.last_name}`}
-                    className="h-12 w-12 rounded-full object-cover border-2 border-primary-200"
+                    className="h-12 w-12 rounded-full object-cover border-2 border-teal-200"
                   />
                 ) : (
-                  <div className="h-12 w-12 rounded-full bg-primary-100 flex items-center justify-center border-2 border-primary-200">
-                    <span className="text-primary-600 font-semibold text-lg">
+                  <div className="h-12 w-12 rounded-full bg-teal-100 flex items-center justify-center border-2 border-teal-200">
+                    <span className="text-teal-600 font-semibold text-lg">
                       {profile?.first_name?.[0]}{profile?.last_name?.[0]}
                     </span>
                   </div>
@@ -120,7 +120,7 @@ export default function EducatorMobileMenu({ profile, isPremium, onLogout }: Edu
               <Link
                 href="/dashboard/educator/profile"
                 onClick={handleClose}
-                className="text-gray-700 hover:text-primary-600 hover:bg-primary-50 py-3 px-4 rounded-lg font-medium transition-all duration-200 flex items-center gap-3"
+                className="text-gray-700 hover:text-teal-600 hover:bg-teal-50 py-3 px-4 rounded-lg font-medium transition-all duration-200 flex items-center gap-3"
               >
                 <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
@@ -131,7 +131,7 @@ export default function EducatorMobileMenu({ profile, isPremium, onLogout }: Edu
               <Link
                 href="/dashboard/educator/diploma"
                 onClick={handleClose}
-                className="text-gray-700 hover:text-primary-600 hover:bg-primary-50 py-3 px-4 rounded-lg font-medium transition-all duration-200 flex items-center gap-3"
+                className="text-gray-700 hover:text-teal-600 hover:bg-teal-50 py-3 px-4 rounded-lg font-medium transition-all duration-200 flex items-center gap-3"
               >
                 <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z" />
@@ -142,7 +142,7 @@ export default function EducatorMobileMenu({ profile, isPremium, onLogout }: Edu
               <Link
                 href="/messages"
                 onClick={handleClose}
-                className="text-gray-700 hover:text-primary-600 hover:bg-primary-50 py-3 px-4 rounded-lg font-medium transition-all duration-200 flex items-center gap-3"
+                className="text-gray-700 hover:text-teal-600 hover:bg-teal-50 py-3 px-4 rounded-lg font-medium transition-all duration-200 flex items-center gap-3"
               >
                 <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z" />
@@ -153,7 +153,7 @@ export default function EducatorMobileMenu({ profile, isPremium, onLogout }: Edu
               <Link
                 href="/dashboard/educator/availability"
                 onClick={handleClose}
-                className="text-gray-700 hover:text-primary-600 hover:bg-primary-50 py-3 px-4 rounded-lg font-medium transition-all duration-200 flex items-center gap-3"
+                className="text-gray-700 hover:text-teal-600 hover:bg-teal-50 py-3 px-4 rounded-lg font-medium transition-all duration-200 flex items-center gap-3"
               >
                 <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
@@ -164,7 +164,7 @@ export default function EducatorMobileMenu({ profile, isPremium, onLogout }: Edu
               <Link
                 href="/dashboard/educator/appointments"
                 onClick={handleClose}
-                className="text-gray-700 hover:text-primary-600 hover:bg-primary-50 py-3 px-4 rounded-lg font-medium transition-all duration-200 flex items-center gap-3"
+                className="text-gray-700 hover:text-teal-600 hover:bg-teal-50 py-3 px-4 rounded-lg font-medium transition-all duration-200 flex items-center gap-3"
               >
                 <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4" />
@@ -175,7 +175,7 @@ export default function EducatorMobileMenu({ profile, isPremium, onLogout }: Edu
               <Link
                 href="/dashboard/educator/invoices"
                 onClick={handleClose}
-                className="text-gray-700 hover:text-primary-600 hover:bg-primary-50 py-3 px-4 rounded-lg font-medium transition-all duration-200 flex items-center gap-3"
+                className="text-gray-700 hover:text-teal-600 hover:bg-teal-50 py-3 px-4 rounded-lg font-medium transition-all duration-200 flex items-center gap-3"
               >
                 <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
@@ -186,7 +186,7 @@ export default function EducatorMobileMenu({ profile, isPremium, onLogout }: Edu
               <Link
                 href="/educators/sap-accreditation"
                 onClick={handleClose}
-                className="text-gray-700 hover:text-blue-600 hover:bg-blue-50 py-3 px-4 rounded-lg font-medium transition-all duration-200 flex items-center gap-3"
+                className="text-gray-700 hover:text-teal-600 hover:bg-teal-50 py-3 px-4 rounded-lg font-medium transition-all duration-200 flex items-center gap-3"
               >
                 <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
@@ -200,7 +200,7 @@ export default function EducatorMobileMenu({ profile, isPremium, onLogout }: Edu
                 <Link
                   href="/dashboard/educator/subscription"
                   onClick={handleClose}
-                  className="text-gray-700 hover:text-primary-600 hover:bg-primary-50 py-3 px-4 rounded-lg font-medium transition-all duration-200 flex items-center gap-3"
+                  className="text-gray-700 hover:text-teal-600 hover:bg-teal-50 py-3 px-4 rounded-lg font-medium transition-all duration-200 flex items-center gap-3"
                 >
                   <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z" />
@@ -209,9 +209,9 @@ export default function EducatorMobileMenu({ profile, isPremium, onLogout }: Edu
                 </Link>
               ) : (
                 <Link
-                  href="/pricing"
+                  href="/pro/pricing"
                   onClick={handleClose}
-                  className="bg-gradient-to-r from-yellow-400 to-yellow-500 text-white px-4 py-3 rounded-lg hover:from-yellow-500 hover:to-yellow-600 font-medium text-center transition-all duration-200 shadow-md hover:shadow-lg transform hover:scale-105 flex items-center justify-center gap-3"
+                  className="bg-gradient-to-r from-emerald-500 via-teal-500 to-cyan-500 text-white px-4 py-3 rounded-lg hover:from-emerald-600 hover:via-teal-600 hover:to-cyan-600 font-medium text-center transition-all duration-200 shadow-md hover:shadow-lg transform hover:scale-105 flex items-center justify-center gap-3"
                 >
                   <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
                     <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />

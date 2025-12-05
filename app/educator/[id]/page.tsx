@@ -7,6 +7,8 @@ import { supabase } from '@/lib/supabase';
 import Logo from '@/components/Logo';
 import MobileMenu from '@/components/MobileMenu';
 import HelpButton from '@/components/HelpButton';
+import ContactQuestionnaireModal from '@/components/ContactQuestionnaireModal';
+import { canEducatorCreateConversation } from '@/lib/subscription-utils';
 
 interface EducatorProfile {
   id: string;
@@ -109,6 +111,8 @@ export default function EducatorPublicProfile({ params }: { params: { id: string
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [userRole, setUserRole] = useState<'educator' | 'family' | null>(null);
   const [activeTab, setActiveTab] = useState<'about' | 'certifications' | 'availability' | 'cv'>('about');
+  const [familyProfileId, setFamilyProfileId] = useState<string | null>(null);
+  const [showContactModal, setShowContactModal] = useState(false);
 
   useEffect(() => {
     let isMounted = true;
@@ -138,6 +142,7 @@ export default function EducatorPublicProfile({ params }: { params: { id: string
 
             if (familyProfile) {
               setUserRole('family');
+              setFamilyProfileId(familyProfile.id);
             }
           }
         }
@@ -163,11 +168,74 @@ export default function EducatorPublicProfile({ params }: { params: { id: string
 
   const handleContact = () => {
     if (isAuthenticated) {
-      // Rediriger vers la messagerie avec l'ID de l'éducateur
-      router.push(`/messages?educator=${params.id}`);
+      // Si c'est une famille, ouvrir le modal questionnaire
+      if (userRole === 'family' && familyProfileId) {
+        setShowContactModal(true);
+      } else {
+        // Si c'est un éducateur, rediriger vers la messagerie
+        router.push(`/messages?educator=${params.id}`);
+      }
     } else {
-      // Rediriger vers la connexion avec un redirect vers la messagerie
-      router.push(`/auth/login?redirect=/messages?educator=${params.id}`);
+      // Rediriger vers la connexion avec un redirect vers cette page
+      router.push(`/auth/login?redirect=/educator/${params.id}`);
+    }
+  };
+
+  const handleQuestionnaireSubmit = async (data: any, childId: string | null) => {
+    if (!familyProfileId) return;
+
+    try {
+      // Vérifier si l'éducateur peut accepter une nouvelle conversation
+      const conversationCheck = await canEducatorCreateConversation(params.id);
+      if (!conversationCheck.canCreate) {
+        alert(`Cet éducateur a atteint sa limite de conversations actives (${conversationCheck.limit}). Il doit passer Premium pour accepter plus de conversations.`);
+        return;
+      }
+
+      // Vérifier si une conversation existe déjà
+      const { data: existingConv } = await supabase
+        .from('conversations')
+        .select('id')
+        .eq('educator_id', params.id)
+        .eq('family_id', familyProfileId)
+        .single();
+
+      if (existingConv) {
+        // Si une conversation existe déjà, mettre à jour avec les nouvelles données
+        await supabase
+          .from('conversations')
+          .update({
+            questionnaire_data: data,
+            child_id: childId,
+            request_message: data.message || null,
+            updated_at: new Date().toISOString(),
+          })
+          .eq('id', existingConv.id);
+      } else {
+        // Créer une nouvelle conversation avec les données du questionnaire
+        const { error: insertError } = await supabase
+          .from('conversations')
+          .insert({
+            educator_id: params.id,
+            family_id: familyProfileId,
+            status: 'pending',
+            questionnaire_data: data,
+            child_id: childId,
+            request_message: data.message || null,
+          });
+
+        if (insertError) {
+          console.error('Erreur création conversation:', insertError);
+          throw insertError;
+        }
+      }
+
+      // Fermer le modal et rediriger vers la messagerie
+      setShowContactModal(false);
+      router.push(`/messages?educator=${params.id}`);
+    } catch (error) {
+      console.error('Erreur envoi questionnaire:', error);
+      alert('Une erreur est survenue lors de l\'envoi de votre demande.');
     }
   };
 
@@ -1010,6 +1078,18 @@ export default function EducatorPublicProfile({ params }: { params: { id: string
 
       {/* Bouton d'aide flottant */}
       <HelpButton />
+
+      {/* Modal questionnaire de contact */}
+      {educator && familyProfileId && (
+        <ContactQuestionnaireModal
+          isOpen={showContactModal}
+          onClose={() => setShowContactModal(false)}
+          educatorId={params.id}
+          educatorName={`${capitalizeFirstName(educator.first_name)} ${formatLastName(educator.last_name)}`}
+          familyId={familyProfileId}
+          onSubmit={handleQuestionnaireSubmit}
+        />
+      )}
     </div>
   );
 }

@@ -110,7 +110,7 @@ export default function ProHowItWorksPage() {
               <Link href="/" className="text-gray-500 hover:text-gray-700 text-xs transition-colors whitespace-nowrap focus:outline-none focus:ring-2 focus:ring-teal-500 focus:ring-offset-2 rounded px-2 py-1">
                 Vous êtes un aidant ?
               </Link>
-              <Link href="/auth/login" className="text-gray-600 hover:text-teal-600 font-medium text-sm transition-colors focus:outline-none focus:ring-2 focus:ring-teal-500 focus:ring-offset-2 rounded px-2 py-1">
+              <Link href="/pro/login" className="text-gray-600 hover:text-teal-600 font-medium text-sm transition-colors focus:outline-none focus:ring-2 focus:ring-teal-500 focus:ring-offset-2 rounded px-2 py-1">
                 Connexion
               </Link>
               <Link

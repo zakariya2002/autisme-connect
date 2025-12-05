@@ -6,7 +6,7 @@ import { supabase } from '@/lib/supabase';
 
 interface Notification {
   id: string;
-  type: 'message' | 'appointment' | 'invoice';
+  type: 'message' | 'appointment' | 'invoice' | 'contact_request';
   title: string;
   description: string;
   link: string;
@@ -83,7 +83,43 @@ export default function NotificationBell({ educatorId, userId }: NotificationBel
         });
       }
 
-      // 2. Rendez-vous en attente (nouvelles demandes)
+      // 2. Demandes de contact en attente (non vues par l'éducateur)
+      const { data: pendingContacts, error: contactError } = await supabase
+        .from('conversations')
+        .select(`
+          id,
+          created_at,
+          questionnaire_data,
+          educator_seen_at,
+          family:family_profiles(first_name, last_name)
+        `)
+        .eq('educator_id', educatorId)
+        .eq('status', 'pending')
+        .is('educator_seen_at', null)
+        .order('created_at', { ascending: false })
+        .limit(5);
+
+      if (!contactError && pendingContacts) {
+        pendingContacts.forEach((contact: any) => {
+          const familyName = contact.family ?
+            `${contact.family.first_name || ''} ${contact.family.last_name || ''}`.trim() :
+            'Une famille';
+          const childName = contact.questionnaire_data?.child_name || '';
+          notifs.push({
+            id: `contact-${contact.id}`,
+            type: 'contact_request',
+            title: 'Nouvelle demande de contact',
+            description: childName
+              ? `${familyName} pour ${childName}`
+              : `${familyName} souhaite vous contacter`,
+            link: '/messages',
+            time: formatTime(contact.created_at),
+            read: false,
+          });
+        });
+      }
+
+      // 3. Rendez-vous en attente (nouvelles demandes)
       const { data: pendingAppointments, error: aptError } = await supabase
         .from('appointments')
         .select(`
@@ -119,7 +155,7 @@ export default function NotificationBell({ educatorId, userId }: NotificationBel
         });
       }
 
-      // 3. Nouvelles factures (dernières 24h)
+      // 4. Nouvelles factures (dernières 24h)
       const yesterday = new Date();
       yesterday.setDate(yesterday.getDate() - 1);
 
@@ -182,6 +218,14 @@ export default function NotificationBell({ educatorId, userId }: NotificationBel
 
   const getIcon = (type: string) => {
     switch (type) {
+      case 'contact_request':
+        return (
+          <div className="w-8 h-8 bg-purple-100 rounded-full flex items-center justify-center">
+            <svg className="w-4 h-4 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z" />
+            </svg>
+          </div>
+        );
       case 'message':
         return (
           <div className="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center">
@@ -216,7 +260,7 @@ export default function NotificationBell({ educatorId, userId }: NotificationBel
       {/* Bouton cloche */}
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="relative p-2 text-gray-600 hover:text-primary-600 hover:bg-gray-100 rounded-full transition-colors"
+        className="relative p-2 text-gray-600 hover:text-teal-600 hover:bg-teal-50 rounded-full transition-colors"
         aria-label="Notifications"
       >
         <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -235,7 +279,7 @@ export default function NotificationBell({ educatorId, userId }: NotificationBel
       {isOpen && (
         <div className="absolute right-0 mt-2 w-80 sm:w-96 bg-white rounded-2xl shadow-xl border border-gray-100 overflow-hidden z-50">
           {/* Header */}
-          <div className="px-4 py-3 bg-gradient-to-r from-primary-500 to-primary-600 text-white">
+          <div className="px-4 py-3 bg-gradient-to-r from-emerald-500 via-teal-500 to-cyan-500 text-white">
             <h3 className="font-semibold">Notifications</h3>
             <p className="text-sm text-white/80">
               {unreadCount > 0 ? `${unreadCount} nouvelle${unreadCount > 1 ? 's' : ''}` : 'Aucune nouvelle'}
@@ -246,7 +290,7 @@ export default function NotificationBell({ educatorId, userId }: NotificationBel
           <div className="max-h-96 overflow-y-auto">
             {loading ? (
               <div className="flex items-center justify-center py-8">
-                <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-primary-600"></div>
+                <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-teal-600"></div>
               </div>
             ) : notifications.length === 0 ? (
               <div className="py-8 text-center">
@@ -273,7 +317,7 @@ export default function NotificationBell({ educatorId, userId }: NotificationBel
                       <p className="text-sm text-gray-500 truncate">{notif.description}</p>
                       <p className="text-xs text-gray-400 mt-1">{notif.time}</p>
                     </div>
-                    <div className="w-2 h-2 bg-primary-500 rounded-full flex-shrink-0 mt-2"></div>
+                    <div className="w-2 h-2 bg-teal-500 rounded-full flex-shrink-0 mt-2"></div>
                   </Link>
                 ))}
               </div>
@@ -287,14 +331,14 @@ export default function NotificationBell({ educatorId, userId }: NotificationBel
                 <Link
                   href="/messages"
                   onClick={() => setIsOpen(false)}
-                  className="flex-1 text-center text-sm text-primary-600 hover:text-primary-700 font-medium py-2 rounded-lg hover:bg-primary-50 transition"
+                  className="flex-1 text-center text-sm text-teal-600 hover:text-teal-700 font-medium py-2 rounded-lg hover:bg-teal-50 transition"
                 >
                   Messages
                 </Link>
                 <Link
                   href="/dashboard/educator/appointments"
                   onClick={() => setIsOpen(false)}
-                  className="flex-1 text-center text-sm text-primary-600 hover:text-primary-700 font-medium py-2 rounded-lg hover:bg-primary-50 transition"
+                  className="flex-1 text-center text-sm text-teal-600 hover:text-teal-700 font-medium py-2 rounded-lg hover:bg-teal-50 transition"
                 >
                   Rendez-vous
                 </Link>

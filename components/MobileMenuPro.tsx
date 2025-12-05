@@ -216,7 +216,7 @@ export default function MobileMenuPro() {
               ) : (
                 <>
                   <Link
-                    href="/auth/login"
+                    href="/pro/login"
                     onClick={closeMenu}
                     className="flex items-center gap-3 px-3 py-2.5 rounded-xl font-medium text-gray-700 hover:bg-gray-50 transition-colors focus:outline-none focus:ring-2 focus:ring-teal-500 focus:ring-offset-2"
                   >
