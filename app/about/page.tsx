@@ -121,7 +121,7 @@ export default function AboutPage() {
               Qui sommes-nous ?
             </h1>
             <p className="text-xl sm:text-2xl text-gray-700 leading-relaxed mb-6 font-light">
-              Autisme Connect est né d'une vision simple : faciliter la rencontre entre les familles
+              neurocare est né d'une vision simple : faciliter la rencontre entre les familles
               concernées par l'autisme et les professionnels qualifiés qui peuvent les accompagner.
             </p>
             <div className="bg-white/80 backdrop-blur-sm rounded-2xl p-6 sm:p-8 shadow-xl border border-primary-100">
@@ -139,9 +139,6 @@ export default function AboutPage() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center">
             <div className="order-2 lg:order-1">
-              <div className="inline-block bg-primary-100 text-primary-700 px-4 py-2 rounded-full text-sm font-semibold mb-6">
-                Notre Mission
-              </div>
               <h2 className="text-3xl lg:text-5xl font-bold text-gray-900 mb-8 leading-tight">
                 Connecter, accompagner, <span className="text-primary-600">transformer</span>
               </h2>
@@ -245,9 +242,6 @@ export default function AboutPage() {
         <div className="absolute inset-0 bg-gradient-to-b from-gray-50 to-white"></div>
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
-            <div className="inline-block bg-primary-100 text-primary-700 px-4 py-2 rounded-full text-sm font-semibold mb-6">
-              Nos Valeurs
-            </div>
             <h2 className="text-3xl lg:text-5xl font-bold text-gray-900 mb-4">
               Ce qui guide notre <span className="text-primary-600">action</span>
             </h2>
@@ -325,7 +319,7 @@ export default function AboutPage() {
                 <h3 className="text-2xl font-bold text-gray-900 mb-2">Zakariya B.</h3>
                 <p className="text-primary-600 font-semibold mb-4">Fondateur & Développeur</p>
                 <p className="text-gray-600 leading-relaxed mb-4">
-                  Passionné par l'impact social et la technologie, Zakariya a créé Autisme Connect pour répondre à un besoin réel du secteur médico-social.
+                  Passionné par l'impact social et la technologie, Zakariya a créé neurocare pour répondre à un besoin réel du secteur médico-social.
                 </p>
                 <div className="flex justify-center gap-2 flex-wrap">
                   <span className="px-3 py-1 bg-blue-100 text-blue-700 rounded-full text-sm font-medium">Vision</span>
@@ -448,9 +442,6 @@ export default function AboutPage() {
       <div className="bg-white py-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
-            <div className="inline-block bg-primary-100 text-primary-700 px-4 py-2 rounded-full text-sm font-semibold mb-6">
-              Le Processus
-            </div>
             <h2 className="text-3xl lg:text-5xl font-bold text-gray-900 mb-4">
               Comment <span className="text-primary-600">ça marche ?</span>
             </h2>
@@ -517,7 +508,7 @@ export default function AboutPage() {
         <div className="relative max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <div className="bg-white/10 backdrop-blur-lg rounded-3xl p-10 lg:p-16 border border-white/20 shadow-2xl">
             <h2 className="text-3xl lg:text-5xl font-bold text-white mb-6 leading-tight">
-              Rejoignez Autisme Connect dès aujourd'hui
+              Rejoignez <span className="bg-gradient-to-r from-yellow-300 via-amber-200 to-yellow-300 bg-clip-text text-transparent font-extrabold">neurocare</span> dès aujourd'hui
             </h2>
             <p className="text-xl lg:text-2xl text-white/90 mb-10 leading-relaxed">
               Que vous soyez une famille ou un éducateur spécialisé, nous sommes là pour vous accompagner.
@@ -569,7 +560,7 @@ export default function AboutPage() {
             </div>
             <div className="border-t border-gray-800 pt-8">
               <p className="text-gray-500">
-                © 2024 Autisme Connect. Tous droits réservés.
+                © 2024 neurocare. Tous droits réservés.
               </p>
             </div>
           </div>

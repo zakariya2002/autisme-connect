@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import { signIn } from '@/lib/auth';
+import Logo from '@/components/Logo';
 
 export default function LoginPage() {
   const [email, setEmail] = useState('');
@@ -56,14 +57,9 @@ export default function LoginPage() {
       {/* Logo et titre */}
       <div className="sm:mx-auto sm:w-full sm:max-w-md">
         <Link href="/" className="flex justify-center mb-6">
-          <div className="w-16 h-16 bg-gradient-to-br from-primary-600 to-blue-600 rounded-full flex items-center justify-center shadow-lg transform hover:scale-105 transition-transform border-2 border-white">
-            <span className="text-white font-extrabold text-base">AC</span>
-          </div>
+          <Logo iconSize="lg" />
         </Link>
-        <h1 className="text-center text-4xl font-bold bg-gradient-to-r from-violet-600 via-purple-500 to-blue-500 bg-clip-text text-transparent mb-2">
-          Autisme Connect
-        </h1>
-        <h2 className="text-center text-3xl font-extrabold text-gray-900 mb-2">
+        <h2 className="text-center text-2xl font-bold text-gray-900 mb-2">
           Connexion
         </h2>
         <p className="text-center text-sm text-gray-600">

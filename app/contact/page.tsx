@@ -253,8 +253,8 @@ export default function ContactPage() {
                     onChange={handleChange}
                     className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all"
                   >
-                    <option value="family">Famille</option>
-                    <option value="educator">Éducateur spécialisé</option>
+                    <option value="family">Aidant</option>
+                    <option value="educator">Professionnel</option>
                     <option value="institution">Institution</option>
                     <option value="other">Autre</option>
                   </select>
@@ -375,12 +375,6 @@ export default function ContactPage() {
                   </svg>
                   Qui sommes-nous ?
                 </Link>
-                <Link href="/pricing" className="block text-primary-700 hover:text-primary-800 font-medium transition-colors flex items-center gap-2">
-                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                  </svg>
-                  Tarifs et abonnements
-                </Link>
                 <Link href="/search" className="block text-primary-700 hover:text-primary-800 font-medium transition-colors flex items-center gap-2">
                   <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
@@ -398,9 +392,9 @@ export default function ContactPage() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-8">
             <div>
-              <h3 className="text-white font-bold text-lg mb-4">Autisme Connect</h3>
+              <h3 className="text-white font-bold text-lg mb-4">neurocare</h3>
               <p className="text-gray-400 leading-relaxed">
-                Une plateforme humaine qui connecte les familles avec des éducateurs spécialisés passionnés.
+                Une plateforme humaine qui connecte les aidants avec des professionnels passionnés.
               </p>
             </div>
             <div>
@@ -423,7 +417,7 @@ export default function ContactPage() {
             </div>
           </div>
           <div className="border-t border-gray-800 pt-8 text-center text-gray-500">
-            <p>© 2024 Autisme Connect. Tous droits réservés. Fait avec ❤️ pour les familles et les éducateurs.</p>
+            <p>© 2024 neurocare. Tous droits réservés. Fait avec ❤️ pour les aidants et les professionnels.</p>
           </div>
         </div>
       </footer>

@@ -5,6 +5,7 @@ import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { supabase } from '@/lib/supabase';
 import MobileMenuPro from '@/components/MobileMenuPro';
+import LogoPro from '@/components/LogoPro';
 
 export default function ProPricingPage() {
   const router = useRouter();
@@ -114,14 +115,7 @@ export default function ProPricingPage() {
       <nav className="bg-white border-b border-gray-100 sticky top-0 z-50" role="navigation" aria-label="Navigation principale">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between h-16 lg:h-20 items-center">
-            <Link href="/pro" className="flex items-center gap-2 flex-shrink-0 focus:outline-none focus:ring-2 focus:ring-teal-500 focus:ring-offset-2 rounded-lg" aria-label="Autisme Connect Pro - Accueil">
-              <span className="text-lg sm:text-xl lg:text-2xl font-bold bg-gradient-to-r from-emerald-500 via-teal-500 to-cyan-500 bg-clip-text text-transparent whitespace-nowrap">
-                Autisme Connect
-              </span>
-              <span className="bg-gradient-to-r from-emerald-500 via-teal-500 to-cyan-500 text-white text-xs font-bold px-2 py-0.5 rounded-full" aria-hidden="true">
-                PRO
-              </span>
-            </Link>
+            <LogoPro iconSize="md" />
 
             {/* Desktop Navigation */}
             <div className="hidden xl:flex items-center gap-5" role="menubar">
@@ -275,7 +269,7 @@ export default function ProPricingPage() {
               <p className="text-gray-600">
                 <span className="text-3xl font-bold text-gray-900">12%</span> uniquement sur les prestations
                 <br />
-                <span className="text-sm">trouvées via Autisme Connect</span>
+                <span className="text-sm">trouvées via neurocare</span>
               </p>
             </div>
           </div>
@@ -396,7 +390,7 @@ export default function ProPricingPage() {
               },
               {
                 q: "Comment fonctionne la commission de 12% ?",
-                a: "La commission s'applique uniquement sur les prestations réservées via Autisme Connect. Vos clients existants ou trouvés en dehors de la plateforme ne sont pas concernés."
+                a: "La commission s'applique uniquement sur les prestations réservées via neurocare. Vos clients existants ou trouvés en dehors de la plateforme ne sont pas concernés."
               },
               {
                 q: "Puis-je annuler à tout moment ?",
@@ -428,7 +422,7 @@ export default function ProPricingPage() {
             Prêt à développer votre activité ?
           </h2>
           <p className="text-xl mb-8 opacity-90">
-            Rejoignez les professionnels qui font confiance à Autisme Connect
+            Rejoignez les professionnels qui font confiance à neurocare
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Link
@@ -453,12 +447,12 @@ export default function ProPricingPage() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex flex-col md:flex-row justify-between items-center gap-4">
             <div className="flex items-center gap-2">
-              <span className="font-bold">Autisme Connect</span>
+              <span className="font-bold">neurocare</span>
               <span className="bg-gradient-to-r from-emerald-500 via-teal-500 to-cyan-500 text-white text-xs font-bold px-2 py-0.5 rounded-full">
                 PRO
               </span>
             </div>
-            <p className="text-gray-400 text-sm">© 2025 Autisme Connect. Tous droits réservés.</p>
+            <p className="text-gray-400 text-sm">© 2025 neurocare. Tous droits réservés.</p>
             <Link href="/" className="text-gray-400 hover:text-white text-sm transition-colors">
               Accéder au site familles →
             </Link>

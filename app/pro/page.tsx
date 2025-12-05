@@ -2,6 +2,7 @@
 
 import Link from 'next/link';
 import MobileMenuPro from '@/components/MobileMenuPro';
+import LogoPro from '@/components/LogoPro';
 
 export default function ProLandingPage() {
 
@@ -11,14 +12,7 @@ export default function ProLandingPage() {
       <nav className="bg-white border-b border-gray-100 sticky top-0 z-50" role="navigation" aria-label="Navigation principale">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between h-16 lg:h-20 items-center">
-            <Link href="/pro" className="flex items-center gap-2 flex-shrink-0 focus:outline-none focus:ring-2 focus:ring-teal-500 focus:ring-offset-2 rounded-lg" aria-label="Autisme Connect Pro - Accueil">
-              <span className="text-lg sm:text-xl lg:text-2xl font-bold bg-gradient-to-r from-emerald-500 via-teal-500 to-cyan-500 bg-clip-text text-transparent whitespace-nowrap">
-                Autisme Connect
-              </span>
-              <span className="bg-gradient-to-r from-emerald-500 via-teal-500 to-cyan-500 text-white text-xs font-bold px-2 py-0.5 rounded-full" aria-hidden="true">
-                PRO
-              </span>
-            </Link>
+            <LogoPro iconSize="md" />
 
             {/* Desktop Navigation */}
             <div className="hidden xl:flex items-center gap-5" role="menubar">
@@ -67,7 +61,7 @@ export default function ProLandingPage() {
               <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-gray-900 leading-tight mb-6">
                 Développez votre activité avec{' '}
                 <span className="bg-gradient-to-r from-emerald-500 via-teal-500 to-cyan-500 bg-clip-text text-transparent">
-                  Autisme Connect
+                  neurocare
                 </span>
               </h1>
 
@@ -187,7 +181,7 @@ export default function ProLandingPage() {
               </span>
             </h2>
             <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-              Découvrez comment Autisme Connect simplifie votre quotidien et améliore l'accompagnement des familles.
+              Découvrez comment neurocare simplifie votre quotidien et améliore l'accompagnement des familles.
             </p>
           </div>
 
@@ -278,7 +272,7 @@ export default function ProLandingPage() {
       <section className="py-20 bg-white">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-6">
-            Prêt à rejoindre Autisme Connect ?
+            Prêt à rejoindre neurocare ?
           </h2>
           <p className="text-xl text-gray-600 mb-8">
             Créez votre profil gratuitement en quelques minutes et commencez à recevoir des demandes de familles.
@@ -307,7 +301,7 @@ export default function ProLandingPage() {
           <div className="grid md:grid-cols-4 gap-8">
             <div>
               <div className="flex items-center gap-2 mb-4">
-                <span className="text-xl font-bold">Autisme Connect</span>
+                <span className="text-xl font-bold">neurocare</span>
                 <span className="bg-gradient-to-r from-emerald-500 via-teal-500 to-cyan-500 text-white text-xs font-bold px-2 py-0.5 rounded-full" aria-hidden="true">
                   PRO
                 </span>
@@ -345,7 +339,7 @@ export default function ProLandingPage() {
             </div>
           </div>
           <div className="border-t border-gray-800 mt-8 pt-8 flex flex-col md:flex-row justify-between items-center gap-4">
-            <p className="text-gray-400 text-sm">© 2025 Autisme Connect. Tous droits réservés.</p>
+            <p className="text-gray-400 text-sm">© 2025 neurocare. Tous droits réservés.</p>
             <Link href="/" className="text-gray-400 hover:text-white text-sm transition-colors focus:outline-none focus:ring-2 focus:ring-teal-500 rounded">
               Vous êtes un aidant ? Accéder au site principal →
             </Link>

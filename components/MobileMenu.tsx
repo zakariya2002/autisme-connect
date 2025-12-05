@@ -275,7 +275,7 @@ export default function MobileMenu() {
               </Link>
             </div>
             <p className="text-gray-400 text-xs text-center">
-              © 2024 Autisme Connect
+              © 2024 neurocare
             </p>
           </div>
         </div>

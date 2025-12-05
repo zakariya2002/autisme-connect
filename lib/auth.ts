@@ -27,8 +27,16 @@ export async function signIn(email: string, password: string) {
 }
 
 export async function signOut() {
-  const { error } = await supabase.auth.signOut();
-  if (error) throw error;
+  try {
+    // Forcer la déconnexion locale même si la session distante a expiré
+    const { error } = await supabase.auth.signOut({ scope: 'local' });
+    if (error) {
+      console.error('Erreur lors de la déconnexion:', error);
+    }
+  } catch (err) {
+    // Ignorer les erreurs de déconnexion
+    console.error('Erreur lors de la déconnexion:', err);
+  }
 }
 
 export async function getCurrentUser() {

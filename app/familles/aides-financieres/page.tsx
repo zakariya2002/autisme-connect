@@ -146,10 +146,11 @@ export default function AidesFinancieresPage() {
       </nav>
 
       {/* Header rétréci */}
-      <div className="bg-gradient-to-br from-blue-600 via-purple-600 to-pink-600 relative overflow-hidden">
+      <div className="bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 relative overflow-hidden">
         <div className="absolute inset-0 overflow-hidden">
-          <div className="absolute -top-16 -right-16 w-64 h-64 bg-white/10 rounded-full blur-3xl"></div>
-          <div className="absolute -bottom-16 -left-16 w-64 h-64 bg-white/10 rounded-full blur-3xl"></div>
+          <div className="absolute -top-16 -right-16 w-96 h-96 bg-purple-400/20 rounded-full blur-3xl"></div>
+          <div className="absolute -bottom-16 -left-16 w-96 h-96 bg-indigo-400/20 rounded-full blur-3xl"></div>
+          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-full bg-gradient-to-t from-transparent via-white/5 to-transparent"></div>
         </div>
 
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 relative z-10">
@@ -169,7 +170,7 @@ export default function AidesFinancieresPage() {
         {/* Simulateur CTA */}
         <Link
           href="/familles/simulateur-aides"
-          className="block mb-8 bg-gradient-to-r from-yellow-400 via-orange-500 to-red-500 p-6 rounded-2xl shadow-xl hover:shadow-2xl transform hover:scale-[1.02] transition-all duration-300 relative overflow-hidden group"
+          className="block mb-8 bg-gradient-to-r from-amber-400 via-orange-400 to-rose-400 p-6 rounded-2xl shadow-xl hover:shadow-2xl transform hover:scale-[1.02] transition-all duration-300 relative overflow-hidden group"
         >
           <div className="absolute inset-0 bg-white/10 opacity-0 group-hover:opacity-100 transition-opacity"></div>
           <div className="flex items-center justify-between relative z-10">
@@ -196,9 +197,10 @@ export default function AidesFinancieresPage() {
         </Link>
 
         {/* Introduction */}
-        <div className="bg-gradient-to-br from-blue-500 via-blue-600 to-green-500 p-8 mb-8 rounded-2xl shadow-2xl transform hover:scale-[1.02] transition-all duration-300 relative overflow-hidden">
+        <div className="bg-gradient-to-r from-blue-500 via-teal-500 to-emerald-500 p-8 mb-8 rounded-2xl shadow-2xl transform hover:scale-[1.02] transition-all duration-300 relative overflow-hidden">
           {/* Background decoration */}
-          <div className="absolute top-0 right-0 w-64 h-64 bg-white/10 rounded-full blur-3xl"></div>
+          <div className="absolute top-0 right-0 w-96 h-96 bg-teal-400/20 rounded-full blur-3xl"></div>
+          <div className="absolute bottom-0 left-0 w-64 h-64 bg-blue-400/20 rounded-full blur-3xl"></div>
 
           <div className="flex items-start relative z-10">
             <div className="flex-shrink-0">
@@ -211,7 +213,7 @@ export default function AidesFinancieresPage() {
             </div>
             <div className="ml-6 flex-1">
               <h3 className="text-2xl font-bold text-white drop-shadow-md mb-3">
-                Vos reçus Autisme Connect sont compatibles avec toutes ces aides
+                Vos reçus neurocare sont compatibles avec toutes ces aides
               </h3>
               <p className="text-xl text-white/95 leading-relaxed drop-shadow">
                 Nos attestations de paiement incluent toutes les mentions légales requises pour vos démarches de remboursement.
@@ -475,7 +477,7 @@ export default function AidesFinancieresPage() {
                 </div>
 
                 <div>
-                  <h3 className="font-semibold text-gray-900 mb-2">Comment l'utiliser avec Autisme Connect ?</h3>
+                  <h3 className="font-semibold text-gray-900 mb-2">Comment l'utiliser avec neurocare ?</h3>
                   <ol className="list-decimal list-inside space-y-2 text-gray-700">
                     <li>Payez votre séance par carte bancaire sur la plateforme</li>
                     <li>Téléchargez votre reçu depuis votre dashboard</li>
@@ -616,7 +618,7 @@ export default function AidesFinancieresPage() {
                   <ol className="list-decimal list-inside space-y-2 text-gray-700">
                     <li>Constituez un dossier MDPH avec certificat médical</li>
                     <li>Demandez la PCH volet "aide humaine"</li>
-                    <li>Après accord, utilisez Autisme Connect pour vos séances</li>
+                    <li>Après accord, utilisez neurocare pour vos séances</li>
                     <li>Envoyez mensuellement vos reçus à la MDPH pour remboursement</li>
                   </ol>
                 </div>
@@ -652,7 +654,7 @@ export default function AidesFinancieresPage() {
                       <svg className="w-6 h-6 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
                       </svg>
-                      Tous ces éléments sont inclus dans vos reçus Autisme Connect
+                      Tous ces éléments sont inclus dans vos reçus neurocare
                     </p>
                   </div>
                 </div>
@@ -755,7 +757,7 @@ export default function AidesFinancieresPage() {
                     <li>Demandez l'AEEH via le dossier MDPH</li>
                     <li>La CDAPH (Commission des Droits et de l'Autonomie) évalue le dossier</li>
                     <li>En cas d'accord, la CAF verse l'allocation mensuellement</li>
-                    <li>Utilisez cette aide pour financer les séances sur Autisme Connect</li>
+                    <li>Utilisez cette aide pour financer les séances sur neurocare</li>
                   </ol>
                 </div>
 
@@ -1012,7 +1014,7 @@ export default function AidesFinancieresPage() {
                     </svg>
                     <p className="ml-3 text-yellow-800">
                       <strong>Important :</strong> L'éducateur doit avoir un numéro d'agrément SAP valide.
-                      Vérifiez cette information sur son profil Autisme Connect.
+                      Vérifiez cette information sur son profil neurocare.
                     </p>
                   </div>
                 </div>
@@ -1060,7 +1062,7 @@ export default function AidesFinancieresPage() {
                 <div>
                   <h3 className="font-semibold text-gray-900 mb-3">Démarches</h3>
                   <ol className="list-decimal list-inside space-y-2 text-gray-700">
-                    <li>Choisissez un éducateur avec agrément SAP sur Autisme Connect</li>
+                    <li>Choisissez un éducateur avec agrément SAP sur neurocare</li>
                     <li>Conservez tous vos reçus de paiement</li>
                     <li>Lors de votre déclaration d'impôts, déclarez les sommes versées</li>
                     <li>Le crédit d'impôt sera calculé automatiquement</li>
@@ -1072,7 +1074,7 @@ export default function AidesFinancieresPage() {
                     <svg className="w-6 h-6 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
                     </svg>
-                    Vos reçus Autisme Connect
+                    Vos reçus neurocare
                   </h4>
                   <p className="text-green-800 mb-3 font-medium">
                     Si l'éducateur a un numéro SAP, vos reçus incluent automatiquement :
@@ -1185,7 +1187,7 @@ export default function AidesFinancieresPage() {
                     <ol className="list-decimal list-inside space-y-3 text-white font-medium">
                       <li>Vérifiez votre contrat de mutuelle (garanties handicap/médecines douces)</li>
                       <li>Contactez votre mutuelle pour connaître les conditions</li>
-                      <li>Téléchargez vos reçus Autisme Connect</li>
+                      <li>Téléchargez vos reçus neurocare</li>
                       <li>Envoyez-les à votre mutuelle avec le formulaire de remboursement</li>
                     </ol>
                   </div>
@@ -1317,7 +1319,7 @@ export default function AidesFinancieresPage() {
                     </svg>
                   </div>
                 </div>
-                <p className="font-medium">Conservez TOUS vos reçus Autisme Connect pour vos démarches</p>
+                <p className="font-medium">Conservez TOUS vos reçus neurocare pour vos démarches</p>
               </div>
             </div>
 

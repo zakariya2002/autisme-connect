@@ -3,6 +3,7 @@
 import Link from 'next/link';
 import { useState } from 'react';
 import MobileMenuPro from '@/components/MobileMenuPro';
+import LogoPro from '@/components/LogoPro';
 
 export default function ProSAPAccreditationPage() {
   const [openFAQ, setOpenFAQ] = useState<number | null>(null);
@@ -48,14 +49,7 @@ export default function ProSAPAccreditationPage() {
       <nav className="bg-white border-b border-gray-100 sticky top-0 z-50" role="navigation" aria-label="Navigation principale">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between h-16 lg:h-20 items-center">
-            <Link href="/pro" className="flex items-center gap-2 flex-shrink-0 focus:outline-none focus:ring-2 focus:ring-teal-500 focus:ring-offset-2 rounded-lg" aria-label="Autisme Connect Pro - Accueil">
-              <span className="text-lg sm:text-xl lg:text-2xl font-bold bg-gradient-to-r from-emerald-500 via-teal-500 to-cyan-500 bg-clip-text text-transparent whitespace-nowrap">
-                Autisme Connect
-              </span>
-              <span className="bg-gradient-to-r from-emerald-500 via-teal-500 to-cyan-500 text-white text-xs font-bold px-2 py-0.5 rounded-full" aria-hidden="true">
-                PRO
-              </span>
-            </Link>
+            <LogoPro iconSize="md" />
 
             {/* Desktop Navigation */}
             <div className="hidden xl:flex items-center gap-5" role="menubar">
@@ -154,7 +148,7 @@ export default function ProSAPAccreditationPage() {
               </div>
               <h3 className="text-xl font-bold text-gray-900 mb-3">Badge de confiance</h3>
               <p className="text-gray-600">
-                Affichez le badge "Agréé Services à la Personne" sur votre profil Autisme Connect pour plus de crédibilité.
+                Affichez le badge "Agréé Services à la Personne" sur votre profil neurocare pour plus de crédibilité.
               </p>
             </div>
 
@@ -390,9 +384,9 @@ export default function ProSAPAccreditationPage() {
                   <span className="text-white font-bold text-lg">6</span>
                 </div>
                 <div className="flex-1">
-                  <h3 className="text-xl font-bold mb-3">Ajouter votre numéro SAP sur Autisme Connect</h3>
+                  <h3 className="text-xl font-bold mb-3">Ajouter votre numéro SAP sur neurocare</h3>
                   <p className="text-emerald-100 mb-4">
-                    Une fois votre agrément obtenu, ajoutez votre numéro SAP dans votre profil Autisme Connect
+                    Une fois votre agrément obtenu, ajoutez votre numéro SAP dans votre profil neurocare
                     pour afficher le badge "Agréé Services à la Personne" et apparaître dans les résultats de recherche filtrés.
                   </p>
                   <Link
@@ -488,7 +482,7 @@ export default function ProSAPAccreditationPage() {
             Prêt à obtenir votre agrément ?
           </h2>
           <p className="text-xl text-gray-600 mb-8 max-w-2xl mx-auto">
-            L'agrément SAP est gratuit, rapide et vous permettra d'attirer plus de familles sur Autisme Connect.
+            L'agrément SAP est gratuit, rapide et vous permettra d'attirer plus de familles sur neurocare.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <a
@@ -506,7 +500,7 @@ export default function ProSAPAccreditationPage() {
               href="/auth/register-educator"
               className="inline-flex items-center justify-center px-8 py-4 bg-white text-teal-600 text-lg font-semibold rounded-xl hover:bg-gray-50 transition border-2 border-teal-500"
             >
-              S'inscrire sur Autisme Connect
+              S'inscrire sur neurocare
             </Link>
           </div>
         </div>
@@ -517,12 +511,12 @@ export default function ProSAPAccreditationPage() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex flex-col md:flex-row justify-between items-center gap-4">
             <div className="flex items-center gap-2">
-              <span className="font-bold">Autisme Connect</span>
+              <span className="font-bold">neurocare</span>
               <span className="bg-gradient-to-r from-emerald-500 via-teal-500 to-cyan-500 text-white text-xs font-bold px-2 py-0.5 rounded-full">
                 PRO
               </span>
             </div>
-            <p className="text-gray-400 text-sm">© 2025 Autisme Connect. Tous droits réservés.</p>
+            <p className="text-gray-400 text-sm">© 2025 neurocare. Tous droits réservés.</p>
             <Link href="/" className="text-gray-400 hover:text-white text-sm transition-colors">
               Accéder au site familles →
             </Link>
