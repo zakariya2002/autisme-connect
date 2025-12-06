@@ -536,6 +536,57 @@ export default function EducatorAppointmentsPage() {
     return appointmentDateTime < new Date();
   };
 
+  // Générer un fichier ICS pour ajouter au calendrier
+  const generateCalendarEvent = (appointment: Appointment) => {
+    const startDate = new Date(`${appointment.appointment_date}T${appointment.start_time}`);
+    const endDate = new Date(`${appointment.appointment_date}T${appointment.end_time}`);
+
+    // Formater les dates au format ICS (YYYYMMDDTHHmmss)
+    const formatICSDate = (date: Date) => {
+      return date.toISOString().replace(/[-:]/g, '').split('.')[0] + 'Z';
+    };
+
+    const locationText = appointment.location_type === 'online'
+      ? 'En ligne (visioconférence)'
+      : appointment.address || getLocationTypeLabel(appointment.location_type);
+
+    const description = [
+      `Rendez-vous avec ${appointment.family_first_name} ${appointment.family_last_name}`,
+      appointment.child_first_name ? `Enfant : ${appointment.child_first_name}` : '',
+      appointment.family_phone ? `Téléphone : ${appointment.family_phone}` : '',
+      appointment.family_notes ? `Notes : ${appointment.family_notes}` : ''
+    ].filter(Boolean).join('\\n');
+
+    const icsContent = [
+      'BEGIN:VCALENDAR',
+      'VERSION:2.0',
+      'PRODID:-//NeuroCare//Appointments//FR',
+      'CALSCALE:GREGORIAN',
+      'METHOD:PUBLISH',
+      'BEGIN:VEVENT',
+      `DTSTART:${formatICSDate(startDate)}`,
+      `DTEND:${formatICSDate(endDate)}`,
+      `SUMMARY:RDV - ${appointment.family_first_name} ${appointment.family_last_name}${appointment.child_first_name ? ` (${appointment.child_first_name})` : ''}`,
+      `DESCRIPTION:${description}`,
+      `LOCATION:${locationText}`,
+      `UID:${appointment.id}@neurocare.fr`,
+      'STATUS:CONFIRMED',
+      'END:VEVENT',
+      'END:VCALENDAR'
+    ].join('\r\n');
+
+    // Créer et télécharger le fichier
+    const blob = new Blob([icsContent], { type: 'text/calendar;charset=utf-8' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = `rdv-${appointment.family_first_name}-${appointment.appointment_date}.ics`;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    URL.revokeObjectURL(url);
+  };
+
   const handleLogout = async () => {
     await signOut();
     window.location.href = '/';
@@ -695,16 +746,28 @@ export default function EducatorAppointmentsPage() {
           {appointment.status === 'accepted' && !isPast && (
             <>
               {!appointment.started_at ? (
-                <button
-                  onClick={() => handleStartSession(appointment.id)}
-                  disabled={actionLoading}
-                  className="flex-1 px-3 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 text-sm font-medium transition flex items-center justify-center gap-2"
-                >
-                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
-                  </svg>
-                  Démarrer (PIN)
-                </button>
+                <>
+                  {/* Bouton Ajouter à l'agenda - visible sur mobile */}
+                  <button
+                    onClick={() => generateCalendarEvent(appointment)}
+                    className="sm:hidden flex-1 px-3 py-2 bg-teal-100 text-teal-700 rounded-lg hover:bg-teal-200 text-sm font-medium transition flex items-center justify-center gap-1"
+                  >
+                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                    </svg>
+                    Agenda
+                  </button>
+                  <button
+                    onClick={() => handleStartSession(appointment.id)}
+                    disabled={actionLoading}
+                    className="flex-1 px-3 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 text-sm font-medium transition flex items-center justify-center gap-2"
+                  >
+                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+                    </svg>
+                    Démarrer (PIN)
+                  </button>
+                </>
               ) : (
                 <SessionCountdown
                   sessionStart={appointment.started_at}

@@ -90,6 +90,21 @@ export default function BookAppointmentPage({ params }: { params: { id: string }
 
     setFamilyId(familyProfile.id);
 
+    // Vérifier si la famille est bloquée par cet éducateur
+    try {
+      const response = await fetch(`/api/check-blocked?educatorId=${params.id}&familyId=${familyProfile.id}`);
+      if (response.ok) {
+        const data = await response.json();
+        if (data.isBlocked) {
+          setError('Vous ne pouvez pas réserver de rendez-vous avec ce professionnel');
+          setLoading(false);
+          return;
+        }
+      }
+    } catch (e) {
+      console.error('Erreur vérification blocage:', e);
+    }
+
     // Récupérer les enfants de la famille
     const { data: childrenData } = await supabase
       .from('child_profiles')

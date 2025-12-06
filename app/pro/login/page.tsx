@@ -56,9 +56,9 @@ export default function ProLoginPage() {
     <div className="min-h-screen bg-gradient-to-br from-emerald-50 via-white to-cyan-50 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
       {/* Logo et titre */}
       <div className="sm:mx-auto sm:w-full sm:max-w-md">
-        <Link href="/pro" className="flex justify-center mb-6">
-          <LogoPro iconSize="lg" />
-        </Link>
+        <div className="flex justify-center mb-6">
+          <LogoPro iconSize="lg" href="/pro" />
+        </div>
         <h2 className="text-center text-2xl font-bold text-gray-900 mb-2">
           Connexion Professionnels
         </h2>

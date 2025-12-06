@@ -113,6 +113,7 @@ export default function EducatorPublicProfile({ params }: { params: { id: string
   const [activeTab, setActiveTab] = useState<'about' | 'certifications' | 'availability' | 'cv'>('about');
   const [familyProfileId, setFamilyProfileId] = useState<string | null>(null);
   const [showContactModal, setShowContactModal] = useState(false);
+  const [isBlockedByEducator, setIsBlockedByEducator] = useState(false);
 
   useEffect(() => {
     let isMounted = true;
@@ -143,6 +144,22 @@ export default function EducatorPublicProfile({ params }: { params: { id: string
             if (familyProfile) {
               setUserRole('family');
               setFamilyProfileId(familyProfile.id);
+
+              // Vérifier si la famille est bloquée par cet éducateur
+              try {
+                const response = await fetch(`/api/check-blocked?educatorId=${params.id}&familyId=${familyProfile.id}`);
+                if (response.ok) {
+                  const data = await response.json();
+                  if (data.isBlocked) {
+                    setIsBlockedByEducator(true);
+                    setError('Ce profil n\'est plus accessible');
+                    setLoading(false);
+                    return;
+                  }
+                }
+              } catch (e) {
+                console.error('Erreur vérification blocage:', e);
+              }
             }
           }
         }
@@ -382,19 +399,32 @@ export default function EducatorPublicProfile({ params }: { params: { id: string
   if (error || !educator) {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-        <div className="text-center">
+        <div className="text-center max-w-md mx-auto px-4">
           <div className="mb-4">
-            <svg className="mx-auto h-12 w-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
-            </svg>
+            {isBlockedByEducator ? (
+              <svg className="mx-auto h-16 w-16 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728A9 9 0 015.636 5.636m12.728 12.728L5.636 5.636" />
+              </svg>
+            ) : (
+              <svg className="mx-auto h-12 w-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+              </svg>
+            )}
           </div>
-          <h1 className="text-2xl font-bold text-gray-900 mb-2">Profil introuvable</h1>
-          <p className="text-gray-600 mb-6">{error}</p>
+          <h1 className="text-2xl font-bold text-gray-900 mb-2">
+            {isBlockedByEducator ? 'Profil non accessible' : 'Profil introuvable'}
+          </h1>
+          <p className="text-gray-600 mb-6">
+            {isBlockedByEducator
+              ? 'Ce professionnel a choisi de ne plus être visible pour vous. Vous pouvez rechercher d\'autres professionnels disponibles.'
+              : error
+            }
+          </p>
           <Link
             href="/search"
             className="inline-block px-6 py-3 bg-primary-600 text-white rounded-md hover:bg-primary-700"
           >
-            Retour à la recherche
+            {isBlockedByEducator ? 'Rechercher d\'autres professionnels' : 'Retour à la recherche'}
           </Link>
         </div>
       </div>

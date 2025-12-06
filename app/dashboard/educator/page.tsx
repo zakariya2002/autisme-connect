@@ -528,10 +528,23 @@ export default function EducatorDashboard() {
               <span className="font-semibold text-gray-900 text-xs sm:text-base truncate">Factures</span>
             </Link>
 
+            {/* Familles bloquées */}
+            <Link
+              href="/dashboard/educator/blocked-families"
+              className="flex items-center gap-2 sm:gap-3 p-3 sm:p-4 bg-red-50 hover:bg-red-100 rounded-xl transition group"
+            >
+              <div className="w-8 h-8 sm:w-10 sm:h-10 bg-red-500 rounded-lg sm:rounded-xl flex items-center justify-center flex-shrink-0 group-hover:scale-105 transition">
+                <svg className="w-4 h-4 sm:w-5 sm:h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728A9 9 0 015.636 5.636m12.728 12.728L5.636 5.636" />
+                </svg>
+              </div>
+              <span className="font-semibold text-gray-900 text-xs sm:text-base truncate">Bloquées</span>
+            </Link>
+
             {/* Agrément SAP */}
             <Link
               href="/educators/sap-accreditation"
-              className="flex items-center gap-2 sm:gap-3 p-3 sm:p-4 bg-cyan-50 hover:bg-cyan-100 rounded-xl transition group col-span-2 sm:col-span-1"
+              className="flex items-center gap-2 sm:gap-3 p-3 sm:p-4 bg-cyan-50 hover:bg-cyan-100 rounded-xl transition group"
             >
               <div className="w-8 h-8 sm:w-10 sm:h-10 bg-cyan-500 rounded-lg sm:rounded-xl flex items-center justify-center flex-shrink-0 group-hover:scale-105 transition">
                 <svg className="w-4 h-4 sm:w-5 sm:h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">

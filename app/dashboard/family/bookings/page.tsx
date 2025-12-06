@@ -220,6 +220,52 @@ export default function FamilyBookingsPage() {
     });
   };
 
+  // Générer un fichier ICS pour ajouter au calendrier
+  const generateCalendarEvent = (appointment: Appointment) => {
+    const startDate = new Date(`${appointment.appointment_date}T${appointment.start_time}`);
+    const endDate = new Date(`${appointment.appointment_date}T${appointment.end_time}`);
+
+    // Formater les dates au format ICS (YYYYMMDDTHHmmss)
+    const formatICSDate = (date: Date) => {
+      return date.toISOString().replace(/[-:]/g, '').split('.')[0] + 'Z';
+    };
+
+    const description = [
+      `Rendez-vous avec ${appointment.educator?.first_name} ${appointment.educator?.last_name}`,
+      appointment.educator?.phone ? `Téléphone : ${appointment.educator.phone}` : '',
+      appointment.notes ? `Notes : ${appointment.notes}` : ''
+    ].filter(Boolean).join('\\n');
+
+    const icsContent = [
+      'BEGIN:VCALENDAR',
+      'VERSION:2.0',
+      'PRODID:-//NeuroCare//Appointments//FR',
+      'CALSCALE:GREGORIAN',
+      'METHOD:PUBLISH',
+      'BEGIN:VEVENT',
+      `DTSTART:${formatICSDate(startDate)}`,
+      `DTEND:${formatICSDate(endDate)}`,
+      `SUMMARY:RDV - ${appointment.educator?.first_name} ${appointment.educator?.last_name}`,
+      `DESCRIPTION:${description}`,
+      `LOCATION:${appointment.address || 'Non précisé'}`,
+      `UID:${appointment.id}@neurocare.fr`,
+      'STATUS:CONFIRMED',
+      'END:VEVENT',
+      'END:VCALENDAR'
+    ].join('\r\n');
+
+    // Créer et télécharger le fichier
+    const blob = new Blob([icsContent], { type: 'text/calendar;charset=utf-8' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = `rdv-${appointment.educator?.first_name}-${appointment.appointment_date}.ics`;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    URL.revokeObjectURL(url);
+  };
+
   // Vérifier si l'annulation est possible (48h avant le rendez-vous)
   const canCancelAppointment = (appointment: Appointment): { canCancel: boolean; hoursRemaining: number } => {
     const appointmentDateTime = new Date(appointment.appointment_date + 'T' + appointment.start_time);
@@ -315,6 +361,16 @@ export default function FamilyBookingsPage() {
 
         {appointment.status === 'accepted' && !isPast && (
           <div className="mt-4 pt-3 border-t border-gray-100 space-y-2">
+            {/* Bouton Ajouter à l'agenda - visible sur mobile */}
+            <button
+              onClick={() => generateCalendarEvent(appointment)}
+              className="sm:hidden w-full px-3 py-2 bg-teal-50 text-teal-700 rounded-lg hover:bg-teal-100 text-sm font-medium transition flex items-center justify-center gap-2"
+            >
+              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+              </svg>
+              Ajouter à mon agenda
+            </button>
             {cancelInfo.canCancel ? (
               <button
                 onClick={() => {
@@ -384,17 +440,6 @@ export default function FamilyBookingsPage() {
       <FamilyNavbar profile={profile} familyId={familyId} userId={userId} />
 
       <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-6">
-        {/* Bouton retour */}
-        <Link
-          href="/dashboard/family"
-          className="inline-flex items-center gap-2 text-gray-600 hover:text-primary-600 mb-4"
-        >
-          <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
-          </svg>
-          <span className="text-sm font-medium">Retour au tableau de bord</span>
-        </Link>
-
         {/* En-tête */}
         <div className="mb-6">
           <h1 className="text-2xl font-bold text-gray-900">Mes rendez-vous</h1>

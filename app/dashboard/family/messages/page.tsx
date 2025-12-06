@@ -323,20 +323,7 @@ export default function FamilyMessagesPage() {
 
       <div className="flex-1 overflow-hidden">
         <div className="max-w-7xl mx-auto h-full px-4 sm:px-6 lg:px-8 py-4 sm:py-6 pb-10 sm:pb-12">
-          {/* Bouton retour - visible uniquement sur desktop ou quand liste affichée */}
-          <div className={`mb-4 ${!showConversationList && selectedConversation ? 'hidden lg:block' : ''}`}>
-            <Link
-              href="/dashboard/family"
-              className="inline-flex items-center gap-2 text-gray-600 hover:text-primary-600"
-            >
-              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
-              </svg>
-              <span className="text-sm font-medium">Retour au tableau de bord</span>
-            </Link>
-          </div>
-
-          <div className="h-[calc(100%-3rem)] bg-white rounded-lg shadow flex">
+          <div className="h-full bg-white rounded-lg shadow flex">
             {/* Liste des conversations */}
             <div className={`w-full lg:w-1/3 border-r border-gray-200 flex flex-col ${selectedConversation && !showConversationList ? 'hidden lg:flex' : 'flex'}`}>
               <div className="p-4 border-b border-gray-200">

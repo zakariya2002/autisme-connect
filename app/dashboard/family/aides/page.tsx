@@ -51,19 +51,6 @@ export default function FamilyAidesPage() {
     <div className="min-h-screen bg-gradient-to-b from-white to-primary-50">
       <FamilyNavbar profile={profile} familyId={familyId} userId={userId} />
 
-      {/* Bouton retour */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-4">
-        <Link
-          href="/dashboard/family"
-          className="inline-flex items-center gap-2 text-gray-600 hover:text-primary-600 mb-3 sm:mb-4"
-        >
-          <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
-          </svg>
-          <span className="text-sm font-medium">Retour au tableau de bord</span>
-        </Link>
-      </div>
-
       {/* Header rétréci */}
       <div className="bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 relative overflow-hidden mt-4">
         <div className="absolute inset-0 overflow-hidden">

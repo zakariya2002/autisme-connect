@@ -29,6 +29,9 @@ export default function MessagesPage() {
   const [subscription, setSubscription] = useState<any>(null);
   const [showConversationList, setShowConversationList] = useState(true); // Pour mobile: bascule entre liste et conversation
   const [moderationWarning, setModerationWarning] = useState<string | null>(null);
+  const [showBlockModal, setShowBlockModal] = useState(false);
+  const [blockReason, setBlockReason] = useState('');
+  const [isBlocking, setIsBlocking] = useState(false);
 
   useEffect(() => {
     fetchCurrentUser();
@@ -368,6 +371,48 @@ export default function MessagesPage() {
     }
   };
 
+  // Bloquer une famille
+  const handleBlockFamily = async () => {
+    if (!selectedConversation || !userProfile || userProfile.role !== 'educator') return;
+
+    const familyId = selectedConversation.family_id;
+    if (!familyId) return;
+
+    setIsBlocking(true);
+    try {
+      const response = await fetch('/api/blocked-families', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          educatorId: userProfile.id,
+          familyId: familyId,
+          reason: blockReason || null
+        })
+      });
+
+      if (!response.ok) {
+        const data = await response.json();
+        throw new Error(data.error || 'Erreur lors du blocage');
+      }
+
+      // Fermer le modal et la conversation
+      setShowBlockModal(false);
+      setBlockReason('');
+      setSelectedConversation(null);
+      setShowConversationList(true);
+
+      // Retirer la conversation de la liste
+      setConversations(prev => prev.filter(c => c.family_id !== familyId));
+
+      alert('La famille a été bloquée. Elle ne pourra plus vous contacter ni prendre de rendez-vous.');
+    } catch (error: any) {
+      console.error('Erreur blocage:', error);
+      alert(error.message || 'Erreur lors du blocage de la famille');
+    } finally {
+      setIsBlocking(false);
+    }
+  };
+
   // Marquer une demande de contact comme vue par l'éducateur
   const markConversationAsSeen = async (conversationId: string) => {
     if (userProfile?.role !== 'educator') return;
@@ -592,18 +637,33 @@ export default function MessagesPage() {
                               </p>
                             </div>
                           </div>
-                          {appointmentUrl && (
-                            <Link
-                              href={appointmentUrl}
-                              className="inline-flex items-center px-3 py-2 sm:px-4 bg-green-600 text-white rounded-lg hover:bg-green-700 font-medium transition-colors text-xs sm:text-sm"
-                            >
-                              <svg className="w-4 h-4 mr-1 sm:mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                              </svg>
-                              <span className="hidden sm:inline">{appointmentLabel}</span>
-                              <span className="sm:hidden">RDV</span>
-                            </Link>
-                          )}
+                          <div className="flex items-center gap-2">
+                            {appointmentUrl && (
+                              <Link
+                                href={appointmentUrl}
+                                className="inline-flex items-center px-3 py-2 sm:px-4 bg-green-600 text-white rounded-lg hover:bg-green-700 font-medium transition-colors text-xs sm:text-sm"
+                              >
+                                <svg className="w-4 h-4 mr-1 sm:mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                                </svg>
+                                <span className="hidden sm:inline">{appointmentLabel}</span>
+                                <span className="sm:hidden">RDV</span>
+                              </Link>
+                            )}
+                            {/* Bouton bloquer pour les éducateurs */}
+                            {userProfile?.role === 'educator' && isOtherFamily && (
+                              <button
+                                onClick={() => setShowBlockModal(true)}
+                                className="inline-flex items-center px-3 py-2 bg-red-100 text-red-600 rounded-lg hover:bg-red-200 font-medium transition-colors text-xs sm:text-sm"
+                                title="Bloquer cette famille"
+                              >
+                                <svg className="w-4 h-4 sm:mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728A9 9 0 015.636 5.636m12.728 12.728L5.636 5.636" />
+                                </svg>
+                                <span className="hidden sm:inline">Bloquer</span>
+                              </button>
+                            )}
+                          </div>
                         </div>
                       );
                     })()}
@@ -926,6 +986,84 @@ export default function MessagesPage() {
           </div>
         </div>
       </div>
+
+      {/* Modal de confirmation de blocage */}
+      {showBlockModal && selectedConversation && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+          <div className="bg-white rounded-xl max-w-md w-full p-6 shadow-xl">
+            <div className="flex items-center gap-3 mb-4">
+              <div className="w-12 h-12 bg-red-100 rounded-full flex items-center justify-center flex-shrink-0">
+                <svg className="w-6 h-6 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728A9 9 0 015.636 5.636m12.728 12.728L5.636 5.636" />
+                </svg>
+              </div>
+              <div>
+                <h3 className="text-lg font-bold text-gray-900">Bloquer cette famille ?</h3>
+                <p className="text-sm text-gray-600">
+                  {selectedConversation.family_profiles?.first_name} {selectedConversation.family_profiles?.last_name}
+                </p>
+              </div>
+            </div>
+
+            <div className="bg-red-50 rounded-lg p-3 mb-4">
+              <p className="text-sm text-red-700">
+                <strong>Attention :</strong> Cette famille ne pourra plus :
+              </p>
+              <ul className="text-sm text-red-600 mt-2 space-y-1 list-disc list-inside">
+                <li>Voir votre profil</li>
+                <li>Vous envoyer de messages</li>
+                <li>Prendre de rendez-vous avec vous</li>
+              </ul>
+              <p className="text-sm text-red-600 mt-2">
+                Les rendez-vous en attente seront annulés.
+              </p>
+            </div>
+
+            <div className="mb-4">
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                Raison du blocage (optionnel)
+              </label>
+              <textarea
+                value={blockReason}
+                onChange={(e) => setBlockReason(e.target.value)}
+                placeholder="Ex: Comportement inapproprié, harcèlement..."
+                className="w-full border border-gray-300 rounded-lg p-2 text-sm focus:ring-red-500 focus:border-red-500"
+                rows={2}
+              />
+            </div>
+
+            <div className="flex gap-3">
+              <button
+                onClick={() => {
+                  setShowBlockModal(false);
+                  setBlockReason('');
+                }}
+                className="flex-1 px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 font-medium transition"
+                disabled={isBlocking}
+              >
+                Annuler
+              </button>
+              <button
+                onClick={handleBlockFamily}
+                disabled={isBlocking}
+                className="flex-1 px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 font-medium transition flex items-center justify-center gap-2"
+              >
+                {isBlocking ? (
+                  <>
+                    <svg className="animate-spin h-4 w-4" fill="none" viewBox="0 0 24 24">
+                      <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                      <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
+                    </svg>
+                    Blocage...
+                  </>
+                ) : (
+                  'Confirmer le blocage'
+                )}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

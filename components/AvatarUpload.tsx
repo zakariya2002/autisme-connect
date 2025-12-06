@@ -143,10 +143,10 @@ export default function AvatarUpload({
 
   return (
     <div className="space-y-4">
-      <div className="flex items-center gap-6">
+      <div className="flex flex-col sm:flex-row items-center gap-4 sm:gap-6">
         {/* Avatar preview */}
-        <div className="relative">
-          <div className="w-32 h-32 rounded-full overflow-hidden bg-gray-200 flex items-center justify-center border-4 border-gray-300">
+        <div className="relative flex-shrink-0">
+          <div className="w-24 h-24 sm:w-32 sm:h-32 rounded-full overflow-hidden bg-gray-200 flex items-center justify-center border-4 border-gray-300">
             {displayUrl ? (
               <img
                 src={displayUrl}
@@ -155,7 +155,7 @@ export default function AvatarUpload({
               />
             ) : (
               <svg
-                className="w-16 h-16 text-gray-400"
+                className="w-12 h-12 sm:w-16 sm:h-16 text-gray-400"
                 fill="currentColor"
                 viewBox="0 0 24 24"
               >
@@ -182,8 +182,8 @@ export default function AvatarUpload({
         </div>
 
         {/* Boutons d'action */}
-        <div className="flex-1 space-y-3">
-          <div className="flex gap-2">
+        <div className="flex-1 space-y-3 text-center sm:text-left w-full sm:w-auto">
+          <div className="flex flex-col sm:flex-row gap-2 justify-center sm:justify-start">
             <button
               type="button"
               onClick={() => fileInputRef.current?.click()}

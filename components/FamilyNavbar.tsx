@@ -1,6 +1,5 @@
 'use client';
 
-import Link from 'next/link';
 import Logo from '@/components/Logo';
 import FamilyMobileMenu from '@/components/FamilyMobileMenu';
 import FamilyNotificationBell from '@/components/FamilyNotificationBell';
@@ -23,9 +22,7 @@ export default function FamilyNavbar({ profile, familyId, userId }: FamilyNavbar
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between h-14 sm:h-16 items-center">
           {/* Logo */}
-          <Link href="/dashboard/family">
-            <Logo />
-          </Link>
+          <Logo href="/dashboard/family" />
 
           {/* Menu mobile */}
           <div className="md:hidden flex items-center gap-2">
