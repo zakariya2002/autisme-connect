@@ -550,7 +550,7 @@ export default function PPAPage() {
   const toAvoid = preferences.filter(p => p.type === 'avoid');
 
   return (
-    <>
+    <div className="min-h-screen bg-white">
       {/* Styles d'impression */}
       <style jsx global>{`
         @media print {
@@ -680,7 +680,7 @@ export default function PPAPage() {
       </div>
 
       {/* Document PPA */}
-      <div id="ppa-document" ref={printRef} className="max-w-5xl mx-auto bg-white p-4 sm:p-6 md:p-8 my-4 sm:my-6 shadow-lg print:shadow-none print:my-0">
+      <div id="ppa-document" ref={printRef} className="max-w-5xl mx-auto bg-white p-4 sm:p-6 md:p-8 print:my-0">
 
         {/* En-tête */}
         <div className="border-b-4 border-primary-600 pb-4 sm:pb-6 mb-6 sm:mb-8">
@@ -1920,6 +1920,6 @@ export default function PPAPage() {
           </div>
         </div>
       )}
-    </>
+    </div>
   );
 }
