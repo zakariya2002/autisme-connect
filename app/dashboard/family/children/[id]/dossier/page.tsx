@@ -408,25 +408,25 @@ export default function ChildDossierPage() {
 
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Header avec infos enfant */}
-        <div className="bg-gradient-to-r from-purple-500 via-violet-500 to-indigo-500 rounded-2xl p-6 mb-6 text-white">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-4">
-              <div className="w-16 h-16 bg-white/20 rounded-full flex items-center justify-center text-2xl font-bold">
+        <div className="bg-gradient-to-r from-purple-500 via-violet-500 to-indigo-500 rounded-2xl p-4 sm:p-6 mb-6 text-white">
+          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+            <div className="flex items-center gap-3 sm:gap-4">
+              <div className="w-12 h-12 sm:w-16 sm:h-16 bg-white/20 rounded-full flex items-center justify-center text-xl sm:text-2xl font-bold flex-shrink-0">
                 {child.first_name[0].toUpperCase()}
               </div>
               <div>
-                <h1 className="text-2xl font-bold">Dossier de {child.first_name}</h1>
-                <p className="text-white/80">
+                <h1 className="text-lg sm:text-xl md:text-2xl font-bold">Dossier de {child.first_name}</h1>
+                <p className="text-white/80 text-sm sm:text-base">
                   {child.age ? `${child.age} ans` : ''}
-                  {child.accompaniment_goals && ` • ${child.accompaniment_goals.substring(0, 50)}...`}
+                  {child.accompaniment_goals && <span className="hidden sm:inline"> • {child.accompaniment_goals.substring(0, 50)}...</span>}
                 </p>
               </div>
             </div>
             <Link
               href={`/dashboard/family/children/${childId}/ppa`}
-              className="flex items-center gap-2 px-4 py-2 bg-white/20 hover:bg-white/30 rounded-lg transition backdrop-blur"
+              className="flex items-center gap-2 px-3 sm:px-4 py-2 bg-white/20 hover:bg-white/30 rounded-lg transition backdrop-blur text-sm sm:text-base w-full sm:w-auto justify-center sm:justify-start"
             >
-              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <svg className="w-4 h-4 sm:w-5 sm:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
               </svg>
               <span className="font-medium">Générer PPA</span>
@@ -436,21 +436,21 @@ export default function ChildDossierPage() {
 
         {/* Onglets */}
         <div className="bg-white rounded-xl shadow-sm border border-gray-100 mb-6">
-          <div className="flex overflow-x-auto">
+          <div className="flex overflow-x-auto scrollbar-hide">
             {tabs.map((tab) => (
               <button
                 key={tab.id}
                 onClick={() => setActiveTab(tab.id)}
-                className={`flex items-center gap-2 px-4 py-3 font-medium text-sm whitespace-nowrap border-b-2 transition ${
+                className={`flex items-center gap-1 sm:gap-2 px-3 sm:px-4 py-2 sm:py-3 font-medium text-xs sm:text-sm whitespace-nowrap border-b-2 transition ${
                   activeTab === tab.id
                     ? 'border-primary-600 text-primary-600'
                     : 'border-transparent text-gray-500 hover:text-gray-700'
                 }`}
               >
-                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg className="w-4 h-4 sm:w-5 sm:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d={tab.icon} />
                 </svg>
-                {tab.label}
+                <span className="hidden xs:inline">{tab.label}</span>
               </button>
             ))}
           </div>
@@ -464,7 +464,7 @@ export default function ChildDossierPage() {
         )}
 
         {/* Contenu des onglets */}
-        <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
+        <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-4 sm:p-6">
           {/* Vue d'ensemble */}
           {activeTab === 'overview' && (
             <div className="space-y-6">
@@ -553,13 +553,13 @@ export default function ChildDossierPage() {
           {/* Objectifs */}
           {activeTab === 'goals' && (
             <div>
-              <div className="flex items-center justify-between mb-6">
-                <h2 className="text-lg font-semibold text-gray-900">Objectifs éducatifs</h2>
+              <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 mb-6">
+                <h2 className="text-base sm:text-lg font-semibold text-gray-900">Objectifs éducatifs</h2>
                 <button
                   onClick={() => setShowGoalModal(true)}
-                  className="flex items-center gap-2 px-4 py-2 bg-primary-600 text-white rounded-lg hover:bg-primary-700 transition"
+                  className="flex items-center gap-2 px-3 sm:px-4 py-2 bg-primary-600 text-white rounded-lg hover:bg-primary-700 transition text-sm w-full sm:w-auto justify-center"
                 >
-                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <svg className="w-4 h-4 sm:w-5 sm:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
                   </svg>
                   Nouvel objectif
@@ -640,13 +640,13 @@ export default function ChildDossierPage() {
           {/* Séances */}
           {activeTab === 'sessions' && (
             <div>
-              <div className="flex items-center justify-between mb-6">
-                <h2 className="text-lg font-semibold text-gray-900">Notes de séances</h2>
+              <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 mb-6">
+                <h2 className="text-base sm:text-lg font-semibold text-gray-900">Notes de séances</h2>
                 <button
                   onClick={() => setShowSessionModal(true)}
-                  className="flex items-center gap-2 px-4 py-2 bg-primary-600 text-white rounded-lg hover:bg-primary-700 transition"
+                  className="flex items-center gap-2 px-3 sm:px-4 py-2 bg-primary-600 text-white rounded-lg hover:bg-primary-700 transition text-sm w-full sm:w-auto justify-center"
                 >
-                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <svg className="w-4 h-4 sm:w-5 sm:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
                   </svg>
                   Nouvelle note
@@ -718,16 +718,16 @@ export default function ChildDossierPage() {
           {/* Compétences */}
           {activeTab === 'skills' && (
             <div>
-              <div className="flex items-center justify-between mb-6">
-                <h2 className="text-lg font-semibold text-gray-900">Compétences</h2>
+              <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 mb-6">
+                <h2 className="text-base sm:text-lg font-semibold text-gray-900">Compétences</h2>
                 <button
                   onClick={() => setShowSkillModal(true)}
-                  className="flex items-center gap-2 px-4 py-2 bg-primary-600 text-white rounded-lg hover:bg-primary-700 transition"
+                  className="flex items-center gap-2 px-3 sm:px-4 py-2 bg-primary-600 text-white rounded-lg hover:bg-primary-700 transition text-sm w-full sm:w-auto justify-center"
                 >
-                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <svg className="w-4 h-4 sm:w-5 sm:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
                   </svg>
-                  Ajouter une compétence
+                  <span className="hidden xs:inline">Ajouter une</span> compétence
                 </button>
               </div>
 
@@ -782,13 +782,13 @@ export default function ChildDossierPage() {
           {/* Préférences */}
           {activeTab === 'preferences' && (
             <div>
-              <div className="flex items-center justify-between mb-6">
-                <h2 className="text-lg font-semibold text-gray-900">Préférences et stratégies</h2>
+              <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 mb-6">
+                <h2 className="text-base sm:text-lg font-semibold text-gray-900">Préférences et stratégies</h2>
                 <button
                   onClick={() => setShowPreferenceModal(true)}
-                  className="flex items-center gap-2 px-4 py-2 bg-primary-600 text-white rounded-lg hover:bg-primary-700 transition"
+                  className="flex items-center gap-2 px-3 sm:px-4 py-2 bg-primary-600 text-white rounded-lg hover:bg-primary-700 transition text-sm w-full sm:w-auto justify-center"
                 >
-                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <svg className="w-4 h-4 sm:w-5 sm:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
                   </svg>
                   Ajouter
@@ -840,15 +840,15 @@ export default function ChildDossierPage() {
       {showGoalModal && (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
           <div className="bg-white rounded-2xl shadow-xl max-w-lg w-full max-h-[90vh] overflow-y-auto">
-            <div className="px-6 py-4 border-b border-gray-100 flex items-center justify-between">
-              <h2 className="text-xl font-semibold">Nouvel objectif</h2>
+            <div className="px-4 sm:px-6 py-4 border-b border-gray-100 flex items-center justify-between">
+              <h2 className="text-lg sm:text-xl font-semibold">Nouvel objectif</h2>
               <button onClick={() => setShowGoalModal(false)} className="p-2 hover:bg-gray-100 rounded-lg">
                 <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
                 </svg>
               </button>
             </div>
-            <form onSubmit={handleAddGoal} className="p-6 space-y-4">
+            <form onSubmit={handleAddGoal} className="p-4 sm:p-6 space-y-4">
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">Titre *</label>
                 <input
@@ -926,16 +926,16 @@ export default function ChildDossierPage() {
       {showSessionModal && (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
           <div className="bg-white rounded-2xl shadow-xl max-w-lg w-full max-h-[90vh] overflow-y-auto">
-            <div className="px-6 py-4 border-b border-gray-100 flex items-center justify-between">
-              <h2 className="text-xl font-semibold">Note de séance</h2>
+            <div className="px-4 sm:px-6 py-4 border-b border-gray-100 flex items-center justify-between">
+              <h2 className="text-lg sm:text-xl font-semibold">Note de séance</h2>
               <button onClick={() => setShowSessionModal(false)} className="p-2 hover:bg-gray-100 rounded-lg">
                 <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
                 </svg>
               </button>
             </div>
-            <form onSubmit={handleAddSession} className="p-6 space-y-4">
-              <div className="grid grid-cols-2 gap-4">
+            <form onSubmit={handleAddSession} className="p-4 sm:p-6 space-y-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">Date</label>
                   <input
@@ -1023,15 +1023,15 @@ export default function ChildDossierPage() {
       {showSkillModal && (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
           <div className="bg-white rounded-2xl shadow-xl max-w-lg w-full">
-            <div className="px-6 py-4 border-b border-gray-100 flex items-center justify-between">
-              <h2 className="text-xl font-semibold">Nouvelle compétence</h2>
+            <div className="px-4 sm:px-6 py-4 border-b border-gray-100 flex items-center justify-between">
+              <h2 className="text-lg sm:text-xl font-semibold">Nouvelle compétence</h2>
               <button onClick={() => setShowSkillModal(false)} className="p-2 hover:bg-gray-100 rounded-lg">
                 <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
                 </svg>
               </button>
             </div>
-            <form onSubmit={handleAddSkill} className="p-6 space-y-4">
+            <form onSubmit={handleAddSkill} className="p-4 sm:p-6 space-y-4">
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">Nom de la compétence *</label>
                 <input
@@ -1043,7 +1043,7 @@ export default function ChildDossierPage() {
                   placeholder="Ex: S'habiller seul"
                 />
               </div>
-              <div className="grid grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">Catégorie</label>
                   <select
@@ -1104,15 +1104,15 @@ export default function ChildDossierPage() {
       {showPreferenceModal && (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
           <div className="bg-white rounded-2xl shadow-xl max-w-lg w-full">
-            <div className="px-6 py-4 border-b border-gray-100 flex items-center justify-between">
-              <h2 className="text-xl font-semibold">Nouvelle préférence</h2>
+            <div className="px-4 sm:px-6 py-4 border-b border-gray-100 flex items-center justify-between">
+              <h2 className="text-lg sm:text-xl font-semibold">Nouvelle préférence</h2>
               <button onClick={() => setShowPreferenceModal(false)} className="p-2 hover:bg-gray-100 rounded-lg">
                 <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
                 </svg>
               </button>
             </div>
-            <form onSubmit={handleAddPreference} className="p-6 space-y-4">
+            <form onSubmit={handleAddPreference} className="p-4 sm:p-6 space-y-4">
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">Type</label>
                 <select
