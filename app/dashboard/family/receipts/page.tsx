@@ -4,9 +4,7 @@ import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { supabase } from '@/lib/supabase';
-import { signOut } from '@/lib/auth';
-import Logo from '@/components/Logo';
-import FamilyMobileMenu from '@/components/FamilyMobileMenu';
+import FamilyNavbar from '@/components/FamilyNavbar';
 
 interface Receipt {
   id: string;
@@ -29,6 +27,8 @@ interface Receipt {
 export default function FamilyReceiptsPage() {
   const router = useRouter();
   const [profile, setProfile] = useState<any>(null);
+  const [familyId, setFamilyId] = useState<string | null>(null);
+  const [userId, setUserId] = useState<string | null>(null);
   const [receipts, setReceipts] = useState<Receipt[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -44,6 +44,8 @@ export default function FamilyReceiptsPage() {
       return;
     }
 
+    setUserId(session.user.id);
+
     const { data } = await supabase
       .from('family_profiles')
       .select('*')
@@ -51,6 +53,9 @@ export default function FamilyReceiptsPage() {
       .single();
 
     setProfile(data);
+    if (data) {
+      setFamilyId(data.id);
+    }
   };
 
   const fetchReceipts = async () => {
@@ -112,11 +117,6 @@ export default function FamilyReceiptsPage() {
     }
   };
 
-  const handleLogout = async () => {
-    await signOut();
-    window.location.href = '/';
-  };
-
   const formatAmount = (amountInCents: number) => {
     return new Intl.NumberFormat('fr-FR', {
       style: 'currency',
@@ -142,31 +142,7 @@ export default function FamilyReceiptsPage() {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      {/* Navigation */}
-      <nav className="bg-white shadow-sm">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between h-16 items-center">
-            <Logo  />
-            <div className="md:hidden">
-              <FamilyMobileMenu profile={profile} onLogout={handleLogout} />
-            </div>
-            <div className="hidden md:flex space-x-4 items-center">
-              <Link href="/dashboard/family" className="inline-flex items-center gap-2 bg-gradient-to-r from-blue-500 to-purple-600 text-white hover:from-blue-600 hover:to-purple-700 px-6 py-2.5 rounded-lg font-semibold transition-all duration-200 shadow-md hover:shadow-lg">
-                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
-                </svg>
-                Tableau de bord
-              </Link>
-              <Link href="/dashboard/family/profile" className="text-gray-700 hover:text-primary-600 px-3 py-2 font-medium transition">
-                Mon profil
-              </Link>
-              <button onClick={handleLogout} className="text-gray-700 hover:text-primary-600 px-3 py-2 font-medium transition">
-                Déconnexion
-              </button>
-            </div>
-          </div>
-        </div>
-      </nav>
+      <FamilyNavbar profile={profile} familyId={familyId} userId={userId} />
 
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-8">
         {/* Header */}

@@ -254,10 +254,10 @@ export default function MobileMenu() {
                   <Link
                     href="/auth/login"
                     onClick={closeMenu}
-                    className="flex items-center gap-3 px-3 py-2.5 rounded-xl font-medium text-gray-700 hover:bg-violet-50 hover:shadow-sm hover:scale-[1.02] transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-violet-500 focus:ring-offset-2"
+                    className="flex items-center gap-3 px-3 py-2.5 rounded-xl font-medium text-violet-600 bg-violet-50 hover:bg-violet-100 hover:shadow-sm hover:scale-[1.02] transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-violet-500 focus:ring-offset-2"
                   >
-                    <div className="w-9 h-9 bg-gray-100 rounded-lg flex items-center justify-center">
-                      <svg className="w-5 h-5 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                    <div className="w-9 h-9 bg-violet-100 rounded-lg flex items-center justify-center">
+                      <svg className="w-5 h-5 text-violet-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1" />
                       </svg>
                     </div>

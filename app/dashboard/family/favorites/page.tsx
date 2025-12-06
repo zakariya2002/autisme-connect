@@ -4,9 +4,7 @@ import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { supabase } from '@/lib/supabase';
-import { signOut } from '@/lib/auth';
-import Logo from '@/components/Logo';
-import FamilyMobileMenu from '@/components/FamilyMobileMenu';
+import FamilyNavbar from '@/components/FamilyNavbar';
 import { getProfessionByValue } from '@/lib/professions-config';
 
 interface FavoriteEducator {
@@ -32,6 +30,8 @@ interface FavoriteEducator {
 export default function FavoritesPage() {
   const router = useRouter();
   const [profile, setProfile] = useState<any>(null);
+  const [familyId, setFamilyId] = useState<string | null>(null);
+  const [userId, setUserId] = useState<string | null>(null);
   const [favorites, setFavorites] = useState<FavoriteEducator[]>([]);
   const [loading, setLoading] = useState(true);
   const [removing, setRemoving] = useState<string | null>(null);
@@ -49,6 +49,8 @@ export default function FavoritesPage() {
         return;
       }
 
+      setUserId(session.user.id);
+
       // Récupérer le profil famille
       const { data: familyProfile } = await supabase
         .from('family_profiles')
@@ -62,6 +64,7 @@ export default function FavoritesPage() {
       }
 
       setProfile(familyProfile);
+      setFamilyId(familyProfile.id);
 
       // Récupérer les favoris avec les infos des éducateurs
       const { data: favoritesData, error } = await supabase
@@ -124,11 +127,6 @@ export default function FavoritesPage() {
     }
   };
 
-  const handleLogout = async () => {
-    await signOut();
-    window.location.href = '/';
-  };
-
   const getProfessionLabel = (professionType: string | null) => {
     if (!professionType) return 'Professionnel';
     const profession = getProfessionByValue(professionType);
@@ -137,27 +135,7 @@ export default function FavoritesPage() {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      <nav className="bg-white shadow-sm">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between h-16 items-center">
-            <Logo  />
-            <div className="md:hidden">
-              <FamilyMobileMenu profile={profile} onLogout={handleLogout} />
-            </div>
-            <div className="hidden md:flex space-x-4">
-              <Link href="/dashboard/family" className="text-gray-700 hover:text-primary-600 px-3 py-2 font-medium transition">
-                Tableau de bord
-              </Link>
-              <Link href="/dashboard/family/profile" className="text-gray-700 hover:text-primary-600 px-3 py-2 font-medium transition">
-                Mon profil
-              </Link>
-              <button onClick={handleLogout} className="text-gray-700 hover:text-primary-600 px-3 py-2 font-medium transition">
-                Déconnexion
-              </button>
-            </div>
-          </div>
-        </div>
-      </nav>
+      <FamilyNavbar profile={profile} familyId={familyId} userId={userId} />
 
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Header */}

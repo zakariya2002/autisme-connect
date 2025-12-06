@@ -4,9 +4,7 @@ import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { supabase } from '@/lib/supabase';
-import { signOut } from '@/lib/auth';
-import Logo from '@/components/Logo';
-import FamilyMobileMenu from '@/components/FamilyMobileMenu';
+import FamilyNavbar from '@/components/FamilyNavbar';
 
 interface ChildProfile {
   id: string;
@@ -89,6 +87,8 @@ const scheduleOptions = [
 export default function ChildrenPage() {
   const router = useRouter();
   const [profile, setProfile] = useState<any>(null);
+  const [familyId, setFamilyId] = useState<string | null>(null);
+  const [userId, setUserId] = useState<string | null>(null);
   const [children, setChildren] = useState<ChildProfile[]>([]);
   const [loading, setLoading] = useState(true);
   const [showAddModal, setShowAddModal] = useState(false);
@@ -122,6 +122,8 @@ export default function ChildrenPage() {
         return;
       }
 
+      setUserId(session.user.id);
+
       // Récupérer le profil famille
       const { data: familyProfile } = await supabase
         .from('family_profiles')
@@ -135,6 +137,7 @@ export default function ChildrenPage() {
       }
 
       setProfile(familyProfile);
+      setFamilyId(familyProfile.id);
 
       // Récupérer les enfants
       const { data: childrenData, error: childrenError } = await supabase
@@ -152,11 +155,6 @@ export default function ChildrenPage() {
     } finally {
       setLoading(false);
     }
-  };
-
-  const handleLogout = async () => {
-    await signOut();
-    window.location.href = '/';
   };
 
   const resetForm = () => {
@@ -327,29 +325,7 @@ export default function ChildrenPage() {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      <nav className="bg-white shadow-sm">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between h-16 items-center">
-            {/* Logo - visible sur mobile et desktop */}
-            <Logo  />
-            {/* Menu mobile (hamburger) */}
-            <div className="md:hidden">
-              <FamilyMobileMenu profile={profile} onLogout={handleLogout} />
-            </div>
-            <div className="hidden md:flex items-center gap-4">
-              <Link
-                href="/dashboard/family"
-                className="inline-flex items-center gap-2 bg-gradient-to-r from-blue-500 to-purple-600 text-white hover:from-blue-600 hover:to-purple-700 px-6 py-2.5 rounded-lg font-semibold transition-all duration-200 shadow-md hover:shadow-lg"
-              >
-                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
-                </svg>
-                Tableau de bord
-              </Link>
-            </div>
-          </div>
-        </div>
-      </nav>
+      <FamilyNavbar profile={profile} familyId={familyId} userId={userId} />
 
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-8">
         {/* Header */}

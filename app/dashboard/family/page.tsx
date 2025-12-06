@@ -4,9 +4,7 @@ import { useEffect, useState } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import { supabase } from '@/lib/supabase';
-import { signOut } from '@/lib/auth';
-import Logo from '@/components/Logo';
-import FamilyMobileMenu from '@/components/FamilyMobileMenu';
+import FamilyNavbar from '@/components/FamilyNavbar';
 
 // Mapping des emojis par profession
 const professionEmojis: { [key: string]: string } = {
@@ -63,6 +61,7 @@ export default function FamilyDashboard() {
   const searchParams = useSearchParams();
   const [profile, setProfile] = useState<any>(null);
   const [familyId, setFamilyId] = useState<string | null>(null);
+  const [userId, setUserId] = useState<string | null>(null);
   const [stats, setStats] = useState({
     appointments: 0,
     messages: 0,
@@ -105,6 +104,8 @@ export default function FamilyDashboard() {
       router.push('/auth/login');
       return;
     }
+
+    setUserId(session.user.id);
 
     const { data } = await supabase
       .from('family_profiles')
@@ -216,35 +217,9 @@ export default function FamilyDashboard() {
     return date.toLocaleDateString('fr-FR', { month: 'long', year: 'numeric' });
   };
 
-  const handleLogout = async () => {
-    await signOut();
-    // Forcer un rechargement complet pour vider le cache
-    window.location.href = '/';
-  };
-
   return (
     <div className="min-h-screen min-h-[100dvh] bg-gray-50 flex flex-col">
-      <nav className="bg-white shadow-sm flex-shrink-0 sticky top-0 z-40">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between h-14 sm:h-16 items-center">
-            {/* Logo - visible sur mobile et desktop */}
-            <Logo  />
-            {/* Menu mobile (hamburger) */}
-            <div className="md:hidden">
-              <FamilyMobileMenu profile={profile} onLogout={handleLogout} />
-            </div>
-            {/* Menu desktop - caché sur mobile */}
-            <div className="hidden md:flex space-x-4">
-              <Link href="/dashboard/family/profile" className="text-gray-700 hover:text-primary-600 px-3 py-2 font-medium transition">
-                Mon profil
-              </Link>
-              <button onClick={handleLogout} className="text-gray-700 hover:text-primary-600 px-3 py-2 font-medium transition">
-                Déconnexion
-              </button>
-            </div>
-          </div>
-        </div>
-      </nav>
+      <FamilyNavbar profile={profile} familyId={familyId} userId={userId} />
 
       <div className="flex-1 pb-8">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-8">
@@ -369,7 +344,7 @@ export default function FamilyDashboard() {
 
             {/* Chercher un éducateur */}
             <Link
-              href="/search"
+              href="/dashboard/family/search"
               className="flex items-center gap-2 sm:gap-3 p-3 sm:p-4 bg-green-50 rounded-lg sm:rounded-xl hover:bg-green-100 transition-colors"
             >
               <div className="w-8 h-8 sm:w-10 sm:h-10 bg-green-500 rounded-lg flex items-center justify-center flex-shrink-0">
@@ -395,7 +370,7 @@ export default function FamilyDashboard() {
 
             {/* Messages */}
             <Link
-              href="/messages"
+              href="/dashboard/family/messages"
               className="flex items-center gap-2 sm:gap-3 p-3 sm:p-4 bg-indigo-50 rounded-lg sm:rounded-xl hover:bg-indigo-100 transition-colors"
             >
               <div className="w-8 h-8 sm:w-10 sm:h-10 bg-indigo-500 rounded-lg flex items-center justify-center flex-shrink-0">
@@ -408,7 +383,7 @@ export default function FamilyDashboard() {
 
             {/* Mes rendez-vous */}
             <Link
-              href="/bookings"
+              href="/dashboard/family/bookings"
               className="flex items-center gap-2 sm:gap-3 p-3 sm:p-4 bg-teal-50 rounded-lg sm:rounded-xl hover:bg-teal-100 transition-colors"
             >
               <div className="w-8 h-8 sm:w-10 sm:h-10 bg-teal-500 rounded-lg flex items-center justify-center flex-shrink-0">
@@ -632,7 +607,7 @@ export default function FamilyDashboard() {
 
             <div className="px-4 py-3 border-t border-gray-100 bg-gray-50">
               <Link
-                href="/bookings"
+                href="/dashboard/family/bookings"
                 className="block w-full text-center py-2.5 bg-purple-600 text-white rounded-xl font-medium hover:bg-purple-700 transition-colors"
                 onClick={() => setShowPopup(false)}
               >

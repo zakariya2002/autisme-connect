@@ -7,8 +7,7 @@ import { supabase } from '@/lib/supabase';
 import { signOut } from '@/lib/auth';
 import { getCurrentPosition, reverseGeocode } from '@/lib/geolocation';
 import AvatarUpload from '@/components/AvatarUpload';
-import Logo from '@/components/Logo';
-import FamilyMobileMenu from '@/components/FamilyMobileMenu';
+import FamilyNavbar from '@/components/FamilyNavbar';
 
 export default function FamilyProfilePage() {
   const router = useRouter();
@@ -17,7 +16,8 @@ export default function FamilyProfilePage() {
   const [geolocating, setGeolocating] = useState(false);
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
-  const [userId, setUserId] = useState<string>('');
+  const [userId, setUserId] = useState<string | null>(null);
+  const [familyId, setFamilyId] = useState<string | null>(null);
   const [avatarUrl, setAvatarUrl] = useState<string | null>(null);
   const [avatarModerationStatus, setAvatarModerationStatus] = useState<'pending' | 'approved' | 'rejected' | null>(null);
   const [avatarModerationReason, setAvatarModerationReason] = useState<string | null>(null);
@@ -64,6 +64,7 @@ export default function FamilyProfilePage() {
 
       if (profile) {
         setProfile(profile);
+        setFamilyId(profile.id);
         setProfileData({
           first_name: profile.first_name || '',
           last_name: profile.last_name || '',
@@ -184,14 +185,14 @@ export default function FamilyProfilePage() {
     );
   }
 
-  const handleLogout = async () => {
-    await signOut();
-    window.location.href = '/';
-  };
-
   const handleDeleteAccount = async () => {
     if (deleteConfirmText !== 'SUPPRIMER') {
       setError('Veuillez taper exactement "SUPPRIMER" pour confirmer');
+      return;
+    }
+
+    if (!userId) {
+      setError('Erreur: utilisateur non identifié');
       return;
     }
 
@@ -224,30 +225,7 @@ export default function FamilyProfilePage() {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      <nav className="bg-white shadow-sm">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between h-16 items-center">
-            {/* Logo */}
-            <Logo  />
-            {/* Menu mobile (hamburger) */}
-            <div className="md:hidden">
-              <FamilyMobileMenu profile={profile} onLogout={handleLogout} />
-            </div>
-            {/* Menu desktop - caché sur mobile */}
-            <div className="hidden md:flex items-center gap-4">
-              <Link
-                href="/dashboard/family"
-                className="bg-gradient-to-r from-blue-500 to-purple-600 text-white hover:from-blue-600 hover:to-purple-700 px-6 py-2.5 rounded-lg font-semibold transition-all duration-200 flex items-center gap-2 shadow-md hover:shadow-lg"
-              >
-                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
-                </svg>
-                Tableau de bord
-              </Link>
-            </div>
-          </div>
-        </div>
-      </nav>
+      <FamilyNavbar profile={profile} familyId={familyId} userId={userId} />
 
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="mb-8">
@@ -277,7 +255,7 @@ export default function FamilyProfilePage() {
               <label className="block text-sm font-medium text-gray-700 mb-3">Photo de profil</label>
               <AvatarUpload
                 currentAvatarUrl={avatarUrl}
-                userId={userId}
+                userId={userId || ''}
                 profileType="family"
                 moderationStatus={avatarModerationStatus}
                 moderationReason={avatarModerationReason}

@@ -8,6 +8,7 @@ import TndToggle from '@/components/TndToggle';
 import { useTnd } from '@/contexts/TndContext';
 import { supabase } from '@/lib/supabase';
 import HomeTnd from './page-tnd';
+import NewsletterForm from '@/components/NewsletterForm';
 
 export default function Home() {
   const { tndMode } = useTnd();
@@ -713,7 +714,7 @@ export default function Home() {
       {/* Footer */}
       <footer className="bg-gray-900 text-gray-300 py-12">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-8">
             <div>
               <h3 className="text-white font-semibold text-lg mb-4">neurocare</h3>
               <p className="text-gray-400 leading-relaxed">
@@ -725,12 +726,11 @@ export default function Home() {
               <ul className="space-y-2">
                 <li><Link href="/search" className="hover:text-white transition-colors">Trouver un professionnel</Link></li>
                 <li><Link href="/about" className="hover:text-white transition-colors">Qui sommes-nous ?</Link></li>
-                <li><Link href="/pricing" className="hover:text-white transition-colors">Tarifs</Link></li>
                 <li><Link href="/educators/sap-accreditation" className="hover:text-white transition-colors">Agrément SAP</Link></li>
                 <li><Link href="/familles/aides-financieres" className="hover:text-white transition-colors">Aides financières</Link></li>
-                <li><Link href="/auth/signup" className="hover:text-white transition-colors">Inscription</Link></li>
               </ul>
-            </div>            <div>
+            </div>
+            <div>
               <h3 className="text-white font-bold text-lg mb-4">Besoin d'aide ?</h3>
               <p className="text-gray-400 leading-relaxed mb-4">
                 Notre équipe est là pour vous accompagner dans votre parcours.
@@ -739,6 +739,7 @@ export default function Home() {
                 Contactez-nous
               </Link>
             </div>
+            <NewsletterForm audience="general" source="homepage_footer" />
           </div>
           <div className="border-t border-gray-800 pt-8">
             <div className="flex flex-col sm:flex-row justify-center items-center gap-4 mb-4">

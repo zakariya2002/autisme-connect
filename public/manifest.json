@@ -1,21 +1,17 @@
 {
-  "name": "Autisme Connect",
-  "short_name": "Autisme Connect",
-  "description": "Trouvez les professionnels adaptés au TSA de votre enfant",
+  "name": "neurocare",
+  "short_name": "neurocare",
+  "description": "Trouvez les professionnels spécialisés pour accompagner votre enfant",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#ffffff",
   "theme_color": "#7c3aed",
   "icons": [
     {
-      "src": "/icon-192.png",
-      "sizes": "192x192",
-      "type": "image/png"
-    },
-    {
-      "src": "/icon-512.png",
-      "sizes": "512x512",
-      "type": "image/png"
+      "src": "/icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
     }
   ]
 }
