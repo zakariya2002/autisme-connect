@@ -98,6 +98,15 @@ export default function PPAPage() {
   const [ppaId, setPpaId] = useState<string | null>(null);
   const [lastSaved, setLastSaved] = useState<Date | null>(null);
 
+  // États pour le versioning
+  const [versions, setVersions] = useState<any[]>([]);
+  const [showVersionModal, setShowVersionModal] = useState(false);
+  const [showHistoryModal, setShowHistoryModal] = useState(false);
+  const [versionLabel, setVersionLabel] = useState('');
+  const [creatingVersion, setCreatingVersion] = useState(false);
+  const [selectedVersion, setSelectedVersion] = useState<any>(null);
+  const [viewingVersion, setViewingVersion] = useState(false);
+
   // Champs éditables pour le PPA
   const [ppaData, setPpaData] = useState({
     // Section 1: Identification
@@ -292,6 +301,7 @@ export default function PPAPage() {
 
   useEffect(() => {
     fetchData();
+    fetchVersions();
   }, [childId]);
 
   const fetchData = async () => {
@@ -433,6 +443,97 @@ export default function PPAPage() {
     window.print();
   };
 
+  // Récupérer l'historique des versions
+  const fetchVersions = async () => {
+    try {
+      const response = await fetch(`/api/ppa/${childId}/versions`);
+      const data = await response.json();
+      if (data.versions) {
+        setVersions(data.versions);
+      }
+    } catch (error) {
+      console.error('Erreur récupération versions:', error);
+    }
+  };
+
+  // Créer une nouvelle version
+  const createVersion = async () => {
+    if (!ppaId) {
+      alert('Veuillez d\'abord enregistrer le PPA avant de créer une version.');
+      return;
+    }
+
+    setCreatingVersion(true);
+    try {
+      const { data: { session } } = await supabase.auth.getSession();
+      if (!session?.user) return;
+
+      const response = await fetch(`/api/ppa/${childId}/versions`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          userId: session.user.id,
+          versionLabel: versionLabel || undefined,
+        }),
+      });
+
+      const data = await response.json();
+
+      if (data.success) {
+        alert(`Version créée avec succès !`);
+        setShowVersionModal(false);
+        setVersionLabel('');
+        fetchVersions();
+      } else {
+        alert('Erreur: ' + (data.error || 'Erreur inconnue'));
+      }
+    } catch (error: any) {
+      console.error('Erreur création version:', error);
+      alert('Erreur lors de la création de la version');
+    } finally {
+      setCreatingVersion(false);
+    }
+  };
+
+  // Voir une version spécifique
+  const viewVersion = async (versionId: string) => {
+    try {
+      const response = await fetch(`/api/ppa/${childId}/versions/${versionId}`);
+      const data = await response.json();
+
+      if (data.version) {
+        setSelectedVersion(data.version);
+        setViewingVersion(true);
+        setShowHistoryModal(false);
+      }
+    } catch (error) {
+      console.error('Erreur chargement version:', error);
+      alert('Erreur lors du chargement de la version');
+    }
+  };
+
+  // Supprimer une version
+  const deleteVersion = async (versionId: string) => {
+    if (!confirm('Supprimer cette version ? Cette action est irréversible.')) return;
+
+    try {
+      const response = await fetch(`/api/ppa/${childId}/versions/${versionId}`, {
+        method: 'DELETE',
+      });
+
+      const data = await response.json();
+
+      if (data.success) {
+        alert('Version supprimée');
+        fetchVersions();
+      } else {
+        alert('Erreur: ' + (data.error || 'Erreur inconnue'));
+      }
+    } catch (error) {
+      console.error('Erreur suppression version:', error);
+    }
+  };
+
   if (loading) {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
@@ -521,25 +622,57 @@ export default function PPAPage() {
             )}
           </div>
 
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-2 sm:gap-3 flex-wrap">
+            {/* Bouton Historique */}
+            <button
+              onClick={() => setShowHistoryModal(true)}
+              className="flex items-center gap-1 sm:gap-2 px-3 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition text-sm"
+            >
+              <svg className="w-4 h-4 sm:w-5 sm:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+              <span className="hidden sm:inline">Historique</span>
+              {versions.length > 0 && (
+                <span className="bg-primary-100 text-primary-700 text-xs px-1.5 py-0.5 rounded-full">
+                  {versions.length}
+                </span>
+              )}
+            </button>
+
+            {/* Bouton Créer version */}
+            <button
+              onClick={() => setShowVersionModal(true)}
+              disabled={!ppaId}
+              className="flex items-center gap-1 sm:gap-2 px-3 py-2 border border-green-300 text-green-700 rounded-lg hover:bg-green-50 transition disabled:opacity-50 disabled:cursor-not-allowed text-sm"
+              title={!ppaId ? 'Enregistrez d\'abord le PPA' : 'Créer une version archivée'}
+            >
+              <svg className="w-4 h-4 sm:w-5 sm:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7v8a2 2 0 002 2h6M8 7V5a2 2 0 012-2h4.586a1 1 0 01.707.293l4.414 4.414a1 1 0 01.293.707V15a2 2 0 01-2 2h-2M8 7H6a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2v-2" />
+              </svg>
+              <span className="hidden sm:inline">Archiver</span>
+            </button>
+
+            {/* Bouton Enregistrer */}
             <button
               onClick={savePPA}
               disabled={saving}
-              className="flex items-center gap-2 px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition disabled:opacity-50"
+              className="flex items-center gap-1 sm:gap-2 px-3 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition disabled:opacity-50 text-sm"
             >
-              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <svg className="w-4 h-4 sm:w-5 sm:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-3m-1 4l-3 3m0 0l-3-3m3 3V4" />
               </svg>
-              Enregistrer
+              <span className="hidden sm:inline">Enregistrer</span>
             </button>
+
+            {/* Bouton Imprimer */}
             <button
               onClick={handlePrint}
-              className="flex items-center gap-2 px-4 py-2 bg-primary-600 text-white rounded-lg hover:bg-primary-700 transition"
+              className="flex items-center gap-1 sm:gap-2 px-3 py-2 bg-primary-600 text-white rounded-lg hover:bg-primary-700 transition text-sm"
             >
-              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <svg className="w-4 h-4 sm:w-5 sm:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z" />
               </svg>
-              Imprimer / PDF
+              <span className="hidden sm:inline">PDF</span>
             </button>
           </div>
         </div>
@@ -1539,6 +1672,253 @@ export default function PPAPage() {
           <p>Ce document ne contient aucune donnée médicale - Usage éducatif uniquement</p>
         </footer>
       </div>
+
+      {/* Modal Créer une version */}
+      {showVersionModal && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4 no-print">
+          <div className="bg-white rounded-xl shadow-xl max-w-md w-full p-6">
+            <h3 className="text-xl font-bold text-gray-900 mb-4 flex items-center gap-2">
+              <svg className="w-6 h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7v8a2 2 0 002 2h6M8 7V5a2 2 0 012-2h4.586a1 1 0 01.707.293l4.414 4.414a1 1 0 01.293.707V15a2 2 0 01-2 2h-2M8 7H6a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2v-2" />
+              </svg>
+              Créer une version
+            </h3>
+            <p className="text-gray-600 mb-4 text-sm">
+              Archiver l'état actuel du PPA avant de faire des modifications importantes.
+              Vous pourrez consulter cette version ultérieurement.
+            </p>
+            <div className="mb-4">
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                Nom de la version (optionnel)
+              </label>
+              <input
+                type="text"
+                value={versionLabel}
+                onChange={(e) => setVersionLabel(e.target.value)}
+                placeholder="Ex: Révision trimestrielle T1 2025"
+                className="w-full border border-gray-300 rounded-lg p-2 focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+              />
+            </div>
+            <div className="flex gap-3">
+              <button
+                onClick={createVersion}
+                disabled={creatingVersion}
+                className="flex-1 px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition disabled:opacity-50 font-medium"
+              >
+                {creatingVersion ? 'Création...' : 'Créer la version'}
+              </button>
+              <button
+                onClick={() => {
+                  setShowVersionModal(false);
+                  setVersionLabel('');
+                }}
+                disabled={creatingVersion}
+                className="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition"
+              >
+                Annuler
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Modal Historique des versions */}
+      {showHistoryModal && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4 no-print">
+          <div className="bg-white rounded-xl shadow-xl max-w-lg w-full max-h-[80vh] flex flex-col">
+            <div className="p-6 border-b">
+              <h3 className="text-xl font-bold text-gray-900 flex items-center gap-2">
+                <svg className="w-6 h-6 text-primary-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+                Historique des versions
+              </h3>
+              <p className="text-sm text-gray-500 mt-1">
+                {versions.length} version{versions.length > 1 ? 's' : ''} archivée{versions.length > 1 ? 's' : ''}
+              </p>
+            </div>
+
+            <div className="flex-1 overflow-y-auto p-4">
+              {versions.length === 0 ? (
+                <div className="text-center py-8 text-gray-500">
+                  <svg className="w-12 h-12 mx-auto mb-3 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                  </svg>
+                  <p>Aucune version archivée</p>
+                  <p className="text-sm mt-1">Créez une version pour sauvegarder l'état actuel du PPA</p>
+                </div>
+              ) : (
+                <div className="space-y-3">
+                  {versions.map((version) => (
+                    <div
+                      key={version.id}
+                      className="border border-gray-200 rounded-lg p-4 hover:border-primary-300 transition"
+                    >
+                      <div className="flex items-start justify-between">
+                        <div>
+                          <h4 className="font-semibold text-gray-900">
+                            {version.version_label || `Version ${version.version_number}`}
+                          </h4>
+                          <p className="text-sm text-gray-500 mt-1">
+                            Archivée le {new Date(version.archived_at).toLocaleDateString('fr-FR', {
+                              day: 'numeric',
+                              month: 'long',
+                              year: 'numeric',
+                              hour: '2-digit',
+                              minute: '2-digit'
+                            })}
+                          </p>
+                          {version.evaluation_date && (
+                            <p className="text-xs text-gray-400 mt-1">
+                              Date d'évaluation : {new Date(version.evaluation_date).toLocaleDateString('fr-FR')}
+                            </p>
+                          )}
+                        </div>
+                        <span className="bg-gray-100 text-gray-600 text-xs px-2 py-1 rounded-full">
+                          v{version.version_number}
+                        </span>
+                      </div>
+                      <div className="flex gap-2 mt-3">
+                        <button
+                          onClick={() => viewVersion(version.id)}
+                          className="flex-1 text-sm px-3 py-1.5 bg-primary-50 text-primary-700 rounded-lg hover:bg-primary-100 transition"
+                        >
+                          Consulter
+                        </button>
+                        <button
+                          onClick={() => deleteVersion(version.id)}
+                          className="text-sm px-3 py-1.5 bg-red-50 text-red-600 rounded-lg hover:bg-red-100 transition"
+                        >
+                          Supprimer
+                        </button>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+
+            <div className="p-4 border-t bg-gray-50">
+              <button
+                onClick={() => setShowHistoryModal(false)}
+                className="w-full px-4 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700 transition font-medium"
+              >
+                Fermer
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Modal Visualisation d'une version */}
+      {viewingVersion && selectedVersion && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4 no-print">
+          <div className="bg-white rounded-xl shadow-xl max-w-4xl w-full max-h-[90vh] flex flex-col">
+            <div className="p-6 border-b bg-amber-50">
+              <div className="flex items-center justify-between">
+                <div>
+                  <h3 className="text-xl font-bold text-gray-900 flex items-center gap-2">
+                    <svg className="w-6 h-6 text-amber-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                    </svg>
+                    {selectedVersion.version_label || `Version ${selectedVersion.version_number}`}
+                  </h3>
+                  <p className="text-sm text-amber-700 mt-1">
+                    Version archivée - Lecture seule
+                  </p>
+                </div>
+                <span className="bg-amber-100 text-amber-800 px-3 py-1 rounded-full text-sm font-medium">
+                  Archive
+                </span>
+              </div>
+            </div>
+
+            <div className="flex-1 overflow-y-auto p-6">
+              <div className="space-y-6">
+                {/* Informations générales */}
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="bg-gray-50 p-4 rounded-lg">
+                    <h4 className="font-semibold text-gray-700 mb-2">Intervenant</h4>
+                    <p className="text-gray-900">{selectedVersion.educator_name || '-'}</p>
+                    <p className="text-sm text-gray-500">{selectedVersion.educator_structure || '-'}</p>
+                  </div>
+                  <div className="bg-gray-50 p-4 rounded-lg">
+                    <h4 className="font-semibold text-gray-700 mb-2">Période d'évaluation</h4>
+                    <p className="text-gray-900">
+                      {selectedVersion.evaluation_period_start
+                        ? new Date(selectedVersion.evaluation_period_start).toLocaleDateString('fr-FR')
+                        : '-'}
+                      {' → '}
+                      {selectedVersion.evaluation_period_end
+                        ? new Date(selectedVersion.evaluation_period_end).toLocaleDateString('fr-FR')
+                        : '-'}
+                    </p>
+                  </div>
+                </div>
+
+                {/* Sections principales */}
+                {selectedVersion.previous_support && (
+                  <div className="border rounded-lg p-4">
+                    <h4 className="font-semibold text-gray-700 mb-2">Accompagnements antérieurs</h4>
+                    <p className="text-gray-600 whitespace-pre-wrap">{selectedVersion.previous_support}</p>
+                  </div>
+                )}
+
+                {selectedVersion.family_expectations && (
+                  <div className="border rounded-lg p-4">
+                    <h4 className="font-semibold text-gray-700 mb-2">Attentes de la famille</h4>
+                    <p className="text-gray-600 whitespace-pre-wrap">{selectedVersion.family_expectations}</p>
+                  </div>
+                )}
+
+                {selectedVersion.priority_axes && (
+                  <div className="border rounded-lg p-4 bg-primary-50">
+                    <h4 className="font-semibold text-primary-700 mb-2">Axes prioritaires</h4>
+                    <p className="text-gray-600 whitespace-pre-wrap">{selectedVersion.priority_axes}</p>
+                  </div>
+                )}
+
+                {selectedVersion.observations && (
+                  <div className="border rounded-lg p-4">
+                    <h4 className="font-semibold text-gray-700 mb-2">Observations</h4>
+                    <p className="text-gray-600 whitespace-pre-wrap">{selectedVersion.observations}</p>
+                  </div>
+                )}
+
+                {/* Métadonnées */}
+                <div className="bg-gray-100 rounded-lg p-4 text-sm text-gray-500">
+                  <p>Créé le : {selectedVersion.original_created_at ? new Date(selectedVersion.original_created_at).toLocaleString('fr-FR') : '-'}</p>
+                  <p>Dernière modification : {selectedVersion.original_updated_at ? new Date(selectedVersion.original_updated_at).toLocaleString('fr-FR') : '-'}</p>
+                  <p>Archivé le : {new Date(selectedVersion.archived_at).toLocaleString('fr-FR')}</p>
+                </div>
+              </div>
+            </div>
+
+            <div className="p-4 border-t bg-gray-50 flex gap-3">
+              <button
+                onClick={() => {
+                  setViewingVersion(false);
+                  setSelectedVersion(null);
+                  setShowHistoryModal(true);
+                }}
+                className="flex-1 px-4 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700 transition font-medium"
+              >
+                Retour à l'historique
+              </button>
+              <button
+                onClick={() => {
+                  setViewingVersion(false);
+                  setSelectedVersion(null);
+                }}
+                className="px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-100 transition"
+              >
+                Fermer
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </>
   );
 }
