@@ -747,25 +747,26 @@ export default function EducatorAppointmentsPage() {
             <>
               {!appointment.started_at ? (
                 <>
-                  {/* Bouton Ajouter à l'agenda - visible sur mobile */}
+                  {/* Bouton Ajouter à l'agenda - visible sur mobile uniquement */}
                   <button
                     onClick={() => generateCalendarEvent(appointment)}
-                    className="sm:hidden flex-1 px-3 py-2 bg-teal-100 text-teal-700 rounded-lg hover:bg-teal-200 text-sm font-medium transition flex items-center justify-center gap-1"
+                    className="sm:hidden p-2 bg-teal-100 text-teal-700 rounded-lg hover:bg-teal-200 transition flex items-center justify-center"
+                    title="Ajouter à l'agenda"
                   >
-                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
                     </svg>
-                    Agenda
                   </button>
                   <button
                     onClick={() => handleStartSession(appointment.id)}
                     disabled={actionLoading}
-                    className="flex-1 px-3 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 text-sm font-medium transition flex items-center justify-center gap-2"
+                    className="flex-1 min-w-0 px-2 sm:px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 text-xs sm:text-sm font-medium transition flex items-center justify-center gap-1 sm:gap-2"
                   >
-                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <svg className="w-4 h-4 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
                     </svg>
-                    Démarrer (PIN)
+                    <span className="hidden sm:inline">Démarrer (PIN)</span>
+                    <span className="sm:hidden">PIN</span>
                   </button>
                 </>
               ) : (
@@ -796,18 +797,18 @@ export default function EducatorAppointmentsPage() {
                   actionLoading={actionLoading}
                 />
               )}
-              {canCancelAppointment(appointment).canCancel ? (
+              {canCancelAppointment(appointment).canCancel && (
                 <button
                   onClick={() => handleCancel(appointment.id)}
                   disabled={actionLoading}
-                  className="px-3 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 text-sm font-medium transition"
+                  className="p-2 sm:px-3 sm:py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 text-xs sm:text-sm font-medium transition flex items-center justify-center"
+                  title="Annuler le rendez-vous"
                 >
-                  Annuler
+                  <svg className="w-4 h-4 sm:hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                  </svg>
+                  <span className="hidden sm:inline">Annuler</span>
                 </button>
-              ) : (
-                <span className="px-3 py-2 bg-gray-50 text-gray-400 rounded-lg text-xs" title={`Annulation impossible moins de 48h avant (${canCancelAppointment(appointment).hoursRemaining}h restantes)`}>
-                  Annulation impossible
-                </span>
               )}
             </>
           )}
@@ -820,12 +821,13 @@ export default function EducatorAppointmentsPage() {
                 setShowNotesModal(true);
               }}
               disabled={actionLoading}
-              className="px-3 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 text-sm font-medium transition flex items-center gap-1"
+              className="p-2 sm:px-3 sm:py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 text-xs sm:text-sm font-medium transition flex items-center justify-center gap-1"
+              title="Notes"
             >
               <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
               </svg>
-              Notes
+              <span className="hidden sm:inline">Notes</span>
             </button>
           )}
 
@@ -833,12 +835,13 @@ export default function EducatorAppointmentsPage() {
             <button
               onClick={() => handleViewDossier(appointment.child_id!)}
               disabled={dossierLoading}
-              className="px-3 py-2 bg-purple-100 text-purple-700 rounded-lg hover:bg-purple-200 text-sm font-medium transition flex items-center gap-1"
+              className="p-2 sm:px-3 sm:py-2 bg-purple-100 text-purple-700 rounded-lg hover:bg-purple-200 text-xs sm:text-sm font-medium transition flex items-center justify-center gap-1"
+              title="Voir le dossier"
             >
               <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
               </svg>
-              Dossier
+              <span className="hidden sm:inline">Dossier</span>
             </button>
           )}
         </div>
@@ -1254,21 +1257,21 @@ export default function EducatorAppointmentsPage() {
                   )}
 
                   {/* Points forts et défis */}
-                  <div className="grid grid-cols-2 gap-4">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
                     {childDossier.strengths && (
-                      <div className="bg-emerald-50 rounded-lg p-4 border border-emerald-200">
-                        <h4 className="font-semibold text-emerald-900 mb-2 flex items-center gap-2">
-                          <span className="text-lg">✓</span> Points forts
+                      <div className="bg-emerald-50 rounded-lg p-3 sm:p-4 border border-emerald-200">
+                        <h4 className="font-semibold text-emerald-900 mb-2 flex items-center gap-2 text-sm sm:text-base">
+                          <span className="text-base sm:text-lg">✓</span> Points forts
                         </h4>
-                        <p className="text-emerald-800 text-sm">{childDossier.strengths}</p>
+                        <p className="text-emerald-800 text-xs sm:text-sm">{childDossier.strengths}</p>
                       </div>
                     )}
                     {childDossier.challenges && (
-                      <div className="bg-orange-50 rounded-lg p-4 border border-orange-200">
-                        <h4 className="font-semibold text-orange-900 mb-2 flex items-center gap-2">
-                          <span className="text-lg">!</span> Points de vigilance
+                      <div className="bg-orange-50 rounded-lg p-3 sm:p-4 border border-orange-200">
+                        <h4 className="font-semibold text-orange-900 mb-2 flex items-center gap-2 text-sm sm:text-base">
+                          <span className="text-base sm:text-lg">!</span> Points de vigilance
                         </h4>
-                        <p className="text-orange-800 text-sm">{childDossier.challenges}</p>
+                        <p className="text-orange-800 text-xs sm:text-sm">{childDossier.challenges}</p>
                       </div>
                     )}
                   </div>
@@ -1284,8 +1287,8 @@ export default function EducatorAppointmentsPage() {
                   {/* Préférences du dossier */}
                   {childDossier.preferences && childDossier.preferences.length > 0 && (
                     <div>
-                      <h4 className="font-semibold text-gray-900 mb-3">Préférences et stratégies</h4>
-                      <div className="grid grid-cols-2 gap-4">
+                      <h4 className="font-semibold text-gray-900 mb-3 text-sm sm:text-base">Préférences et stratégies</h4>
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
                         {/* Renforçateurs */}
                         {childDossier.preferences.filter((p: any) => p.type === 'reinforcer').length > 0 && (
                           <div className="bg-yellow-50 rounded-lg p-3 border border-yellow-200">
