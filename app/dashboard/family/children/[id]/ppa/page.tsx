@@ -582,19 +582,20 @@ export default function PPAPage() {
 
       {/* Barre d'outils (non imprimée) */}
       <div className="no-print bg-white border-b border-gray-200 sticky top-0 z-50">
-        <div className="max-w-5xl mx-auto px-4 py-3 flex items-center justify-between">
+        <div className="max-w-5xl mx-auto px-3 sm:px-4 py-2 sm:py-3 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 sm:gap-0">
           <Link
             href={`/dashboard/family/children/${childId}/dossier`}
-            className="flex items-center gap-2 text-gray-600 hover:text-primary-600"
+            className="flex items-center gap-2 text-gray-600 hover:text-primary-600 text-sm sm:text-base"
           >
-            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <svg className="w-4 h-4 sm:w-5 sm:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
             </svg>
-            Retour au dossier
+            <span className="hidden xs:inline">Retour au dossier</span>
+            <span className="xs:hidden">Retour</span>
           </Link>
 
           {/* Indicateur de sauvegarde */}
-          <div className="flex items-center gap-2 text-sm">
+          <div className="hidden sm:flex items-center gap-2 text-sm">
             {saveStatus === 'saving' && (
               <span className="flex items-center gap-2 text-blue-600">
                 <svg className="w-4 h-4 animate-spin" fill="none" viewBox="0 0 24 24">
@@ -679,36 +680,36 @@ export default function PPAPage() {
       </div>
 
       {/* Document PPA */}
-      <div id="ppa-document" ref={printRef} className="max-w-5xl mx-auto bg-white p-8 my-6 shadow-lg print:shadow-none print:my-0">
+      <div id="ppa-document" ref={printRef} className="max-w-5xl mx-auto bg-white p-4 sm:p-6 md:p-8 my-4 sm:my-6 shadow-lg print:shadow-none print:my-0">
 
         {/* En-tête */}
-        <div className="border-b-4 border-primary-600 pb-6 mb-8">
-          <div className="flex items-center justify-between">
+        <div className="border-b-4 border-primary-600 pb-4 sm:pb-6 mb-6 sm:mb-8">
+          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 sm:gap-4">
             <div>
-              <h1 className="text-3xl font-bold text-gray-900">
+              <h1 className="text-xl sm:text-2xl md:text-3xl font-bold text-gray-900">
                 Projet Personnalisé d'Accompagnement
               </h1>
-              <p className="text-lg text-gray-600 mt-1">PPA - Document de suivi éducatif</p>
+              <p className="text-sm sm:text-base md:text-lg text-gray-600 mt-1">PPA - Document de suivi éducatif</p>
             </div>
-            <div className="text-right">
-              <p className="text-sm text-gray-500">Date d'élaboration</p>
+            <div className="text-left sm:text-right w-full sm:w-auto">
+              <p className="text-xs sm:text-sm text-gray-500">Date d'élaboration</p>
               <input
                 type="date"
                 value={ppaData.evaluation_date}
                 onChange={(e) => setPpaData({ ...ppaData, evaluation_date: e.target.value })}
-                className="text-lg font-semibold text-gray-900 border-b border-gray-300 focus:border-primary-500 outline-none"
+                className="text-base sm:text-lg font-semibold text-gray-900 border-b border-gray-300 focus:border-primary-500 outline-none w-full sm:w-auto"
               />
             </div>
           </div>
         </div>
 
         {/* Section 1: Identification */}
-        <section className="mb-8">
-          <h2 className="text-xl font-bold text-white bg-primary-600 px-4 py-2 rounded-t-lg">
+        <section className="mb-6 sm:mb-8">
+          <h2 className="text-base sm:text-lg md:text-xl font-bold text-white bg-primary-600 px-3 sm:px-4 py-2 rounded-t-lg">
             1. IDENTIFICATION
           </h2>
-          <div className="border border-gray-300 border-t-0 rounded-b-lg p-4">
-            <div className="grid grid-cols-2 gap-6">
+          <div className="border border-gray-300 border-t-0 rounded-b-lg p-3 sm:p-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
               {/* Enfant */}
               <div>
                 <h3 className="font-semibold text-gray-900 mb-3 border-b pb-1">Personne accompagnée</h3>
@@ -753,9 +754,9 @@ export default function PPAPage() {
             </div>
 
             {/* Intervenant */}
-            <div className="mt-6 pt-4 border-t">
-              <h3 className="font-semibold text-gray-900 mb-3">Intervenant principal</h3>
-              <div className="grid grid-cols-2 gap-4">
+            <div className="mt-4 sm:mt-6 pt-4 border-t">
+              <h3 className="font-semibold text-gray-900 mb-3 text-sm sm:text-base">Intervenant principal</h3>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
                   <label className="text-sm text-gray-600">Nom de l'intervenant :</label>
                   <input
@@ -782,11 +783,11 @@ export default function PPAPage() {
         </section>
 
         {/* Section 2: Anamnèse */}
-        <section className="mb-8">
-          <h2 className="text-xl font-bold text-white bg-primary-600 px-4 py-2 rounded-t-lg">
+        <section className="mb-6 sm:mb-8">
+          <h2 className="text-base sm:text-lg md:text-xl font-bold text-white bg-primary-600 px-3 sm:px-4 py-2 rounded-t-lg">
             2. ANAMNÈSE
           </h2>
-          <div className="border border-gray-300 border-t-0 rounded-b-lg p-4">
+          <div className="border border-gray-300 border-t-0 rounded-b-lg p-3 sm:p-4">
 
             {/* Partie A: Historique éducatif (stockable) */}
             <div className="mb-6">
@@ -858,8 +859,8 @@ export default function PPAPage() {
                 </span>
               </h3>
 
-              <div className="bg-gray-50 p-4 rounded-lg space-y-4">
-                <div className="grid grid-cols-2 gap-4">
+              <div className="bg-gray-50 p-3 sm:p-4 rounded-lg space-y-4">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div>
                     <label className="text-sm font-medium text-gray-700 block mb-1">Diagnostic(s)</label>
                     <div className="border border-gray-300 bg-white rounded p-2 min-h-[60px]">
@@ -901,7 +902,7 @@ export default function PPAPage() {
                   </div>
                 </div>
 
-                <div className="grid grid-cols-2 gap-4">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div>
                     <label className="text-sm font-medium text-gray-700 block mb-1">Traitements en cours</label>
                     <div className="border border-gray-300 bg-white rounded p-2 min-h-[60px]">
@@ -936,11 +937,11 @@ export default function PPAPage() {
         </section>
 
         {/* Section 3: Profil de la personne */}
-        <section className="mb-8">
-          <h2 className="text-xl font-bold text-white bg-primary-600 px-4 py-2 rounded-t-lg">
+        <section className="mb-6 sm:mb-8">
+          <h2 className="text-base sm:text-lg md:text-xl font-bold text-white bg-primary-600 px-3 sm:px-4 py-2 rounded-t-lg">
             3. PROFIL DE LA PERSONNE
           </h2>
-          <div className="border border-gray-300 border-t-0 rounded-b-lg p-4">
+          <div className="border border-gray-300 border-t-0 rounded-b-lg p-3 sm:p-4">
 
             {/* Description */}
             <div className="mb-6">
@@ -951,9 +952,9 @@ export default function PPAPage() {
             </div>
 
             {/* Points forts et centres d'intérêt */}
-            <div className="grid grid-cols-2 gap-6 mb-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6 mb-6">
               <div>
-                <h3 className="font-semibold text-gray-900 mb-2 flex items-center gap-2">
+                <h3 className="font-semibold text-gray-900 mb-2 flex items-center gap-2 text-sm sm:text-base">
                   <span className="text-green-600">✓</span> Points forts
                 </h3>
                 <div className="bg-green-50 p-3 rounded min-h-[80px]">
@@ -983,9 +984,9 @@ export default function PPAPage() {
             </div>
 
             {/* Centres d'intérêt et renforçateurs */}
-            <div className="grid grid-cols-2 gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
               <div>
-                <h3 className="font-semibold text-gray-900 mb-2">❤️ Centres d'intérêt</h3>
+                <h3 className="font-semibold text-gray-900 mb-2 text-sm sm:text-base">❤️ Centres d'intérêt</h3>
                 <div className="bg-pink-50 p-3 rounded min-h-[60px]">
                   {interests.length > 0 ? (
                     <ul className="space-y-1">
@@ -1015,9 +1016,9 @@ export default function PPAPage() {
             </div>
 
             {/* Stratégies et à éviter */}
-            <div className="grid grid-cols-2 gap-6 mt-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6 mt-4">
               <div>
-                <h3 className="font-semibold text-gray-900 mb-2">💡 Stratégies qui fonctionnent</h3>
+                <h3 className="font-semibold text-gray-900 mb-2 text-sm sm:text-base">💡 Stratégies qui fonctionnent</h3>
                 <div className="bg-blue-50 p-3 rounded min-h-[60px]">
                   {strategies.length > 0 ? (
                     <ul className="space-y-1">
@@ -1049,11 +1050,11 @@ export default function PPAPage() {
         </section>
 
         {/* Section 4: Contexte */}
-        <section className="mb-8 print-break">
-          <h2 className="text-xl font-bold text-white bg-primary-600 px-4 py-2 rounded-t-lg">
+        <section className="mb-6 sm:mb-8 print-break">
+          <h2 className="text-base sm:text-lg md:text-xl font-bold text-white bg-primary-600 px-3 sm:px-4 py-2 rounded-t-lg">
             4. CONTEXTE ET ENVIRONNEMENT
           </h2>
-          <div className="border border-gray-300 border-t-0 rounded-b-lg p-4">
+          <div className="border border-gray-300 border-t-0 rounded-b-lg p-3 sm:p-4">
             <div className="space-y-4">
               <div>
                 <label className="font-semibold text-gray-900 block mb-2">Scolarité / Lieu d'accueil</label>
@@ -1087,11 +1088,11 @@ export default function PPAPage() {
         </section>
 
         {/* Section 5: Synthèse d'évaluation par domaine */}
-        <section className="mb-8">
-          <h2 className="text-xl font-bold text-white bg-primary-600 px-4 py-2 rounded-t-lg">
+        <section className="mb-6 sm:mb-8">
+          <h2 className="text-base sm:text-lg md:text-xl font-bold text-white bg-primary-600 px-3 sm:px-4 py-2 rounded-t-lg">
             5. SYNTHÈSE D'ÉVALUATION PAR DOMAINE
           </h2>
-          <div className="border border-gray-300 border-t-0 rounded-b-lg p-4">
+          <div className="border border-gray-300 border-t-0 rounded-b-lg p-3 sm:p-4">
             <p className="text-sm text-gray-600 mb-4 italic">
               Basé sur les évaluations VABS-2, EFI-Ré/TTAP et observations cliniques
             </p>
@@ -1233,10 +1234,10 @@ export default function PPAPage() {
 
             {/* Profil Sensoriel */}
             <div className="mb-6 print-break">
-              <h3 className="font-bold text-primary-700 mb-3 pb-1 border-b-2 border-primary-200">
+              <h3 className="font-bold text-primary-700 mb-3 pb-1 border-b-2 border-primary-200 text-sm sm:text-base">
                 PROFIL SENSORIEL
               </h3>
-              <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-3">
                 <div>
                   <label className="text-sm font-medium text-gray-700 block mb-1">Visuel</label>
                   <textarea
@@ -1409,11 +1410,11 @@ export default function PPAPage() {
         </section>
 
         {/* Section 6: Objectifs */}
-        <section className="mb-8 print-break">
-          <h2 className="text-xl font-bold text-white bg-primary-600 px-4 py-2 rounded-t-lg">
+        <section className="mb-6 sm:mb-8 print-break">
+          <h2 className="text-base sm:text-lg md:text-xl font-bold text-white bg-primary-600 px-3 sm:px-4 py-2 rounded-t-lg">
             6. OBJECTIFS D'ACCOMPAGNEMENT
           </h2>
-          <div className="border border-gray-300 border-t-0 rounded-b-lg p-4">
+          <div className="border border-gray-300 border-t-0 rounded-b-lg p-3 sm:p-4">
             {goals.length > 0 ? (
               <div className="space-y-4">
                 {goals.map((goal, index) => (
@@ -1459,7 +1460,7 @@ export default function PPAPage() {
                           <label className="text-sm text-gray-600">Objectif :</label>
                           <div className="border-b border-gray-300 py-1">_________________________________</div>
                         </div>
-                        <div className="grid grid-cols-2 gap-4">
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                           <div>
                             <label className="text-sm text-gray-600">Domaine :</label>
                             <div className="border-b border-gray-300 py-1">____________</div>
@@ -1498,12 +1499,12 @@ export default function PPAPage() {
         </section>
 
         {/* Section 7: Modalités */}
-        <section className="mb-8">
-          <h2 className="text-xl font-bold text-white bg-primary-600 px-4 py-2 rounded-t-lg">
+        <section className="mb-6 sm:mb-8">
+          <h2 className="text-base sm:text-lg md:text-xl font-bold text-white bg-primary-600 px-3 sm:px-4 py-2 rounded-t-lg">
             7. MODALITÉS D'ACCOMPAGNEMENT
           </h2>
-          <div className="border border-gray-300 border-t-0 rounded-b-lg p-4">
-            <div className="grid grid-cols-2 gap-6">
+          <div className="border border-gray-300 border-t-0 rounded-b-lg p-3 sm:p-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
               <div>
                 <label className="font-semibold text-gray-900 block mb-2">Fréquence des séances</label>
                 <div className="space-y-2 text-sm">
@@ -1580,12 +1581,12 @@ export default function PPAPage() {
         </section>
 
         {/* Section 8: Révision */}
-        <section className="mb-8">
-          <h2 className="text-xl font-bold text-white bg-primary-600 px-4 py-2 rounded-t-lg">
+        <section className="mb-6 sm:mb-8">
+          <h2 className="text-base sm:text-lg md:text-xl font-bold text-white bg-primary-600 px-3 sm:px-4 py-2 rounded-t-lg">
             8. RÉVISION ET SUIVI
           </h2>
-          <div className="border border-gray-300 border-t-0 rounded-b-lg p-4">
-            <div className="grid grid-cols-2 gap-6">
+          <div className="border border-gray-300 border-t-0 rounded-b-lg p-3 sm:p-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
               <div>
                 <label className="font-semibold text-gray-900 block mb-2">Date de prochaine révision</label>
                 <input
@@ -1642,12 +1643,12 @@ export default function PPAPage() {
         </section>
 
         {/* Signatures */}
-        <section className="mb-8">
-          <h2 className="text-xl font-bold text-white bg-gray-700 px-4 py-2 rounded-t-lg">
+        <section className="mb-6 sm:mb-8">
+          <h2 className="text-base sm:text-lg md:text-xl font-bold text-white bg-gray-700 px-3 sm:px-4 py-2 rounded-t-lg">
             SIGNATURES
           </h2>
-          <div className="border border-gray-300 border-t-0 rounded-b-lg p-4">
-            <div className="grid grid-cols-2 gap-8">
+          <div className="border border-gray-300 border-t-0 rounded-b-lg p-3 sm:p-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 sm:gap-8">
               <div className="text-center">
                 <p className="font-semibold text-gray-900 mb-4">Responsable légal</p>
                 <div className="border-b border-gray-400 h-20 mb-2"></div>
@@ -1834,12 +1835,12 @@ export default function PPAPage() {
               </div>
             </div>
 
-            <div className="flex-1 overflow-y-auto p-6">
-              <div className="space-y-6">
+            <div className="flex-1 overflow-y-auto p-4 sm:p-6">
+              <div className="space-y-4 sm:space-y-6">
                 {/* Informations générales */}
-                <div className="grid grid-cols-2 gap-4">
-                  <div className="bg-gray-50 p-4 rounded-lg">
-                    <h4 className="font-semibold text-gray-700 mb-2">Intervenant</h4>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div className="bg-gray-50 p-3 sm:p-4 rounded-lg">
+                    <h4 className="font-semibold text-gray-700 mb-2 text-sm sm:text-base">Intervenant</h4>
                     <p className="text-gray-900">{selectedVersion.educator_name || '-'}</p>
                     <p className="text-sm text-gray-500">{selectedVersion.educator_structure || '-'}</p>
                   </div>
