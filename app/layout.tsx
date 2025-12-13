@@ -4,7 +4,7 @@ import { TndProvider } from '@/contexts/TndContext'
 import CookieBanner from '@/components/CookieBanner'
 
 export const metadata: Metadata = {
-  title: 'Autisme Connect - Professionnels TND & Autisme près de chez vous',
+  title: 'neurocare - Professionnels du Neuro Développement près de chez vous',
   description: 'Plateforme gratuite pour les familles. Trouvez des professionnels diplômés et vérifiés : psychologues, psychomotriciens, orthophonistes, éducateurs spécialisés. Accompagnement TND, TSA et troubles du neurodéveloppement.',
   keywords: [
     'TND',
@@ -29,9 +29,9 @@ export const metadata: Metadata = {
     'rendez-vous professionnel TND',
     'soutien famille autisme'
   ],
-  authors: [{ name: 'Autisme Connect' }],
-  creator: 'Autisme Connect',
-  publisher: 'Autisme Connect',
+  authors: [{ name: 'neurocare' }],
+  creator: 'neurocare',
+  publisher: 'neurocare',
   formatDetection: {
     email: false,
     address: false,
@@ -42,26 +42,26 @@ export const metadata: Metadata = {
     canonical: '/',
   },
   openGraph: {
-    title: 'Autisme Connect - Professionnels TND & Autisme',
-    description: 'Trouvez des professionnels diplômés et vérifiés près de chez vous : psychologues, psychomotriciens, orthophonistes, éducateurs spécialisés. Accompagnement TND et autisme.',
+    title: 'neurocare - Professionnels du Neuro Développement',
+    description: 'Trouvez des professionnels diplômés et vérifiés près de chez vous : psychologues, psychomotriciens, orthophonistes, éducateurs spécialisés. Accompagnement TND et troubles du neurodéveloppement.',
     url: 'https://www.autismeconnect.fr',
-    siteName: 'Autisme Connect',
+    siteName: 'neurocare',
     locale: 'fr_FR',
     type: 'website',
     images: [
       {
-        url: '/og-image.png',
+        url: '/opengraph-image',
         width: 1200,
         height: 630,
-        alt: 'Autisme Connect - Professionnels TND & Autisme',
+        alt: 'neurocare - Professionnels du Neuro Développement',
       },
     ],
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Autisme Connect - Professionnels TND & Autisme',
-    description: 'Trouvez des professionnels diplômés et vérifiés près de chez vous. Accompagnement TND, TSA et troubles du neurodéveloppement.',
-    images: ['/og-image.png'],
+    title: 'neurocare - Professionnels du Neuro Développement',
+    description: 'Trouvez des professionnels diplômés et vérifiés près de chez vous. Accompagnement TND et troubles du neurodéveloppement.',
+    images: ['/opengraph-image'],
   },
   robots: {
     index: true,
@@ -87,8 +87,8 @@ export default function RootLayout({
   const jsonLd = {
     '@context': 'https://schema.org',
     '@type': 'WebSite',
-    name: 'Autisme Connect',
-    description: 'Plateforme de mise en relation entre professionnels TND (psychologues, psychomotriciens, orthophonistes, éducateurs spécialisés) et familles',
+    name: 'neurocare',
+    description: 'Plateforme de mise en relation entre professionnels du neuro développement (psychologues, psychomotriciens, orthophonistes, éducateurs spécialisés) et familles',
     url: 'https://www.autismeconnect.fr',
     potentialAction: {
       '@type': 'SearchAction',
@@ -100,7 +100,7 @@ export default function RootLayout({
     },
     publisher: {
       '@type': 'Organization',
-      name: 'Autisme Connect',
+      name: 'neurocare',
       url: 'https://www.autismeconnect.fr',
       logo: {
         '@type': 'ImageObject',
@@ -117,13 +117,13 @@ export default function RootLayout({
       {
         '@type': 'SiteNavigationElement',
         name: 'Qui sommes-nous ?',
-        description: 'Découvrez l\'équipe et la mission d\'Autisme Connect',
+        description: 'Découvrez l\'équipe et la mission de neurocare',
         url: 'https://www.autismeconnect.fr/about'
       },
       {
         '@type': 'SiteNavigationElement',
         name: 'Trouver un professionnel',
-        description: 'Recherchez un professionnel TND près de chez vous : psychologue, psychomotricien, orthophoniste, éducateur spécialisé',
+        description: 'Recherchez un professionnel du neuro développement près de chez vous : psychologue, psychomotricien, orthophoniste, éducateur spécialisé',
         url: 'https://www.autismeconnect.fr/search'
       },
       {
@@ -135,7 +135,7 @@ export default function RootLayout({
       {
         '@type': 'SiteNavigationElement',
         name: 'Tarifs',
-        description: 'Découvrez nos offres pour les professionnels TND',
+        description: 'Découvrez nos offres pour les professionnels du neuro développement',
         url: 'https://www.autismeconnect.fr/pricing'
       }
     ]

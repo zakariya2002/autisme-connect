@@ -2,7 +2,7 @@ import { ImageResponse } from 'next/og'
 
 export const runtime = 'edge'
 
-export const alt = 'Autisme Connect - Professionnels TND & Autisme'
+export const alt = 'neurocare - Professionnels du Neuro Développement'
 export const size = {
   width: 1200,
   height: 630,
@@ -21,65 +21,80 @@ export default async function Image() {
           flexDirection: 'column',
           alignItems: 'center',
           justifyContent: 'center',
-          background: 'linear-gradient(135deg, #0d9488 0%, #0891b2 50%, #6366f1 100%)',
-          fontSize: 60,
-          fontWeight: 700,
+          background: 'linear-gradient(135deg, #7c3aed 0%, #6366f1 50%, #3b82f6 100%)',
           padding: '40px',
         }}
       >
-        {/* Logo */}
+        {/* Logo avec texte */}
         <div
           style={{
             display: 'flex',
             alignItems: 'center',
-            gap: '24px',
-            marginBottom: '30px',
+            gap: '20px',
+            marginBottom: '40px',
           }}
         >
+          {/* Logo SVG - onde neurologique */}
           <div
             style={{
-              fontSize: 100,
-              background: 'white',
-              color: '#0d9488',
-              width: '160px',
-              height: '160px',
+              width: '120px',
+              height: '120px',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
-              borderRadius: '50%',
-              fontWeight: 'bold',
-              boxShadow: '0 20px 60px rgba(0, 0, 0, 0.25)',
             }}
           >
-            AC
+            <svg
+              viewBox="0 0 40 40"
+              width="120"
+              height="120"
+              fill="none"
+            >
+              {/* Cercle externe */}
+              <circle
+                cx="20"
+                cy="20"
+                r="16"
+                stroke="white"
+                strokeWidth="3.5"
+                fill="none"
+              />
+              {/* Onde neurologique */}
+              <path
+                d="M9 20 L12 20 Q14 20 15 12 Q16 8 17 12 L20 20 L23 28 Q24 32 25 28 Q26 20 28 20 L31 20"
+                stroke="white"
+                strokeWidth="3"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                fill="none"
+              />
+            </svg>
+          </div>
+
+          {/* Texte neurocare */}
+          <div
+            style={{
+              fontSize: 80,
+              color: 'white',
+              fontWeight: 'bold',
+              letterSpacing: '-2px',
+            }}
+          >
+            neurocare
           </div>
         </div>
 
-        {/* Titre principal */}
+        {/* Sous-titre */}
         <div
           style={{
-            fontSize: 64,
-            color: 'white',
-            textAlign: 'center',
-            marginBottom: '12px',
-            fontWeight: 'bold',
-            textShadow: '0 4px 20px rgba(0, 0, 0, 0.2)',
-          }}
-        >
-          Autisme Connect
-        </div>
-
-        {/* Sous-titre TND */}
-        <div
-          style={{
-            fontSize: 32,
+            fontSize: 38,
             color: 'rgba(255,255,255,0.95)',
             textAlign: 'center',
-            marginBottom: '30px',
+            marginBottom: '40px',
             fontWeight: '600',
           }}
         >
-          Professionnels TND & Autisme
+          Professionnels du Neuro Développement
         </div>
 
         {/* Liste des professionnels */}
@@ -98,9 +113,9 @@ export default async function Image() {
               style={{
                 background: 'rgba(255,255,255,0.2)',
                 color: 'white',
-                padding: '10px 24px',
+                padding: '12px 28px',
                 borderRadius: '50px',
-                fontSize: 22,
+                fontSize: 24,
                 fontWeight: '600',
                 border: '2px solid rgba(255,255,255,0.3)',
               }}
@@ -116,7 +131,7 @@ export default async function Image() {
             fontSize: 26,
             color: 'rgba(255,255,255,0.9)',
             textAlign: 'center',
-            marginTop: '30px',
+            marginTop: '40px',
             fontWeight: '500',
           }}
         >
