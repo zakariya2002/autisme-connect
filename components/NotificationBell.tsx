@@ -24,7 +24,16 @@ export default function NotificationBell({ educatorId, userId }: NotificationBel
   const [unreadCount, setUnreadCount] = useState(0);
   const [isOpen, setIsOpen] = useState(false);
   const [loading, setLoading] = useState(true);
+  const [readNotifIds, setReadNotifIds] = useState<Set<string>>(new Set());
   const dropdownRef = useRef<HTMLDivElement>(null);
+
+  // Charger les notifications lues depuis localStorage
+  useEffect(() => {
+    const stored = localStorage.getItem(`readNotifs_${educatorId}`);
+    if (stored) {
+      setReadNotifIds(new Set(JSON.parse(stored)));
+    }
+  }, [educatorId]);
 
   useEffect(() => {
     fetchNotifications();
@@ -33,7 +42,7 @@ export default function NotificationBell({ educatorId, userId }: NotificationBel
     const interval = setInterval(fetchNotifications, 30000);
 
     return () => clearInterval(interval);
-  }, [educatorId, userId]);
+  }, [educatorId, userId, readNotifIds]);
 
   // Fermer le dropdown si on clique en dehors
   useEffect(() => {
@@ -148,7 +157,7 @@ export default function NotificationBell({ educatorId, userId }: NotificationBel
             type: 'appointment',
             title: 'Demande de rendez-vous',
             description: `${familyName} - ${date} à ${apt.start_time?.substring(0, 5)}`,
-            link: '/dashboard/educator/appointments',
+            link: '/dashboard/educator/appointments?tab=pending',
             time: formatTime(apt.created_at),
             read: false,
           });
@@ -192,13 +201,28 @@ export default function NotificationBell({ educatorId, userId }: NotificationBel
         return 0;
       });
 
-      setNotifications(notifs.slice(0, 10));
-      setUnreadCount(notifs.length);
+      // Filtrer les notifications déjà lues
+      const unreadNotifs = notifs.filter(n => !readNotifIds.has(n.id));
+
+      setNotifications(unreadNotifs.slice(0, 10));
+      setUnreadCount(unreadNotifs.length);
     } catch (error) {
       console.error('Erreur notifications:', error);
     } finally {
       setLoading(false);
     }
+  };
+
+  // Marquer une notification comme lue
+  const markAsRead = (notifId: string) => {
+    const newReadIds = new Set(readNotifIds);
+    newReadIds.add(notifId);
+    setReadNotifIds(newReadIds);
+    localStorage.setItem(`readNotifs_${educatorId}`, JSON.stringify([...newReadIds]));
+
+    // Retirer immédiatement de la liste affichée
+    setNotifications(prev => prev.filter(n => n.id !== notifId));
+    setUnreadCount(prev => Math.max(0, prev - 1));
   };
 
   const formatTime = (dateStr: string) => {
@@ -308,7 +332,10 @@ export default function NotificationBell({ educatorId, userId }: NotificationBel
                   <Link
                     key={notif.id}
                     href={notif.link}
-                    onClick={() => setIsOpen(false)}
+                    onClick={() => {
+                      markAsRead(notif.id);
+                      setIsOpen(false);
+                    }}
                     className="flex items-start gap-3 px-4 py-3 hover:bg-gray-50 transition-colors"
                   >
                     {getIcon(notif.type)}

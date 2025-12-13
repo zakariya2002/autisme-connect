@@ -21,7 +21,7 @@ export default function FamilyNavbar({ profile, familyId, userId }: FamilyNavbar
     <nav className="bg-white shadow-sm flex-shrink-0 sticky top-0 z-40">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between h-14 sm:h-16 items-center">
-          {/* Logo */}
+          {/* Logo - redirige vers le dashboard */}
           <Logo href="/dashboard/family" />
 
           {/* Menu mobile */}

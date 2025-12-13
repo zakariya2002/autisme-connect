@@ -72,7 +72,7 @@ export default function EducatorNavbar({ profile: propProfile, subscription: pro
     <nav className="bg-white shadow-sm">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between h-16 items-center">
-          {/* Logo Pro - visible sur mobile et desktop */}
+          {/* Logo Pro - visible sur mobile et desktop, redirige vers le dashboard */}
           <LogoPro href="/dashboard/educator" iconSize="md" />
 
           {/* Menu mobile (hamburger) */}

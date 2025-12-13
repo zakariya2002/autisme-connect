@@ -5,12 +5,12 @@ import { useState } from 'react';
 interface CalendarProps {
   selectedDate: string;
   onDateSelect: (date: string) => void;
-  availableDays: number[]; // Les jours de la semaine disponibles (0-6)
+  availableDays?: number[]; // Les jours de la semaine disponibles (0-6), tous par défaut
   minDate?: Date;
   fullyBookedDates?: string[]; // Les dates complètement réservées (format YYYY-MM-DD)
 }
 
-export default function Calendar({ selectedDate, onDateSelect, availableDays, minDate = new Date(), fullyBookedDates = [] }: CalendarProps) {
+export default function Calendar({ selectedDate, onDateSelect, availableDays = [0, 1, 2, 3, 4, 5, 6], minDate = new Date(), fullyBookedDates = [] }: CalendarProps) {
   const [currentMonth, setCurrentMonth] = useState(new Date());
 
   const monthNames = [

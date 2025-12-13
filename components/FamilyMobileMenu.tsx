@@ -3,17 +3,38 @@
 import { useState, useEffect } from 'react';
 import { createPortal } from 'react-dom';
 import Link from 'next/link';
-import { usePathname } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
+import { supabase } from '@/lib/supabase';
 
 interface FamilyMobileMenuProps {
-  profile: any;
-  onLogout: () => void;
+  profile?: any;
+  onLogout?: () => void;
 }
 
-export default function FamilyMobileMenu({ profile, onLogout }: FamilyMobileMenuProps) {
+export default function FamilyMobileMenu({ profile: propProfile, onLogout }: FamilyMobileMenuProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [mounted, setMounted] = useState(false);
+  const [profile, setProfile] = useState<any>(propProfile || null);
   const pathname = usePathname();
+  const router = useRouter();
+
+  // Récupérer le profil si non fourni en props
+  useEffect(() => {
+    if (!propProfile) {
+      const fetchProfile = async () => {
+        const { data: { session } } = await supabase.auth.getSession();
+        if (session?.user) {
+          const { data } = await supabase
+            .from('family_profiles')
+            .select('*')
+            .eq('user_id', session.user.id)
+            .single();
+          if (data) setProfile(data);
+        }
+      };
+      fetchProfile();
+    }
+  }, [propProfile]);
 
   // Pour le portal - s'assurer qu'on est côté client
   useEffect(() => {
@@ -53,9 +74,14 @@ export default function FamilyMobileMenu({ profile, onLogout }: FamilyMobileMenu
     document.body.style.overflow = '';
   };
 
-  const handleLogoutClick = () => {
+  const handleLogoutClick = async () => {
     closeMenu();
-    onLogout();
+    if (onLogout) {
+      onLogout();
+    } else {
+      await supabase.auth.signOut();
+      router.push('/');
+    }
   };
 
   // Le contenu du menu qui sera rendu via portal
@@ -133,9 +159,10 @@ export default function FamilyMobileMenu({ profile, onLogout }: FamilyMobileMenu
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
                   </svg>
                 </div>
-                <span>Tableau de bord</span>
+                <span>Mon Compte</span>
               </Link>
 
+              {/* 1. Mon profil */}
               <Link
                 href="/dashboard/family/profile"
                 onClick={closeMenu}
@@ -147,28 +174,7 @@ export default function FamilyMobileMenu({ profile, onLogout }: FamilyMobileMenu
                 Mon profil
               </Link>
 
-              <Link
-                href="/dashboard/family/search"
-                onClick={closeMenu}
-                className="text-gray-700 hover:text-primary-600 hover:bg-primary-50 py-3 px-4 rounded-lg font-medium transition-all duration-200 flex items-center gap-3"
-              >
-                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-                </svg>
-                Chercher un professionnel
-              </Link>
-
-              <Link
-                href="/dashboard/family/bookings"
-                onClick={closeMenu}
-                className="text-gray-700 hover:text-primary-600 hover:bg-primary-50 py-3 px-4 rounded-lg font-medium transition-all duration-200 flex items-center gap-3"
-              >
-                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                </svg>
-                Mes rendez-vous
-              </Link>
-
+              {/* 2. Messages */}
               <Link
                 href="/dashboard/family/messages"
                 onClick={closeMenu}
@@ -180,28 +186,7 @@ export default function FamilyMobileMenu({ profile, onLogout }: FamilyMobileMenu
                 Messages
               </Link>
 
-              <Link
-                href="/dashboard/family/favorites"
-                onClick={closeMenu}
-                className="text-gray-700 hover:text-primary-600 hover:bg-primary-50 py-3 px-4 rounded-lg font-medium transition-all duration-200 flex items-center gap-3"
-              >
-                <svg className="w-5 h-5 text-red-500" fill="currentColor" viewBox="0 0 24 24">
-                  <path d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
-                </svg>
-                Mes favoris
-              </Link>
-
-              <Link
-                href="/dashboard/family/receipts"
-                onClick={closeMenu}
-                className="text-gray-700 hover:text-primary-600 hover:bg-primary-50 py-3 px-4 rounded-lg font-medium transition-all duration-200 flex items-center gap-3"
-              >
-                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-                </svg>
-                Mes reçus
-              </Link>
-
+              {/* 3. Accompagnements */}
               <Link
                 href="/dashboard/family/children"
                 onClick={closeMenu}
@@ -213,6 +198,55 @@ export default function FamilyMobileMenu({ profile, onLogout }: FamilyMobileMenu
                 Accompagnements
               </Link>
 
+              {/* 4. Recherche */}
+              <Link
+                href="/dashboard/family/search"
+                onClick={closeMenu}
+                className="text-gray-700 hover:text-primary-600 hover:bg-primary-50 py-3 px-4 rounded-lg font-medium transition-all duration-200 flex items-center gap-3"
+              >
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                </svg>
+                Recherche
+              </Link>
+
+              {/* 5. Rendez-vous */}
+              <Link
+                href="/dashboard/family/bookings"
+                onClick={closeMenu}
+                className="text-gray-700 hover:text-primary-600 hover:bg-primary-50 py-3 px-4 rounded-lg font-medium transition-all duration-200 flex items-center gap-3"
+              >
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                </svg>
+                Mes rendez-vous
+              </Link>
+
+              {/* 6. Mes reçus */}
+              <Link
+                href="/dashboard/family/receipts"
+                onClick={closeMenu}
+                className="text-gray-700 hover:text-primary-600 hover:bg-primary-50 py-3 px-4 rounded-lg font-medium transition-all duration-200 flex items-center gap-3"
+              >
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                </svg>
+                Mes reçus
+              </Link>
+
+              {/* 7. Mes favoris */}
+              <Link
+                href="/dashboard/family/favorites"
+                onClick={closeMenu}
+                className="text-gray-700 hover:text-primary-600 hover:bg-primary-50 py-3 px-4 rounded-lg font-medium transition-all duration-200 flex items-center gap-3"
+              >
+                <svg className="w-5 h-5 text-red-500" fill="currentColor" viewBox="0 0 24 24">
+                  <path d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+                </svg>
+                Mes favoris
+              </Link>
+
+              {/* 8. Aides financières */}
               <Link
                 href="/dashboard/family/aides"
                 onClick={closeMenu}

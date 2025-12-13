@@ -18,6 +18,7 @@ interface Appointment {
   end_time: string;
   address?: string;
   notes?: string;
+  location_type?: 'home' | 'office' | 'online';
   educator?: {
     id: string;
     first_name: string;
@@ -36,6 +37,7 @@ export default function FamilyBookingsPage() {
   const [familyId, setFamilyId] = useState<string | null>(null);
   const [userId, setUserId] = useState<string | null>(null);
   const [activeFilter, setActiveFilter] = useState<'all' | 'pending' | 'upcoming' | 'past' | null>(null);
+  const [activeTab, setActiveTab] = useState<'appointments' | 'caregivers'>('appointments');
 
   // États pour le signalement no-show
   const [showReportModal, setShowReportModal] = useState(false);
@@ -147,6 +149,51 @@ export default function FamilyBookingsPage() {
     const date = new Date(a.appointment_date);
     return a.status === 'completed' || (a.status === 'accepted' && date < today) || a.status === 'rejected' || a.status === 'cancelled';
   });
+
+  // Extraire les professionnels uniques rencontrés (rendez-vous complétés ou passés acceptés)
+  const getUniqueCaregiversWithStats = () => {
+    const caregiverMap = new Map<string, {
+      id: string;
+      first_name: string;
+      last_name: string;
+      avatar_url?: string;
+      profile_image_url?: string;
+      appointmentCount: number;
+      lastAppointmentDate: string;
+    }>();
+
+    appointments.forEach(apt => {
+      if (!apt.educator?.id) return;
+      const date = new Date(apt.appointment_date);
+      const isPast = apt.status === 'completed' || (apt.status === 'accepted' && date < today);
+
+      if (isPast) {
+        const existing = caregiverMap.get(apt.educator.id);
+        if (existing) {
+          existing.appointmentCount++;
+          if (apt.appointment_date > existing.lastAppointmentDate) {
+            existing.lastAppointmentDate = apt.appointment_date;
+          }
+        } else {
+          caregiverMap.set(apt.educator.id, {
+            id: apt.educator.id,
+            first_name: apt.educator.first_name,
+            last_name: apt.educator.last_name,
+            avatar_url: apt.educator.avatar_url,
+            profile_image_url: apt.educator.profile_image_url,
+            appointmentCount: 1,
+            lastAppointmentDate: apt.appointment_date
+          });
+        }
+      }
+    });
+
+    return Array.from(caregiverMap.values()).sort((a, b) =>
+      new Date(b.lastAppointmentDate).getTime() - new Date(a.lastAppointmentDate).getTime()
+    );
+  };
+
+  const uniqueCaregivers = getUniqueCaregiversWithStats();
 
   const getStatusConfig = (status: AppointmentStatus) => {
     const configs = {
@@ -277,6 +324,34 @@ export default function FamilyBookingsPage() {
     };
   };
 
+  // Vérifier si le bouton vidéo doit être visible (le jour du RDV, à partir de 15 min avant l'heure de début)
+  const canJoinVideoCall = (appointment: Appointment): boolean => {
+    if (appointment.location_type !== 'online') return false;
+
+    const now = new Date();
+    const appointmentDate = new Date(appointment.appointment_date + 'T00:00:00');
+    const todayDate = new Date();
+    todayDate.setHours(0, 0, 0, 0);
+
+    // Vérifier si c'est le même jour
+    if (appointmentDate.getTime() !== todayDate.getTime()) return false;
+
+    // Vérifier si on est à 15 minutes ou moins du début du RDV
+    const [startHour, startMinute] = appointment.start_time.split(':').map(Number);
+    const appointmentStartTime = new Date(appointment.appointment_date);
+    appointmentStartTime.setHours(startHour, startMinute, 0, 0);
+
+    // Permettre de rejoindre 15 minutes avant le début
+    const canJoinFrom = new Date(appointmentStartTime.getTime() - 15 * 60 * 1000);
+
+    // Vérifier si le RDV n'est pas terminé (end_time)
+    const [endHour, endMinute] = appointment.end_time.split(':').map(Number);
+    const appointmentEndTime = new Date(appointment.appointment_date);
+    appointmentEndTime.setHours(endHour, endMinute, 0, 0);
+
+    return now >= canJoinFrom && now <= appointmentEndTime;
+  };
+
   const AppointmentCard = ({ appointment }: { appointment: Appointment }) => {
     const statusConfig = getStatusConfig(appointment.status);
     const appointmentDate = new Date(appointment.appointment_date);
@@ -361,6 +436,19 @@ export default function FamilyBookingsPage() {
 
         {appointment.status === 'accepted' && !isPast && (
           <div className="mt-4 pt-3 border-t border-gray-100 space-y-2">
+            {/* Bouton Rejoindre vidéo - visible uniquement le jour du RDV, 15 min avant */}
+            {canJoinVideoCall(appointment) && (
+              <button
+                onClick={() => window.open(`/video-call/${appointment.id}`, '_blank')}
+                className="w-full px-3 py-2.5 text-white rounded-lg text-sm font-medium transition flex items-center justify-center gap-2 animate-pulse"
+                style={{ background: 'linear-gradient(135deg, #7c3aed 0%, #8b5cf6 25%, #a855f7 50%, #c084fc 75%, #e879f9 100%)' }}
+              >
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z" />
+                </svg>
+                Rejoindre la vidéo
+              </button>
+            )}
             {/* Bouton Ajouter à l'agenda - visible sur mobile */}
             <button
               onClick={() => generateCalendarEvent(appointment)}
@@ -446,6 +534,48 @@ export default function FamilyBookingsPage() {
           <p className="text-gray-500 text-sm mt-1">Gérez et suivez vos rendez-vous</p>
         </div>
 
+        {/* Onglets */}
+        <div className="flex bg-gray-100 rounded-xl p-1 mb-6">
+          <button
+            onClick={() => setActiveTab('appointments')}
+            className={`flex-1 py-2.5 px-4 rounded-lg font-medium text-sm transition-all ${
+              activeTab === 'appointments'
+                ? 'bg-white text-gray-900 shadow-sm'
+                : 'text-gray-600 hover:text-gray-900'
+            }`}
+          >
+            <span className="flex items-center justify-center gap-2">
+              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+              </svg>
+              Rendez-vous
+            </span>
+          </button>
+          <button
+            onClick={() => setActiveTab('caregivers')}
+            className={`flex-1 py-2.5 px-4 rounded-lg font-medium text-sm transition-all ${
+              activeTab === 'caregivers'
+                ? 'bg-white text-gray-900 shadow-sm'
+                : 'text-gray-600 hover:text-gray-900'
+            }`}
+          >
+            <span className="flex items-center justify-center gap-2">
+              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+              </svg>
+              Mes soignants
+              {uniqueCaregivers.length > 0 && (
+                <span className="bg-purple-100 text-purple-700 text-xs px-1.5 py-0.5 rounded-full">
+                  {uniqueCaregivers.length}
+                </span>
+              )}
+            </span>
+          </button>
+        </div>
+
+        {/* Contenu de l'onglet Rendez-vous */}
+        {activeTab === 'appointments' && (
+          <>
         {/* Boutons de filtre */}
         <div className="grid grid-cols-4 gap-3 mb-8">
           {/* Tous */}
@@ -598,6 +728,99 @@ export default function FamilyBookingsPage() {
                   ))}
                 </div>
               </section>
+            )}
+          </div>
+        )}
+          </>
+        )}
+
+        {/* Contenu de l'onglet Mes soignants */}
+        {activeTab === 'caregivers' && (
+          <div>
+            {loading ? (
+              <div className="text-center py-12">
+                <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-primary-600 mx-auto"></div>
+                <p className="text-gray-500 mt-4 text-sm">Chargement...</p>
+              </div>
+            ) : uniqueCaregivers.length === 0 ? (
+              <div className="text-center py-12 bg-white rounded-2xl border border-gray-100">
+                <div className="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                  <svg className="h-8 w-8 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+                  </svg>
+                </div>
+                <h3 className="text-lg font-medium text-gray-900">Aucun soignant rencontré</h3>
+                <p className="text-gray-500 mt-2 text-sm">Les professionnels avec qui vous avez eu des rendez-vous apparaîtront ici.</p>
+                <Link
+                  href="/dashboard/family/search"
+                  className="mt-6 inline-flex items-center px-5 py-2.5 bg-primary-600 text-white rounded-xl font-medium hover:bg-primary-700 transition"
+                >
+                  <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                  </svg>
+                  Trouver un professionnel
+                </Link>
+              </div>
+            ) : (
+              <div className="space-y-3">
+                <p className="text-sm text-gray-500 mb-4">
+                  {uniqueCaregivers.length} professionnel{uniqueCaregivers.length > 1 ? 's' : ''} rencontré{uniqueCaregivers.length > 1 ? 's' : ''}
+                </p>
+                {uniqueCaregivers.map((caregiver) => (
+                  <Link
+                    key={caregiver.id}
+                    href={`/educator/${caregiver.id}/book-appointment`}
+                    className="block bg-white rounded-xl border border-gray-100 shadow-sm hover:shadow-md hover:border-purple-200 transition-all p-4"
+                  >
+                    <div className="flex items-center gap-4">
+                      {/* Avatar */}
+                      <div className="flex-shrink-0">
+                        {caregiver.avatar_url || caregiver.profile_image_url ? (
+                          <img
+                            src={caregiver.avatar_url || caregiver.profile_image_url}
+                            alt={`${caregiver.first_name} ${caregiver.last_name}`}
+                            className="h-14 w-14 rounded-full object-cover border-2 border-purple-100"
+                          />
+                        ) : (
+                          <div className="h-14 w-14 rounded-full bg-gradient-to-br from-violet-400 to-purple-600 flex items-center justify-center">
+                            <span className="text-lg font-bold text-white">
+                              {caregiver.first_name?.[0]}{caregiver.last_name?.[0]}
+                            </span>
+                          </div>
+                        )}
+                      </div>
+
+                      {/* Infos */}
+                      <div className="flex-1 min-w-0">
+                        <h3 className="font-semibold text-gray-900 truncate">
+                          {caregiver.first_name} {caregiver.last_name}
+                        </h3>
+                        <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-sm text-gray-500 mt-1">
+                          <span className="flex items-center gap-1">
+                            <svg className="w-4 h-4 text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                            </svg>
+                            {caregiver.appointmentCount} rendez-vous
+                          </span>
+                          <span className="flex items-center gap-1">
+                            <svg className="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                            </svg>
+                            Dernier : {new Date(caregiver.lastAppointmentDate).toLocaleDateString('fr-FR', { day: 'numeric', month: 'short' })}
+                          </span>
+                        </div>
+                      </div>
+
+                      {/* Flèche */}
+                      <div className="flex-shrink-0">
+                        <svg className="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                        </svg>
+                      </div>
+                    </div>
+                  </Link>
+                ))}
+              </div>
             )}
           </div>
         )}

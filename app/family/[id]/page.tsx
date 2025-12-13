@@ -20,6 +20,44 @@ interface FamilyProfile {
   created_at: string;
 }
 
+interface ChildProfile {
+  id: string;
+  first_name: string;
+  birth_date: string | null;
+  tnd_types: string[];
+  tnd_other: string | null;
+  description: string | null;
+  accompaniment_types: string[];
+  accompaniment_goals: string | null;
+  location_preference: string | null;
+}
+
+const tndTypeLabels: Record<string, string> = {
+  tsa: 'TSA',
+  tdah: 'TDAH',
+  dyslexie: 'Dyslexie',
+  dyspraxie: 'Dyspraxie',
+  dyscalculie: 'Dyscalculie',
+  dysorthographie: 'Dysorthographie',
+  dysphasie: 'Dysphasie',
+  tdi: 'TDI',
+  tdc: 'TDC',
+  hpi: 'HPI',
+  trouble_anxieux: 'Trouble anxieux',
+  autre: 'Autre',
+};
+
+const accompanimentTypeLabels: Record<string, string> = {
+  scolaire: 'Soutien scolaire',
+  comportemental: 'Gestion du comportement',
+  socialisation: 'Socialisation',
+  autonomie: 'Autonomie',
+  communication: 'Communication',
+  motricite: 'Motricité',
+  sensoriel: 'Sensoriel',
+  loisirs: 'Loisirs',
+};
+
 // Fonction pour capitaliser correctement un prénom
 const capitalizeFirstName = (name: string): string => {
   if (!name || !name.trim()) return '';
@@ -59,6 +97,7 @@ export default function FamilyPublicProfile({ params }: { params: { id: string }
   const [userRole, setUserRole] = useState<'educator' | 'family' | null>(null);
   const [educatorProfileId, setEducatorProfileId] = useState<string | null>(null);
   const [hasConversation, setHasConversation] = useState(false);
+  const [children, setChildren] = useState<ChildProfile[]>([]);
 
   useEffect(() => {
     fetchFamilyProfile();
@@ -91,6 +130,16 @@ export default function FamilyPublicProfile({ params }: { params: { id: string }
           .single();
 
         setHasConversation(!!conversation);
+
+        // Récupérer les accompagnements de la famille
+        const { data: childrenData } = await supabase
+          .from('child_profiles')
+          .select('id, first_name, birth_date, tnd_types, tnd_other, description, accompaniment_types, accompaniment_goals, location_preference')
+          .eq('family_id', params.id)
+          .eq('is_active', true)
+          .order('created_at', { ascending: true });
+
+        setChildren(childrenData || []);
       }
     }
   };
@@ -216,12 +265,7 @@ export default function FamilyPublicProfile({ params }: { params: { id: string }
 
               {/* Informations de base */}
               <div className="flex-1">
-                <div className="flex items-center gap-3 mb-2">
-                  <div className="flex-shrink-0 w-12 h-12 rounded-full bg-gradient-to-br from-primary-500 to-primary-700 flex items-center justify-center shadow-lg ring-2 ring-white">
-                    <span className="text-lg font-bold text-white">
-                      {family.first_name?.[0]?.toUpperCase()}{family.last_name?.[0]?.toUpperCase()}
-                    </span>
-                  </div>
+                <div className="mb-2">
                   <h1 className="text-3xl font-bold text-white">
                     {getFormattedFullName(family.first_name, family.last_name)}
                   </h1>
@@ -246,7 +290,7 @@ export default function FamilyPublicProfile({ params }: { params: { id: string }
                   <svg className="w-6 h-6 mr-2 text-primary-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
                   </svg>
-                  Profil Famille
+                  Profil Aidant
                 </h2>
                 <div className="space-y-3">
                   <div className="flex items-center text-gray-700">
@@ -263,6 +307,84 @@ export default function FamilyPublicProfile({ params }: { params: { id: string }
                   </div>
                 </div>
               </div>
+
+              {/* Section Accompagnements - visible uniquement pour les éducateurs */}
+              {userRole === 'educator' && children.length > 0 && (
+                <div className="bg-green-50 rounded-lg p-6 border border-green-200">
+                  <h2 className="text-xl font-semibold text-gray-900 mb-4 flex items-center">
+                    <svg className="w-6 h-6 mr-2 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" />
+                    </svg>
+                    Accompagnements ({children.length})
+                  </h2>
+                  <div className="space-y-4">
+                    {children.map((child) => (
+                      <div key={child.id} className="bg-white rounded-xl p-4 border border-green-100 shadow-sm">
+                        <div className="flex items-start gap-3">
+                          <div className="w-10 h-10 bg-green-100 rounded-full flex items-center justify-center flex-shrink-0">
+                            <span className="text-lg font-semibold text-green-600">
+                              {child.first_name[0].toUpperCase()}
+                            </span>
+                          </div>
+                          <div className="flex-1 min-w-0">
+                            <div className="flex items-center gap-2 flex-wrap">
+                              <h3 className="text-lg font-semibold text-gray-900">{child.first_name}</h3>
+                              {child.birth_date && (
+                                <span className="text-sm text-gray-500">
+                                  ({Math.floor((new Date().getTime() - new Date(child.birth_date).getTime()) / (365.25 * 24 * 60 * 60 * 1000))} ans)
+                                </span>
+                              )}
+                              {child.location_preference && (
+                                <span className="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-700">
+                                  {child.location_preference === 'domicile' ? 'Domicile' :
+                                   child.location_preference === 'exterieur' ? 'Extérieur' : 'Dom./Ext.'}
+                                </span>
+                              )}
+                            </div>
+
+                            {/* Types de TND */}
+                            {child.tnd_types && child.tnd_types.length > 0 && (
+                              <div className="flex flex-wrap gap-1 mt-2">
+                                {child.tnd_types.map((type) => (
+                                  <span key={type} className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-purple-50 text-purple-700 border border-purple-200">
+                                    {type === 'autre' && child.tnd_other
+                                      ? `Autre: ${child.tnd_other}`
+                                      : tndTypeLabels[type] || type}
+                                  </span>
+                                ))}
+                              </div>
+                            )}
+
+                            {/* Types d'accompagnement */}
+                            {child.accompaniment_types && child.accompaniment_types.length > 0 && (
+                              <div className="flex flex-wrap gap-1 mt-2">
+                                {child.accompaniment_types.map((type) => (
+                                  <span key={type} className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-primary-50 text-primary-700">
+                                    {accompanimentTypeLabels[type] || type}
+                                  </span>
+                                ))}
+                              </div>
+                            )}
+
+                            {/* Description */}
+                            {child.description && (
+                              <p className="text-sm text-gray-600 mt-2 line-clamp-2">{child.description}</p>
+                            )}
+
+                            {/* Objectifs */}
+                            {child.accompaniment_goals && (
+                              <div className="mt-2 p-2 bg-green-50 rounded-lg">
+                                <p className="text-xs font-medium text-green-700 mb-1">Objectifs :</p>
+                                <p className="text-sm text-green-800 line-clamp-2">{child.accompaniment_goals}</p>
+                              </div>
+                            )}
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
 
               {/* Boutons de contact et rendez-vous */}
               {userRole === 'educator' && hasConversation ? (

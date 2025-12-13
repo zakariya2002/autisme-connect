@@ -14,13 +14,6 @@ interface Family {
   last_name: string;
 }
 
-interface WeeklySlot {
-  id: string;
-  day_of_week: number;
-  start_time: string;
-  end_time: string;
-}
-
 interface Appointment {
   appointment_date: string;
   start_time: string;
@@ -28,22 +21,11 @@ interface Appointment {
   status: string;
 }
 
-const DAYS = [
-  { value: 0, label: 'Dimanche' },
-  { value: 1, label: 'Lundi' },
-  { value: 2, label: 'Mardi' },
-  { value: 3, label: 'Mercredi' },
-  { value: 4, label: 'Jeudi' },
-  { value: 5, label: 'Vendredi' },
-  { value: 6, label: 'Samedi' },
-];
-
 export default function RequestAppointmentPage({ params }: { params: { id: string } }) {
   const router = useRouter();
   const [loading, setLoading] = useState(true);
   const [family, setFamily] = useState<Family | null>(null);
   const [educatorId, setEducatorId] = useState<string | null>(null);
-  const [weeklySlots, setWeeklySlots] = useState<WeeklySlot[]>([]);
   const [appointments, setAppointments] = useState<Appointment[]>([]);
 
   const [selectedDate, setSelectedDate] = useState('');
@@ -53,7 +35,6 @@ export default function RequestAppointmentPage({ params }: { params: { id: strin
   const [educatorNotes, setEducatorNotes] = useState('');
 
   const [availableSlots, setAvailableSlots] = useState<{ start: string; end: string }[]>([]);
-  const [fullyBookedDates, setFullyBookedDates] = useState<string[]>([]);
   const [success, setSuccess] = useState('');
   const [error, setError] = useState('');
   const [submitting, setSubmitting] = useState(false);
@@ -65,25 +46,15 @@ export default function RequestAppointmentPage({ params }: { params: { id: strin
   useEffect(() => {
     if (educatorId) {
       fetchFamilyData();
-      fetchEducatorAvailability();
+      fetchExistingAppointments();
     }
   }, [educatorId]);
 
   useEffect(() => {
-    if (selectedDate && weeklySlots.length > 0) {
+    if (selectedDate) {
       calculateAvailableSlots();
     }
-  }, [selectedDate, weeklySlots, appointments]);
-
-  useEffect(() => {
-    console.log('UseEffect déclenché - weeklySlots.length:', weeklySlots.length, 'appointments.length:', appointments.length);
-    if (weeklySlots.length > 0) {
-      console.log('Appel de calculateFullyBookedDates()');
-      calculateFullyBookedDates();
-    } else {
-      console.log('weeklySlots est vide, calcul ignoré');
-    }
-  }, [weeklySlots, appointments]);
+  }, [selectedDate, appointments]);
 
   const checkAuth = async () => {
     const { data: { session } } = await supabase.auth.getSession();
@@ -126,95 +97,40 @@ export default function RequestAppointmentPage({ params }: { params: { id: strin
     }
   };
 
-  const fetchEducatorAvailability = async () => {
+  const fetchExistingAppointments = async () => {
     if (!educatorId) return;
 
     try {
-      console.log('Récupération des données pour educatorId:', educatorId);
-
-      // Récupérer les créneaux hebdomadaires de l'éducateur
-      const { data: slots } = await supabase
-        .from('weekly_availability')
-        .select('*')
-        .eq('educator_id', educatorId)
-        .eq('is_active', true);
-
-      console.log('Weekly slots récupérés:', slots);
-      setWeeklySlots(slots || []);
-
-      // Récupérer les rendez-vous existants
+      // Récupérer les rendez-vous existants de l'éducateur
       const { data: existingAppointments } = await supabase
         .from('appointments')
         .select('appointment_date, start_time, end_time, status')
         .eq('educator_id', educatorId)
         .in('status', ['pending', 'confirmed']);
 
-      console.log('Appointments récupérés:', existingAppointments);
       setAppointments(existingAppointments || []);
     } catch (err) {
       console.error('Erreur:', err);
     }
   };
 
+  // Générer des créneaux standards de 8h à 20h (créneaux de 1h)
   const calculateAvailableSlotsForDate = (dateStr: string) => {
-    const date = new Date(dateStr + 'T00:00:00');
-    const dayOfWeek = date.getDay();
-
-    // Trouver les créneaux pour ce jour
-    const daySlots = weeklySlots.filter(slot => slot.day_of_week === dayOfWeek);
-
-    if (daySlots.length === 0) {
-      return [];
-    }
-
-    // Générer tous les créneaux de 30 minutes
     const slots: { start: string; end: string }[] = [];
-    const allSlots: { start: string; end: string; booked: boolean }[] = [];
 
-    daySlots.forEach(slot => {
-      const [startHour, startMinute] = slot.start_time.split(':').map(Number);
-      const [endHour, endMinute] = slot.end_time.split(':').map(Number);
+    // Créneaux de 8h00 à 20h00 par tranches de 1 heure
+    for (let hour = 8; hour < 20; hour++) {
+      const startTime = `${String(hour).padStart(2, '0')}:00`;
+      const endTime = `${String(hour + 1).padStart(2, '0')}:00`;
 
-      let currentHour = startHour;
-      let currentMinute = startMinute;
-
-      while (currentHour < endHour || (currentHour === endHour && currentMinute < endMinute)) {
-        const startTime = `${String(currentHour).padStart(2, '0')}:${String(currentMinute).padStart(2, '0')}`;
-
-        // Calculer l'heure de fin (+30 min)
-        let nextMinute = currentMinute + 30;
-        let nextHour = currentHour;
-        if (nextMinute >= 60) {
-          nextMinute -= 60;
-          nextHour += 1;
-        }
-        const endTime = `${String(nextHour).padStart(2, '0')}:${String(nextMinute).padStart(2, '0')}`;
-
-        // Vérifier si ce créneau n'est pas déjà pris
-        const isBooked = appointments.some(apt => {
-          return apt.appointment_date === dateStr &&
-                 apt.start_time === startTime;
-        });
-
-        allSlots.push({ start: startTime, end: endTime, booked: isBooked });
-
-        if (!isBooked) {
-          slots.push({ start: startTime, end: endTime });
-        }
-
-        currentMinute = nextMinute;
-        currentHour = nextHour;
-      }
-    });
-
-    // Log pour debug
-    if (allSlots.length > 0 && slots.length === 0) {
-      console.log(`Date ${dateStr} est COMPLÈTE - Total: ${allSlots.length}, Disponibles: ${slots.length}`, {
-        date: dateStr,
-        dayOfWeek,
-        allSlots,
-        appointments: appointments.filter(apt => apt.appointment_date === dateStr)
+      // Vérifier si ce créneau n'est pas déjà pris
+      const isBooked = appointments.some(apt => {
+        return apt.appointment_date === dateStr && apt.start_time === startTime;
       });
+
+      if (!isBooked) {
+        slots.push({ start: startTime, end: endTime });
+      }
     }
 
     return slots;
@@ -226,46 +142,32 @@ export default function RequestAppointmentPage({ params }: { params: { id: strin
     setAvailableSlots(slots);
   };
 
-  // Calculer les dates complètes pour le calendrier
-  const calculateFullyBookedDates = () => {
-    console.log('=== DÉBUT CALCUL DATES COMPLÈTES ===');
-    console.log('WeeklySlots:', weeklySlots);
-    console.log('Appointments:', appointments);
-
-    const fullyBooked: string[] = [];
-    const today = new Date();
-    today.setHours(0, 0, 0, 0);
-
-    // Vérifier les 90 prochains jours
-    for (let i = 0; i < 90; i++) {
-      const checkDate = new Date(today);
-      checkDate.setDate(today.getDate() + i);
-      const dateStr = checkDate.toISOString().split('T')[0];
-      const dayOfWeek = checkDate.getDay();
-
-      // Vérifier si ce jour a des créneaux disponibles
-      const hasSlots = weeklySlots.some(slot => slot.day_of_week === dayOfWeek);
-
-      if (hasSlots) {
-        const slots = calculateAvailableSlotsForDate(dateStr);
-        if (slots.length === 0) {
-          fullyBooked.push(dateStr);
-        }
-      }
-    }
-
-    console.log('=== DATES COMPLÈTES CALCULÉES ===', fullyBooked);
-    console.log('Nombre de dates complètes:', fullyBooked.length);
-    setFullyBookedDates(fullyBooked);
-  };
-
   const handleSlotToggle = (startTime: string) => {
     setSelectedSlots(prev => {
+      // Si on clique sur un créneau déjà sélectionné, on désélectionne tout
       if (prev.includes(startTime)) {
-        return prev.filter(t => t !== startTime);
-      } else {
-        return [...prev, startTime];
+        return [];
       }
+
+      // Si aucun créneau n'est sélectionné, on sélectionne juste celui-ci
+      if (prev.length === 0) {
+        return [startTime];
+      }
+
+      // Sinon, on sélectionne tous les créneaux entre le premier sélectionné et celui-ci
+      const allSlotTimes = availableSlots.map(s => s.start);
+      const clickedIndex = allSlotTimes.indexOf(startTime);
+      const firstSelectedIndex = allSlotTimes.indexOf(prev[0]);
+
+      if (clickedIndex === -1 || firstSelectedIndex === -1) {
+        return [startTime];
+      }
+
+      const startIdx = Math.min(clickedIndex, firstSelectedIndex);
+      const endIdx = Math.max(clickedIndex, firstSelectedIndex);
+
+      // Sélectionner tous les créneaux entre startIdx et endIdx
+      return allSlotTimes.slice(startIdx, endIdx + 1);
     });
   };
 
@@ -287,27 +189,35 @@ export default function RequestAppointmentPage({ params }: { params: { id: strin
     setSuccess('');
 
     try {
-      // Créer un rendez-vous pour chaque créneau sélectionné
-      const appointmentsToCreate = selectedSlots.map(startTime => {
+      // Préparer les créneaux pour l'API
+      const slots = selectedSlots.map(startTime => {
         const slot = availableSlots.find(s => s.start === startTime);
         return {
-          educator_id: educatorId,
-          family_id: params.id,
-          appointment_date: selectedDate,
           start_time: startTime,
           end_time: slot?.end || '',
-          location_type: locationType,
-          location_address: locationType === 'home' ? address : null,
-          educator_notes: educatorNotes || null,
-          status: 'pending',
         };
       });
 
-      const { error: insertError } = await supabase
-        .from('appointments')
-        .insert(appointmentsToCreate);
+      // Appeler l'API pour créer les rendez-vous
+      const response = await fetch('/api/appointments/propose', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          educatorId,
+          familyId: params.id,
+          appointmentDate: selectedDate,
+          slots,
+          locationType,
+          address: locationType === 'home' ? address : null,
+          educatorNotes: educatorNotes || null,
+        }),
+      });
 
-      if (insertError) throw insertError;
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.error || 'Erreur lors de la création des rendez-vous');
+      }
 
       setSuccess(`Rendez-vous proposé${selectedSlots.length > 1 ? 's' : ''} avec succès ! La famille recevra une notification.`);
 
@@ -317,7 +227,7 @@ export default function RequestAppointmentPage({ params }: { params: { id: strin
       setAddress('');
 
       // Recharger les rendez-vous
-      fetchEducatorAvailability();
+      fetchExistingAppointments();
 
       // Rediriger après 2 secondes
       setTimeout(() => {
@@ -412,19 +322,9 @@ export default function RequestAppointmentPage({ params }: { params: { id: strin
             </div>
           )}
 
-          {error && (
-            <div className="mb-6 bg-red-50 border-l-4 border-red-500 p-4 rounded-r">
-              <div className="flex items-center">
-                <svg className="w-5 h-5 text-red-500 mr-2" fill="currentColor" viewBox="0 0 20 20">
-                  <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd" />
-                </svg>
-                <span className="text-red-700 font-medium">{error}</span>
-              </div>
-            </div>
-          )}
 
           <form onSubmit={handleSubmit} className="space-y-6">
-            {/* Calendrier */}
+            {/* Calendrier - tous les jours sont disponibles */}
             <div>
               <label className="block text-sm font-semibold text-gray-700 mb-2">
                 Sélectionner une date
@@ -432,42 +332,67 @@ export default function RequestAppointmentPage({ params }: { params: { id: strin
               <Calendar
                 selectedDate={selectedDate}
                 onDateSelect={setSelectedDate}
-                availableDays={[...new Set(weeklySlots.map(slot => slot.day_of_week))]}
-                fullyBookedDates={fullyBookedDates}
                 minDate={new Date()}
               />
             </div>
 
             {/* Créneaux disponibles */}
             {selectedDate && (
-              <div>
-                <label className="block text-sm font-semibold text-gray-700 mb-2">
+              <div className="bg-gray-50 rounded-xl p-4 border border-gray-200">
+                <label className="block text-sm font-semibold text-gray-700 mb-3">
                   Créneaux disponibles pour le {new Date(selectedDate + 'T00:00:00').toLocaleDateString('fr-FR', {
                     weekday: 'long',
-                    year: 'numeric',
-                    month: 'long',
-                    day: 'numeric'
+                    day: 'numeric',
+                    month: 'long'
                   })}
                 </label>
                 {availableSlots.length === 0 ? (
-                  <p className="text-gray-500 text-sm">Aucun créneau disponible pour cette date.</p>
+                  <p className="text-gray-500 text-sm">Tous les créneaux sont déjà réservés pour cette date.</p>
                 ) : (
-                  <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2">
-                    {availableSlots.map((slot) => (
-                      <button
-                        key={slot.start}
-                        type="button"
-                        onClick={() => handleSlotToggle(slot.start)}
-                        className={`px-4 py-2 rounded-md text-sm font-medium transition-colors ${
-                          selectedSlots.includes(slot.start)
-                            ? 'bg-primary-600 text-white'
-                            : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-                        }`}
-                      >
-                        {slot.start} - {slot.end}
-                      </button>
-                    ))}
-                  </div>
+                  <>
+                    <div className="grid grid-cols-4 sm:grid-cols-6 md:grid-cols-8 gap-2">
+                      {availableSlots.map((slot) => (
+                        <button
+                          key={slot.start}
+                          type="button"
+                          onClick={() => handleSlotToggle(slot.start)}
+                          className={`py-2 px-2 rounded-lg text-sm font-medium transition-all ${
+                            selectedSlots.includes(slot.start)
+                              ? 'bg-green-600 text-white shadow-md'
+                              : 'bg-white text-gray-700 border border-gray-300 hover:border-green-400 hover:bg-green-50'
+                          }`}
+                        >
+                          {slot.start}
+                        </button>
+                      ))}
+                    </div>
+
+                    {/* Résumé dynamique */}
+                    {selectedSlots.length > 0 && (
+                      <div className="mt-4 p-4 bg-green-50 rounded-lg border border-green-200">
+                        <div className="flex items-center justify-between flex-wrap gap-2">
+                          <div>
+                            <p className="text-lg font-bold text-green-900">
+                              {selectedSlots.length}h
+                            </p>
+                            <p className="text-sm text-green-700">
+                              De {[...selectedSlots].sort()[0]} à {(() => {
+                                const sorted = [...selectedSlots].sort();
+                                const last = sorted[sorted.length - 1];
+                                const h = parseInt(last.split(':')[0], 10);
+                                return `${String(h + 1).padStart(2, '0')}:00`;
+                              })()}
+                            </p>
+                          </div>
+                          <div className="text-right">
+                            <p className="text-xs text-green-600">
+                              Cliquez sur un créneau sélectionné pour annuler
+                            </p>
+                          </div>
+                        </div>
+                      </div>
+                    )}
+                  </>
                 )}
               </div>
             )}
@@ -518,7 +443,7 @@ export default function RequestAppointmentPage({ params }: { params: { id: strin
             {locationType === 'home' && (
               <div>
                 <label htmlFor="address" className="block text-sm font-semibold text-gray-700 mb-2">
-                  Adresse du rendez-vous
+                  Adresse du rendez-vous <span className="text-red-500">*</span>
                 </label>
                 <input
                   id="address"
@@ -553,12 +478,36 @@ export default function RequestAppointmentPage({ params }: { params: { id: strin
                 disabled={submitting || selectedSlots.length === 0}
                 className="px-6 py-3 bg-green-600 text-white rounded-lg hover:bg-green-700 font-semibold transition-colors shadow-md disabled:opacity-50 disabled:cursor-not-allowed"
               >
-                {submitting ? 'Envoi en cours...' : `Proposer ${selectedSlots.length > 0 ? `(${selectedSlots.length})` : ''}`}
+                {submitting ? 'Envoi en cours...' : 'Proposer'}
               </button>
             </div>
           </form>
         </div>
       </div>
+
+      {/* Toast d'erreur en bas à droite */}
+      {error && (
+        <div className="fixed bottom-4 right-4 left-4 md:left-auto md:w-96 z-50 animate-slide-up">
+          <div className="bg-red-600 text-white px-6 py-4 rounded-lg shadow-2xl border-2 border-red-700">
+            <div className="flex items-start gap-3">
+              <svg className="h-6 w-6 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+                <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd" />
+              </svg>
+              <div className="flex-1">
+                <p className="font-semibold text-sm">{error}</p>
+              </div>
+              <button
+                onClick={() => setError('')}
+                className="flex-shrink-0 text-white/80 hover:text-white transition"
+              >
+                <svg className="h-5 w-5" fill="currentColor" viewBox="0 0 20 20">
+                  <path fillRule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clipRule="evenodd" />
+                </svg>
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

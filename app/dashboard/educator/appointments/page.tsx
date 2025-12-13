@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import { supabase } from '@/lib/supabase';
 import { signOut } from '@/lib/auth';
@@ -120,12 +120,25 @@ interface Appointment {
 
 export default function EducatorAppointmentsPage() {
   const router = useRouter();
+  const searchParams = useSearchParams();
   const [loading, setLoading] = useState(true);
   const [educatorId, setEducatorId] = useState('');
   const [profile, setProfile] = useState<any>(null);
   const [subscription, setSubscription] = useState<any>(null);
   const [appointments, setAppointments] = useState<Appointment[]>([]);
   const [activeFilter, setActiveFilter] = useState<'all' | 'pending' | 'in_progress' | 'upcoming' | 'completed' | null>(null);
+
+  // Lire le paramètre tab de l'URL
+  useEffect(() => {
+    const tab = searchParams.get('tab');
+    if (tab === 'upcoming') {
+      setActiveFilter('upcoming');
+    } else if (tab === 'pending') {
+      setActiveFilter('pending');
+    } else if (tab === 'completed') {
+      setActiveFilter('completed');
+    }
+  }, [searchParams]);
 
   // Modal states
   const [selectedAppointment, setSelectedAppointment] = useState<Appointment | null>(null);
@@ -536,6 +549,34 @@ export default function EducatorAppointmentsPage() {
     return appointmentDateTime < new Date();
   };
 
+  // Vérifier si le bouton vidéo doit être visible (le jour du RDV, à partir de 15 min avant l'heure de début)
+  const canJoinVideoCall = (appointment: Appointment): boolean => {
+    if (appointment.location_type !== 'online') return false;
+
+    const now = new Date();
+    const appointmentDate = new Date(appointment.appointment_date + 'T00:00:00');
+    const todayDate = new Date();
+    todayDate.setHours(0, 0, 0, 0);
+
+    // Vérifier si c'est le même jour
+    if (appointmentDate.getTime() !== todayDate.getTime()) return false;
+
+    // Vérifier si on est à 15 minutes ou moins du début du RDV
+    const [startHour, startMinute] = appointment.start_time.split(':').map(Number);
+    const appointmentStartTime = new Date(appointment.appointment_date);
+    appointmentStartTime.setHours(startHour, startMinute, 0, 0);
+
+    // Permettre de rejoindre 15 minutes avant le début
+    const canJoinFrom = new Date(appointmentStartTime.getTime() - 15 * 60 * 1000);
+
+    // Vérifier si le RDV n'est pas terminé (end_time)
+    const [endHour, endMinute] = appointment.end_time.split(':').map(Number);
+    const appointmentEndTime = new Date(appointment.appointment_date);
+    appointmentEndTime.setHours(endHour, endMinute, 0, 0);
+
+    return now >= canJoinFrom && now <= appointmentEndTime;
+  };
+
   // Générer un fichier ICS pour ajouter au calendrier
   const generateCalendarEvent = (appointment: Appointment) => {
     const startDate = new Date(`${appointment.appointment_date}T${appointment.start_time}`);
@@ -598,11 +639,21 @@ export default function EducatorAppointmentsPage() {
   const today = new Date();
   today.setHours(0, 0, 0, 0);
 
+  // Fonction pour vérifier si un RDV est passé (date + heure de fin)
+  const isAppointmentPast = (appointment: Appointment): boolean => {
+    const endDateTime = new Date(`${appointment.appointment_date}T${appointment.end_time}`);
+    return endDateTime < new Date();
+  };
+
   const pendingAppointments = appointments.filter(a => a.status === 'pending');
   const inProgressAppointments = appointments.filter(a => a.status === 'accepted' && a.started_at);
   const upcomingAppointments = appointments.filter(a => {
-    const date = new Date(a.appointment_date);
-    return a.status === 'accepted' && !a.started_at && date >= today;
+    // Un RDV est "à venir" si il est accepté, pas démarré, et pas encore passé (date+heure de fin)
+    return a.status === 'accepted' && !a.started_at && !isAppointmentPast(a);
+  });
+  // RDV passés non démarrés (manqués)
+  const missedAppointments = appointments.filter(a => {
+    return a.status === 'accepted' && !a.started_at && isAppointmentPast(a);
   });
   const completedAppointments = appointments.filter(a => a.status === 'completed');
   const cancelledAppointments = appointments.filter(a => a.status === 'cancelled' || a.status === 'rejected');
@@ -743,7 +794,7 @@ export default function EducatorAppointmentsPage() {
             </>
           )}
 
-          {appointment.status === 'accepted' && !isPast && (
+          {appointment.status === 'accepted' && (!isPast || appointment.started_at) && (
             <>
               {!appointment.started_at ? (
                 <>
@@ -757,6 +808,20 @@ export default function EducatorAppointmentsPage() {
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
                     </svg>
                   </button>
+                  {/* Bouton Rejoindre la séance vidéo - uniquement le jour du RDV, 15 min avant */}
+                  {canJoinVideoCall(appointment) && (
+                    <button
+                      onClick={() => window.open(`/video-call/${appointment.id}`, '_blank')}
+                      className="flex-1 min-w-0 px-2 sm:px-4 py-2 text-white rounded-lg text-xs sm:text-sm font-medium transition flex items-center justify-center gap-1 sm:gap-2 animate-pulse"
+                      style={{ background: 'linear-gradient(135deg, #7c3aed 0%, #8b5cf6 25%, #a855f7 50%, #c084fc 75%, #e879f9 100%)' }}
+                    >
+                      <svg className="w-4 h-4 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z" />
+                      </svg>
+                      <span className="hidden sm:inline">Rejoindre vidéo</span>
+                      <span className="sm:hidden">Vidéo</span>
+                    </button>
+                  )}
                   <button
                     onClick={() => handleStartSession(appointment.id)}
                     disabled={actionLoading}
@@ -770,32 +835,49 @@ export default function EducatorAppointmentsPage() {
                   </button>
                 </>
               ) : (
-                <SessionCountdown
-                  sessionStart={appointment.started_at}
-                  scheduledDuration={(() => {
-                    const [startHour, startMinute] = appointment.start_time.split(':');
-                    const [endHour, endMinute] = appointment.end_time.split(':');
-                    const start = parseInt(startHour) * 60 + parseInt(startMinute);
-                    const end = parseInt(endHour) * 60 + parseInt(endMinute);
-                    return (end - start) * 60 * 1000;
-                  })()}
-                  onTimeUp={() => {}}
-                  canComplete={(() => {
-                    const sessionStart = new Date(appointment.started_at!);
-                    const [startHour, startMinute] = appointment.start_time.split(':');
-                    const [endHour, endMinute] = appointment.end_time.split(':');
-                    const appointmentDate = new Date(appointment.appointment_date);
-                    const scheduledStart = new Date(appointmentDate);
-                    scheduledStart.setHours(parseInt(startHour), parseInt(startMinute), 0);
-                    const scheduledEnd = new Date(appointmentDate);
-                    scheduledEnd.setHours(parseInt(endHour), parseInt(endMinute), 0);
-                    const sessionDuration = scheduledEnd.getTime() - scheduledStart.getTime();
-                    const minimumEndTime = new Date(sessionStart.getTime() + sessionDuration);
-                    return Date.now() >= minimumEndTime.getTime();
-                  })()}
-                  onComplete={() => handleComplete(appointment.id)}
-                  actionLoading={actionLoading}
-                />
+                <>
+                  {/* Bouton vidéo pendant la séance en cours */}
+                  {canJoinVideoCall(appointment) && (
+                    <button
+                      onClick={() => window.open(`/video-call/${appointment.id}`, '_blank')}
+                      className="p-2 sm:px-4 sm:py-2 text-white rounded-lg text-xs sm:text-sm font-medium transition flex items-center justify-center gap-1 sm:gap-2"
+                      style={{ background: 'linear-gradient(135deg, #7c3aed 0%, #8b5cf6 25%, #a855f7 50%, #c084fc 75%, #e879f9 100%)' }}
+                      title="Rejoindre la vidéo"
+                    >
+                      <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z" />
+                      </svg>
+                      <span className="hidden sm:inline">Vidéo</span>
+                    </button>
+                  )}
+                  <SessionCountdown
+                    sessionStart={appointment.started_at}
+                    scheduledDuration={(() => {
+                      const [startHour, startMinute] = appointment.start_time.split(':');
+                      const [endHour, endMinute] = appointment.end_time.split(':');
+                      const start = parseInt(startHour) * 60 + parseInt(startMinute);
+                      const end = parseInt(endHour) * 60 + parseInt(endMinute);
+                      return (end - start) * 60 * 1000;
+                    })()}
+                    onTimeUp={() => {}}
+                    canComplete={(() => {
+                      const now = Date.now();
+                      const sessionStart = new Date(appointment.started_at!).getTime();
+
+                      // Calculer la durée prévue
+                      const [startHour, startMinute] = appointment.start_time.split(':');
+                      const [endHour, endMinute] = appointment.end_time.split(':');
+                      const start = parseInt(startHour) * 60 + parseInt(startMinute);
+                      const end = parseInt(endHour) * 60 + parseInt(endMinute);
+                      const scheduledDurationMs = (end - start) * 60 * 1000;
+
+                      // On peut terminer si 100% de la durée prévue est écoulée depuis le démarrage
+                      return now >= sessionStart + scheduledDurationMs;
+                    })()}
+                    onComplete={() => handleComplete(appointment.id)}
+                    actionLoading={actionLoading}
+                  />
+                </>
               )}
               {canCancelAppointment(appointment).canCancel && (
                 <button
@@ -1026,6 +1108,23 @@ export default function EducatorAppointmentsPage() {
                 />
                 <div className="space-y-3">
                   {completedAppointments.map(apt => (
+                    <AppointmentCard key={apt.id} appointment={apt} />
+                  ))}
+                </div>
+              </section>
+            )}
+
+            {/* Section: RDV manqués (passés non démarrés) - visible uniquement avec "Tous" */}
+            {activeFilter === 'all' && missedAppointments.length > 0 && (
+              <section>
+                <SectionHeader
+                  title="Rendez-vous manqués"
+                  count={missedAppointments.length}
+                  icon={<svg className="h-5 w-5 text-orange-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" /></svg>}
+                  color="bg-orange-100"
+                />
+                <div className="space-y-3">
+                  {missedAppointments.map(apt => (
                     <AppointmentCard key={apt.id} appointment={apt} />
                   ))}
                 </div>

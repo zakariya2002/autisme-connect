@@ -316,7 +316,7 @@ export default function FamilyDashboard() {
             <h2 className="text-base sm:text-lg font-semibold text-gray-900">Actions rapides</h2>
           </div>
           <div className="p-3 sm:p-4 grid grid-cols-2 gap-2 sm:gap-3">
-            {/* Mon profil */}
+            {/* 1. Mon profil */}
             <Link
               href="/dashboard/family/profile"
               className="flex items-center gap-2 sm:gap-3 p-3 sm:p-4 bg-blue-50 rounded-lg sm:rounded-xl hover:bg-blue-100 transition-colors"
@@ -329,46 +329,7 @@ export default function FamilyDashboard() {
               <span className="font-medium text-gray-900 text-sm sm:text-base">Mon profil</span>
             </Link>
 
-            {/* Mes accompagnements */}
-            <Link
-              href="/dashboard/family/children"
-              className="flex items-center gap-2 sm:gap-3 p-3 sm:p-4 bg-purple-50 rounded-lg sm:rounded-xl hover:bg-purple-100 transition-colors"
-            >
-              <div className="w-8 h-8 sm:w-10 sm:h-10 bg-purple-500 rounded-lg flex items-center justify-center flex-shrink-0">
-                <svg className="h-4 w-4 sm:h-5 sm:w-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" />
-                </svg>
-              </div>
-              <span className="font-medium text-gray-900 text-sm sm:text-base truncate">Accompagnements</span>
-            </Link>
-
-            {/* Chercher un éducateur */}
-            <Link
-              href="/dashboard/family/search"
-              className="flex items-center gap-2 sm:gap-3 p-3 sm:p-4 bg-green-50 rounded-lg sm:rounded-xl hover:bg-green-100 transition-colors"
-            >
-              <div className="w-8 h-8 sm:w-10 sm:h-10 bg-green-500 rounded-lg flex items-center justify-center flex-shrink-0">
-                <svg className="h-4 w-4 sm:h-5 sm:w-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-                </svg>
-              </div>
-              <span className="font-medium text-gray-900 text-sm sm:text-base truncate">Trouver un pro</span>
-            </Link>
-
-            {/* Mes favoris */}
-            <Link
-              href="/dashboard/family/favorites"
-              className="flex items-center gap-2 sm:gap-3 p-3 sm:p-4 bg-red-50 rounded-lg sm:rounded-xl hover:bg-red-100 transition-colors"
-            >
-              <div className="w-8 h-8 sm:w-10 sm:h-10 bg-red-500 rounded-lg flex items-center justify-center flex-shrink-0">
-                <svg className="h-4 w-4 sm:h-5 sm:w-5 text-white" fill="currentColor" viewBox="0 0 24 24">
-                  <path d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
-                </svg>
-              </div>
-              <span className="font-medium text-gray-900 text-sm sm:text-base truncate">Mes favoris</span>
-            </Link>
-
-            {/* Messages */}
+            {/* 2. Messages */}
             <Link
               href="/dashboard/family/messages"
               className="flex items-center gap-2 sm:gap-3 p-3 sm:p-4 bg-indigo-50 rounded-lg sm:rounded-xl hover:bg-indigo-100 transition-colors"
@@ -381,7 +342,33 @@ export default function FamilyDashboard() {
               <span className="font-medium text-gray-900 text-sm sm:text-base">Messages</span>
             </Link>
 
-            {/* Mes rendez-vous */}
+            {/* 3. Accompagnements */}
+            <Link
+              href="/dashboard/family/children"
+              className="flex items-center gap-2 sm:gap-3 p-3 sm:p-4 bg-purple-50 rounded-lg sm:rounded-xl hover:bg-purple-100 transition-colors"
+            >
+              <div className="w-8 h-8 sm:w-10 sm:h-10 bg-purple-500 rounded-lg flex items-center justify-center flex-shrink-0">
+                <svg className="h-4 w-4 sm:h-5 sm:w-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" />
+                </svg>
+              </div>
+              <span className="font-medium text-gray-900 text-sm sm:text-base truncate">Accompagnements</span>
+            </Link>
+
+            {/* 4. Recherche */}
+            <Link
+              href="/dashboard/family/search"
+              className="flex items-center gap-2 sm:gap-3 p-3 sm:p-4 bg-green-50 rounded-lg sm:rounded-xl hover:bg-green-100 transition-colors"
+            >
+              <div className="w-8 h-8 sm:w-10 sm:h-10 bg-green-500 rounded-lg flex items-center justify-center flex-shrink-0">
+                <svg className="h-4 w-4 sm:h-5 sm:w-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                </svg>
+              </div>
+              <span className="font-medium text-gray-900 text-sm sm:text-base truncate">Recherche</span>
+            </Link>
+
+            {/* 5. Rendez-vous */}
             <Link
               href="/dashboard/family/bookings"
               className="flex items-center gap-2 sm:gap-3 p-3 sm:p-4 bg-teal-50 rounded-lg sm:rounded-xl hover:bg-teal-100 transition-colors"
@@ -394,7 +381,7 @@ export default function FamilyDashboard() {
               <span className="font-medium text-gray-900 text-sm sm:text-base">Rendez-vous</span>
             </Link>
 
-            {/* Mes reçus */}
+            {/* 6. Mes reçus */}
             <Link
               href="/dashboard/family/receipts"
               className="flex items-center gap-2 sm:gap-3 p-3 sm:p-4 bg-pink-50 rounded-lg sm:rounded-xl hover:bg-pink-100 transition-colors"
@@ -407,7 +394,20 @@ export default function FamilyDashboard() {
               <span className="font-medium text-gray-900 text-sm sm:text-base">Mes reçus</span>
             </Link>
 
-            {/* Aides financières */}
+            {/* 7. Mes favoris */}
+            <Link
+              href="/dashboard/family/favorites"
+              className="flex items-center gap-2 sm:gap-3 p-3 sm:p-4 bg-red-50 rounded-lg sm:rounded-xl hover:bg-red-100 transition-colors"
+            >
+              <div className="w-8 h-8 sm:w-10 sm:h-10 bg-red-500 rounded-lg flex items-center justify-center flex-shrink-0">
+                <svg className="h-4 w-4 sm:h-5 sm:w-5 text-white" fill="currentColor" viewBox="0 0 24 24">
+                  <path d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+                </svg>
+              </div>
+              <span className="font-medium text-gray-900 text-sm sm:text-base truncate">Mes favoris</span>
+            </Link>
+
+            {/* 8. Aides financières */}
             <Link
               href="/dashboard/family/aides"
               className="flex items-center gap-2 sm:gap-3 p-3 sm:p-4 bg-violet-50 rounded-lg sm:rounded-xl hover:bg-violet-100 transition-colors"
@@ -536,6 +536,17 @@ export default function FamilyDashboard() {
                 ))}
               </div>
             </div>
+
+            {/* Bouton trouver un nouveau rendez-vous */}
+            <Link
+              href="/dashboard/family/search"
+              className="w-full flex items-center justify-center gap-2 py-3 sm:py-4 bg-gradient-to-r from-emerald-400 via-teal-400 to-cyan-400 text-white rounded-xl font-semibold hover:from-emerald-500 hover:via-teal-500 hover:to-cyan-500 transition-all shadow-md hover:shadow-lg"
+            >
+              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+              </svg>
+              Trouver un nouveau rendez-vous
+            </Link>
           </div>
         </div>
         {/* Espace supplémentaire pour iOS */}

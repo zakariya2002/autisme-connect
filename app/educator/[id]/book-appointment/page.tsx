@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { supabase } from '@/lib/supabase';
 import Logo from '@/components/Logo';
-import PublicMobileMenu from '@/components/PublicMobileMenu';
+import FamilyMobileMenu from '@/components/FamilyMobileMenu';
 import { canEducatorCreateBooking } from '@/lib/subscription-utils';
 
 interface Educator {
@@ -37,6 +37,12 @@ interface ChildProfile {
   support_level_needed: string | null;
 }
 
+interface TimeSlot {
+  start: string;
+  end: string;
+  availabilityId: string;
+}
+
 export default function BookAppointmentPage({ params }: { params: { id: string } }) {
   const router = useRouter();
   const [loading, setLoading] = useState(true);
@@ -48,16 +54,21 @@ export default function BookAppointmentPage({ params }: { params: { id: string }
   const [selectedChildId, setSelectedChildId] = useState<string | null>(null);
 
   const [selectedDate, setSelectedDate] = useState('');
-  const [selectedSlot, setSelectedSlot] = useState<{ start: string; end: string } | null>(null);
-  const [customStartTime, setCustomStartTime] = useState('');
-  const [customEndTime, setCustomEndTime] = useState('');
+  const [selectedSlots, setSelectedSlots] = useState<string[]>([]);
   const [locationType, setLocationType] = useState<'home' | 'office' | 'online'>('online');
   const [address, setAddress] = useState('');
   const [familyNotes, setFamilyNotes] = useState('');
 
+  const [currentMonth, setCurrentMonth] = useState(new Date());
   const [success, setSuccess] = useState('');
   const [error, setError] = useState('');
   const [submitting, setSubmitting] = useState(false);
+
+  const monthNames = [
+    'Janvier', 'Février', 'Mars', 'Avril', 'Mai', 'Juin',
+    'Juillet', 'Août', 'Septembre', 'Octobre', 'Novembre', 'Décembre'
+  ];
+  const dayNames = ['Dim', 'Lun', 'Mar', 'Mer', 'Jeu', 'Ven', 'Sam'];
 
   useEffect(() => {
     checkAuth();
@@ -90,7 +101,6 @@ export default function BookAppointmentPage({ params }: { params: { id: string }
 
     setFamilyId(familyProfile.id);
 
-    // Vérifier si la famille est bloquée par cet éducateur
     try {
       const response = await fetch(`/api/check-blocked?educatorId=${params.id}&familyId=${familyProfile.id}`);
       if (response.ok) {
@@ -105,7 +115,6 @@ export default function BookAppointmentPage({ params }: { params: { id: string }
       console.error('Erreur vérification blocage:', e);
     }
 
-    // Récupérer les enfants de la famille
     const { data: childrenData } = await supabase
       .from('child_profiles')
       .select('id, first_name, age, support_level_needed')
@@ -115,7 +124,6 @@ export default function BookAppointmentPage({ params }: { params: { id: string }
 
     if (childrenData && childrenData.length > 0) {
       setChildren(childrenData);
-      // Présélectionner le premier enfant s'il n'y en a qu'un
       if (childrenData.length === 1) {
         setSelectedChildId(childrenData[0].id);
       }
@@ -124,7 +132,6 @@ export default function BookAppointmentPage({ params }: { params: { id: string }
 
   const fetchEducatorData = async () => {
     try {
-      // Récupérer les infos éducateur
       const { data: educatorData, error: educatorError } = await supabase
         .from('educator_profiles')
         .select('id, first_name, last_name, hourly_rate')
@@ -134,7 +141,6 @@ export default function BookAppointmentPage({ params }: { params: { id: string }
       if (educatorError) throw educatorError;
       setEducator(educatorData);
 
-      // Récupérer les disponibilités futures
       const today = new Date().toISOString().split('T')[0];
       const { data: availData } = await supabase
         .from('educator_availability')
@@ -147,7 +153,6 @@ export default function BookAppointmentPage({ params }: { params: { id: string }
 
       if (availData) setAvailabilities(availData);
 
-      // Récupérer les rendez-vous existants
       const { data: appts } = await supabase
         .from('appointments')
         .select('appointment_date, start_time, end_time, status')
@@ -165,122 +170,166 @@ export default function BookAppointmentPage({ params }: { params: { id: string }
     }
   };
 
-  const getAvailableDates = () => {
-    // Grouper par date
-    const dateMap = new Map<string, DailyAvailability[]>();
-
+  // Obtenir les dates avec disponibilités
+  const getAvailableDatesSet = () => {
+    const dates = new Set<string>();
     availabilities.forEach(avail => {
-      const existing = dateMap.get(avail.availability_date) || [];
-      existing.push(avail);
-      dateMap.set(avail.availability_date, existing);
-    });
-
-    // Filtrer les dates avec au moins un créneau libre
-    const freeDates: string[] = [];
-
-    dateMap.forEach((slots, date) => {
-      const hasAvailableSlot = slots.some(slot => {
-        // Vérifier si ce créneau n'est pas déjà réservé
-        return !isSlotBooked(date, slot.start_time, slot.end_time);
-      });
-
-      if (hasAvailableSlot) {
-        freeDates.push(date);
+      if (!isSlotFullyBooked(avail.availability_date, avail.start_time, avail.end_time)) {
+        dates.add(avail.availability_date);
       }
     });
-
-    return freeDates.sort();
+    return dates;
   };
 
-  const getAvailableSlotsForDate = (date: string) => {
-    const dayAvail = availabilities.filter(a => a.availability_date === date);
-
-    return dayAvail.filter(slot => {
-      return !isSlotBooked(date, slot.start_time, slot.end_time);
-    });
-  };
-
-  const isSlotBooked = (date: string, startTime: string, endTime: string) => {
-    // Vérifier s'il y a un chevauchement avec des rendez-vous existants
+  const isSlotFullyBooked = (date: string, startTime: string, endTime: string) => {
     return appointments.some(appt => {
       if (appt.appointment_date !== date) return false;
-
-      // Convertir les heures en minutes pour faciliter la comparaison
       const slotStart = timeToMinutes(startTime);
       const slotEnd = timeToMinutes(endTime);
       const apptStart = timeToMinutes(appt.start_time);
       const apptEnd = timeToMinutes(appt.end_time);
-
-      // Vérifier le chevauchement : un créneau est réservé s'il y a une intersection
       return (slotStart < apptEnd && slotEnd > apptStart);
     });
   };
 
-  // Fonction utilitaire pour convertir HH:MM en minutes
   const timeToMinutes = (time: string): number => {
     const [hours, minutes] = time.split(':').map(Number);
     return hours * 60 + minutes;
   };
 
-  // Générer des options d'heures pour un créneau (par tranches de 30 minutes)
-  const generateTimeOptions = (startTime: string, endTime: string): string[] => {
-    const times: string[] = [];
-    const [startHour, startMin] = startTime.split(':').map(Number);
-    const [endHour, endMin] = endTime.split(':').map(Number);
+  // Générer les créneaux de 1 heure pour une date
+  const getTimeSlotsForDate = (date: string): TimeSlot[] => {
+    const dayAvail = availabilities.filter(a => a.availability_date === date);
+    const slots: TimeSlot[] = [];
 
-    let currentHour = startHour;
-    let currentMin = startMin;
+    dayAvail.forEach(avail => {
+      const [startHour, startMin] = avail.start_time.split(':').map(Number);
+      const [endHour, endMin] = avail.end_time.split(':').map(Number);
 
-    while (currentHour < endHour || (currentHour === endHour && currentMin < endMin)) {
-      times.push(`${String(currentHour).padStart(2, '0')}:${String(currentMin).padStart(2, '0')}`);
+      let currentHour = startHour;
+      let currentMin = startMin;
 
-      currentMin += 30;
-      if (currentMin >= 60) {
-        currentMin = 0;
-        currentHour++;
+      while (currentHour < endHour || (currentHour === endHour && currentMin < endMin)) {
+        const slotStart = `${String(currentHour).padStart(2, '0')}:${String(currentMin).padStart(2, '0')}`;
+
+        let nextHour = currentHour + 1;
+        let nextMin = currentMin;
+        const slotEnd = `${String(nextHour).padStart(2, '0')}:${String(nextMin).padStart(2, '0')}`;
+
+        // Vérifier que le créneau ne dépasse pas la fin de disponibilité
+        const slotEndMinutes = timeToMinutes(slotEnd);
+        const availEndMinutes = timeToMinutes(avail.end_time);
+        if (slotEndMinutes > availEndMinutes) break;
+
+        // Vérifier si ce créneau de 1h n'est pas réservé
+        const isBooked = appointments.some(appt => {
+          if (appt.appointment_date !== date) return false;
+          const apptStart = timeToMinutes(appt.start_time);
+          const apptEnd = timeToMinutes(appt.end_time);
+          const slStart = timeToMinutes(slotStart);
+          const slEnd = timeToMinutes(slotEnd);
+          return (slStart < apptEnd && slEnd > apptStart);
+        });
+
+        if (!isBooked) {
+          slots.push({ start: slotStart, end: slotEnd, availabilityId: avail.id });
+        }
+
+        currentHour = nextHour;
       }
-    }
+    });
 
-    // Ajouter l'heure de fin
-    times.push(endTime);
-
-    return times;
+    return slots.sort((a, b) => a.start.localeCompare(b.start));
   };
 
-  // Valider que la durée est d'au moins 2 heures
-  const validateDuration = (start: string, end: string): boolean => {
-    const [startHour, startMin] = start.split(':').map(Number);
-    const [endHour, endMin] = end.split(':').map(Number);
+  // Calendrier
+  const generateCalendarDays = () => {
+    const firstDay = new Date(currentMonth.getFullYear(), currentMonth.getMonth(), 1);
+    const lastDay = new Date(currentMonth.getFullYear(), currentMonth.getMonth() + 1, 0);
+    const startingDayOfWeek = firstDay.getDay();
+    const daysInMonth = lastDay.getDate();
 
-    const startMinutes = startHour * 60 + startMin;
-    const endMinutes = endHour * 60 + endMin;
-    const durationMinutes = endMinutes - startMinutes;
+    const days: (Date | null)[] = [];
+    for (let i = 0; i < startingDayOfWeek; i++) {
+      days.push(null);
+    }
+    for (let day = 1; day <= daysInMonth; day++) {
+      days.push(new Date(currentMonth.getFullYear(), currentMonth.getMonth(), day));
+    }
+    return days;
+  };
 
-    return durationMinutes >= 120; // Au moins 2 heures (120 minutes)
+  const handleDateClick = (date: Date) => {
+    const dateStr = date.toISOString().split('T')[0];
+    const availableDates = getAvailableDatesSet();
+
+    if (!availableDates.has(dateStr)) return;
+
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    if (date < today) return;
+
+    setSelectedDate(dateStr);
+    setSelectedSlots([]);
+  };
+
+  const toggleSlotSelection = (slotStart: string, availableSlots: TimeSlot[]) => {
+    setSelectedSlots(prev => {
+      // Si on clique sur un créneau déjà sélectionné, tout désélectionner
+      if (prev.includes(slotStart)) {
+        return [];
+      }
+
+      // Si aucun créneau sélectionné, sélectionner celui-ci
+      if (prev.length === 0) {
+        return [slotStart];
+      }
+
+      // Sinon, sélectionner tous les créneaux entre le premier et le nouveau (exclusif)
+      const allSlotStarts = availableSlots.map(s => s.start).sort();
+      const firstSelected = prev[0];
+      const clickedSlot = slotStart;
+
+      // Déterminer le début et la fin de la plage
+      const startSlot = firstSelected < clickedSlot ? firstSelected : clickedSlot;
+      const endSlot = firstSelected < clickedSlot ? clickedSlot : firstSelected;
+
+      // Sélectionner tous les créneaux de startSlot jusqu'à endSlot (inclus)
+      const slotsInRange = allSlotStarts.filter(s => s >= startSlot && s <= endSlot);
+
+      return slotsInRange;
+    });
+  };
+
+  const calculateTotalDuration = (): number => {
+    return selectedSlots.length * 60;
+  };
+
+  const calculateTotalPrice = (): number => {
+    const durationHours = calculateTotalDuration() / 60;
+    return durationHours * (educator?.hourly_rate || 50);
+  };
+
+  const formatDuration = (minutes: number): string => {
+    const hours = Math.floor(minutes / 60);
+    const remainingMinutes = minutes % 60;
+    if (remainingMinutes === 0) {
+      return `${hours}h`;
+    }
+    return `${hours}h ${remainingMinutes}min`;
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    if (!selectedDate || !selectedSlot) {
-      setError('Veuillez sélectionner une date et un créneau');
+    if (!selectedDate || selectedSlots.length === 0) {
+      setError('Veuillez sélectionner une date et au moins un créneau');
       return;
     }
 
-    if (!customStartTime || !customEndTime) {
-      setError('Veuillez choisir une heure de début et de fin');
-      return;
-    }
-
-    // Vérifier que la durée est d'au moins 2 heures
-    if (!validateDuration(customStartTime, customEndTime)) {
-      setError('La durée minimum est de 2 heures');
-      return;
-    }
-
-    // Vérifier que les heures personnalisées sont dans la plage de disponibilité
-    if (customStartTime < selectedSlot.start || customEndTime > selectedSlot.end) {
-      setError(`Les heures doivent être entre ${selectedSlot.start} et ${selectedSlot.end}`);
+    const totalMinutes = calculateTotalDuration();
+    if (totalMinutes < 120) {
+      setError('La durée minimum est de 2 heures. Veuillez sélectionner plus de créneaux.');
       return;
     }
 
@@ -289,13 +338,11 @@ export default function BookAppointmentPage({ params }: { params: { id: string }
       return;
     }
 
-    // Vérifier qu'un enfant est sélectionné si la famille a des enfants
     if (children.length > 0 && !selectedChildId) {
       setError('Veuillez sélectionner l\'enfant concerné par ce rendez-vous');
       return;
     }
 
-    // Vérifier les limites
     const canBook = await canEducatorCreateBooking(params.id);
     if (!canBook.canCreate) {
       setError(canBook.reason || 'Limite de réservations atteinte');
@@ -306,15 +353,18 @@ export default function BookAppointmentPage({ params }: { params: { id: string }
     setError('');
 
     try {
-      // Calculer le prix basé sur la durée et le tarif horaire
-      const durationMinutes = calculateDuration(customStartTime, customEndTime);
-      const durationHours = durationMinutes / 60;
-      const hourlyRate = educator?.hourly_rate || 50; // 50€ par défaut
-      const price = durationHours * hourlyRate;
+      // Trouver l'heure de début et de fin à partir des créneaux sélectionnés
+      const sortedSlots = [...selectedSlots].sort();
+      const startTime = sortedSlots[0];
 
-      console.log('💰 Prix calculé:', { durationMinutes, durationHours, hourlyRate, price });
+      // Calculer l'heure de fin (dernier créneau + 1h)
+      const lastSlot = sortedSlots[sortedSlots.length - 1];
+      const [lastH, lastM] = lastSlot.split(':').map(Number);
+      const endH = lastH + 1;
+      const endTime = `${String(endH).padStart(2, '0')}:${String(lastM).padStart(2, '0')}`;
 
-      // Créer une session de paiement Stripe
+      const price = calculateTotalPrice();
+
       const response = await fetch('/api/appointments/create-with-payment', {
         method: 'POST',
         headers: {
@@ -325,8 +375,8 @@ export default function BookAppointmentPage({ params }: { params: { id: string }
           familyId,
           childId: selectedChildId,
           appointmentDate: selectedDate,
-          startTime: customStartTime,
-          endTime: customEndTime,
+          startTime,
+          endTime,
           locationType,
           address: locationType !== 'online' ? address : null,
           familyNotes,
@@ -340,7 +390,6 @@ export default function BookAppointmentPage({ params }: { params: { id: string }
         throw new Error(data.error || 'Erreur lors de la création de la session de paiement');
       }
 
-      // Rediriger vers Stripe Checkout
       if (data.url) {
         window.location.href = data.url;
       } else {
@@ -353,32 +402,6 @@ export default function BookAppointmentPage({ params }: { params: { id: string }
     }
   };
 
-  const calculateDuration = (start: string, end: string): number => {
-    const [startH, startM] = start.split(':').map(Number);
-    const [endH, endM] = end.split(':').map(Number);
-    return (endH * 60 + endM) - (startH * 60 + startM);
-  };
-
-  const formatDuration = (minutes: number): string => {
-    const hours = Math.floor(minutes / 60);
-    const remainingMinutes = minutes % 60;
-
-    if (remainingMinutes === 0) {
-      return `${hours}h`;
-    }
-    return `${hours}h ${remainingMinutes}min`;
-  };
-
-  const formatDate = (dateStr: string) => {
-    const date = new Date(dateStr + 'T00:00:00');
-    return new Intl.DateTimeFormat('fr-FR', {
-      weekday: 'long',
-      year: 'numeric',
-      month: 'long',
-      day: 'numeric'
-    }).format(date);
-  };
-
   if (loading) {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
@@ -387,7 +410,9 @@ export default function BookAppointmentPage({ params }: { params: { id: string }
     );
   }
 
-  const availableDates = getAvailableDates();
+  const availableDatesSet = getAvailableDatesSet();
+  const calendarDays = generateCalendarDays();
+  const timeSlotsForSelectedDate = selectedDate ? getTimeSlotsForDate(selectedDate) : [];
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -395,7 +420,7 @@ export default function BookAppointmentPage({ params }: { params: { id: string }
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between h-16 items-center">
             <Logo />
-            <PublicMobileMenu />
+            <FamilyMobileMenu />
           </div>
         </div>
       </nav>
@@ -438,7 +463,7 @@ export default function BookAppointmentPage({ params }: { params: { id: string }
           </div>
         )}
 
-        {availableDates.length === 0 ? (
+        {availableDatesSet.size === 0 ? (
           <div className="bg-white rounded-xl shadow-lg p-12 text-center">
             <svg className="w-20 h-20 text-gray-300 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
@@ -457,10 +482,10 @@ export default function BookAppointmentPage({ params }: { params: { id: string }
             </Link>
           </div>
         ) : (
-          <form onSubmit={handleSubmit} className="bg-white rounded-xl shadow-lg p-6 space-y-6">
-            {/* Sélection de l'enfant (si la famille a des enfants) */}
+          <form onSubmit={handleSubmit} className="space-y-6">
+            {/* Sélection de l'enfant */}
             {children.length > 0 && (
-              <div>
+              <div className="bg-white rounded-xl shadow-lg p-6">
                 <label className="block text-sm font-semibold text-gray-900 mb-3">
                   1. Sélectionnez l'enfant concerné
                 </label>
@@ -497,146 +522,204 @@ export default function BookAppointmentPage({ params }: { params: { id: string }
                     </button>
                   ))}
                 </div>
-                <p className="text-xs text-gray-500 mt-2">
-                  Vous pouvez gérer vos enfants dans{' '}
-                  <Link href="/dashboard/family/children" className="text-primary-600 hover:underline">
-                    votre espace famille
-                  </Link>
-                </p>
               </div>
             )}
 
-            {/* Sélection de la date */}
-            <div>
-              <label className="block text-sm font-semibold text-gray-900 mb-3">
-                {children.length > 0 ? '2. Choisissez une date' : '1. Choisissez une date'}
-              </label>
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
-                {availableDates.map(date => (
-                  <button
-                    key={date}
-                    type="button"
-                    onClick={() => {
-                      setSelectedDate(date);
-                      setSelectedSlot(null);
-                    }}
-                    className={`p-4 rounded-lg border-2 transition text-left ${
-                      selectedDate === date
-                        ? 'border-primary-600 bg-primary-50'
-                        : 'border-gray-200 hover:border-primary-300'
-                    }`}
-                  >
-                    <p className="font-semibold text-gray-900 capitalize">
-                      {formatDate(date)}
-                    </p>
-                    <p className="text-sm text-gray-600 mt-1">
-                      {getAvailableSlotsForDate(date).length} créneau(x) disponible(s)
-                    </p>
-                  </button>
-                ))}
+            {/* Calendrier et créneaux fusionnés */}
+            <div className="bg-white rounded-xl shadow-lg overflow-hidden">
+              <div className="p-6">
+                <label className="block text-sm font-semibold text-gray-900 mb-4">
+                  {children.length > 0 ? '2.' : '1.'} Choisissez une date et vos créneaux
+                </label>
+
+                {/* Calendrier */}
+                <div className="border-2 border-primary-200 rounded-xl overflow-hidden">
+                  {/* En-tête du calendrier */}
+                  <div className="bg-gradient-to-r from-primary-600 to-primary-700 px-4 py-3">
+                    <div className="flex items-center justify-between">
+                      <button
+                        type="button"
+                        onClick={() => setCurrentMonth(new Date(currentMonth.getFullYear(), currentMonth.getMonth() - 1, 1))}
+                        className="p-2 hover:bg-white/20 rounded-lg transition text-white"
+                      >
+                        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+                        </svg>
+                      </button>
+                      <h3 className="text-lg font-bold text-white">
+                        {monthNames[currentMonth.getMonth()]} {currentMonth.getFullYear()}
+                      </h3>
+                      <button
+                        type="button"
+                        onClick={() => setCurrentMonth(new Date(currentMonth.getFullYear(), currentMonth.getMonth() + 1, 1))}
+                        className="p-2 hover:bg-white/20 rounded-lg transition text-white"
+                      >
+                        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                        </svg>
+                      </button>
+                    </div>
+                  </div>
+
+                  <div className="p-4">
+                    {/* Jours de la semaine */}
+                    <div className="grid grid-cols-7 gap-1 mb-2">
+                      {dayNames.map((day) => (
+                        <div key={day} className="text-center text-xs font-bold text-primary-700 py-2">
+                          {day}
+                        </div>
+                      ))}
+                    </div>
+
+                    {/* Grille du calendrier */}
+                    <div className="grid grid-cols-7 gap-1">
+                      {calendarDays.map((date, index) => {
+                        if (!date) {
+                          return <div key={`empty-${index}`} className="aspect-square" />;
+                        }
+
+                        const dateStr = date.toISOString().split('T')[0];
+                        const isAvailable = availableDatesSet.has(dateStr);
+                        const isSelected = selectedDate === dateStr;
+                        const today = new Date();
+                        today.setHours(0, 0, 0, 0);
+                        const isPast = date < today;
+                        const isToday = date.toDateString() === today.toDateString();
+
+                        return (
+                          <button
+                            key={index}
+                            type="button"
+                            onClick={() => handleDateClick(date)}
+                            disabled={!isAvailable || isPast}
+                            className={`
+                              aspect-square p-1 rounded-lg text-sm font-semibold transition-all relative
+                              ${isSelected
+                                ? 'bg-primary-600 text-white shadow-lg ring-2 ring-primary-200'
+                                : isAvailable && !isPast
+                                ? 'bg-green-100 text-green-800 border-2 border-green-300 hover:bg-green-200 hover:scale-105'
+                                : isToday && !isAvailable
+                                ? 'bg-gray-100 text-gray-400'
+                                : 'bg-gray-50 text-gray-300 cursor-not-allowed'
+                              }
+                            `}
+                          >
+                            {date.getDate()}
+                            {isAvailable && !isPast && !isSelected && (
+                              <span className="absolute bottom-1 left-1/2 transform -translate-x-1/2 w-1 h-1 bg-green-600 rounded-full"></span>
+                            )}
+                          </button>
+                        );
+                      })}
+                    </div>
+
+                    {/* Légende */}
+                    <div className="mt-4 pt-3 border-t border-gray-200 flex flex-wrap justify-center gap-4 text-xs">
+                      <div className="flex items-center gap-2">
+                        <div className="w-4 h-4 rounded bg-primary-600"></div>
+                        <span className="text-gray-700">Sélectionné</span>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <div className="w-4 h-4 rounded bg-green-100 border-2 border-green-300"></div>
+                        <span className="text-gray-700">Disponible</span>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <div className="w-4 h-4 rounded bg-gray-50"></div>
+                        <span className="text-gray-700">Non disponible</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
               </div>
+
+              {/* Créneaux horaires pour la date sélectionnée */}
+              {selectedDate && (
+                <div className="border-t border-gray-200 bg-gray-50 p-6">
+                  <div className="mb-4">
+                    <h4 className="font-semibold text-gray-900">
+                      Créneaux disponibles le {new Date(selectedDate + 'T00:00:00').toLocaleDateString('fr-FR', {
+                        weekday: 'long',
+                        day: 'numeric',
+                        month: 'long'
+                      })}
+                    </h4>
+                    <p className="text-sm text-gray-600 mt-1">
+                      Sélectionnez les créneaux souhaités (minimum 2 heures)
+                    </p>
+                  </div>
+
+                  {timeSlotsForSelectedDate.length === 0 ? (
+                    <p className="text-gray-500 text-sm">Aucun créneau disponible pour cette date.</p>
+                  ) : (
+                    <>
+                      <div className="grid grid-cols-4 sm:grid-cols-6 md:grid-cols-8 gap-2">
+                        {timeSlotsForSelectedDate.map((slot) => {
+                          const isSelected = selectedSlots.includes(slot.start);
+                          return (
+                            <button
+                              key={slot.start}
+                              type="button"
+                              onClick={() => toggleSlotSelection(slot.start, timeSlotsForSelectedDate)}
+                              className={`py-2 px-2 rounded-lg text-sm font-medium transition-all ${
+                                isSelected
+                                  ? 'bg-primary-600 text-white shadow-md'
+                                  : 'bg-white text-gray-700 border border-gray-300 hover:border-primary-400 hover:bg-primary-50'
+                              }`}
+                            >
+                              {slot.start}
+                            </button>
+                          );
+                        })}
+                      </div>
+
+                      {/* Résumé de la sélection */}
+                      {selectedSlots.length > 0 && (
+                        <div className="mt-4 p-4 bg-primary-50 rounded-lg border border-primary-200">
+                          <div className="flex items-center justify-between flex-wrap gap-2">
+                            <div>
+                              <p className="text-sm font-medium text-primary-900">
+                                {selectedSlots.length} créneau{selectedSlots.length > 1 ? 'x' : ''} sélectionné{selectedSlots.length > 1 ? 's' : ''}
+                              </p>
+                              <p className="text-xs text-primary-700">
+                                De {selectedSlots[0]} à {(() => {
+                                  const last = selectedSlots[selectedSlots.length - 1];
+                                  const [h, m] = last.split(':').map(Number);
+                                  const nh = h + 1;
+                                  return `${String(nh).padStart(2, '0')}:${String(m).padStart(2, '0')}`;
+                                })()}
+                              </p>
+                            </div>
+                            <div className="text-right">
+                              <p className="text-lg font-bold text-primary-900">
+                                {formatDuration(calculateTotalDuration())}
+                              </p>
+                              <p className="text-sm text-primary-700">
+                                {calculateTotalPrice().toFixed(2)}€
+                              </p>
+                            </div>
+                          </div>
+                          {calculateTotalDuration() < 120 && (
+                            <p className="text-xs text-orange-600 mt-2 flex items-center gap-1">
+                              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                              </svg>
+                              Sélectionnez plus de créneaux pour atteindre le minimum de 2h
+                            </p>
+                          )}
+                        </div>
+                      )}
+                    </>
+                  )}
+                </div>
+              )}
             </div>
 
-            {/* Sélection du créneau */}
-            {selectedDate && (
-              <div>
-                <label className="block text-sm font-semibold text-gray-900 mb-3">
-                  {children.length > 0 ? '3. Choisissez un créneau horaire' : '2. Choisissez un créneau horaire'}
-                </label>
-                <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3">
-                  {getAvailableSlotsForDate(selectedDate).map((slot) => {
-                    const duration = calculateDuration(slot.start_time, slot.end_time);
-                    const price = educator?.hourly_rate ? ((educator.hourly_rate / 60) * duration).toFixed(2) : '0';
-
-                    return (
-                      <button
-                        key={slot.id}
-                        type="button"
-                        onClick={() => {
-                          setSelectedSlot({ start: slot.start_time, end: slot.end_time });
-                          setCustomStartTime(slot.start_time);
-                          setCustomEndTime(slot.end_time);
-                        }}
-                        className={`p-3 rounded-lg border-2 transition ${
-                          selectedSlot?.start === slot.start_time
-                            ? 'border-primary-600 bg-primary-50'
-                            : 'border-gray-200 hover:border-primary-300'
-                        }`}
-                      >
-                        <p className="font-semibold text-gray-900 text-sm">
-                          {slot.start_time} - {slot.end_time}
-                        </p>
-                        <p className="text-xs text-gray-600 mt-1">
-                          {formatDuration(duration)} - {price}€
-                        </p>
-                      </button>
-                    );
-                  })}
-                </div>
-              </div>
-            )}
-
-            {/* Choisir les heures personnalisées */}
-            {selectedSlot && (
-              <div className="bg-blue-50 p-4 rounded-lg border border-blue-200">
-                <label className="block text-sm font-semibold text-gray-900 mb-3">
-                  Personnalisez votre créneau (minimum 2 heures)
-                </label>
-                <p className="text-xs text-gray-600 mb-3">
-                  Créneau disponible : {selectedSlot.start} - {selectedSlot.end}
-                </p>
-                <div className="grid grid-cols-2 gap-4">
-                  <div>
-                    <label className="block text-xs font-medium text-gray-700 mb-1">
-                      Heure de début
-                    </label>
-                    <select
-                      value={customStartTime}
-                      onChange={(e) => setCustomStartTime(e.target.value)}
-                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500"
-                    >
-                      {generateTimeOptions(selectedSlot.start, selectedSlot.end).slice(0, -1).map(time => (
-                        <option key={time} value={time}>{time}</option>
-                      ))}
-                    </select>
-                  </div>
-                  <div>
-                    <label className="block text-xs font-medium text-gray-700 mb-1">
-                      Heure de fin
-                    </label>
-                    <select
-                      value={customEndTime}
-                      onChange={(e) => setCustomEndTime(e.target.value)}
-                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500"
-                    >
-                      {generateTimeOptions(selectedSlot.start, selectedSlot.end).filter(time => time > customStartTime).map(time => (
-                        <option key={time} value={time}>{time}</option>
-                      ))}
-                    </select>
-                  </div>
-                </div>
-                {customStartTime && customEndTime && (
-                  <div className="mt-3">
-                    <p className="text-sm font-medium text-gray-900">
-                      Durée : {formatDuration(calculateDuration(customStartTime, customEndTime))}
-                      {educator?.hourly_rate && ` - ${((educator.hourly_rate / 60) * calculateDuration(customStartTime, customEndTime)).toFixed(2)}€`}
-                    </p>
-                    {!validateDuration(customStartTime, customEndTime) && (
-                      <p className="text-xs text-red-600 mt-1">
-                        ⚠️ La durée minimum est de 2 heures
-                      </p>
-                    )}
-                  </div>
-                )}
-              </div>
-            )}
-
-            {/* Type de rendez-vous */}
-            {selectedSlot && (
-              <>
+            {/* Type de rendez-vous et reste du formulaire */}
+            {selectedSlots.length > 0 && calculateTotalDuration() >= 120 && (
+              <div className="bg-white rounded-xl shadow-lg p-6 space-y-6">
                 <div>
                   <label className="block text-sm font-semibold text-gray-900 mb-3">
-                    {children.length > 0 ? '4. Type de rendez-vous' : '3. Type de rendez-vous'}
+                    {children.length > 0 ? '3.' : '2.'} Type de rendez-vous
                   </label>
                   <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
                     <button
@@ -678,7 +761,6 @@ export default function BookAppointmentPage({ params }: { params: { id: string }
                   </div>
                 </div>
 
-                {/* Adresse si nécessaire */}
                 {(locationType === 'home' || locationType === 'office') && (
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-2">
@@ -695,7 +777,6 @@ export default function BookAppointmentPage({ params }: { params: { id: string }
                   </div>
                 )}
 
-                {/* Notes */}
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">
                     Message pour l&apos;éducateur (optionnel)
@@ -709,7 +790,6 @@ export default function BookAppointmentPage({ params }: { params: { id: string }
                   />
                 </div>
 
-                {/* Bouton de soumission */}
                 <div className="flex gap-4 pt-4">
                   <Link
                     href={`/educator/${params.id}`}
@@ -722,10 +802,10 @@ export default function BookAppointmentPage({ params }: { params: { id: string }
                     disabled={submitting}
                     className="flex-1 px-6 py-3 bg-primary-600 text-white rounded-lg hover:bg-primary-700 font-medium transition disabled:opacity-50 disabled:cursor-not-allowed"
                   >
-                    {submitting ? 'Envoi...' : 'Envoyer la demande'}
+                    {submitting ? 'Envoi...' : `Réserver (${calculateTotalPrice().toFixed(2)}€)`}
                   </button>
                 </div>
-              </>
+              </div>
             )}
           </form>
         )}
