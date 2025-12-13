@@ -4,23 +4,30 @@ import { TndProvider } from '@/contexts/TndContext'
 import CookieBanner from '@/components/CookieBanner'
 
 export const metadata: Metadata = {
-  title: 'Autisme Connect - Trouvez les professionnels adaptés au TSA de votre enfant',
-  description: 'Plateforme gratuite pour les familles. Trouvez un professionnel diplômé et vérifié près de chez vous. Accompagnement personnalisé autisme et TSA. Prise de rendez-vous en ligne simplifiée.',
+  title: 'Autisme Connect - Professionnels TND & Autisme près de chez vous',
+  description: 'Plateforme gratuite pour les familles. Trouvez des professionnels diplômés et vérifiés : psychologues, psychomotriciens, orthophonistes, éducateurs spécialisés. Accompagnement TND, TSA et troubles du neurodéveloppement.',
   keywords: [
-    'éducateur spécialisé',
-    'éducateur spécialisé autisme',
+    'TND',
+    'troubles du neurodéveloppement',
     'autisme',
     'TSA',
     'trouble du spectre autistique',
+    'psychologue TND',
+    'psychomotricien',
+    'orthophoniste',
+    'éducateur spécialisé',
+    'ergothérapeute',
+    'neuropsychologue',
+    'accompagnement TND',
     'accompagnement autisme',
-    'éducateur TSA',
     'professionnel autisme',
-    'accompagnement éducatif',
-    'éducateur ABA',
-    'intervention autisme',
-    'soutien famille autisme',
-    'rendez-vous éducateur',
-    'trouver éducateur spécialisé'
+    'professionnel TND',
+    'TDAH',
+    'troubles dys',
+    'dyslexie',
+    'dyspraxie',
+    'rendez-vous professionnel TND',
+    'soutien famille autisme'
   ],
   authors: [{ name: 'Autisme Connect' }],
   creator: 'Autisme Connect',
@@ -35,8 +42,8 @@ export const metadata: Metadata = {
     canonical: '/',
   },
   openGraph: {
-    title: 'Autisme Connect - Trouvez les professionnels adaptés au TSA de votre enfant',
-    description: 'Plateforme gratuite pour les familles. Trouvez un professionnel diplômé et vérifié près de chez vous. Accompagnement personnalisé autisme et TSA.',
+    title: 'Autisme Connect - Professionnels TND & Autisme',
+    description: 'Trouvez des professionnels diplômés et vérifiés près de chez vous : psychologues, psychomotriciens, orthophonistes, éducateurs spécialisés. Accompagnement TND et autisme.',
     url: 'https://www.autismeconnect.fr',
     siteName: 'Autisme Connect',
     locale: 'fr_FR',
@@ -46,14 +53,14 @@ export const metadata: Metadata = {
         url: '/og-image.png',
         width: 1200,
         height: 630,
-        alt: 'Autisme Connect - Éducateurs Spécialisés',
+        alt: 'Autisme Connect - Professionnels TND & Autisme',
       },
     ],
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Autisme Connect - Trouvez les professionnels adaptés au TSA de votre enfant',
-    description: 'Plateforme gratuite pour les familles. Trouvez un professionnel diplômé et vérifié près de chez vous.',
+    title: 'Autisme Connect - Professionnels TND & Autisme',
+    description: 'Trouvez des professionnels diplômés et vérifiés près de chez vous. Accompagnement TND, TSA et troubles du neurodéveloppement.',
     images: ['/og-image.png'],
   },
   robots: {
@@ -81,7 +88,7 @@ export default function RootLayout({
     '@context': 'https://schema.org',
     '@type': 'WebSite',
     name: 'Autisme Connect',
-    description: 'Plateforme de mise en relation entre éducateurs spécialisés en autisme et familles',
+    description: 'Plateforme de mise en relation entre professionnels TND (psychologues, psychomotriciens, orthophonistes, éducateurs spécialisés) et familles',
     url: 'https://www.autismeconnect.fr',
     potentialAction: {
       '@type': 'SearchAction',
@@ -116,19 +123,19 @@ export default function RootLayout({
       {
         '@type': 'SiteNavigationElement',
         name: 'Trouver un professionnel',
-        description: 'Recherchez un éducateur spécialisé en autisme près de chez vous',
+        description: 'Recherchez un professionnel TND près de chez vous : psychologue, psychomotricien, orthophoniste, éducateur spécialisé',
         url: 'https://www.autismeconnect.fr/search'
       },
       {
         '@type': 'SiteNavigationElement',
         name: 'Connexion',
-        description: 'Connectez-vous à votre espace famille ou éducateur',
+        description: 'Connectez-vous à votre espace famille ou professionnel',
         url: 'https://www.autismeconnect.fr/auth/login'
       },
       {
         '@type': 'SiteNavigationElement',
         name: 'Tarifs',
-        description: 'Découvrez nos offres pour les éducateurs spécialisés',
+        description: 'Découvrez nos offres pour les professionnels TND',
         url: 'https://www.autismeconnect.fr/pricing'
       }
     ]
