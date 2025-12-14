@@ -522,11 +522,11 @@ export default function FamilySearchPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-primary-50 via-white to-blue-50 relative overflow-hidden">
-      {/* Éléments décoratifs de fond */}
-      <div className="absolute top-0 right-0 w-96 h-96 bg-gradient-to-br from-purple-200/30 to-pink-200/30 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2 pointer-events-none"></div>
-      <div className="absolute bottom-0 left-0 w-80 h-80 bg-gradient-to-tr from-primary-200/30 to-blue-200/30 rounded-full blur-3xl translate-y-1/2 -translate-x-1/2 pointer-events-none"></div>
-      <div className="absolute top-1/2 left-1/4 w-64 h-64 bg-gradient-to-r from-green-100/20 to-teal-100/20 rounded-full blur-3xl pointer-events-none"></div>
+    <div className="min-h-screen bg-gradient-to-br from-primary-50 via-white to-blue-50 relative">
+      {/* Éléments décoratifs de fond - masqués sur mobile */}
+      <div className="hidden sm:block absolute top-0 right-0 w-96 h-96 bg-gradient-to-br from-purple-200/30 to-pink-200/30 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2 pointer-events-none"></div>
+      <div className="hidden sm:block absolute bottom-0 left-0 w-80 h-80 bg-gradient-to-tr from-primary-200/30 to-blue-200/30 rounded-full blur-3xl translate-y-1/2 -translate-x-1/2 pointer-events-none"></div>
+      <div className="hidden sm:block absolute top-1/2 left-1/4 w-64 h-64 bg-gradient-to-r from-green-100/20 to-teal-100/20 rounded-full blur-3xl pointer-events-none"></div>
 
       {/* Navigation */}
       <FamilyNavbar profile={familyProfile} familyId={familyId} userId={userId} />
