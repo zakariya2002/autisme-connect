@@ -97,21 +97,22 @@ export default function FamilyMobileMenu({ profile: propProfile, onLogout }: Fam
         onTouchMove={(e) => e.preventDefault()}
       />
 
-      {/* Menu panel - à droite */}
+      {/* Menu panel - depuis le haut */}
       <div
-        className="absolute top-0 right-0 h-full w-[320px] max-w-[90vw] bg-white shadow-2xl"
+        className="absolute top-0 left-0 right-0 bg-white shadow-2xl max-h-[90vh] overflow-y-auto"
         role="dialog"
         aria-modal="true"
         aria-labelledby="family-mobile-menu-title"
+        style={{ borderBottomLeftRadius: '24px', borderBottomRightRadius: '24px' }}
       >
         {/* Contenu du menu */}
-        <div className="relative h-full flex flex-col">
+        <div className="relative flex flex-col">
           {/* Header avec titre et croix */}
-          <div className="flex items-center justify-between px-5 py-4 border-b border-gray-100">
-            <h2 id="family-mobile-menu-title" className="text-xl font-bold text-primary-600">Menu</h2>
+          <div className="flex items-center justify-between px-5 py-4 border-b border-gray-100" style={{ background: 'linear-gradient(135deg, #027e7e 0%, #3a9e9e 100%)' }}>
+            <h2 id="family-mobile-menu-title" className="text-xl font-bold text-white">Menu</h2>
             <button
               onClick={closeMenu}
-              className="p-2 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-lg transition-colors focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2"
+              className="p-2 text-white/80 hover:text-white hover:bg-white/10 rounded-lg transition-colors focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2"
               aria-label="Fermer le menu"
             >
               <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
@@ -122,18 +123,21 @@ export default function FamilyMobileMenu({ profile: propProfile, onLogout }: Fam
 
           {/* Profil utilisateur */}
           <div className="px-5 py-4 border-b border-gray-100">
-            <div className="flex items-center gap-3 p-4 bg-gradient-to-br from-blue-50 to-green-50 rounded-lg">
+            <div className="flex items-center gap-3 p-4 rounded-lg" style={{ background: 'linear-gradient(135deg, #e6f4f4 0%, #fdf9f4 100%)' }}>
               {profile?.avatar_url ? (
                 <img
                   src={profile.avatar_url}
                   alt={`${profile.first_name} ${profile.last_name}`}
-                  className="h-12 w-12 rounded-full object-cover border-2 border-blue-200"
+                  className="h-12 w-12 rounded-full object-cover"
+                  style={{ border: '2px solid #6bbebe' }}
                 />
               ) : (
-                <div className="h-12 w-12 rounded-full bg-blue-100 flex items-center justify-center border-2 border-blue-200">
-                  <span className="text-blue-600 font-semibold text-lg">
-                    {profile?.first_name?.[0]}{profile?.last_name?.[0]}
-                  </span>
+                <div className="h-12 w-12 rounded-full flex items-center justify-center overflow-hidden bg-white" style={{ border: '2px solid #6bbebe' }}>
+                  <img
+                    src={profile?.gender === 'male' ? '/images/icons/avatar-male.svg' : profile?.gender === 'female' ? '/images/icons/avatar-female.svg' : ((profile?.id?.charCodeAt(0) || 0) % 2 === 0 ? '/images/icons/avatar-male.svg' : '/images/icons/avatar-female.svg')}
+                    alt=""
+                    className="w-full h-full object-cover"
+                  />
                 </div>
               )}
               <div className="flex-1">
@@ -141,18 +145,19 @@ export default function FamilyMobileMenu({ profile: propProfile, onLogout }: Fam
                 <p className="text-xs text-gray-500">Compte famille</p>
               </div>
             </div>
-            <div className="mt-2 px-3 py-1.5 bg-green-100 rounded-lg text-center">
-              <p className="text-xs font-semibold text-green-700">100% Gratuit</p>
+            <div className="mt-2 px-3 py-1.5 rounded-lg text-center" style={{ backgroundColor: '#c9eaea' }}>
+              <p className="text-xs font-semibold" style={{ color: '#027e7e' }}>100% Gratuit</p>
             </div>
           </div>
 
           {/* Navigation */}
-          <nav className="flex-1 overflow-y-auto px-4 py-4">
+          <nav className="px-4 py-4">
             <div className="flex flex-col gap-2">
               <Link
                 href="/dashboard/family"
                 onClick={closeMenu}
-                className="bg-gradient-to-r from-violet-500 via-purple-500 to-fuchsia-500 text-white hover:from-violet-600 hover:via-purple-600 hover:to-fuchsia-600 py-3 px-4 rounded-xl font-bold transition-all duration-200 flex items-center gap-3 shadow-lg"
+                className="text-white py-3 px-4 rounded-xl font-bold transition-all duration-200 flex items-center gap-3 shadow-lg"
+                style={{ background: 'linear-gradient(135deg, #027e7e 0%, #3a9e9e 100%)' }}
               >
                 <div className="w-8 h-8 bg-white/20 rounded-lg flex items-center justify-center">
                   <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
@@ -166,7 +171,12 @@ export default function FamilyMobileMenu({ profile: propProfile, onLogout }: Fam
               <Link
                 href="/dashboard/family/profile"
                 onClick={closeMenu}
-                className="text-gray-700 hover:text-primary-600 hover:bg-primary-50 py-3 px-4 rounded-lg font-medium transition-all duration-200 flex items-center gap-3"
+                className={`py-3 px-4 rounded-lg font-medium transition-all duration-200 flex items-center gap-3 ${
+                  pathname === '/dashboard/family/profile'
+                    ? 'bg-[#05a5a5] text-white'
+                    : 'text-gray-700 hover:bg-[#e6f4f4] hover:text-[#027e7e]'
+                }`}
+                aria-current={pathname === '/dashboard/family/profile' ? 'page' : undefined}
               >
                 <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
@@ -178,7 +188,12 @@ export default function FamilyMobileMenu({ profile: propProfile, onLogout }: Fam
               <Link
                 href="/dashboard/family/messages"
                 onClick={closeMenu}
-                className="text-gray-700 hover:text-primary-600 hover:bg-primary-50 py-3 px-4 rounded-lg font-medium transition-all duration-200 flex items-center gap-3"
+                className={`py-3 px-4 rounded-lg font-medium transition-all duration-200 flex items-center gap-3 ${
+                  pathname === '/dashboard/family/messages'
+                    ? 'bg-[#05a5a5] text-white'
+                    : 'text-gray-700 hover:bg-[#e6f4f4] hover:text-[#027e7e]'
+                }`}
+                aria-current={pathname === '/dashboard/family/messages' ? 'page' : undefined}
               >
                 <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z" />
@@ -190,7 +205,12 @@ export default function FamilyMobileMenu({ profile: propProfile, onLogout }: Fam
               <Link
                 href="/dashboard/family/children"
                 onClick={closeMenu}
-                className="text-gray-700 hover:text-primary-600 hover:bg-primary-50 py-3 px-4 rounded-lg font-medium transition-all duration-200 flex items-center gap-3"
+                className={`py-3 px-4 rounded-lg font-medium transition-all duration-200 flex items-center gap-3 ${
+                  pathname === '/dashboard/family/children'
+                    ? 'bg-[#05a5a5] text-white'
+                    : 'text-gray-700 hover:bg-[#e6f4f4] hover:text-[#027e7e]'
+                }`}
+                aria-current={pathname === '/dashboard/family/children' ? 'page' : undefined}
               >
                 <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" />
@@ -202,7 +222,12 @@ export default function FamilyMobileMenu({ profile: propProfile, onLogout }: Fam
               <Link
                 href="/dashboard/family/search"
                 onClick={closeMenu}
-                className="text-gray-700 hover:text-primary-600 hover:bg-primary-50 py-3 px-4 rounded-lg font-medium transition-all duration-200 flex items-center gap-3"
+                className={`py-3 px-4 rounded-lg font-medium transition-all duration-200 flex items-center gap-3 ${
+                  pathname === '/dashboard/family/search'
+                    ? 'bg-[#05a5a5] text-white'
+                    : 'text-gray-700 hover:bg-[#e6f4f4] hover:text-[#027e7e]'
+                }`}
+                aria-current={pathname === '/dashboard/family/search' ? 'page' : undefined}
               >
                 <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
@@ -214,7 +239,12 @@ export default function FamilyMobileMenu({ profile: propProfile, onLogout }: Fam
               <Link
                 href="/dashboard/family/bookings"
                 onClick={closeMenu}
-                className="text-gray-700 hover:text-primary-600 hover:bg-primary-50 py-3 px-4 rounded-lg font-medium transition-all duration-200 flex items-center gap-3"
+                className={`py-3 px-4 rounded-lg font-medium transition-all duration-200 flex items-center gap-3 ${
+                  pathname === '/dashboard/family/bookings'
+                    ? 'bg-[#05a5a5] text-white'
+                    : 'text-gray-700 hover:bg-[#e6f4f4] hover:text-[#027e7e]'
+                }`}
+                aria-current={pathname === '/dashboard/family/bookings' ? 'page' : undefined}
               >
                 <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
@@ -226,7 +256,12 @@ export default function FamilyMobileMenu({ profile: propProfile, onLogout }: Fam
               <Link
                 href="/dashboard/family/receipts"
                 onClick={closeMenu}
-                className="text-gray-700 hover:text-primary-600 hover:bg-primary-50 py-3 px-4 rounded-lg font-medium transition-all duration-200 flex items-center gap-3"
+                className={`py-3 px-4 rounded-lg font-medium transition-all duration-200 flex items-center gap-3 ${
+                  pathname === '/dashboard/family/receipts'
+                    ? 'bg-[#05a5a5] text-white'
+                    : 'text-gray-700 hover:bg-[#e6f4f4] hover:text-[#027e7e]'
+                }`}
+                aria-current={pathname === '/dashboard/family/receipts' ? 'page' : undefined}
               >
                 <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
@@ -238,9 +273,14 @@ export default function FamilyMobileMenu({ profile: propProfile, onLogout }: Fam
               <Link
                 href="/dashboard/family/favorites"
                 onClick={closeMenu}
-                className="text-gray-700 hover:text-primary-600 hover:bg-primary-50 py-3 px-4 rounded-lg font-medium transition-all duration-200 flex items-center gap-3"
+                className={`py-3 px-4 rounded-lg font-medium transition-all duration-200 flex items-center gap-3 ${
+                  pathname === '/dashboard/family/favorites'
+                    ? 'bg-[#05a5a5] text-white'
+                    : 'text-gray-700 hover:bg-[#e6f4f4] hover:text-[#027e7e]'
+                }`}
+                aria-current={pathname === '/dashboard/family/favorites' ? 'page' : undefined}
               >
-                <svg className="w-5 h-5 text-red-500" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                <svg className={`w-5 h-5 ${pathname === '/dashboard/family/favorites' ? '' : ''}`} fill="currentColor" viewBox="0 0 24 24" aria-hidden="true" style={{ color: pathname === '/dashboard/family/favorites' ? 'white' : '#f0879f' }}>
                   <path d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
                 </svg>
                 Mes favoris
@@ -250,7 +290,12 @@ export default function FamilyMobileMenu({ profile: propProfile, onLogout }: Fam
               <Link
                 href="/dashboard/family/aides"
                 onClick={closeMenu}
-                className="text-gray-700 hover:text-primary-600 hover:bg-primary-50 py-3 px-4 rounded-lg font-medium transition-all duration-200 flex items-center gap-3"
+                className={`py-3 px-4 rounded-lg font-medium transition-all duration-200 flex items-center gap-3 ${
+                  pathname === '/dashboard/family/aides'
+                    ? 'bg-[#05a5a5] text-white'
+                    : 'text-gray-700 hover:bg-[#e6f4f4] hover:text-[#027e7e]'
+                }`}
+                aria-current={pathname === '/dashboard/family/aides' ? 'page' : undefined}
               >
                 <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
@@ -262,7 +307,8 @@ export default function FamilyMobileMenu({ profile: propProfile, onLogout }: Fam
 
               <button
                 onClick={handleLogoutClick}
-                className="text-purple-600 bg-purple-50 hover:bg-purple-100 py-3 px-4 rounded-lg font-medium transition-all duration-200 flex items-center gap-3 w-full text-left"
+                className="py-3 px-4 rounded-lg font-medium transition-all duration-200 flex items-center gap-3 w-full text-left"
+                style={{ color: '#f0879f', backgroundColor: '#fde8ec' }}
               >
                 <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />

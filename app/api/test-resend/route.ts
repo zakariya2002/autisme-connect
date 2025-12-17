@@ -17,21 +17,30 @@ export async function GET() {
 
     // Envoyer un email de test
     const { data, error } = await resend.emails.send({
-      from: process.env.RESEND_FROM_EMAIL || 'Autisme Connect <onboarding@resend.dev>',
+      from: process.env.RESEND_FROM_EMAIL || 'neurocare <onboarding@resend.dev>',
       to: process.env.ADMIN_EMAIL || 'test@example.com',
-      subject: '✅ Test Resend - Autisme Connect',
+      subject: '✅ Test Resend - neurocare',
       html: `
         <!DOCTYPE html>
-        <html>
+        <html lang="fr">
         <head>
+          <meta charset="UTF-8">
+          <meta name="viewport" content="width=device-width, initial-scale=1.0">
           <style>
-            body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; }
+            body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; line-height: 1.6; color: #333; margin: 0; padding: 0; background-color: #fdf9f4; }
             .container { max-width: 600px; margin: 0 auto; padding: 20px; }
-            .header { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 30px; text-align: center; border-radius: 10px 10px 0 0; }
-            .content { background: white; padding: 30px; border: 1px solid #e0e0e0; }
-            .success { background: #d1fae5; border-left: 4px solid #10b981; padding: 15px; margin: 20px 0; }
-            .info-box { background: #f3f4f6; padding: 15px; margin: 15px 0; border-radius: 5px; }
-            .footer { text-align: center; padding: 20px; color: #666; font-size: 12px; }
+            .header { background: linear-gradient(135deg, #027e7e 0%, #05a5a5 50%, #3a9e9e 100%); color: white; padding: 30px; text-align: center; border-radius: 16px 16px 0 0; }
+            .content { background: white; padding: 30px; border: 1px solid #e6f4f4; }
+            .success { background: linear-gradient(135deg, #e6f4f4 0%, #c9eaea 100%); border-left: 4px solid #027e7e; padding: 15px; margin: 20px 0; border-radius: 0 8px 8px 0; }
+            .info-box { background-color: #fdf9f4; padding: 15px; margin: 15px 0; border-radius: 8px; border: 1px solid #e6f4f4; }
+            .footer { text-align: center; padding: 20px; color: #666; font-size: 12px; background-color: #fdf9f4; border-radius: 0 0 16px 16px; }
+            .check-icon { color: #027e7e; margin-right: 8px; }
+            h1 { margin: 0; }
+            h3 { color: #027e7e; margin-top: 24px; }
+            ul { padding-left: 20px; }
+            li { margin-bottom: 8px; }
+            code { background-color: #e6f4f4; padding: 2px 6px; border-radius: 4px; font-size: 13px; }
+            strong { color: #027e7e; }
           </style>
         </head>
         <body>
@@ -44,17 +53,17 @@ export async function GET() {
                 <strong>🎉 Félicitations !</strong> Votre configuration Resend est opérationnelle.
               </div>
 
-              <p>Ceci est un email de test depuis <strong>Autisme Connect</strong>.</p>
+              <p>Ceci est un email de test depuis <strong>neurocare</strong>.</p>
 
               <p>Si vous recevez cet email, cela signifie que :</p>
               <ul>
-                <li>✅ Votre clé API Resend est correcte</li>
-                <li>✅ Les variables d'environnement sont bien configurées</li>
-                <li>✅ L'envoi d'emails fonctionne parfaitement</li>
+                <li><span class="check-icon">✅</span> Votre clé API Resend est correcte</li>
+                <li><span class="check-icon">✅</span> Les variables d'environnement sont bien configurées</li>
+                <li><span class="check-icon">✅</span> L'envoi d'emails fonctionne parfaitement</li>
               </ul>
 
               <div class="info-box">
-                <h3>📧 Informations de Configuration</h3>
+                <h3 style="margin-top: 0;">📧 Informations de Configuration</h3>
                 <p><strong>From:</strong> ${process.env.RESEND_FROM_EMAIL || 'onboarding@resend.dev'}</p>
                 <p><strong>To:</strong> ${process.env.ADMIN_EMAIL || 'test@example.com'}</p>
                 <p><strong>Date:</strong> ${new Date().toLocaleString('fr-FR', {
@@ -71,15 +80,15 @@ export async function GET() {
                 <li>Les emails de vérification DREETS sont prêts à être envoyés !</li>
               </ol>
 
-              <p style="margin-top: 30px;">
+              <p style="margin-top: 30px; color: #666;">
                 Pour plus d'informations, consultez la documentation :
-                <strong>RESEND_SETUP.md</strong>
+                <strong style="color: #027e7e;">RESEND_SETUP.md</strong>
               </p>
             </div>
             <div class="footer">
               <p>
-                <strong>Autisme Connect</strong><br>
-                Plateforme de mise en relation familles-éducateurs<br>
+                <strong style="color: #027e7e;">neurocare</strong><br>
+                Plateforme de mise en relation familles-professionnels<br>
                 ${process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'}
               </p>
             </div>

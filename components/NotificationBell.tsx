@@ -260,16 +260,16 @@ export default function NotificationBell({ educatorId, userId }: NotificationBel
     switch (type) {
       case 'contact_request':
         return (
-          <div className="w-8 h-8 bg-purple-100 rounded-full flex items-center justify-center">
-            <svg className="w-4 h-4 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+          <div className="w-8 h-8 rounded-full flex items-center justify-center" style={{ backgroundColor: '#fde8ec' }}>
+            <svg className="w-4 h-4" style={{ color: '#f0879f' }} fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z" />
             </svg>
           </div>
         );
       case 'message':
         return (
-          <div className="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center">
-            <svg className="w-4 h-4 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+          <div className="w-8 h-8 rounded-full flex items-center justify-center" style={{ backgroundColor: '#e6f4f4' }}>
+            <svg className="w-4 h-4" style={{ color: '#027e7e' }} fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z" />
             </svg>
           </div>
@@ -330,12 +330,12 @@ export default function NotificationBell({ educatorId, userId }: NotificationBel
       {/* Dropdown */}
       {isOpen && (
         <div
-          className="absolute right-0 mt-2 w-80 sm:w-96 bg-white rounded-2xl shadow-xl border border-gray-100 overflow-hidden z-50"
+          className="absolute right-0 mt-2 w-80 sm:w-96 bg-white rounded-xl shadow-xl border border-gray-100 overflow-hidden z-50"
           role="region"
           aria-label="Panneau de notifications"
         >
           {/* Header */}
-          <div className="px-4 py-3 bg-gradient-to-r from-emerald-500 via-teal-500 to-cyan-500 text-white">
+          <div className="px-4 py-3 text-white" style={{ background: 'linear-gradient(135deg, #027e7e 0%, #3a9e9e 100%)' }}>
             <h3 className="font-semibold" id="notifications-heading">Notifications</h3>
             <p className="text-sm text-white/80">
               {unreadCount > 0 ? `${unreadCount} nouvelle${unreadCount > 1 ? 's' : ''}` : 'Aucune nouvelle'}
@@ -345,13 +345,14 @@ export default function NotificationBell({ educatorId, userId }: NotificationBel
           {/* Liste des notifications */}
           <div className="max-h-96 overflow-y-auto">
             {loading ? (
-              <div className="flex items-center justify-center py-8">
-                <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-teal-600"></div>
+              <div className="flex items-center justify-center py-8" role="status" aria-live="polite">
+                <div className="animate-spin rounded-full h-6 w-6 border-b-2" style={{ borderColor: '#027e7e' }} aria-hidden="true"></div>
+                <span className="sr-only">Chargement des notifications</span>
               </div>
             ) : notifications.length === 0 ? (
               <div className="py-8 text-center">
-                <div className="w-12 h-12 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-3">
-                  <svg className="w-6 h-6 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                <div className="w-12 h-12 rounded-full flex items-center justify-center mx-auto mb-3" style={{ backgroundColor: '#e6f4f4' }}>
+                  <svg className="w-6 h-6" style={{ color: '#027e7e' }} fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
                   </svg>
                 </div>
@@ -377,7 +378,7 @@ export default function NotificationBell({ educatorId, userId }: NotificationBel
                         <p className="text-sm text-gray-500 truncate">{notif.description}</p>
                         <p className="text-xs text-gray-400 mt-1">{notif.time}</p>
                       </div>
-                      <div className="w-2 h-2 bg-teal-500 rounded-full flex-shrink-0 mt-2" aria-label="Non lu"></div>
+                      <div className="w-2 h-2 rounded-full flex-shrink-0 mt-2" style={{ backgroundColor: '#027e7e' }} aria-label="Non lu"></div>
                     </Link>
                   </li>
                 ))}
@@ -392,14 +393,20 @@ export default function NotificationBell({ educatorId, userId }: NotificationBel
                 <Link
                   href="/messages"
                   onClick={() => setIsOpen(false)}
-                  className="flex-1 text-center text-sm text-teal-600 hover:text-teal-700 font-medium py-2 rounded-lg hover:bg-teal-50 transition"
+                  className="flex-1 text-center text-sm font-medium py-2 rounded-lg transition"
+                  style={{ color: '#027e7e' }}
+                  onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#e6f4f4'}
+                  onMouseLeave={(e) => e.currentTarget.style.backgroundColor = 'transparent'}
                 >
                   Messages
                 </Link>
                 <Link
                   href="/dashboard/educator/appointments"
                   onClick={() => setIsOpen(false)}
-                  className="flex-1 text-center text-sm text-teal-600 hover:text-teal-700 font-medium py-2 rounded-lg hover:bg-teal-50 transition"
+                  className="flex-1 text-center text-sm font-medium py-2 rounded-lg transition"
+                  style={{ color: '#027e7e' }}
+                  onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#e6f4f4'}
+                  onMouseLeave={(e) => e.currentTarget.style.backgroundColor = 'transparent'}
                 >
                   Rendez-vous
                 </Link>

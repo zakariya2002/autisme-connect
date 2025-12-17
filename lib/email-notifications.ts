@@ -96,15 +96,17 @@ function getEmailSubject(status: DiplomaStatusChange): string {
 function getEmailHtml(educator: EducatorEmailData, status: DiplomaStatusChange): string {
   const baseStyles = `
     <style>
-      body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; }
+      body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; line-height: 1.6; color: #333; background-color: #fdf9f4; }
       .container { max-width: 600px; margin: 0 auto; padding: 20px; }
-      .header { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 30px; text-align: center; border-radius: 10px 10px 0 0; }
-      .content { background: white; padding: 30px; border: 1px solid #e0e0e0; border-top: none; }
-      .button { display: inline-block; padding: 12px 30px; background: #667eea; color: white; text-decoration: none; border-radius: 5px; margin: 20px 0; }
-      .footer { text-align: center; padding: 20px; color: #666; font-size: 12px; }
-      .success { color: #10b981; font-weight: bold; }
-      .warning { color: #f59e0b; font-weight: bold; }
-      .error { color: #ef4444; font-weight: bold; }
+      .header { background: linear-gradient(135deg, #027e7e 0%, #05a5a5 50%, #3a9e9e 100%); color: white; padding: 30px; text-align: center; border-radius: 16px 16px 0 0; }
+      .content { background: white; padding: 30px; border: 1px solid #e6f4f4; border-top: none; }
+      .button { display: inline-block; padding: 14px 32px; background: linear-gradient(135deg, #027e7e 0%, #05a5a5 100%); color: white; text-decoration: none; border-radius: 8px; margin: 20px 0; font-weight: 600; box-shadow: 0 4px 12px rgba(2, 126, 126, 0.3); }
+      .footer { text-align: center; padding: 20px; color: #666; font-size: 12px; background-color: #fdf9f4; border-radius: 0 0 16px 16px; }
+      .success { color: #027e7e; font-weight: bold; }
+      .warning { color: #f0879f; font-weight: bold; }
+      .error { color: #d16a7f; font-weight: bold; }
+      .info-box { background-color: #e6f4f4; border-left: 4px solid #027e7e; padding: 15px; margin: 20px 0; border-radius: 0 8px 8px 0; }
+      .warning-box { background: linear-gradient(135deg, #fdf9f4 0%, #f8c3cf 100%); border-left: 4px solid #f0879f; padding: 15px; margin: 20px 0; border-radius: 0 8px 8px 0; }
     </style>
   `;
 
@@ -114,19 +116,21 @@ function getEmailHtml(educator: EducatorEmailData, status: DiplomaStatusChange):
         ${baseStyles}
         <div class="container">
           <div class="header">
-            <h1>Diplôme reçu !</h1>
+            <h1>📄 Diplôme reçu !</h1>
           </div>
           <div class="content">
             <p>Bonjour ${educator.firstName},</p>
             <p>Nous avons bien reçu votre diplôme. Notre équipe va le vérifier dans les <strong>24 à 48 heures</strong>.</p>
-            <p class="warning">⏳ Votre profil n'est pas encore visible dans les recherches.</p>
+            <div class="warning-box">
+              <p class="warning">⏳ Votre profil n'est pas encore visible dans les recherches.</p>
+            </div>
             <p>Vous recevrez un email dès que la vérification sera terminée.</p>
             <a href="${process.env.NEXT_PUBLIC_APP_URL}/dashboard/educator/diploma" class="button">Voir le statut</a>
             <p>Merci de votre patience !</p>
-            <p>L'équipe neurocare Pro</p>
+            <p>L'équipe <strong style="color: #027e7e;">neurocare Pro</strong></p>
           </div>
           <div class="footer">
-            <p>neurocare Pro - Plateforme de mise en relation familles-professionnels</p>
+            <p>© 2025 <span style="color: #027e7e; font-weight: 600;">neurocare Pro</span> - Plateforme de mise en relation familles-professionnels</p>
           </div>
         </div>
       `;
@@ -140,9 +144,11 @@ function getEmailHtml(educator: EducatorEmailData, status: DiplomaStatusChange):
           </div>
           <div class="content">
             <p>Bonjour ${educator.firstName},</p>
-            <p class="success">✓ Excellente nouvelle ! Votre diplôme a été vérifié avec succès.</p>
+            <div class="info-box">
+              <p class="success">✓ Excellente nouvelle ! Votre diplôme a été vérifié avec succès.</p>
+            </div>
             <p><strong>Votre profil est maintenant visible</strong> dans les résultats de recherche et les familles peuvent vous contacter.</p>
-            <h3>Prochaines étapes :</h3>
+            <h3 style="color: #027e7e;">Prochaines étapes :</h3>
             <ul>
               <li>Complétez votre profil si ce n'est pas déjà fait</li>
               <li>Configurez vos disponibilités</li>
@@ -150,10 +156,10 @@ function getEmailHtml(educator: EducatorEmailData, status: DiplomaStatusChange):
             </ul>
             <a href="${process.env.NEXT_PUBLIC_APP_URL}/dashboard/educator" class="button">Accéder à mon tableau de bord</a>
             <p>Bonne chance dans vos accompagnements !</p>
-            <p>L'équipe neurocare Pro</p>
+            <p>L'équipe <strong style="color: #027e7e;">neurocare Pro</strong></p>
           </div>
           <div class="footer">
-            <p>neurocare Pro - Plateforme de mise en relation familles-professionnels</p>
+            <p>© 2025 <span style="color: #027e7e; font-weight: 600;">neurocare Pro</span> - Plateforme de mise en relation familles-professionnels</p>
           </div>
         </div>
       `;
@@ -163,15 +169,17 @@ function getEmailHtml(educator: EducatorEmailData, status: DiplomaStatusChange):
         ${baseStyles}
         <div class="container">
           <div class="header">
-            <h1>Action requise</h1>
+            <h1>⚠️ Action requise</h1>
           </div>
           <div class="content">
             <p>Bonjour ${educator.firstName},</p>
-            <p class="error">⚠️ Votre diplôme n'a pas pu être vérifié.</p>
+            <div class="warning-box">
+              <p class="error">⚠️ Votre diplôme n'a pas pu être vérifié.</p>
+            </div>
             ${educator.diplomaRejectedReason ? `
               <p><strong>Raison :</strong> ${educator.diplomaRejectedReason}</p>
             ` : ''}
-            <p><strong>Que faire maintenant ?</strong></p>
+            <p><strong style="color: #027e7e;">Que faire maintenant ?</strong></p>
             <ul>
               <li>Vérifiez que votre document est lisible</li>
               <li>Assurez-vous qu'il s'agit bien d'un diplôme ME ou ES</li>
@@ -179,10 +187,10 @@ function getEmailHtml(educator: EducatorEmailData, status: DiplomaStatusChange):
             </ul>
             <a href="${process.env.NEXT_PUBLIC_APP_URL}/dashboard/educator/diploma" class="button">Re-soumettre mon diplôme</a>
             <p>Notre équipe reste à votre disposition si vous avez des questions.</p>
-            <p>L'équipe neurocare Pro</p>
+            <p>L'équipe <strong style="color: #027e7e;">neurocare Pro</strong></p>
           </div>
           <div class="footer">
-            <p>neurocare Pro - Plateforme de mise en relation familles-professionnels</p>
+            <p>© 2025 <span style="color: #027e7e; font-weight: 600;">neurocare Pro</span> - Plateforme de mise en relation familles-professionnels</p>
           </div>
         </div>
       `;
