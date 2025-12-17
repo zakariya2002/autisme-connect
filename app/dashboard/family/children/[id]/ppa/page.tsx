@@ -4,6 +4,7 @@ import { useEffect, useState, useRef, useCallback } from 'react';
 import { useRouter, useParams } from 'next/navigation';
 import Link from 'next/link';
 import { supabase } from '@/lib/supabase';
+import FamilyNavbar from '@/components/FamilyNavbar';
 
 // Debounce hook for auto-save
 function useDebounce<T>(value: T, delay: number): T {
@@ -536,8 +537,8 @@ export default function PPAPage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary-600"></div>
+      <div className="min-h-screen flex items-center justify-center" style={{ backgroundColor: '#fdf9f4' }}>
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2" style={{ borderColor: '#027e7e' }}></div>
       </div>
     );
   }
@@ -550,7 +551,12 @@ export default function PPAPage() {
   const toAvoid = preferences.filter(p => p.type === 'avoid');
 
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen min-h-[100dvh] flex flex-col" style={{ backgroundColor: '#fdf9f4' }}>
+      {/* Navbar */}
+      <div className="no-print sticky top-0 z-50">
+        <FamilyNavbar profile={family} />
+      </div>
+
       {/* Styles d'impression */}
       <style jsx global>{`
         @media print {
@@ -581,11 +587,12 @@ export default function PPAPage() {
       `}</style>
 
       {/* Barre d'outils (non imprimée) */}
-      <div className="no-print bg-white border-b border-gray-200 sticky top-0 z-50">
+      <div className="no-print bg-white border-b border-gray-200">
         <div className="max-w-5xl mx-auto px-3 sm:px-4 py-2 sm:py-3 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 sm:gap-0">
           <Link
             href={`/dashboard/family/children/${childId}/dossier`}
-            className="flex items-center gap-2 text-gray-600 hover:text-primary-600 text-sm sm:text-base"
+            className="flex items-center gap-2 text-gray-600 hover:opacity-80 text-sm sm:text-base"
+            style={{ color: '#027e7e' }}
           >
             <svg className="w-4 h-4 sm:w-5 sm:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
@@ -624,66 +631,71 @@ export default function PPAPage() {
           </div>
 
           <div className="flex items-center gap-2 sm:gap-3 flex-wrap">
-            {/* Bouton Historique */}
+            {/* Bouton Versions précédentes */}
             <button
               onClick={() => setShowHistoryModal(true)}
-              className="flex items-center gap-1 sm:gap-2 px-3 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition text-sm"
+              className="flex items-center gap-1.5 px-3 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition text-xs sm:text-sm"
+              title="Consulter les versions précédentes du PPA"
             >
-              <svg className="w-4 h-4 sm:w-5 sm:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
               </svg>
-              <span className="hidden sm:inline">Historique</span>
+              <span>Versions</span>
               {versions.length > 0 && (
-                <span className="bg-primary-100 text-primary-700 text-xs px-1.5 py-0.5 rounded-full">
+                <span className="text-xs px-1.5 py-0.5 rounded-full" style={{ backgroundColor: '#e6f4f4', color: '#027e7e' }}>
                   {versions.length}
                 </span>
               )}
             </button>
 
-            {/* Bouton Créer version */}
+            {/* Bouton Créer une copie */}
             <button
               onClick={() => setShowVersionModal(true)}
               disabled={!ppaId}
-              className="flex items-center gap-1 sm:gap-2 px-3 py-2 border border-green-300 text-green-700 rounded-lg hover:bg-green-50 transition disabled:opacity-50 disabled:cursor-not-allowed text-sm"
-              title={!ppaId ? 'Enregistrez d\'abord le PPA' : 'Créer une version archivée'}
+              className="flex items-center gap-1.5 px-3 py-2 border border-green-300 text-green-700 rounded-lg hover:bg-green-50 transition disabled:opacity-50 disabled:cursor-not-allowed text-xs sm:text-sm"
+              title={!ppaId ? 'Enregistrez d\'abord le PPA' : 'Créer une copie de sauvegarde avant modification'}
             >
-              <svg className="w-4 h-4 sm:w-5 sm:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7v8a2 2 0 002 2h6M8 7V5a2 2 0 012-2h4.586a1 1 0 01.707.293l4.414 4.414a1 1 0 01.293.707V15a2 2 0 01-2 2h-2M8 7H6a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2v-2" />
               </svg>
-              <span className="hidden sm:inline">Archiver</span>
+              <span>Copie</span>
             </button>
 
-            {/* Bouton Enregistrer */}
+            {/* Bouton Sauvegarder */}
             <button
               onClick={savePPA}
               disabled={saving}
-              className="flex items-center gap-1 sm:gap-2 px-3 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition disabled:opacity-50 text-sm"
+              className="flex items-center gap-1.5 px-3 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition disabled:opacity-50 text-xs sm:text-sm"
+              title="Sauvegarder les modifications (sauvegarde automatique activée)"
             >
-              <svg className="w-4 h-4 sm:w-5 sm:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-3m-1 4l-3 3m0 0l-3-3m3 3V4" />
+              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
               </svg>
-              <span className="hidden sm:inline">Enregistrer</span>
+              <span>Sauvegarder</span>
             </button>
 
-            {/* Bouton Imprimer */}
+            {/* Bouton Imprimer / PDF */}
             <button
               onClick={handlePrint}
-              className="flex items-center gap-1 sm:gap-2 px-3 py-2 bg-primary-600 text-white rounded-lg hover:bg-primary-700 transition text-sm"
+              className="flex items-center gap-1.5 px-3 py-2 text-white rounded-lg hover:opacity-90 transition text-xs sm:text-sm"
+              style={{ backgroundColor: '#027e7e' }}
+              title="Imprimer ou exporter en PDF"
             >
-              <svg className="w-4 h-4 sm:w-5 sm:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z" />
               </svg>
-              <span className="hidden sm:inline">PDF</span>
+              <span>Imprimer</span>
             </button>
           </div>
         </div>
       </div>
 
       {/* Document PPA */}
-      <div id="ppa-document" ref={printRef} className="max-w-5xl mx-auto bg-white p-4 sm:p-6 md:p-8 print:my-0">
+      <div className="flex-1 pb-8">
+      <div id="ppa-document" ref={printRef} className="max-w-5xl mx-auto bg-white p-4 sm:p-6 md:p-8 print:my-0 shadow-sm rounded-lg my-4 mx-4 sm:mx-auto">
 
         {/* En-tête */}
-        <div className="border-b-4 border-primary-600 pb-4 sm:pb-6 mb-6 sm:mb-8">
+        <div className="border-b-4 pb-4 sm:pb-6 mb-6 sm:mb-8" style={{ borderColor: '#027e7e' }}>
           <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 sm:gap-4">
             <div>
               <h1 className="text-xl sm:text-2xl md:text-3xl font-bold text-gray-900">
@@ -697,7 +709,7 @@ export default function PPAPage() {
                 type="date"
                 value={ppaData.evaluation_date}
                 onChange={(e) => setPpaData({ ...ppaData, evaluation_date: e.target.value })}
-                className="text-base sm:text-lg font-semibold text-gray-900 border-b border-gray-300 focus:border-primary-500 outline-none w-full sm:w-auto"
+                className="text-base sm:text-lg font-semibold text-gray-900 border-b border-gray-300 outline-none w-full sm:w-auto" style={{ '--focus-border-color': '#027e7e' } as any}
               />
             </div>
           </div>
@@ -705,7 +717,7 @@ export default function PPAPage() {
 
         {/* Section 1: Identification */}
         <section className="mb-6 sm:mb-8">
-          <h2 className="text-base sm:text-lg md:text-xl font-bold text-white bg-primary-600 px-3 sm:px-4 py-2 rounded-t-lg">
+          <h2 className="text-base sm:text-lg md:text-xl font-bold text-white px-3 sm:px-4 py-2 rounded-t-lg" style={{ backgroundColor: '#027e7e' }}>
             1. IDENTIFICATION
           </h2>
           <div className="border border-gray-300 border-t-0 rounded-b-lg p-3 sm:p-4">
@@ -763,7 +775,7 @@ export default function PPAPage() {
                     type="text"
                     value={ppaData.educator_name}
                     onChange={(e) => setPpaData({ ...ppaData, educator_name: e.target.value })}
-                    className="w-full border-b border-gray-300 focus:border-primary-500 outline-none py-1"
+                    className="w-full border-b border-gray-300 outline-none py-1"
                     placeholder="Nom et prénom"
                   />
                 </div>
@@ -773,7 +785,7 @@ export default function PPAPage() {
                     type="text"
                     value={ppaData.educator_structure}
                     onChange={(e) => setPpaData({ ...ppaData, educator_structure: e.target.value })}
-                    className="w-full border-b border-gray-300 focus:border-primary-500 outline-none py-1"
+                    className="w-full border-b border-gray-300 outline-none py-1"
                     placeholder="Ex: Libéral, Association..."
                   />
                 </div>
@@ -784,15 +796,15 @@ export default function PPAPage() {
 
         {/* Section 2: Anamnèse */}
         <section className="mb-6 sm:mb-8">
-          <h2 className="text-base sm:text-lg md:text-xl font-bold text-white bg-primary-600 px-3 sm:px-4 py-2 rounded-t-lg">
+          <h2 className="text-base sm:text-lg md:text-xl font-bold text-white px-3 sm:px-4 py-2 rounded-t-lg" style={{ backgroundColor: '#027e7e' }}>
             2. ANAMNÈSE
           </h2>
           <div className="border border-gray-300 border-t-0 rounded-b-lg p-3 sm:p-4">
 
             {/* Partie A: Historique éducatif (stockable) */}
             <div className="mb-6">
-              <h3 className="font-semibold text-primary-700 mb-4 pb-2 border-b flex items-center gap-2">
-                <span className="bg-primary-100 text-primary-700 px-2 py-1 rounded text-sm">A</span>
+              <h3 className="font-semibold mb-4 pb-2 border-b flex items-center gap-2" style={{ color: '#027e7e' }}>
+                <span className="px-2 py-1 rounded text-sm" style={{ backgroundColor: '#e6f4f4', color: '#027e7e' }}>A</span>
                 Parcours éducatif et développemental
               </h3>
 
@@ -936,123 +948,10 @@ export default function PPAPage() {
           </div>
         </section>
 
-        {/* Section 3: Profil de la personne */}
-        <section className="mb-6 sm:mb-8">
-          <h2 className="text-base sm:text-lg md:text-xl font-bold text-white bg-primary-600 px-3 sm:px-4 py-2 rounded-t-lg">
-            3. PROFIL DE LA PERSONNE
-          </h2>
-          <div className="border border-gray-300 border-t-0 rounded-b-lg p-3 sm:p-4">
-
-            {/* Description */}
-            <div className="mb-6">
-              <h3 className="font-semibold text-gray-900 mb-2">Présentation générale</h3>
-              <div className="bg-gray-50 p-3 rounded min-h-[60px]">
-                {child.description || <span className="text-gray-400 italic">Description à compléter...</span>}
-              </div>
-            </div>
-
-            {/* Points forts et centres d'intérêt */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6 mb-6">
-              <div>
-                <h3 className="font-semibold text-gray-900 mb-2 flex items-center gap-2 text-sm sm:text-base">
-                  <span className="text-green-600">✓</span> Points forts
-                </h3>
-                <div className="bg-green-50 p-3 rounded min-h-[80px]">
-                  {child.strengths || (
-                    <ul className="text-gray-400 italic text-sm space-y-1">
-                      <li>• _______________________</li>
-                      <li>• _______________________</li>
-                      <li>• _______________________</li>
-                    </ul>
-                  )}
-                </div>
-              </div>
-              <div>
-                <h3 className="font-semibold text-gray-900 mb-2 flex items-center gap-2">
-                  <span className="text-red-600">!</span> Points de vigilance
-                </h3>
-                <div className="bg-red-50 p-3 rounded min-h-[80px]">
-                  {child.challenges || (
-                    <ul className="text-gray-400 italic text-sm space-y-1">
-                      <li>• _______________________</li>
-                      <li>• _______________________</li>
-                      <li>• _______________________</li>
-                    </ul>
-                  )}
-                </div>
-              </div>
-            </div>
-
-            {/* Centres d'intérêt et renforçateurs */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
-              <div>
-                <h3 className="font-semibold text-gray-900 mb-2 text-sm sm:text-base">❤️ Centres d'intérêt</h3>
-                <div className="bg-pink-50 p-3 rounded min-h-[60px]">
-                  {interests.length > 0 ? (
-                    <ul className="space-y-1">
-                      {interests.map(i => (
-                        <li key={i.id} className="text-sm">• {i.name}</li>
-                      ))}
-                    </ul>
-                  ) : (
-                    <span className="text-gray-400 italic text-sm">À compléter...</span>
-                  )}
-                </div>
-              </div>
-              <div>
-                <h3 className="font-semibold text-gray-900 mb-2">⭐ Renforçateurs efficaces</h3>
-                <div className="bg-yellow-50 p-3 rounded min-h-[60px]">
-                  {reinforcers.length > 0 ? (
-                    <ul className="space-y-1">
-                      {reinforcers.map(r => (
-                        <li key={r.id} className="text-sm">• {r.name}</li>
-                      ))}
-                    </ul>
-                  ) : (
-                    <span className="text-gray-400 italic text-sm">À compléter...</span>
-                  )}
-                </div>
-              </div>
-            </div>
-
-            {/* Stratégies et à éviter */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6 mt-4">
-              <div>
-                <h3 className="font-semibold text-gray-900 mb-2 text-sm sm:text-base">💡 Stratégies qui fonctionnent</h3>
-                <div className="bg-blue-50 p-3 rounded min-h-[60px]">
-                  {strategies.length > 0 ? (
-                    <ul className="space-y-1">
-                      {strategies.map(s => (
-                        <li key={s.id} className="text-sm">• {s.name}</li>
-                      ))}
-                    </ul>
-                  ) : (
-                    <span className="text-gray-400 italic text-sm">À compléter...</span>
-                  )}
-                </div>
-              </div>
-              <div>
-                <h3 className="font-semibold text-gray-900 mb-2">⚠️ À éviter</h3>
-                <div className="bg-orange-50 p-3 rounded min-h-[60px]">
-                  {toAvoid.length > 0 ? (
-                    <ul className="space-y-1">
-                      {toAvoid.map(a => (
-                        <li key={a.id} className="text-sm">• {a.name}</li>
-                      ))}
-                    </ul>
-                  ) : (
-                    <span className="text-gray-400 italic text-sm">À compléter...</span>
-                  )}
-                </div>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        {/* Section 4: Contexte */}
+        {/* Section 3: Contexte */}
         <section className="mb-6 sm:mb-8 print-break">
-          <h2 className="text-base sm:text-lg md:text-xl font-bold text-white bg-primary-600 px-3 sm:px-4 py-2 rounded-t-lg">
-            4. CONTEXTE ET ENVIRONNEMENT
+          <h2 className="text-base sm:text-lg md:text-xl font-bold text-white px-3 sm:px-4 py-2 rounded-t-lg" style={{ backgroundColor: '#027e7e' }}>
+            3. CONTEXTE ET ENVIRONNEMENT
           </h2>
           <div className="border border-gray-300 border-t-0 rounded-b-lg p-3 sm:p-4">
             <div className="space-y-4">
@@ -1087,10 +986,10 @@ export default function PPAPage() {
           </div>
         </section>
 
-        {/* Section 5: Synthèse d'évaluation par domaine */}
+        {/* Section 4: Synthèse d'évaluation par domaine */}
         <section className="mb-6 sm:mb-8">
-          <h2 className="text-base sm:text-lg md:text-xl font-bold text-white bg-primary-600 px-3 sm:px-4 py-2 rounded-t-lg">
-            5. SYNTHÈSE D'ÉVALUATION PAR DOMAINE
+          <h2 className="text-base sm:text-lg md:text-xl font-bold text-white px-3 sm:px-4 py-2 rounded-t-lg" style={{ backgroundColor: '#027e7e' }}>
+            4. SYNTHÈSE D'ÉVALUATION PAR DOMAINE
           </h2>
           <div className="border border-gray-300 border-t-0 rounded-b-lg p-3 sm:p-4">
             <p className="text-sm text-gray-600 mb-4 italic">
@@ -1099,7 +998,7 @@ export default function PPAPage() {
 
             {/* Communication */}
             <div className="mb-6">
-              <h3 className="font-bold text-primary-700 mb-3 pb-1 border-b-2 border-primary-200">
+              <h3 className="font-bold mb-3 pb-1 border-b-2" style={{ color: '#027e7e', borderColor: '#c9eaea' }}>
                 COMMUNICATION
               </h3>
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
@@ -1135,7 +1034,7 @@ export default function PPAPage() {
 
             {/* Autonomie */}
             <div className="mb-6">
-              <h3 className="font-bold text-primary-700 mb-3 pb-1 border-b-2 border-primary-200">
+              <h3 className="font-bold mb-3 pb-1 border-b-2" style={{ color: '#027e7e', borderColor: '#c9eaea' }}>
                 AUTONOMIE DANS LA VIE QUOTIDIENNE
               </h3>
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
@@ -1171,7 +1070,7 @@ export default function PPAPage() {
 
             {/* Socialisation */}
             <div className="mb-6">
-              <h3 className="font-bold text-primary-700 mb-3 pb-1 border-b-2 border-primary-200">
+              <h3 className="font-bold mb-3 pb-1 border-b-2" style={{ color: '#027e7e', borderColor: '#c9eaea' }}>
                 SOCIALISATION
               </h3>
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
@@ -1207,7 +1106,7 @@ export default function PPAPage() {
 
             {/* Motricité */}
             <div className="mb-6">
-              <h3 className="font-bold text-primary-700 mb-3 pb-1 border-b-2 border-primary-200">
+              <h3 className="font-bold mb-3 pb-1 border-b-2" style={{ color: '#027e7e', borderColor: '#c9eaea' }}>
                 MOTRICITÉ
               </h3>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -1234,7 +1133,7 @@ export default function PPAPage() {
 
             {/* Profil Sensoriel */}
             <div className="mb-6 print-break">
-              <h3 className="font-bold text-primary-700 mb-3 pb-1 border-b-2 border-primary-200 text-sm sm:text-base">
+              <h3 className="font-bold mb-3 pb-1 border-b-2 text-sm sm:text-base" style={{ color: '#027e7e', borderColor: '#c9eaea' }}>
                 PROFIL SENSORIEL
               </h3>
               <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-3">
@@ -1306,7 +1205,7 @@ export default function PPAPage() {
 
             {/* Cognitif & Apprentissages */}
             <div className="mb-6">
-              <h3 className="font-bold text-primary-700 mb-3 pb-1 border-b-2 border-primary-200">
+              <h3 className="font-bold mb-3 pb-1 border-b-2" style={{ color: '#027e7e', borderColor: '#c9eaea' }}>
                 COGNITIF & APPRENTISSAGES
               </h3>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
@@ -1383,7 +1282,7 @@ export default function PPAPage() {
 
             {/* Psycho-affectif */}
             <div className="mb-6">
-              <h3 className="font-bold text-primary-700 mb-3 pb-1 border-b-2 border-primary-200">
+              <h3 className="font-bold mb-3 pb-1 border-b-2" style={{ color: '#027e7e', borderColor: '#c9eaea' }}>
                 PSYCHO-AFFECTIF
               </h3>
               <textarea
@@ -1396,7 +1295,7 @@ export default function PPAPage() {
 
             {/* Comportements problèmes */}
             <div className="mb-2">
-              <h3 className="font-bold text-primary-700 mb-3 pb-1 border-b-2 border-primary-200">
+              <h3 className="font-bold mb-3 pb-1 border-b-2" style={{ color: '#027e7e', borderColor: '#c9eaea' }}>
                 COMPORTEMENTS PROBLÈMES
               </h3>
               <textarea
@@ -1409,10 +1308,10 @@ export default function PPAPage() {
           </div>
         </section>
 
-        {/* Section 6: Objectifs */}
+        {/* Section 5: Objectifs */}
         <section className="mb-6 sm:mb-8 print-break">
-          <h2 className="text-base sm:text-lg md:text-xl font-bold text-white bg-primary-600 px-3 sm:px-4 py-2 rounded-t-lg">
-            6. OBJECTIFS D'ACCOMPAGNEMENT
+          <h2 className="text-base sm:text-lg md:text-xl font-bold text-white px-3 sm:px-4 py-2 rounded-t-lg" style={{ backgroundColor: '#027e7e' }}>
+            5. OBJECTIFS D'ACCOMPAGNEMENT
           </h2>
           <div className="border border-gray-300 border-t-0 rounded-b-lg p-3 sm:p-4">
             {goals.length > 0 ? (
@@ -1420,7 +1319,7 @@ export default function PPAPage() {
                 {goals.map((goal, index) => (
                   <div key={goal.id} className="border border-gray-200 rounded-lg p-4">
                     <div className="flex items-start gap-3">
-                      <span className="bg-primary-600 text-white rounded-full w-8 h-8 flex items-center justify-center font-bold flex-shrink-0">
+                      <span className="text-white rounded-full w-8 h-8 flex items-center justify-center font-bold flex-shrink-0" style={{ backgroundColor: '#027e7e' }}>
                         {index + 1}
                       </span>
                       <div className="flex-1">
@@ -1438,7 +1337,7 @@ export default function PPAPage() {
                         <div className="mt-2 flex items-center gap-2">
                           <span className="text-sm text-gray-600">Progression :</span>
                           <div className="flex-1 h-2 bg-gray-200 rounded-full max-w-xs">
-                            <div className="h-2 bg-primary-600 rounded-full" style={{ width: `${goal.progress}%` }} />
+                            <div className="h-2 rounded-full" style={{ width: `${goal.progress}%`, backgroundColor: '#027e7e' }} />
                           </div>
                           <span className="text-sm font-medium">{goal.progress}%</span>
                         </div>
@@ -1452,7 +1351,7 @@ export default function PPAPage() {
                 {[1, 2, 3].map(i => (
                   <div key={i} className="border border-gray-200 rounded-lg p-4">
                     <div className="flex items-start gap-3">
-                      <span className="bg-primary-600 text-white rounded-full w-8 h-8 flex items-center justify-center font-bold flex-shrink-0">
+                      <span className="text-white rounded-full w-8 h-8 flex items-center justify-center font-bold flex-shrink-0" style={{ backgroundColor: '#027e7e' }}>
                         {i}
                       </span>
                       <div className="flex-1 space-y-3">
@@ -1498,10 +1397,10 @@ export default function PPAPage() {
           </div>
         </section>
 
-        {/* Section 7: Modalités */}
+        {/* Section 6: Modalités */}
         <section className="mb-6 sm:mb-8">
-          <h2 className="text-base sm:text-lg md:text-xl font-bold text-white bg-primary-600 px-3 sm:px-4 py-2 rounded-t-lg">
-            7. MODALITÉS D'ACCOMPAGNEMENT
+          <h2 className="text-base sm:text-lg md:text-xl font-bold text-white px-3 sm:px-4 py-2 rounded-t-lg" style={{ backgroundColor: '#027e7e' }}>
+            6. MODALITÉS D'ACCOMPAGNEMENT
           </h2>
           <div className="border border-gray-300 border-t-0 rounded-b-lg p-3 sm:p-4">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
@@ -1580,10 +1479,10 @@ export default function PPAPage() {
           </div>
         </section>
 
-        {/* Section 8: Révision */}
+        {/* Section 7: Révision */}
         <section className="mb-6 sm:mb-8">
-          <h2 className="text-base sm:text-lg md:text-xl font-bold text-white bg-primary-600 px-3 sm:px-4 py-2 rounded-t-lg">
-            8. RÉVISION ET SUIVI
+          <h2 className="text-base sm:text-lg md:text-xl font-bold text-white px-3 sm:px-4 py-2 rounded-t-lg" style={{ backgroundColor: '#027e7e' }}>
+            7. RÉVISION ET SUIVI
           </h2>
           <div className="border border-gray-300 border-t-0 rounded-b-lg p-3 sm:p-4">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
@@ -1669,9 +1568,10 @@ export default function PPAPage() {
 
         {/* Pied de page */}
         <footer className="text-center text-xs text-gray-400 mt-8 pt-4 border-t">
-          <p>Document généré via Autisme Connect - {new Date().toLocaleDateString('fr-FR')}</p>
+          <p>Document généré via neurocare - {new Date().toLocaleDateString('fr-FR')}</p>
           <p>Ce document ne contient aucune donnée médicale - Usage éducatif uniquement</p>
         </footer>
+      </div>
       </div>
 
       {/* Modal Créer une version */}
@@ -1697,7 +1597,7 @@ export default function PPAPage() {
                 value={versionLabel}
                 onChange={(e) => setVersionLabel(e.target.value)}
                 placeholder="Ex: Révision trimestrielle T1 2025"
-                className="w-full border border-gray-300 rounded-lg p-2 focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+                className="w-full border border-gray-300 rounded-lg p-2 focus:ring-2 focus:border-transparent" style={{ '--tw-ring-color': '#027e7e' } as any}
               />
             </div>
             <div className="flex gap-3">
@@ -1729,7 +1629,7 @@ export default function PPAPage() {
           <div className="bg-white rounded-xl shadow-xl max-w-lg w-full max-h-[80vh] flex flex-col">
             <div className="p-6 border-b">
               <h3 className="text-xl font-bold text-gray-900 flex items-center gap-2">
-                <svg className="w-6 h-6 text-primary-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" style={{ color: '#027e7e' }}>
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
                 </svg>
                 Historique des versions
@@ -1753,7 +1653,7 @@ export default function PPAPage() {
                   {versions.map((version) => (
                     <div
                       key={version.id}
-                      className="border border-gray-200 rounded-lg p-4 hover:border-primary-300 transition"
+                      className="border border-gray-200 rounded-lg p-4 hover:border-teal-300 transition"
                     >
                       <div className="flex items-start justify-between">
                         <div>
@@ -1782,7 +1682,7 @@ export default function PPAPage() {
                       <div className="flex gap-2 mt-3">
                         <button
                           onClick={() => viewVersion(version.id)}
-                          className="flex-1 text-sm px-3 py-1.5 bg-primary-50 text-primary-700 rounded-lg hover:bg-primary-100 transition"
+                          className="flex-1 text-sm px-3 py-1.5 rounded-lg transition" style={{ backgroundColor: '#e6f4f4', color: '#027e7e' }}
                         >
                           Consulter
                         </button>
@@ -1874,8 +1774,8 @@ export default function PPAPage() {
                 )}
 
                 {selectedVersion.priority_axes && (
-                  <div className="border rounded-lg p-4 bg-primary-50">
-                    <h4 className="font-semibold text-primary-700 mb-2">Axes prioritaires</h4>
+                  <div className="border rounded-lg p-4" style={{ backgroundColor: '#e6f4f4' }}>
+                    <h4 className="font-semibold mb-2" style={{ color: '#027e7e' }}>Axes prioritaires</h4>
                     <p className="text-gray-600 whitespace-pre-wrap">{selectedVersion.priority_axes}</p>
                   </div>
                 )}
@@ -1920,6 +1820,9 @@ export default function PPAPage() {
           </div>
         </div>
       )}
+
+      {/* Footer teal */}
+      <div className="no-print mt-auto" style={{ backgroundColor: '#027e7e', height: '40px' }}></div>
     </div>
   );
 }

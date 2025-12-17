@@ -2,6 +2,7 @@
 
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
+import PublicNavbar from '@/components/PublicNavbar';
 
 export default function SignupChoicePage() {
   const router = useRouter();
@@ -16,151 +17,183 @@ export default function SignupChoicePage() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-primary-50 via-white to-blue-50 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
-      <div className="sm:mx-auto sm:w-full sm:max-w-4xl">
-        {/* En-tête */}
-        <div className="text-center mb-12">
-          <Link href="/" className="inline-block">
-            <h1 className="text-4xl font-bold text-primary-600 mb-2">
-              Autisme Connect
+    <div className="min-h-screen flex flex-col" style={{ backgroundColor: '#fdf9f4' }}>
+      <PublicNavbar showAuthButtons={true} />
+
+      <div className="flex-1 flex flex-col justify-center py-12 px-4 sm:px-6 lg:px-8 relative z-0">
+        <div className="sm:mx-auto sm:w-full sm:max-w-4xl">
+          {/* En-tête */}
+          <div className="text-center mb-10">
+            <h1 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-3">
+              Créer un compte
             </h1>
-          </Link>
-          <h2 className="text-3xl font-extrabold text-gray-900 mb-4">
-            Créer un compte
-          </h2>
-          <p className="text-lg text-gray-600">
-            Choisissez le type de compte que vous souhaitez créer
-          </p>
-          <p className="mt-4 text-sm text-gray-600">
-            Vous avez déjà un compte ?{' '}
-            <Link href="/auth/login" className="font-medium text-primary-600 hover:text-primary-500">
-              Connectez-vous
-            </Link>
-          </p>
-        </div>
+            <p className="text-lg text-gray-600">
+              Choisissez le type de compte que vous souhaitez créer
+            </p>
+            <p className="mt-4 text-sm text-gray-600">
+              Vous avez déjà un compte ?{' '}
+              <Link href="/auth/login" className="font-semibold hover:underline" style={{ color: '#027e7e' }}>
+                Connectez-vous
+              </Link>
+            </p>
+          </div>
 
-        {/* Cartes de choix */}
-        <div className="grid md:grid-cols-2 gap-8 max-w-5xl mx-auto px-4">
-          {/* Carte Famille */}
-          <button
-            onClick={() => handleRoleSelection('family')}
-            className="group relative bg-white rounded-2xl shadow-xl hover:shadow-2xl transition-all duration-300 overflow-hidden border-2 border-transparent hover:border-primary-500 transform hover:-translate-y-1"
-          >
-            <div className="p-8 text-center">
-              {/* Icône */}
-              <div className="mb-6 flex justify-center">
-                <div className="w-24 h-24 bg-gradient-to-br from-blue-100 to-primary-100 rounded-full flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
-                  <svg className="w-12 h-12 text-primary-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
-                  </svg>
+          {/* Cartes de choix */}
+          <div className="grid md:grid-cols-2 gap-6 max-w-4xl mx-auto">
+            {/* Carte Aidant */}
+            <button
+              onClick={() => handleRoleSelection('family')}
+              className="group relative bg-white rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-300 overflow-hidden border-2 border-transparent hover:border-[#027e7e] transform hover:-translate-y-1 text-left"
+              aria-label="Créer un compte aidant ou personne avec TND"
+            >
+              <div className="p-6 sm:p-8">
+                {/* En-tête avec icône */}
+                <div className="flex items-center gap-4 mb-6">
+                  <div className="w-14 h-14 rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform duration-300" style={{ backgroundColor: 'rgba(2, 126, 126, 0.1)' }}>
+                    <svg className="w-7 h-7" style={{ color: '#027e7e' }} fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+                    </svg>
+                  </div>
+                  <div>
+                    <h2 className="text-xl sm:text-2xl font-bold text-gray-900">
+                      Je suis un aidant
+                    </h2>
+                    <p className="text-gray-500 text-sm">ou une personne avec TND</p>
+                  </div>
+                </div>
+
+                {/* Liste des avantages */}
+                <ul className="space-y-3 mb-6">
+                  <li className="flex items-start gap-3">
+                    <div className="w-5 h-5 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5" style={{ backgroundColor: '#027e7e' }}>
+                      <svg className="w-3 h-3 text-white" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
+                        <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                      </svg>
+                    </div>
+                    <span className="text-gray-700">Rechercher des professionnels qualifiés</span>
+                  </li>
+                  <li className="flex items-start gap-3">
+                    <div className="w-5 h-5 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5" style={{ backgroundColor: '#027e7e' }}>
+                      <svg className="w-3 h-3 text-white" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
+                        <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                      </svg>
+                    </div>
+                    <span className="text-gray-700">Contacter et échanger en toute sécurité</span>
+                  </li>
+                  <li className="flex items-start gap-3">
+                    <div className="w-5 h-5 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5" style={{ backgroundColor: '#027e7e' }}>
+                      <svg className="w-3 h-3 text-white" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
+                        <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                      </svg>
+                    </div>
+                    <span className="text-gray-700">100% gratuit, sans engagement</span>
+                  </li>
+                </ul>
+
+                {/* Bouton */}
+                <div className="w-full text-center text-white font-semibold py-3.5 rounded-xl transition-all group-hover:opacity-90 group-hover:shadow-lg" style={{ backgroundColor: '#027e7e' }}>
+                  <span className="flex items-center justify-center gap-2">
+                    Créer mon compte aidant
+                    <svg className="w-5 h-5 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                    </svg>
+                  </span>
                 </div>
               </div>
+            </button>
 
-              {/* Titre */}
-              <h3 className="text-2xl font-bold text-gray-900 mb-3">
-                Je suis un aidant
-              </h3>
-              <p className="text-gray-600 mb-6">
-                ou une personne avec TND
-              </p>
+            {/* Carte Professionnel */}
+            <button
+              onClick={() => handleRoleSelection('educator')}
+              className="group relative bg-white rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-300 overflow-hidden border-2 border-transparent hover:border-[#41005c] transform hover:-translate-y-1 text-left"
+              aria-label="Créer un compte professionnel"
+            >
+              <div className="p-6 sm:p-8">
+                {/* En-tête avec icône */}
+                <div className="flex items-center gap-4 mb-6">
+                  <div className="w-14 h-14 rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform duration-300" style={{ backgroundColor: 'rgba(65, 0, 92, 0.1)' }}>
+                    <svg className="w-7 h-7" style={{ color: '#41005c' }} fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                    </svg>
+                  </div>
+                  <div>
+                    <h2 className="text-xl sm:text-2xl font-bold text-gray-900">
+                      Je suis un professionnel
+                    </h2>
+                    <p className="text-gray-500 text-sm">Éducateur, psychologue, etc.</p>
+                  </div>
+                </div>
 
-              {/* Description */}
-              <div className="text-left space-y-3 mb-6">
-                <div className="flex items-start">
-                  <svg className="w-5 h-5 text-green-500 mr-2 mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
-                    <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
-                  </svg>
-                  <span className="text-sm text-gray-600">Rechercher des éducateurs qualifiés</span>
-                </div>
-                <div className="flex items-start">
-                  <svg className="w-5 h-5 text-green-500 mr-2 mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
-                    <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
-                  </svg>
-                  <span className="text-sm text-gray-600">Contacter et échanger en toute sécurité</span>
-                </div>
-                <div className="flex items-start">
-                  <svg className="w-5 h-5 text-green-500 mr-2 mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
-                    <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
-                  </svg>
-                  <span className="text-sm text-gray-600">Accéder à des professionnels certifiés</span>
+                {/* Liste des avantages */}
+                <ul className="space-y-3 mb-6">
+                  <li className="flex items-start gap-3">
+                    <div className="w-5 h-5 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5" style={{ backgroundColor: '#41005c' }}>
+                      <svg className="w-3 h-3 text-white" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
+                        <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                      </svg>
+                    </div>
+                    <span className="text-gray-700">Valorisez votre expertise et diplômes</span>
+                  </li>
+                  <li className="flex items-start gap-3">
+                    <div className="w-5 h-5 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5" style={{ backgroundColor: '#41005c' }}>
+                      <svg className="w-3 h-3 text-white" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
+                        <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                      </svg>
+                    </div>
+                    <span className="text-gray-700">Soyez visible auprès des familles</span>
+                  </li>
+                  <li className="flex items-start gap-3">
+                    <div className="w-5 h-5 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5" style={{ backgroundColor: '#41005c' }}>
+                      <svg className="w-3 h-3 text-white" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
+                        <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                      </svg>
+                    </div>
+                    <span className="text-gray-700">Gérez vos revenus facilement</span>
+                  </li>
+                </ul>
+
+                {/* Bouton */}
+                <div className="w-full text-center text-white font-semibold py-3.5 rounded-xl transition-all group-hover:opacity-90 group-hover:shadow-lg" style={{ backgroundColor: '#41005c' }}>
+                  <span className="flex items-center justify-center gap-2">
+                    Créer mon compte pro
+                    <svg className="w-5 h-5 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                    </svg>
+                  </span>
                 </div>
               </div>
+            </button>
+          </div>
 
-              {/* Bouton */}
-              <div className="flex items-center justify-center text-primary-600 font-semibold group-hover:text-primary-700">
-                <span>Continuer</span>
-                <svg className="w-5 h-5 ml-2 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                </svg>
-              </div>
+          {/* Message informatif et liens RGPD */}
+          <div className="mt-10 text-center">
+            <p className="text-sm text-gray-500 max-w-2xl mx-auto mb-6">
+              En créant un compte, vous acceptez nos{' '}
+              <a href="/cgu" className="font-medium hover:underline" style={{ color: '#027e7e' }}>
+                conditions générales d'utilisation
+              </a>{' '}
+              et notre{' '}
+              <a href="/politique-confidentialite" className="font-medium hover:underline" style={{ color: '#027e7e' }}>
+                politique de confidentialité
+              </a>
+              . Tous les diplômes et certifications des professionnels sont vérifiés par notre équipe.
+            </p>
+
+            {/* Liens RGPD */}
+            <div className="flex flex-wrap justify-center gap-4 text-xs text-gray-400">
+              <a href="/politique-confidentialite" className="hover:underline" style={{ color: '#027e7e' }}>
+                Politique de confidentialité
+              </a>
+              <span className="text-gray-300">•</span>
+              <a href="/cgu" className="hover:underline" style={{ color: '#027e7e' }}>
+                Conditions générales d'utilisation
+              </a>
+              <span className="text-gray-300">•</span>
+              <a href="/mentions-legales" className="hover:underline" style={{ color: '#027e7e' }}>
+                Mentions légales
+              </a>
             </div>
-
-            {/* Effet de brillance au survol */}
-            <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white to-transparent opacity-0 group-hover:opacity-10 transform -skew-x-12 group-hover:translate-x-full transition-all duration-1000"></div>
-          </button>
-
-          {/* Carte Éducateur */}
-          <button
-            onClick={() => handleRoleSelection('educator')}
-            className="group relative bg-white rounded-2xl shadow-xl hover:shadow-2xl transition-all duration-300 overflow-hidden border-2 border-transparent hover:border-primary-500 transform hover:-translate-y-1"
-          >
-            <div className="p-8 text-center">
-              {/* Icône */}
-              <div className="mb-6 flex justify-center">
-                <div className="w-24 h-24 bg-gradient-to-br from-purple-100 to-primary-100 rounded-full flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
-                  <svg className="w-12 h-12 text-primary-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-                  </svg>
-                </div>
-              </div>
-
-              {/* Titre */}
-              <h3 className="text-2xl font-bold text-gray-900 mb-6">
-                Je suis un professionnel
-              </h3>
-
-              {/* Description */}
-              <div className="text-left space-y-3 mb-6">
-                <div className="flex items-start">
-                  <svg className="w-5 h-5 text-green-500 mr-2 mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
-                    <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
-                  </svg>
-                  <span className="text-sm text-gray-600">Éducateur, psychologue, psychomotricien...</span>
-                </div>
-                <div className="flex items-start">
-                  <svg className="w-5 h-5 text-green-500 mr-2 mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
-                    <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
-                  </svg>
-                  <span className="text-sm text-gray-600">Faire vérifier vos diplômes et certifications</span>
-                </div>
-                <div className="flex items-start">
-                  <svg className="w-5 h-5 text-green-500 mr-2 mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
-                    <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
-                  </svg>
-                  <span className="text-sm text-gray-600">Être visible auprès des familles</span>
-                </div>
-              </div>
-
-              {/* Bouton */}
-              <div className="flex items-center justify-center text-primary-600 font-semibold group-hover:text-primary-700">
-                <span>Continuer</span>
-                <svg className="w-5 h-5 ml-2 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                </svg>
-              </div>
-            </div>
-
-            {/* Effet de brillance au survol */}
-            <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white to-transparent opacity-0 group-hover:opacity-10 transform -skew-x-12 group-hover:translate-x-full transition-all duration-1000"></div>
-          </button>
-        </div>
-
-        {/* Message informatif */}
-        <div className="mt-12 text-center">
-          <p className="text-sm text-gray-500 max-w-2xl mx-auto">
-            En créant un compte, vous acceptez nos <a href="/cgu" className="text-primary-600 hover:underline">conditions d'utilisation</a> et notre <a href="/politique-confidentialite" className="text-primary-600 hover:underline">politique de confidentialité</a>.
-            Tous les diplômes et certifications des professionnels sont vérifiés par notre équipe.
-          </p>
+          </div>
         </div>
       </div>
     </div>

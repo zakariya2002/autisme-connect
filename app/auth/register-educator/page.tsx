@@ -643,7 +643,7 @@ export default function RegisterEducatorPage() {
           <div className="bg-white rounded-2xl shadow-xl p-8 text-center">
             {/* Icône email */}
             <div className="mx-auto w-20 h-20 bg-teal-100 rounded-full flex items-center justify-center mb-6">
-              <svg className="w-10 h-10 text-teal-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <svg className="w-10 h-10 text-teal-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
               </svg>
             </div>
@@ -714,7 +714,7 @@ export default function RegisterEducatorPage() {
         {/* Hero Section */}
         <div className="text-center mb-8 sm:mb-12">
           <div className="inline-flex items-center gap-2 bg-gradient-to-r from-emerald-100 to-cyan-100 text-teal-700 px-4 py-2 rounded-full text-sm font-semibold mb-4">
-            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
             </svg>
             neurocare Pro
@@ -867,7 +867,7 @@ export default function RegisterEducatorPage() {
               {/* Formulaire */}
               <div className="bg-white rounded-2xl shadow-xl p-6 sm:p-8 border border-gray-100">
                 <h2 className="text-xl font-bold text-gray-900 mb-6 flex items-center gap-2">
-                  <svg className="w-6 h-6 text-teal-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <svg className="w-6 h-6 text-teal-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
                   </svg>
                   Vos informations
@@ -880,6 +880,7 @@ export default function RegisterEducatorPage() {
                     <input
                       type="email"
                       required
+                      aria-required="true"
                       value={authData.email}
                       onChange={(e) => setAuthData({ ...authData, email: e.target.value })}
                       className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition-all"
@@ -894,6 +895,7 @@ export default function RegisterEducatorPage() {
                       <input
                         type={showPassword ? 'text' : 'password'}
                         required
+                        aria-required="true"
                         value={authData.password}
                         onChange={handlePasswordChange}
                         className="w-full px-4 py-3 pr-12 border border-gray-300 rounded-xl focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition-all"
@@ -902,14 +904,15 @@ export default function RegisterEducatorPage() {
                       <button
                         type="button"
                         onClick={() => setShowPassword(!showPassword)}
+                        aria-label={showPassword ? "Masquer le mot de passe" : "Afficher le mot de passe"}
                         className="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-gray-600"
                       >
                         {showPassword ? (
-                          <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.543 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21" />
                           </svg>
                         ) : (
-                          <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
                           </svg>
@@ -941,6 +944,7 @@ export default function RegisterEducatorPage() {
                       <input
                         type={showConfirmPassword ? 'text' : 'password'}
                         required
+                        aria-required="true"
                         value={authData.confirmPassword}
                         onChange={(e) => setAuthData({ ...authData, confirmPassword: e.target.value })}
                         className="w-full px-4 py-3 pr-12 border border-gray-300 rounded-xl focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition-all"
@@ -949,14 +953,15 @@ export default function RegisterEducatorPage() {
                       <button
                         type="button"
                         onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                        aria-label={showConfirmPassword ? "Masquer la confirmation du mot de passe" : "Afficher la confirmation du mot de passe"}
                         className="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-gray-600"
                       >
                         {showConfirmPassword ? (
-                          <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.543 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21" />
                           </svg>
                         ) : (
-                          <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
                           </svg>
@@ -971,6 +976,7 @@ export default function RegisterEducatorPage() {
                     <input
                       type="text"
                       required
+                      aria-required="true"
                       value={educatorData.first_name}
                       onChange={(e) => setEducatorData({ ...educatorData, first_name: e.target.value })}
                       className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition-all"
@@ -984,6 +990,7 @@ export default function RegisterEducatorPage() {
                     <input
                       type="text"
                       required
+                      aria-required="true"
                       value={educatorData.last_name}
                       onChange={(e) => setEducatorData({ ...educatorData, last_name: e.target.value })}
                       className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition-all"
@@ -1010,6 +1017,7 @@ export default function RegisterEducatorPage() {
                       <input
                         type="text"
                         required
+                        aria-required="true"
                         value={educatorData.location}
                         onChange={(e) => setEducatorData({ ...educatorData, location: e.target.value })}
                         className="flex-1 px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition-all"
@@ -1019,13 +1027,15 @@ export default function RegisterEducatorPage() {
                         type="button"
                         onClick={handleUseCurrentLocation}
                         disabled={geolocating}
+                        aria-label="Utiliser ma position actuelle"
+                        aria-busy={geolocating}
                         className="px-4 py-3 bg-gray-100 text-gray-700 rounded-xl hover:bg-gray-200 disabled:opacity-50 transition-all"
                         title="Ma position"
                       >
                         {geolocating ? (
-                          <div className="animate-spin h-5 w-5 border-2 border-teal-600 border-t-transparent rounded-full"></div>
+                          <div className="animate-spin h-5 w-5 border-2 border-teal-600 border-t-transparent rounded-full" aria-hidden="true"></div>
                         ) : (
-                          <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
                           </svg>
@@ -1039,6 +1049,7 @@ export default function RegisterEducatorPage() {
                     <label className="block text-sm font-semibold text-gray-700 mb-2">Diplôme principal *</label>
                     <select
                       required
+                      aria-required="true"
                       value={educatorData.diploma_type}
                       onChange={(e) => setEducatorData({ ...educatorData, diploma_type: e.target.value })}
                       className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition-all"
@@ -1060,6 +1071,7 @@ export default function RegisterEducatorPage() {
                         <input
                           type="text"
                           required
+                          aria-required="true"
                           maxLength={11}
                           value={educatorData.rpps_number}
                           onChange={(e) => {
@@ -1087,15 +1099,15 @@ export default function RegisterEducatorPage() {
                               : 'border-gray-300 focus:ring-teal-500 focus:border-teal-500'
                           }`}
                         />
-                        <div className="absolute inset-y-0 right-0 pr-4 flex items-center">
+                        <div className="absolute inset-y-0 right-0 pr-4 flex items-center" aria-live="polite">
                           {rppsValidationState.loading ? (
-                            <div className="animate-spin h-5 w-5 border-2 border-teal-500 border-t-transparent rounded-full"></div>
+                            <div className="animate-spin h-5 w-5 border-2 border-teal-500 border-t-transparent rounded-full" aria-hidden="true"></div>
                           ) : rppsValidationState.isValid === true ? (
-                            <svg className="h-5 w-5 text-green-500" fill="currentColor" viewBox="0 0 20 20">
+                            <svg className="h-5 w-5 text-green-500" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
                               <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
                             </svg>
                           ) : rppsValidationState.isValid === false && educatorData.rpps_number.length === 11 ? (
-                            <svg className="h-5 w-5 text-red-500" fill="currentColor" viewBox="0 0 20 20">
+                            <svg className="h-5 w-5 text-red-500" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
                               <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd" />
                             </svg>
                           ) : null}
@@ -1116,6 +1128,7 @@ export default function RegisterEducatorPage() {
                     <input
                       type="number"
                       required
+                      aria-required="true"
                       min="1"
                       placeholder="Minimum 1 an"
                       value={educatorData.years_of_experience}
@@ -1195,7 +1208,7 @@ export default function RegisterEducatorPage() {
               {/* Informations professionnelles */}
               <div className="bg-white rounded-2xl shadow-xl p-6 sm:p-8 border border-gray-100">
                 <h2 className="text-xl font-bold text-gray-900 mb-6 flex items-center gap-2">
-                  <svg className="w-6 h-6 text-teal-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <svg className="w-6 h-6 text-teal-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
                   </svg>
                   Informations administratives
@@ -1209,6 +1222,7 @@ export default function RegisterEducatorPage() {
                       <input
                         type="text"
                         required
+                        aria-required="true"
                         maxLength={14}
                         value={educatorData.siret}
                         onChange={(e) => {
@@ -1236,15 +1250,15 @@ export default function RegisterEducatorPage() {
                             : 'border-gray-300 focus:ring-teal-500 focus:border-teal-500'
                         }`}
                       />
-                      <div className="absolute inset-y-0 right-0 pr-4 flex items-center">
+                      <div className="absolute inset-y-0 right-0 pr-4 flex items-center" aria-live="polite">
                         {siretValidationState.loading ? (
-                          <div className="animate-spin h-5 w-5 border-2 border-teal-500 border-t-transparent rounded-full"></div>
+                          <div className="animate-spin h-5 w-5 border-2 border-teal-500 border-t-transparent rounded-full" aria-hidden="true"></div>
                         ) : siretValidationState.isValid === true ? (
-                          <svg className="h-5 w-5 text-green-500" fill="currentColor" viewBox="0 0 20 20">
+                          <svg className="h-5 w-5 text-green-500" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
                             <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
                           </svg>
                         ) : siretValidationState.isValid === false && educatorData.siret.length === 14 ? (
-                          <svg className="h-5 w-5 text-red-500" fill="currentColor" viewBox="0 0 20 20">
+                          <svg className="h-5 w-5 text-red-500" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
                             <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd" />
                           </svg>
                         ) : null}
@@ -1286,7 +1300,7 @@ export default function RegisterEducatorPage() {
               {/* Spécialisations */}
               <div className="bg-white rounded-2xl shadow-xl p-6 sm:p-8 border border-gray-100">
                 <h2 className="text-xl font-bold text-gray-900 mb-6 flex items-center gap-2">
-                  <svg className="w-6 h-6 text-teal-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <svg className="w-6 h-6 text-teal-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
                   </svg>
                   Spécialisations
@@ -1323,7 +1337,7 @@ export default function RegisterEducatorPage() {
               {/* Langues */}
               <div className="bg-white rounded-2xl shadow-xl p-6 sm:p-8 border border-gray-100">
                 <h2 className="text-xl font-bold text-gray-900 mb-6 flex items-center gap-2">
-                  <svg className="w-6 h-6 text-teal-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <svg className="w-6 h-6 text-teal-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 5h12M9 3v2m1.048 9.5A18.022 18.022 0 016.412 9m6.088 9h7M11 21l5-10 5 10M12.751 5C11.783 10.77 8.07 15.61 3 18.129" />
                   </svg>
                   Langues parlées
@@ -1355,7 +1369,7 @@ export default function RegisterEducatorPage() {
               {/* CV Upload */}
               <div className="bg-white rounded-2xl shadow-xl p-6 sm:p-8 border border-gray-100">
                 <h2 className="text-xl font-bold text-gray-900 mb-6 flex items-center gap-2">
-                  <svg className="w-6 h-6 text-teal-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <svg className="w-6 h-6 text-teal-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
                   </svg>
                   CV *
@@ -1367,7 +1381,7 @@ export default function RegisterEducatorPage() {
                   }`}>
                     {cvFile ? (
                       <div className="flex items-center justify-center gap-3 text-green-700">
-                        <svg className="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <svg className="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
                         </svg>
                         <div className="text-left">
@@ -1377,7 +1391,7 @@ export default function RegisterEducatorPage() {
                       </div>
                     ) : (
                       <div className="text-gray-600">
-                        <svg className="mx-auto h-12 w-12 text-gray-400 mb-4" stroke="currentColor" fill="none" viewBox="0 0 48 48">
+                        <svg className="mx-auto h-12 w-12 text-gray-400 mb-4" stroke="currentColor" fill="none" viewBox="0 0 48 48" aria-hidden="true">
                           <path d="M28 8H12a4 4 0 00-4 4v20m32-12v8m0 0v8a4 4 0 01-4 4H12a4 4 0 01-4-4v-4m32-4l-3.172-3.172a4 4 0 00-5.656 0L28 28M8 32l9.172-9.172a4 4 0 015.656 0L28 28m0 0l4 4m4-24h8m-4-4v8m-12 4h.02" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" />
                         </svg>
                         <p className="font-semibold">Cliquez pour uploader votre CV</p>
@@ -1389,6 +1403,7 @@ export default function RegisterEducatorPage() {
                     type="file"
                     accept=".pdf"
                     required
+                    aria-required="true"
                     className="hidden"
                     onChange={(e) => {
                       const file = e.target.files?.[0];
@@ -1419,22 +1434,23 @@ export default function RegisterEducatorPage() {
 
               {/* Consentement RGPD */}
               <div className="bg-white rounded-2xl shadow-xl p-6 sm:p-8 border border-gray-100">
-                <h2 className="text-xl font-bold text-gray-900 mb-6">Consentement</h2>
+                <h2 className="text-xl font-bold text-gray-900 mb-6">Consentement et protection de vos données</h2>
 
                 <div className="space-y-4">
                   <label className="flex items-start gap-3 cursor-pointer group">
                     <input
                       type="checkbox"
                       required
+                      aria-required="true"
                       className="mt-1 h-5 w-5 text-teal-600 focus:ring-teal-500 border-gray-300 rounded cursor-pointer"
                     />
                     <span className="text-sm text-gray-700 group-hover:text-gray-900">
                       J'accepte les{' '}
-                      <a href="/cgu" target="_blank" className="text-teal-600 hover:underline font-medium">
+                      <a href="/cgu" target="_blank" rel="noopener noreferrer" className="text-teal-600 hover:underline font-medium">
                         conditions générales d'utilisation
                       </a>{' '}
                       et la{' '}
-                      <a href="/politique-confidentialite" target="_blank" className="text-teal-600 hover:underline font-medium">
+                      <a href="/politique-confidentialite" target="_blank" rel="noopener noreferrer" className="text-teal-600 hover:underline font-medium">
                         politique de confidentialité
                       </a>. <span className="text-red-500">*</span>
                     </span>
@@ -1443,12 +1459,36 @@ export default function RegisterEducatorPage() {
                     <input
                       type="checkbox"
                       required
+                      aria-required="true"
                       className="mt-1 h-5 w-5 text-teal-600 focus:ring-teal-500 border-gray-300 rounded cursor-pointer"
                     />
                     <span className="text-sm text-gray-700 group-hover:text-gray-900">
-                      Je consens au traitement de mes données personnelles pour la mise en relation avec des familles et la vérification de mes diplômes. <span className="text-red-500">*</span>
+                      Je consens explicitement au traitement de mes données personnelles (nom, prénom, email, téléphone, localisation, diplômes, CV) pour la mise en relation avec des familles, la vérification de mes qualifications professionnelles et la gestion de mon compte professionnel. Je peux retirer ce consentement à tout moment depuis mon espace personnel. <span className="text-red-500">*</span>
                     </span>
                   </label>
+                </div>
+
+                <div className="mt-6 pt-6 border-t border-gray-200">
+                  <p className="text-xs text-gray-600 mb-3">
+                    <strong>Vos droits RGPD :</strong> Conformément au Règlement Général sur la Protection des Données (RGPD), vous disposez d'un droit d'accès, de rectification, d'effacement, de limitation, de portabilité et d'opposition au traitement de vos données.
+                  </p>
+                  <div className="flex flex-wrap gap-3 text-xs">
+                    <a href="/mentions-legales" target="_blank" rel="noopener noreferrer" className="text-teal-600 hover:underline font-medium">
+                      Mentions légales
+                    </a>
+                    <span className="text-gray-300">•</span>
+                    <a href="/politique-confidentialite" target="_blank" rel="noopener noreferrer" className="text-teal-600 hover:underline font-medium">
+                      Politique de confidentialité
+                    </a>
+                    <span className="text-gray-300">•</span>
+                    <a href="/cgu" target="_blank" rel="noopener noreferrer" className="text-teal-600 hover:underline font-medium">
+                      CGU
+                    </a>
+                    <span className="text-gray-300">•</span>
+                    <a href="/contact" target="_blank" rel="noopener noreferrer" className="text-teal-600 hover:underline font-medium">
+                      Exercer mes droits
+                    </a>
+                  </div>
                 </div>
               </div>
 
@@ -1476,17 +1516,18 @@ export default function RegisterEducatorPage() {
                     }
                   }}
                   disabled={loading}
+                  aria-busy={loading}
                   className="w-full sm:w-auto px-10 py-4 bg-gradient-to-r from-emerald-600 via-teal-600 to-cyan-600 text-white rounded-xl font-bold text-lg shadow-xl hover:shadow-2xl disabled:opacity-50 disabled:cursor-not-allowed transition-all hover:from-emerald-700 hover:via-teal-700 hover:to-cyan-700 flex items-center justify-center gap-3"
                 >
                   {loading ? (
                     <>
-                      <div className="animate-spin h-5 w-5 border-2 border-white border-t-transparent rounded-full"></div>
+                      <div className="animate-spin h-5 w-5 border-2 border-white border-t-transparent rounded-full" aria-hidden="true"></div>
                       Création en cours...
                     </>
                   ) : (
                     <>
                       Créer mon compte
-                      <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
                       </svg>
                     </>
@@ -1515,10 +1556,10 @@ export default function RegisterEducatorPage() {
 
       {/* Toast notification en bas à droite */}
       {error && (
-        <div className="fixed bottom-4 right-4 left-4 md:left-auto md:w-96 z-50 animate-slide-up">
+        <div className="fixed bottom-4 right-4 left-4 md:left-auto md:w-96 z-50 animate-slide-up" role="alert" aria-live="assertive">
           <div className="bg-red-600 text-white px-6 py-4 rounded-lg shadow-2xl border-2 border-red-700">
             <div className="flex items-start gap-3">
-              <svg className="h-6 w-6 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+              <svg className="h-6 w-6 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
                 <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd" />
               </svg>
               <div className="flex-1">
@@ -1526,9 +1567,10 @@ export default function RegisterEducatorPage() {
               </div>
               <button
                 onClick={() => setError('')}
+                aria-label="Fermer le message d'erreur"
                 className="flex-shrink-0 text-white hover:text-red-200 transition-colors"
               >
-                <svg className="h-5 w-5" fill="currentColor" viewBox="0 0 20 20">
+                <svg className="h-5 w-5" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
                   <path fillRule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clipRule="evenodd" />
                 </svg>
               </button>

@@ -59,8 +59,8 @@ function SessionCountdown({
 
   return (
     <div className="flex flex-col sm:flex-row items-center gap-3 w-full sm:w-auto">
-      <div className="flex items-center gap-2 px-3 py-2 sm:px-4 bg-indigo-50 border border-indigo-200 rounded-md w-full sm:w-auto justify-center">
-        <svg className="w-5 h-5 text-indigo-600 animate-pulse" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <div className="flex items-center gap-2 px-3 py-2 sm:px-4 bg-indigo-50 border border-indigo-200 rounded-md w-full sm:w-auto justify-center" role="status" aria-live="polite">
+        <svg className="w-5 h-5 text-indigo-600 animate-pulse" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
         </svg>
         <span className="font-mono font-bold text-sm sm:text-base text-indigo-900">
@@ -76,8 +76,9 @@ function SessionCountdown({
             : 'bg-gray-400 cursor-not-allowed'
         } disabled:opacity-50`}
         title={!canComplete ? 'Le temps minimum de la séance doit être écoulé' : ''}
+        aria-label={canComplete ? 'Terminer la séance' : 'Séance en cours, le temps minimum doit être écoulé'}
       >
-        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
         </svg>
         <span className="hidden sm:inline">
@@ -525,20 +526,20 @@ export default function EducatorAppointmentsPage() {
   const getLocationTypeIcon = (type: string) => {
     if (type === 'home') {
       return (
-        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
         </svg>
       );
     }
     if (type === 'office') {
       return (
-        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
         </svg>
       );
     }
     return (
-      <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
       </svg>
     );
@@ -738,7 +739,7 @@ export default function EducatorAppointmentsPage() {
           <div className="px-4 py-3 space-y-2 bg-gray-50/50">
             {appointment.address && (
               <p className="text-sm text-gray-600 flex items-center gap-2">
-                <svg className="h-4 w-4 text-gray-400 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg className="h-4 w-4 text-gray-400 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
                 </svg>
                 <span className="truncate">{appointment.address}</span>
@@ -761,8 +762,9 @@ export default function EducatorAppointmentsPage() {
                   onClick={() => handleViewDossier(appointment.child_id!)}
                   disabled={dossierLoading}
                   className="flex-1 px-3 py-2 bg-purple-100 text-purple-700 rounded-lg hover:bg-purple-200 text-sm font-medium transition flex items-center justify-center gap-1"
+                  aria-label="Voir le dossier de l'enfant"
                 >
-                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
                   </svg>
                   Dossier
@@ -772,8 +774,9 @@ export default function EducatorAppointmentsPage() {
                 onClick={() => handleAccept(appointment.id)}
                 disabled={actionLoading}
                 className="flex-1 px-3 py-2 bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 text-sm font-medium transition flex items-center justify-center gap-1"
+                aria-label="Accepter le rendez-vous"
               >
-                <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                 </svg>
                 Accepter
@@ -785,8 +788,9 @@ export default function EducatorAppointmentsPage() {
                 }}
                 disabled={actionLoading}
                 className="flex-1 px-3 py-2 bg-red-100 text-red-700 rounded-lg hover:bg-red-200 text-sm font-medium transition flex items-center justify-center gap-1"
+                aria-label="Refuser le rendez-vous"
               >
-                <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
                 </svg>
                 Refuser
@@ -803,8 +807,9 @@ export default function EducatorAppointmentsPage() {
                     onClick={() => generateCalendarEvent(appointment)}
                     className="sm:hidden p-2 bg-teal-100 text-teal-700 rounded-lg hover:bg-teal-200 transition flex items-center justify-center"
                     title="Ajouter à l'agenda"
+                    aria-label="Ajouter à l'agenda"
                   >
-                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
                     </svg>
                   </button>
@@ -814,8 +819,9 @@ export default function EducatorAppointmentsPage() {
                       onClick={() => window.open(`/video-call/${appointment.id}`, '_blank')}
                       className="flex-1 min-w-0 px-2 sm:px-4 py-2 text-white rounded-lg text-xs sm:text-sm font-medium transition flex items-center justify-center gap-1 sm:gap-2 animate-pulse"
                       style={{ background: 'linear-gradient(135deg, #7c3aed 0%, #8b5cf6 25%, #a855f7 50%, #c084fc 75%, #e879f9 100%)' }}
+                      aria-label="Rejoindre la séance vidéo"
                     >
-                      <svg className="w-4 h-4 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <svg className="w-4 h-4 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z" />
                       </svg>
                       <span className="hidden sm:inline">Rejoindre vidéo</span>
@@ -826,8 +832,9 @@ export default function EducatorAppointmentsPage() {
                     onClick={() => handleStartSession(appointment.id)}
                     disabled={actionLoading}
                     className="flex-1 min-w-0 px-2 sm:px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 text-xs sm:text-sm font-medium transition flex items-center justify-center gap-1 sm:gap-2"
+                    aria-label="Démarrer la séance avec code PIN"
                   >
-                    <svg className="w-4 h-4 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <svg className="w-4 h-4 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
                     </svg>
                     <span className="hidden sm:inline">Démarrer (PIN)</span>
@@ -843,8 +850,9 @@ export default function EducatorAppointmentsPage() {
                       className="p-2 sm:px-4 sm:py-2 text-white rounded-lg text-xs sm:text-sm font-medium transition flex items-center justify-center gap-1 sm:gap-2"
                       style={{ background: 'linear-gradient(135deg, #7c3aed 0%, #8b5cf6 25%, #a855f7 50%, #c084fc 75%, #e879f9 100%)' }}
                       title="Rejoindre la vidéo"
+                      aria-label="Rejoindre la séance vidéo"
                     >
-                      <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z" />
                       </svg>
                       <span className="hidden sm:inline">Vidéo</span>
@@ -885,8 +893,9 @@ export default function EducatorAppointmentsPage() {
                   disabled={actionLoading}
                   className="p-2 sm:px-3 sm:py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 text-xs sm:text-sm font-medium transition flex items-center justify-center"
                   title="Annuler le rendez-vous"
+                  aria-label="Annuler le rendez-vous"
                 >
-                  <svg className="w-4 h-4 sm:hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <svg className="w-4 h-4 sm:hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
                   </svg>
                   <span className="hidden sm:inline">Annuler</span>
@@ -905,8 +914,9 @@ export default function EducatorAppointmentsPage() {
               disabled={actionLoading}
               className="p-2 sm:px-3 sm:py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 text-xs sm:text-sm font-medium transition flex items-center justify-center gap-1"
               title="Notes"
+              aria-label="Ajouter ou modifier les notes du rendez-vous"
             >
-              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
               </svg>
               <span className="hidden sm:inline">Notes</span>
@@ -919,8 +929,9 @@ export default function EducatorAppointmentsPage() {
               disabled={dossierLoading}
               className="p-2 sm:px-3 sm:py-2 bg-purple-100 text-purple-700 rounded-lg hover:bg-purple-200 text-xs sm:text-sm font-medium transition flex items-center justify-center gap-1"
               title="Voir le dossier"
+              aria-label="Voir le dossier de l'enfant"
             >
-              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
               </svg>
               <span className="hidden sm:inline">Dossier</span>
@@ -967,6 +978,7 @@ export default function EducatorAppointmentsPage() {
                   ? 'bg-gray-300 ring-2 ring-gray-500'
                   : 'bg-gray-100 hover:bg-gray-200 cursor-pointer'
             }`}
+            aria-label={`Tous les rendez-vous, ${appointments.length} au total`}
           >
             <p className="text-xl sm:text-2xl font-bold text-gray-600">{appointments.length}</p>
             <p className="text-[10px] sm:text-xs text-gray-700 mt-0.5">Tous</p>
@@ -981,6 +993,7 @@ export default function EducatorAppointmentsPage() {
                   ? 'bg-amber-200 ring-2 ring-amber-400'
                   : 'bg-amber-50 hover:bg-amber-100 cursor-pointer'
             }`}
+            aria-label={`Rendez-vous en attente, ${pendingAppointments.length} au total`}
           >
             <p className="text-xl sm:text-2xl font-bold text-amber-600">{pendingAppointments.length}</p>
             <p className="text-[10px] sm:text-xs text-amber-700 mt-0.5">Attente</p>
@@ -995,6 +1008,7 @@ export default function EducatorAppointmentsPage() {
                   ? 'bg-indigo-200 ring-2 ring-indigo-400'
                   : 'bg-indigo-50 hover:bg-indigo-100 cursor-pointer'
             }`}
+            aria-label={`Rendez-vous en cours, ${inProgressAppointments.length} au total`}
           >
             <p className="text-xl sm:text-2xl font-bold text-indigo-600">{inProgressAppointments.length}</p>
             <p className="text-[10px] sm:text-xs text-indigo-700 mt-0.5">En cours</p>
@@ -1009,6 +1023,7 @@ export default function EducatorAppointmentsPage() {
                   ? 'bg-emerald-200 ring-2 ring-emerald-400'
                   : 'bg-emerald-50 hover:bg-emerald-100 cursor-pointer'
             }`}
+            aria-label={`Rendez-vous à venir, ${upcomingAppointments.length} au total`}
           >
             <p className="text-xl sm:text-2xl font-bold text-emerald-600">{upcomingAppointments.length}</p>
             <p className="text-[10px] sm:text-xs text-emerald-700 mt-0.5">À venir</p>
@@ -1023,6 +1038,7 @@ export default function EducatorAppointmentsPage() {
                   ? 'bg-blue-200 ring-2 ring-blue-400'
                   : 'bg-blue-50 hover:bg-blue-100 cursor-pointer'
             }`}
+            aria-label={`Rendez-vous terminés, ${completedAppointments.length} au total`}
           >
             <p className="text-xl sm:text-2xl font-bold text-blue-600">{completedAppointments.length}</p>
             <p className="text-[10px] sm:text-xs text-blue-700 mt-0.5">Terminés</p>
@@ -1030,14 +1046,14 @@ export default function EducatorAppointmentsPage() {
         </div>
 
         {loading ? (
-          <div className="text-center py-12">
-            <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-primary-600 mx-auto"></div>
+          <div className="text-center py-12" role="status" aria-live="polite">
+            <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-primary-600 mx-auto" aria-hidden="true"></div>
             <p className="text-gray-500 mt-4 text-sm">Chargement...</p>
           </div>
         ) : appointments.length === 0 ? (
           <div className="text-center py-12 bg-white rounded-2xl border border-gray-100">
             <div className="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
-              <svg className="h-8 w-8 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <svg className="h-8 w-8 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
               </svg>
             </div>
@@ -1052,7 +1068,7 @@ export default function EducatorAppointmentsPage() {
                 <SectionHeader
                   title="Demandes en attente"
                   count={pendingAppointments.length}
-                  icon={<svg className="h-5 w-5 text-amber-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>}
+                  icon={<svg className="h-5 w-5 text-amber-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>}
                   color="bg-amber-100"
                 />
                 <div className="space-y-3">
@@ -1069,7 +1085,7 @@ export default function EducatorAppointmentsPage() {
                 <SectionHeader
                   title="Séances en cours"
                   count={inProgressAppointments.length}
-                  icon={<svg className="h-5 w-5 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z" /><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>}
+                  icon={<svg className="h-5 w-5 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z" /><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>}
                   color="bg-indigo-100"
                 />
                 <div className="space-y-3">
@@ -1086,7 +1102,7 @@ export default function EducatorAppointmentsPage() {
                 <SectionHeader
                   title="Rendez-vous à venir"
                   count={upcomingAppointments.length}
-                  icon={<svg className="h-5 w-5 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" /></svg>}
+                  icon={<svg className="h-5 w-5 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" /></svg>}
                   color="bg-emerald-100"
                 />
                 <div className="space-y-3">
@@ -1103,7 +1119,7 @@ export default function EducatorAppointmentsPage() {
                 <SectionHeader
                   title="Séances terminées"
                   count={completedAppointments.length}
-                  icon={<svg className="h-5 w-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>}
+                  icon={<svg className="h-5 w-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>}
                   color="bg-blue-100"
                 />
                 <div className="space-y-3">
@@ -1120,7 +1136,7 @@ export default function EducatorAppointmentsPage() {
                 <SectionHeader
                   title="Rendez-vous manqués"
                   count={missedAppointments.length}
-                  icon={<svg className="h-5 w-5 text-orange-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" /></svg>}
+                  icon={<svg className="h-5 w-5 text-orange-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" /></svg>}
                   color="bg-orange-100"
                 />
                 <div className="space-y-3">
@@ -1137,7 +1153,7 @@ export default function EducatorAppointmentsPage() {
                 <SectionHeader
                   title="Annulés / Refusés"
                   count={cancelledAppointments.length}
-                  icon={<svg className="h-5 w-5 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" /></svg>}
+                  icon={<svg className="h-5 w-5 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" /></svg>}
                   color="bg-gray-200"
                 />
                 <div className="space-y-3">
@@ -1157,7 +1173,7 @@ export default function EducatorAppointmentsPage() {
             {activeFilter === null && (
               <div className="text-center py-12 bg-white rounded-2xl border border-gray-100">
                 <div className="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                  <svg className="h-8 w-8 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <svg className="h-8 w-8 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 15l-2 5L9 9l11 4-5 2zm0 0l5 5M7.188 2.239l.777 2.897M5.136 7.965l-2.898-.777M13.95 4.05l-2.122 2.122m-5.657 5.656l-2.12 2.122" />
                   </svg>
                 </div>
@@ -1171,9 +1187,9 @@ export default function EducatorAppointmentsPage() {
 
       {/* Modal Refus */}
       {showRejectModal && selectedAppointment && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4" role="dialog" aria-modal="true" aria-labelledby="reject-modal-title">
           <div className="bg-white rounded-lg shadow-xl max-w-md w-full p-6">
-            <h3 className="text-xl font-bold text-gray-900 mb-4">Refuser le rendez-vous</h3>
+            <h3 id="reject-modal-title" className="text-xl font-bold text-gray-900 mb-4">Refuser le rendez-vous</h3>
             <p className="text-gray-600 mb-4">
               Veuillez indiquer la raison du refus. La famille recevra cette information.
             </p>
@@ -1183,6 +1199,7 @@ export default function EducatorAppointmentsPage() {
               rows={4}
               placeholder="Raison du refus..."
               className="w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:ring-primary-500 focus:border-primary-500 mb-4"
+              aria-label="Raison du refus du rendez-vous"
             />
             <div className="flex gap-2">
               <button
@@ -1210,9 +1227,9 @@ export default function EducatorAppointmentsPage() {
 
       {/* Modal Notes */}
       {showNotesModal && selectedAppointment && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4" role="dialog" aria-modal="true" aria-labelledby="notes-modal-title">
           <div className="bg-white rounded-lg shadow-xl max-w-md w-full p-6">
-            <h3 className="text-xl font-bold text-gray-900 mb-4">Notes du rendez-vous</h3>
+            <h3 id="notes-modal-title" className="text-xl font-bold text-gray-900 mb-4">Notes du rendez-vous</h3>
             <p className="text-gray-600 mb-4">
               Ajoutez des notes personnelles sur ce rendez-vous (visibles uniquement par vous).
             </p>
@@ -1222,6 +1239,7 @@ export default function EducatorAppointmentsPage() {
               rows={6}
               placeholder="Vos notes..."
               className="w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:ring-primary-500 focus:border-primary-500 mb-4"
+              aria-label="Notes personnelles du rendez-vous"
             />
             <div className="flex gap-2">
               <button
@@ -1262,12 +1280,12 @@ export default function EducatorAppointmentsPage() {
 
       {/* Modal Dossier Enfant */}
       {showDossierModal && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4" role="dialog" aria-modal="true" aria-labelledby="dossier-modal-title">
           <div className="bg-white rounded-xl shadow-xl max-w-3xl w-full max-h-[90vh] overflow-hidden flex flex-col">
             {/* Header */}
             <div className="bg-gradient-to-r from-purple-600 to-indigo-600 px-6 py-4 flex items-center justify-between">
-              <h3 className="text-xl font-bold text-white flex items-center gap-2">
-                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <h3 id="dossier-modal-title" className="text-xl font-bold text-white flex items-center gap-2">
+                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
                 </svg>
                 Dossier de la personne accompagnée
@@ -1278,8 +1296,9 @@ export default function EducatorAppointmentsPage() {
                   setChildDossier(null);
                 }}
                 className="text-white/80 hover:text-white transition"
+                aria-label="Fermer le dossier"
               >
-                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
                 </svg>
               </button>
@@ -1288,15 +1307,16 @@ export default function EducatorAppointmentsPage() {
             {/* Content */}
             <div className="flex-1 overflow-y-auto p-6">
               {dossierLoading ? (
-                <div className="flex items-center justify-center py-12">
-                  <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-purple-600"></div>
+                <div className="flex items-center justify-center py-12" role="status" aria-live="polite">
+                  <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-purple-600" aria-hidden="true"></div>
+                  <span className="sr-only">Chargement du dossier...</span>
                 </div>
               ) : childDossier ? (
                 <div className="space-y-6">
                   {/* Identité */}
                   <div className="bg-purple-50 rounded-lg p-4 border border-purple-200">
                     <h4 className="font-semibold text-purple-900 mb-3 flex items-center gap-2">
-                      <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
                       </svg>
                       Identité
@@ -1451,7 +1471,7 @@ export default function EducatorAppointmentsPage() {
                   {!childDossier.description && !childDossier.strengths && !childDossier.challenges &&
                    (!childDossier.preferences || childDossier.preferences.length === 0) && (
                     <div className="bg-gray-100 rounded-lg p-6 text-center">
-                      <svg className="w-12 h-12 text-gray-400 mx-auto mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <svg className="w-12 h-12 text-gray-400 mx-auto mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
                       </svg>
                       <p className="text-gray-600">Le dossier de cet enfant n'a pas encore été complété par la famille.</p>

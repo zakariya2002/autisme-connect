@@ -298,7 +298,7 @@ export default function RequestAppointmentPage({ params }: { params: { id: strin
               href={`/family/${params.id}`}
               className="text-primary-600 hover:text-primary-700 inline-flex items-center mb-4"
             >
-              <svg className="w-5 h-5 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <svg className="w-5 h-5 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
               </svg>
               Retour au profil
@@ -312,9 +312,9 @@ export default function RequestAppointmentPage({ params }: { params: { id: strin
           </div>
 
           {success && (
-            <div className="mb-6 bg-green-50 border-l-4 border-green-500 p-4 rounded-r">
+            <div className="mb-6 bg-green-50 border-l-4 border-green-500 p-4 rounded-r" role="alert">
               <div className="flex items-center">
-                <svg className="w-5 h-5 text-green-500 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                <svg className="w-5 h-5 text-green-500 mr-2" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
                   <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
                 </svg>
                 <span className="text-green-700 font-medium">{success}</span>
@@ -361,6 +361,8 @@ export default function RequestAppointmentPage({ params }: { params: { id: strin
                               ? 'bg-green-600 text-white shadow-md'
                               : 'bg-white text-gray-700 border border-gray-300 hover:border-green-400 hover:bg-green-50'
                           }`}
+                          aria-label={`Créneau de ${slot.start} à ${slot.end}`}
+                          aria-pressed={selectedSlots.includes(slot.start)}
                         >
                           {slot.start}
                         </button>
@@ -411,6 +413,7 @@ export default function RequestAppointmentPage({ params }: { params: { id: strin
                       ? 'bg-primary-600 text-white'
                       : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
                   }`}
+                  aria-pressed={locationType === 'online'}
                 >
                   En ligne
                 </button>
@@ -422,6 +425,7 @@ export default function RequestAppointmentPage({ params }: { params: { id: strin
                       ? 'bg-primary-600 text-white'
                       : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
                   }`}
+                  aria-pressed={locationType === 'home'}
                 >
                   À domicile
                 </button>
@@ -433,6 +437,7 @@ export default function RequestAppointmentPage({ params }: { params: { id: strin
                       ? 'bg-primary-600 text-white'
                       : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
                   }`}
+                  aria-pressed={locationType === 'office'}
                 >
                   Au cabinet
                 </button>
@@ -452,6 +457,8 @@ export default function RequestAppointmentPage({ params }: { params: { id: strin
                   onChange={(e) => setAddress(e.target.value)}
                   placeholder="123 Rue Example, 75001 Paris"
                   className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+                  aria-required="true"
+                  required
                 />
               </div>
             )}
@@ -488,9 +495,9 @@ export default function RequestAppointmentPage({ params }: { params: { id: strin
       {/* Toast d'erreur en bas à droite */}
       {error && (
         <div className="fixed bottom-4 right-4 left-4 md:left-auto md:w-96 z-50 animate-slide-up">
-          <div className="bg-red-600 text-white px-6 py-4 rounded-lg shadow-2xl border-2 border-red-700">
+          <div className="bg-red-600 text-white px-6 py-4 rounded-lg shadow-2xl border-2 border-red-700" role="alert">
             <div className="flex items-start gap-3">
-              <svg className="h-6 w-6 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+              <svg className="h-6 w-6 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
                 <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd" />
               </svg>
               <div className="flex-1">
@@ -499,8 +506,9 @@ export default function RequestAppointmentPage({ params }: { params: { id: strin
               <button
                 onClick={() => setError('')}
                 className="flex-shrink-0 text-white/80 hover:text-white transition"
+                aria-label="Fermer le message d'erreur"
               >
-                <svg className="h-5 w-5" fill="currentColor" viewBox="0 0 20 20">
+                <svg className="h-5 w-5" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
                   <path fillRule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clipRule="evenodd" />
                 </svg>
               </button>

@@ -1,0 +1,6 @@
+<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+  <circle cx="50" cy="50" r="45" fill="#E1000F"/>
+  <text x="50" y="45" text-anchor="middle" fill="white" font-size="18" font-weight="bold" font-family="Arial">ARS</text>
+  <text x="50" y="62" text-anchor="middle" fill="white" font-size="7" font-family="Arial">Agence Régionale</text>
+  <text x="50" y="72" text-anchor="middle" fill="white" font-size="7" font-family="Arial">de Santé</text>
+</svg>

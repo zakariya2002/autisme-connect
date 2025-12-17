@@ -26,6 +26,7 @@ export default function NotificationBell({ educatorId, userId }: NotificationBel
   const [loading, setLoading] = useState(true);
   const [readNotifIds, setReadNotifIds] = useState<Set<string>>(new Set());
   const dropdownRef = useRef<HTMLDivElement>(null);
+  const buttonRef = useRef<HTMLButtonElement>(null);
 
   // Charger les notifications lues depuis localStorage
   useEffect(() => {
@@ -55,6 +56,21 @@ export default function NotificationBell({ educatorId, userId }: NotificationBel
     document.addEventListener('mousedown', handleClickOutside);
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
+
+  // Gestion du clavier pour l'accessibilité
+  useEffect(() => {
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (isOpen) {
+        if (event.key === 'Escape') {
+          setIsOpen(false);
+          buttonRef.current?.focus();
+        }
+      }
+    };
+
+    document.addEventListener('keydown', handleKeyDown);
+    return () => document.removeEventListener('keydown', handleKeyDown);
+  }, [isOpen]);
 
   const fetchNotifications = async () => {
     try {
@@ -245,7 +261,7 @@ export default function NotificationBell({ educatorId, userId }: NotificationBel
       case 'contact_request':
         return (
           <div className="w-8 h-8 bg-purple-100 rounded-full flex items-center justify-center">
-            <svg className="w-4 h-4 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <svg className="w-4 h-4 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z" />
             </svg>
           </div>
@@ -253,7 +269,7 @@ export default function NotificationBell({ educatorId, userId }: NotificationBel
       case 'message':
         return (
           <div className="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center">
-            <svg className="w-4 h-4 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <svg className="w-4 h-4 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z" />
             </svg>
           </div>
@@ -261,7 +277,7 @@ export default function NotificationBell({ educatorId, userId }: NotificationBel
       case 'appointment':
         return (
           <div className="w-8 h-8 bg-amber-100 rounded-full flex items-center justify-center">
-            <svg className="w-4 h-4 text-amber-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <svg className="w-4 h-4 text-amber-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
             </svg>
           </div>
@@ -269,7 +285,7 @@ export default function NotificationBell({ educatorId, userId }: NotificationBel
       case 'invoice':
         return (
           <div className="w-8 h-8 bg-green-100 rounded-full flex items-center justify-center">
-            <svg className="w-4 h-4 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <svg className="w-4 h-4 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
             </svg>
           </div>
@@ -283,28 +299,44 @@ export default function NotificationBell({ educatorId, userId }: NotificationBel
     <div className="relative" ref={dropdownRef}>
       {/* Bouton cloche */}
       <button
+        ref={buttonRef}
         onClick={() => setIsOpen(!isOpen)}
-        className="relative p-2 text-gray-600 hover:text-teal-600 hover:bg-teal-50 rounded-full transition-colors"
+        className="relative p-2 text-white hover:text-teal-100 rounded-full transition-colors"
         aria-label="Notifications"
+        aria-expanded={isOpen}
+        aria-describedby={unreadCount > 0 ? "notification-count" : undefined}
       >
-        <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
         </svg>
 
         {/* Badge nombre de notifications */}
         {unreadCount > 0 && (
-          <span className="absolute -top-1 -right-1 flex items-center justify-center min-w-[20px] h-5 px-1.5 text-xs font-bold text-white bg-red-500 rounded-full animate-pulse">
+          <span
+            id="notification-count"
+            className="absolute -top-1 -right-1 flex items-center justify-center min-w-[20px] h-5 px-1.5 text-xs font-bold text-white bg-red-500 rounded-full animate-pulse"
+            aria-label={`${unreadCount} notification${unreadCount > 1 ? 's' : ''} non lue${unreadCount > 1 ? 's' : ''}`}
+          >
             {unreadCount > 9 ? '9+' : unreadCount}
           </span>
         )}
       </button>
 
+      {/* Région live pour annoncer les changements de notifications */}
+      <div aria-live="polite" aria-atomic="true" className="sr-only">
+        {unreadCount > 0 && `${unreadCount} nouvelle${unreadCount > 1 ? 's' : ''} notification${unreadCount > 1 ? 's' : ''}`}
+      </div>
+
       {/* Dropdown */}
       {isOpen && (
-        <div className="absolute right-0 mt-2 w-80 sm:w-96 bg-white rounded-2xl shadow-xl border border-gray-100 overflow-hidden z-50">
+        <div
+          className="absolute right-0 mt-2 w-80 sm:w-96 bg-white rounded-2xl shadow-xl border border-gray-100 overflow-hidden z-50"
+          role="region"
+          aria-label="Panneau de notifications"
+        >
           {/* Header */}
           <div className="px-4 py-3 bg-gradient-to-r from-emerald-500 via-teal-500 to-cyan-500 text-white">
-            <h3 className="font-semibold">Notifications</h3>
+            <h3 className="font-semibold" id="notifications-heading">Notifications</h3>
             <p className="text-sm text-white/80">
               {unreadCount > 0 ? `${unreadCount} nouvelle${unreadCount > 1 ? 's' : ''}` : 'Aucune nouvelle'}
             </p>
@@ -319,7 +351,7 @@ export default function NotificationBell({ educatorId, userId }: NotificationBel
             ) : notifications.length === 0 ? (
               <div className="py-8 text-center">
                 <div className="w-12 h-12 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-3">
-                  <svg className="w-6 h-6 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <svg className="w-6 h-6 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
                   </svg>
                 </div>
@@ -327,27 +359,29 @@ export default function NotificationBell({ educatorId, userId }: NotificationBel
                 <p className="text-gray-400 text-xs mt-1">Vous êtes à jour !</p>
               </div>
             ) : (
-              <div className="divide-y divide-gray-100">
+              <ul className="divide-y divide-gray-100" role="list" aria-label="Liste des notifications">
                 {notifications.map((notif) => (
-                  <Link
-                    key={notif.id}
-                    href={notif.link}
-                    onClick={() => {
-                      markAsRead(notif.id);
-                      setIsOpen(false);
-                    }}
-                    className="flex items-start gap-3 px-4 py-3 hover:bg-gray-50 transition-colors"
-                  >
-                    {getIcon(notif.type)}
-                    <div className="flex-1 min-w-0">
-                      <p className="text-sm font-medium text-gray-900">{notif.title}</p>
-                      <p className="text-sm text-gray-500 truncate">{notif.description}</p>
-                      <p className="text-xs text-gray-400 mt-1">{notif.time}</p>
-                    </div>
-                    <div className="w-2 h-2 bg-teal-500 rounded-full flex-shrink-0 mt-2"></div>
-                  </Link>
+                  <li key={notif.id}>
+                    <Link
+                      href={notif.link}
+                      onClick={() => {
+                        markAsRead(notif.id);
+                        setIsOpen(false);
+                      }}
+                      className="flex items-start gap-3 px-4 py-3 hover:bg-gray-50 transition-colors"
+                      aria-label={`${notif.title}: ${notif.description}, ${notif.time}`}
+                    >
+                      {getIcon(notif.type)}
+                      <div className="flex-1 min-w-0">
+                        <p className="text-sm font-medium text-gray-900">{notif.title}</p>
+                        <p className="text-sm text-gray-500 truncate">{notif.description}</p>
+                        <p className="text-xs text-gray-400 mt-1">{notif.time}</p>
+                      </div>
+                      <div className="w-2 h-2 bg-teal-500 rounded-full flex-shrink-0 mt-2" aria-label="Non lu"></div>
+                    </Link>
+                  </li>
                 ))}
-              </div>
+              </ul>
             )}
           </div>
 

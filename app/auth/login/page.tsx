@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import { signIn } from '@/lib/auth';
-import Logo from '@/components/Logo';
+import PublicNavbar from '@/components/PublicNavbar';
 
 export default function LoginPage() {
   const [email, setEmail] = useState('');
@@ -53,31 +53,48 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-primary-50 via-white to-blue-50 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
-      {/* Logo et titre */}
-      <div className="sm:mx-auto sm:w-full sm:max-w-md">
-        <Link href="/" className="flex justify-center mb-6">
-          <Logo iconSize="lg" />
-        </Link>
-        <h2 className="text-center text-2xl font-bold text-gray-900 mb-2">
-          Connexion
-        </h2>
-        <p className="text-center text-sm text-gray-600">
-          Pas encore de compte ?{' '}
-          <Link href="/auth/signup" className="font-semibold text-primary-600 hover:text-primary-500 transition-colors">
-            Inscrivez-vous gratuitement
-          </Link>
-        </p>
-      </div>
+    <div className="min-h-screen flex flex-col" style={{ backgroundColor: '#fdf9f4' }}>
+      <PublicNavbar showAuthButtons={true} />
+
+      <div className="flex-1 flex flex-col justify-center py-12 sm:px-6 lg:px-8 relative z-0">
+        {/* Logo et Titre */}
+        <div className="sm:mx-auto sm:w-full sm:max-w-md">
+          {/* Logo */}
+          <div className="flex justify-center mb-6">
+            <Link href="/">
+              <img
+                src="/images/logo-neurocare.svg"
+                alt="neurocare"
+                className="h-36"
+                style={{ filter: 'brightness(0) saturate(100%) invert(30%) sepia(80%) saturate(500%) hue-rotate(140deg) brightness(95%)' }}
+              />
+            </Link>
+          </div>
+          <h2 className="text-center text-2xl font-bold text-gray-900 mb-2" style={{ fontFamily: 'Verdana, sans-serif' }}>
+            Connexion
+          </h2>
+          {/* Ligne décorative */}
+          <div className="w-16 h-[2px] mx-auto mb-4" style={{ background: 'linear-gradient(90deg, #027e7e 0%, #f0879f 100%)' }}></div>
+          <p className="text-center text-sm text-gray-600" style={{ fontFamily: 'Open Sans, sans-serif' }}>
+            Pas encore de compte ?{' '}
+            <Link href="/auth/signup" className="font-semibold hover:underline transition-colors" style={{ color: '#027e7e' }}>
+              Inscrivez-vous gratuitement
+            </Link>
+          </p>
+        </div>
 
       {/* Formulaire de connexion */}
       <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
         <div className="bg-white py-10 px-6 shadow-xl rounded-2xl sm:px-12 border border-gray-100">
           <form className="space-y-6" onSubmit={handleSubmit}>
             {error && (
-              <div className="bg-red-50 border-l-4 border-red-500 text-red-700 px-4 py-3 rounded-r animate-pulse">
+              <div
+                role="alert"
+                aria-live="assertive"
+                className="bg-red-50 border-l-4 border-red-500 text-red-700 px-4 py-3 rounded-r animate-pulse"
+              >
                 <div className="flex items-center">
-                  <svg className="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                  <svg className="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
                     <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd" />
                   </svg>
                   <span className="text-sm font-medium">{error}</span>
@@ -87,11 +104,11 @@ export default function LoginPage() {
 
             <div>
               <label htmlFor="email" className="block text-sm font-semibold text-gray-700 mb-2">
-                Adresse email
+                Adresse email <span className="text-red-500" aria-hidden="true">*</span>
               </label>
               <div className="relative">
                 <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                  <svg className="h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <svg className="h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 12a4 4 0 10-8 0 4 4 0 008 0zm0 0v1.5a2.5 2.5 0 005 0V12a9 9 0 10-9 9m4.5-1.206a8.959 8.959 0 01-4.5 1.207" />
                   </svg>
                 </div>
@@ -101,21 +118,23 @@ export default function LoginPage() {
                   type="email"
                   autoComplete="email"
                   required
+                  aria-required="true"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   placeholder="votre@email.com"
-                  className="appearance-none block w-full pl-10 pr-3 py-3 border border-gray-300 rounded-lg shadow-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all"
+                  className="appearance-none block w-full pl-10 pr-3 py-3 border border-gray-300 rounded-lg shadow-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:border-transparent transition-all"
+                  style={{ '--tw-ring-color': '#027e7e' } as any}
                 />
               </div>
             </div>
 
             <div>
               <label htmlFor="password" className="block text-sm font-semibold text-gray-700 mb-2">
-                Mot de passe
+                Mot de passe <span className="text-red-500" aria-hidden="true">*</span>
               </label>
               <div className="relative">
                 <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                  <svg className="h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <svg className="h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
                   </svg>
                 </div>
@@ -125,22 +144,26 @@ export default function LoginPage() {
                   type={showPassword ? 'text' : 'password'}
                   autoComplete="current-password"
                   required
+                  aria-required="true"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   placeholder="••••••••"
-                  className="appearance-none block w-full pl-10 pr-12 py-3 border border-gray-300 rounded-lg shadow-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all"
+                  className="appearance-none block w-full pl-10 pr-12 py-3 border border-gray-300 rounded-lg shadow-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:border-transparent transition-all"
+                  style={{ '--tw-ring-color': '#027e7e' } as any}
                 />
                 <button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
                   className="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-gray-600 transition-colors"
+                  aria-label={showPassword ? 'Masquer le mot de passe' : 'Afficher le mot de passe'}
+                  aria-pressed={showPassword}
                 >
                   {showPassword ? (
-                    <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.543 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21" />
                     </svg>
                   ) : (
-                    <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
                     </svg>
@@ -155,7 +178,8 @@ export default function LoginPage() {
                   id="remember-me"
                   name="remember-me"
                   type="checkbox"
-                  className="h-4 w-4 text-primary-600 focus:ring-primary-500 border-gray-300 rounded"
+                  className="h-4 w-4 border-gray-300 rounded"
+                  style={{ accentColor: '#027e7e' }}
                 />
                 <label htmlFor="remember-me" className="ml-2 block text-sm text-gray-700">
                   Se souvenir de moi
@@ -163,7 +187,7 @@ export default function LoginPage() {
               </div>
 
               <div className="text-sm">
-                <Link href="/auth/forgot-password" className="font-semibold text-primary-600 hover:text-primary-500 transition-colors">
+                <Link href="/auth/forgot-password" className="font-semibold hover:underline transition-colors" style={{ color: '#027e7e' }}>
                   Mot de passe oublié ?
                 </Link>
               </div>
@@ -173,20 +197,22 @@ export default function LoginPage() {
               <button
                 type="submit"
                 disabled={loading}
-                className="group relative w-full flex justify-center py-3 px-4 border border-transparent rounded-lg text-sm font-semibold text-white bg-gradient-to-r from-primary-600 to-primary-700 hover:from-primary-700 hover:to-primary-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 disabled:opacity-50 disabled:cursor-not-allowed shadow-md hover:shadow-lg transition-all transform hover:-translate-y-0.5"
+                className="group relative w-full flex justify-center py-3 px-4 border border-transparent rounded-lg text-sm font-semibold text-white focus:outline-none focus:ring-2 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed shadow-md hover:shadow-lg transition-all transform hover:-translate-y-0.5 hover:opacity-90"
+                style={{ backgroundColor: '#027e7e' }}
+                aria-busy={loading}
               >
                 {loading ? (
-                  <div className="flex items-center">
-                    <svg className="animate-spin -ml-1 mr-3 h-5 w-5 text-white" fill="none" viewBox="0 0 24 24">
+                  <div className="flex items-center" role="status" aria-live="polite">
+                    <svg className="animate-spin -ml-1 mr-3 h-5 w-5 text-white" fill="none" viewBox="0 0 24 24" aria-hidden="true">
                       <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
                       <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                     </svg>
-                    Connexion en cours...
+                    <span>Connexion en cours...</span>
                   </div>
                 ) : (
                   <span className="flex items-center">
                     Se connecter
-                    <svg className="ml-2 w-5 h-5 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <svg className="ml-2 w-5 h-5 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
                     </svg>
                   </span>
@@ -197,42 +223,71 @@ export default function LoginPage() {
 
           {/* Retour à l'accueil */}
           <div className="mt-6">
-            <Link href="/" className="flex items-center justify-center text-sm text-gray-600 hover:text-primary-600 transition-colors">
-              <svg className="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <Link href="/" className="flex items-center justify-center text-sm text-gray-600 hover:underline transition-colors" style={{ '--hover-color': '#027e7e' } as any}>
+              <svg className="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
               </svg>
               Retour à l&apos;accueil
             </Link>
           </div>
+
+          {/* Liens RGPD */}
+          <div className="mt-6 pt-6 border-t border-gray-200">
+            <p className="text-xs text-gray-500 text-center mb-3">
+              En vous connectant, vous acceptez nos conditions d&apos;utilisation.
+            </p>
+            <div className="flex justify-center gap-4 text-xs">
+              <Link href="/politique-confidentialite" className="text-gray-500 hover:underline" style={{ '--hover-color': '#027e7e' } as any}>
+                Politique de confidentialité
+              </Link>
+              <span className="text-gray-300">|</span>
+              <Link href="/cgu" className="text-gray-500 hover:underline" style={{ '--hover-color': '#027e7e' } as any}>
+                CGU
+              </Link>
+              <span className="text-gray-300">|</span>
+              <Link href="/mentions-legales" className="text-gray-500 hover:underline" style={{ '--hover-color': '#027e7e' } as any}>
+                Mentions légales
+              </Link>
+            </div>
+          </div>
         </div>
+      </div>
       </div>
 
       {/* Popup de confirmation d'email */}
       {showConfirmationPopup && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4">
+        <div
+          className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4"
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="confirmation-title"
+          aria-describedby="confirmation-description"
+        >
           <div className="bg-white rounded-2xl max-w-md w-full p-8 shadow-2xl animate-in fade-in zoom-in duration-300">
             <div className="text-center">
               {/* Icône de succès */}
-              <div className="mx-auto w-20 h-20 bg-green-100 rounded-full flex items-center justify-center mb-6">
-                <svg className="w-10 h-10 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <div className="mx-auto w-20 h-20 rounded-full flex items-center justify-center mb-6" style={{ backgroundColor: '#e6f4f4' }}>
+                <svg className="w-10 h-10" style={{ color: '#027e7e' }} fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                 </svg>
               </div>
 
               {/* Titre */}
-              <h3 className="text-2xl font-bold text-gray-900 mb-3">
+              <h3 id="confirmation-title" className="text-2xl font-bold text-gray-900 mb-3" style={{ fontFamily: 'Verdana, sans-serif' }}>
                 Email vérifié !
               </h3>
 
               {/* Message */}
-              <p className="text-gray-600 mb-6">
+              <p id="confirmation-description" className="text-gray-600 mb-6" style={{ fontFamily: 'Open Sans, sans-serif' }}>
                 Votre adresse email a bien été confirmée. Vous pouvez maintenant vous connecter à votre compte.
               </p>
 
               {/* Bouton de fermeture */}
               <button
                 onClick={() => setShowConfirmationPopup(false)}
-                className="w-full py-3 px-4 bg-gradient-to-r from-green-600 to-green-700 text-white rounded-lg font-semibold hover:from-green-700 hover:to-green-800 transition-all shadow-md hover:shadow-lg"
+                className="w-full py-3 px-4 text-white rounded-lg font-semibold transition-all shadow-md hover:shadow-lg hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-offset-2"
+                style={{ backgroundColor: '#027e7e' }}
+                autoFocus
               >
                 C&apos;est compris !
               </button>

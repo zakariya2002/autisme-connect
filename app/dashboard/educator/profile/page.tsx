@@ -539,10 +539,11 @@ export default function EducatorProfilePage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center" role="status" aria-live="polite">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary-600 mx-auto"></div>
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary-600 mx-auto" aria-hidden="true"></div>
           <p className="mt-4 text-gray-600">Chargement...</p>
+          <span className="sr-only">Chargement de votre profil en cours</span>
         </div>
       </div>
     );
@@ -598,7 +599,7 @@ export default function EducatorProfilePage() {
             <div className="pt-4 border-t border-gray-200">
               <div className="flex items-center gap-3 mb-4">
                 <div className="w-10 h-10 bg-gradient-to-br from-violet-500 to-purple-600 rounded-xl flex items-center justify-center">
-                  <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z" />
                   </svg>
                 </div>
@@ -620,20 +621,24 @@ export default function EducatorProfilePage() {
 
             <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">Prénom *</label>
+                <label htmlFor="first_name" className="block text-sm font-medium text-gray-700 mb-2">Prénom *</label>
                 <input
+                  id="first_name"
                   type="text"
                   required
+                  aria-required="true"
                   value={profileData.first_name}
                   onChange={(e) => setProfileData({ ...profileData, first_name: e.target.value })}
                   className="w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:ring-primary-500 focus:border-primary-500"
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">Nom *</label>
+                <label htmlFor="last_name" className="block text-sm font-medium text-gray-700 mb-2">Nom *</label>
                 <input
+                  id="last_name"
                   type="text"
                   required
+                  aria-required="true"
                   value={profileData.last_name}
                   onChange={(e) => setProfileData({ ...profileData, last_name: e.target.value })}
                   className="w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:ring-primary-500 focus:border-primary-500"
@@ -642,8 +647,9 @@ export default function EducatorProfilePage() {
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">Téléphone</label>
+              <label htmlFor="phone" className="block text-sm font-medium text-gray-700 mb-2">Téléphone</label>
               <input
+                id="phone"
                 type="tel"
                 value={profileData.phone}
                 onChange={(e) => setProfileData({ ...profileData, phone: e.target.value })}
@@ -652,25 +658,27 @@ export default function EducatorProfilePage() {
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+              <label htmlFor="linkedin_url" className="block text-sm font-medium text-gray-700 mb-2">
                 Profil LinkedIn
                 <span className="text-xs text-gray-500 font-normal ml-2">(optionnel)</span>
               </label>
               <div className="flex">
-                <span className="inline-flex items-center px-3 rounded-l-md border border-r-0 border-gray-300 bg-gray-50 text-gray-500 text-sm">
-                  <svg className="w-5 h-5 text-blue-600" fill="currentColor" viewBox="0 0 24 24">
+                <span className="inline-flex items-center px-3 rounded-l-md border border-r-0 border-gray-300 bg-gray-50 text-gray-500 text-sm" aria-hidden="true">
+                  <svg className="w-5 h-5 text-blue-600" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                     <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/>
                   </svg>
                 </span>
                 <input
+                  id="linkedin_url"
                   type="url"
                   value={profileData.linkedin_url}
                   onChange={(e) => setProfileData({ ...profileData, linkedin_url: e.target.value })}
                   placeholder="https://www.linkedin.com/in/votre-profil"
+                  aria-describedby="linkedin_help"
                   className="flex-1 border border-gray-300 rounded-r-md shadow-sm py-2 px-3 focus:ring-primary-500 focus:border-primary-500"
                 />
               </div>
-              <p className="mt-1 text-xs text-gray-500">
+              <p id="linkedin_help" className="mt-1 text-xs text-gray-500">
                 Votre profil LinkedIn sera visible sur votre page publique
               </p>
             </div>
@@ -682,12 +690,15 @@ export default function EducatorProfilePage() {
               <div className="space-y-4">
                 {/* SIRET */}
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                  <label htmlFor="siret" className="block text-sm font-medium text-gray-700 mb-2">
                     Numéro SIRET *
                   </label>
                   <input
+                    id="siret"
                     type="text"
                     required
+                    aria-required="true"
+                    aria-describedby="siret_help"
                     maxLength={14}
                     value={profileData.siret}
                     onChange={(e) => {
@@ -697,25 +708,27 @@ export default function EducatorProfilePage() {
                     placeholder="12345678901234"
                     className="w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:ring-primary-500 focus:border-primary-500"
                   />
-                  <p className="mt-1 text-xs text-gray-500">
+                  <p id="siret_help" className="mt-1 text-xs text-gray-500">
                     14 chiffres - Obligatoire pour la facturation et les paiements
                   </p>
                 </div>
 
                 {/* SAP Number */}
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2 flex items-center gap-2">
+                  <label htmlFor="sap_number" className="block text-sm font-medium text-gray-700 mb-2 flex items-center gap-2">
                     Numéro d'agrément SAP
                     <span className="text-xs text-green-600 font-normal">(Facultatif)</span>
                   </label>
                   <input
+                    id="sap_number"
                     type="text"
                     value={profileData.sap_number}
                     onChange={(e) => setProfileData({ ...profileData, sap_number: e.target.value.toUpperCase() })}
                     placeholder="SAP123456789"
+                    aria-describedby="sap_info"
                     className="w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:ring-primary-500 focus:border-primary-500"
                   />
-                  <div className="mt-2 bg-blue-50 border border-blue-200 rounded-lg p-3">
+                  <div id="sap_info" className="mt-2 bg-blue-50 border border-blue-200 rounded-lg p-3">
                     <p className="text-xs text-blue-800 mb-2">
                       <strong>💡 Pourquoi ajouter votre agrément SAP ?</strong>
                     </p>
@@ -725,6 +738,7 @@ export default function EducatorProfilePage() {
                     <a
                       href="/educators/sap-accreditation"
                       target="_blank"
+                      rel="noopener noreferrer"
                       className="text-xs text-blue-600 hover:text-blue-800 font-medium underline"
                     >
                       → En savoir plus sur l'agrément SAP (100% gratuit)
@@ -740,40 +754,47 @@ export default function EducatorProfilePage() {
               <p className="text-sm text-gray-600 mb-4">
                 Choisissez les informations de contact que vous souhaitez afficher sur votre profil public
               </p>
-              <div className="space-y-3">
-                <label className="flex items-start">
+              <div className="space-y-3" role="group" aria-labelledby="privacy_settings">
+                <span id="privacy_settings" className="sr-only">Paramètres de confidentialité</span>
+                <div className="flex items-start">
                   <input
+                    id="show_phone"
                     type="checkbox"
                     checked={profileData.show_phone}
                     onChange={(e) => setProfileData({ ...profileData, show_phone: e.target.checked })}
+                    aria-describedby="show_phone_desc"
                     className="h-4 w-4 text-primary-600 focus:ring-primary-500 border-gray-300 rounded mt-0.5"
                   />
-                  <span className="ml-3 text-sm text-gray-700">
+                  <label htmlFor="show_phone" className="ml-3 text-sm text-gray-700 cursor-pointer">
                     <span className="font-medium">Afficher mon numéro de téléphone</span>
-                    <span className="block text-gray-500 mt-1">Les familles pourront voir votre téléphone sur votre profil public</span>
-                  </span>
-                </label>
-                <label className="flex items-start">
+                    <span id="show_phone_desc" className="block text-gray-500 mt-1">Les familles pourront voir votre téléphone sur votre profil public</span>
+                  </label>
+                </div>
+                <div className="flex items-start">
                   <input
+                    id="show_email"
                     type="checkbox"
                     checked={profileData.show_email}
                     onChange={(e) => setProfileData({ ...profileData, show_email: e.target.checked })}
+                    aria-describedby="show_email_desc"
                     className="h-4 w-4 text-primary-600 focus:ring-primary-500 border-gray-300 rounded mt-0.5"
                   />
-                  <span className="ml-3 text-sm text-gray-700">
+                  <label htmlFor="show_email" className="ml-3 text-sm text-gray-700 cursor-pointer">
                     <span className="font-medium">Afficher mon adresse e-mail</span>
-                    <span className="block text-gray-500 mt-1">Les familles pourront voir votre e-mail sur votre profil public</span>
-                  </span>
-                </label>
+                    <span id="show_email_desc" className="block text-gray-500 mt-1">Les familles pourront voir votre e-mail sur votre profil public</span>
+                  </label>
+                </div>
               </div>
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">Localisation *</label>
+              <label htmlFor="location" className="block text-sm font-medium text-gray-700 mb-2">Localisation *</label>
               <div className="flex gap-2">
                 <input
+                  id="location"
                   type="text"
                   required
+                  aria-required="true"
                   placeholder="Ex: Paris, France"
                   value={profileData.location}
                   onChange={(e) => setProfileData({ ...profileData, location: e.target.value })}
@@ -783,16 +804,18 @@ export default function EducatorProfilePage() {
                   type="button"
                   onClick={handleUseCurrentLocation}
                   disabled={geolocating}
+                  aria-label="Utiliser ma position actuelle"
+                  aria-busy={geolocating}
                   className="flex items-center gap-2 px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 disabled:opacity-50 disabled:cursor-not-allowed whitespace-nowrap"
                 >
                   {geolocating ? (
                     <>
-                      <div className="animate-spin h-4 w-4 border-2 border-white border-t-transparent rounded-full"></div>
+                      <div className="animate-spin h-4 w-4 border-2 border-white border-t-transparent rounded-full" aria-hidden="true"></div>
                       <span className="hidden sm:inline">Localisation...</span>
                     </>
                   ) : (
                     <>
-                      <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
                       </svg>
@@ -804,8 +827,9 @@ export default function EducatorProfilePage() {
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">Bio</label>
+              <label htmlFor="bio" className="block text-sm font-medium text-gray-700 mb-2">Bio</label>
               <textarea
+                id="bio"
                 rows={4}
                 value={profileData.bio}
                 onChange={(e) => setProfileData({ ...profileData, bio: e.target.value })}
@@ -816,10 +840,12 @@ export default function EducatorProfilePage() {
 
             <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">Années d'expérience *</label>
+                <label htmlFor="years_experience" className="block text-sm font-medium text-gray-700 mb-2">Années d'expérience *</label>
                 <input
+                  id="years_experience"
                   type="number"
                   required
+                  aria-required="true"
                   min="0"
                   value={profileData.years_of_experience}
                   onChange={(e) => setProfileData({ ...profileData, years_of_experience: parseInt(e.target.value) })}
@@ -827,8 +853,9 @@ export default function EducatorProfilePage() {
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">Tarif horaire (€)</label>
+                <label htmlFor="hourly_rate" className="block text-sm font-medium text-gray-700 mb-2">Tarif horaire (€)</label>
                 <input
+                  id="hourly_rate"
                   type="number"
                   step="0.01"
                   min="0"
@@ -840,11 +867,13 @@ export default function EducatorProfilePage() {
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">Compétences</label>
+              <label htmlFor="skills" className="block text-sm font-medium text-gray-700 mb-2">Compétences</label>
               <textarea
+                id="skills"
                 rows={4}
                 value={profileData.skills}
                 onChange={(e) => setProfileData({ ...profileData, skills: e.target.value })}
+                aria-describedby="skills_help"
                 placeholder="Décrivez vos compétences, atouts et spécialités...
 
 Exemples :
@@ -855,27 +884,30 @@ Exemples :
 • Soutien scolaire adapté"
                 className="w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:ring-primary-500 focus:border-primary-500"
               />
-              <p className="mt-1 text-sm text-gray-500">
+              <p id="skills_help" className="mt-1 text-sm text-gray-500">
                 Décrivez librement vos compétences, vos spécialités et ce qui vous distingue
               </p>
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">Langues parlées</label>
+              <label htmlFor="languages" className="block text-sm font-medium text-gray-700 mb-2">Langues parlées</label>
               <input
+                id="languages"
                 type="text"
                 placeholder="Ex: Français, Anglais, Arabe"
                 value={profileData.languages}
                 onChange={(e) => setProfileData({ ...profileData, languages: e.target.value })}
+                aria-describedby="languages_help"
                 className="w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:ring-primary-500 focus:border-primary-500"
               />
-              <p className="mt-1 text-sm text-gray-500">Séparez les langues par des virgules</p>
+              <p id="languages_help" className="mt-1 text-sm text-gray-500">Séparez les langues par des virgules</p>
             </div>
 
             <div className="flex justify-end">
               <button
                 type="submit"
                 disabled={saving}
+                aria-busy={saving}
                 className="px-6 py-2 bg-primary-600 text-white rounded-md hover:bg-primary-700 disabled:opacity-50"
               >
                 {saving ? 'Enregistrement...' : 'Enregistrer les modifications'}
@@ -892,7 +924,7 @@ Exemples :
           <div className="p-6 space-y-4">
             <div className="bg-gray-50 border border-gray-200 rounded-lg p-4">
               <div className="flex items-center gap-2 text-sm text-gray-700">
-                <svg className="h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg className="h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
                 </svg>
                 <span className="font-medium">Email actuel :</span>
@@ -902,14 +934,16 @@ Exemples :
 
             <form onSubmit={handleUpdateEmail} className="space-y-3">
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
+                <label htmlFor="new_email" className="block text-sm font-medium text-gray-700 mb-2">
                   Nouvelle adresse email
                 </label>
                 <input
+                  id="new_email"
                   type="email"
                   value={newEmail}
                   onChange={(e) => setNewEmail(e.target.value)}
                   placeholder="nouvelle@email.com"
+                  aria-describedby="email_change_help"
                   className="w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:ring-primary-500 focus:border-primary-500"
                 />
               </div>
@@ -917,11 +951,12 @@ Exemples :
                 <button
                   type="submit"
                   disabled={updatingEmail || !newEmail}
+                  aria-busy={updatingEmail}
                   className="px-4 py-2 bg-primary-600 text-white rounded-md hover:bg-primary-700 disabled:opacity-50 disabled:cursor-not-allowed text-sm font-medium transition"
                 >
                   {updatingEmail ? 'Envoi en cours...' : 'Changer mon email'}
                 </button>
-                <p className="text-xs text-gray-500">
+                <p id="email_change_help" className="text-xs text-gray-500">
                   Un email de confirmation sera envoyé à votre nouvelle adresse.
                 </p>
               </div>
@@ -953,24 +988,24 @@ Exemples :
                   {cert.verification_status && cert.verification_status !== 'pending' && (
                     <div className="mb-4">
                       {cert.verification_status === 'document_verified' && (
-                        <div className="bg-green-50 border border-green-200 text-green-700 px-3 py-2 rounded-lg flex items-center">
-                          <svg className="h-5 w-5 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                        <div className="bg-green-50 border border-green-200 text-green-700 px-3 py-2 rounded-lg flex items-center" role="status">
+                          <svg className="h-5 w-5 mr-2" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
                             <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
                           </svg>
                           <span className="text-sm font-medium">🟢 Document vérifié</span>
                         </div>
                       )}
                       {cert.verification_status === 'officially_confirmed' && (
-                        <div className="bg-blue-50 border border-blue-200 text-blue-700 px-3 py-2 rounded-lg flex items-center">
-                          <svg className="h-5 w-5 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                        <div className="bg-blue-50 border border-blue-200 text-blue-700 px-3 py-2 rounded-lg flex items-center" role="status">
+                          <svg className="h-5 w-5 mr-2" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
                             <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
                           </svg>
                           <span className="text-sm font-medium">⭐ Certification officielle confirmée</span>
                         </div>
                       )}
                       {cert.verification_status === 'rejected' && (
-                        <div className="bg-red-50 border border-red-200 text-red-700 px-3 py-2 rounded-lg flex items-center">
-                          <svg className="h-5 w-5 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                        <div className="bg-red-50 border border-red-200 text-red-700 px-3 py-2 rounded-lg flex items-center" role="alert">
+                          <svg className="h-5 w-5 mr-2" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
                             <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd" />
                           </svg>
                           <span className="text-sm font-medium">❌ Document rejeté</span>
@@ -985,6 +1020,8 @@ Exemples :
                       <select
                         value={cert.type}
                         onChange={(e) => updateCertification(index, 'type', e.target.value)}
+                        aria-required="true"
+                        required
                         className="w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:ring-primary-500 focus:border-primary-500"
                       >
                         <option value="ABA">ABA (Applied Behavior Analysis)</option>
@@ -1003,6 +1040,8 @@ Exemples :
                         value={cert.name}
                         onChange={(e) => updateCertification(index, 'name', e.target.value)}
                         placeholder="Ex: Diplôme d'État d'Éducateur Spécialisé"
+                        required
+                        aria-required="true"
                         className="w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:ring-primary-500 focus:border-primary-500"
                       />
                     </div>
@@ -1013,6 +1052,8 @@ Exemples :
                         value={cert.issuing_organization}
                         onChange={(e) => updateCertification(index, 'issuing_organization', e.target.value)}
                         placeholder="Ex: IRTS Paris Île-de-France"
+                        required
+                        aria-required="true"
                         className="w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:ring-primary-500 focus:border-primary-500"
                       />
                     </div>
@@ -1022,6 +1063,8 @@ Exemples :
                         type="date"
                         value={cert.issue_date}
                         onChange={(e) => updateCertification(index, 'issue_date', e.target.value)}
+                        required
+                        aria-required="true"
                         className="w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:ring-primary-500 focus:border-primary-500"
                       />
                     </div>
@@ -1039,6 +1082,7 @@ Exemples :
                           'Ex: 2023-12345'
                         }
                         required={cert.type === 'DEES' || cert.type === 'DEME'}
+                        aria-required={cert.type === 'DEES' || cert.type === 'DEME' ? 'true' : 'false'}
                         className={`w-full border rounded-md shadow-sm py-2 px-3 focus:ring-primary-500 focus:border-primary-500 ${
                           (cert.type === 'DEES' || cert.type === 'DEME') && (!cert.diploma_number || cert.diploma_number === '')
                             ? 'border-red-300'
@@ -1101,6 +1145,7 @@ Exemples :
                       type="button"
                       onClick={() => removeCertification(index)}
                       className="text-red-600 hover:text-red-700 text-sm"
+                      aria-label={`Supprimer la certification ${cert.name || 'non nommée'}`}
                     >
                       Supprimer cette certification
                     </button>
@@ -1115,6 +1160,7 @@ Exemples :
                   type="button"
                   onClick={saveCertifications}
                   disabled={saving}
+                  aria-busy={saving}
                   className="px-6 py-2 bg-primary-600 text-white rounded-md hover:bg-primary-700 disabled:opacity-50"
                 >
                   {saving ? 'Enregistrement...' : 'Enregistrer ma certification'}
@@ -1128,7 +1174,7 @@ Exemples :
         <div className="bg-white rounded-lg shadow-md p-6 mt-8 border-2 border-blue-200">
           <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
             <h3 className="font-semibold text-blue-800 mb-2 flex items-center gap-2">
-              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
               </svg>
               Exporter mes données (RGPD)
@@ -1141,7 +1187,7 @@ Exemples :
               download
               className="inline-flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 font-medium transition"
             >
-              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
               </svg>
               Télécharger mes données
@@ -1153,10 +1199,10 @@ Exemples :
         <div className="bg-white rounded-lg shadow-md p-6 mt-8 border-2 border-red-200">
           <div className="bg-red-50 border border-red-200 rounded-lg p-4 mb-4">
             <h3 className="font-semibold text-red-800 mb-2">⚠️ Supprimer mon compte</h3>
-            <p className="text-sm text-red-700 mb-3">
+            <p id="delete_warning" className="text-sm text-red-700 mb-3">
               Cette action est <strong>irréversible</strong>. Toutes vos données seront définitivement supprimées :
             </p>
-            <ul className="text-sm text-red-700 space-y-1 mb-4 ml-4">
+            <ul className="text-sm text-red-700 space-y-1 mb-4 ml-4" aria-label="Données qui seront supprimées">
               <li>• Votre profil et vos informations personnelles</li>
               <li>• Vos certifications et diplômes</li>
               <li>• Votre historique de messages</li>
@@ -1174,14 +1220,16 @@ Exemples :
             ) : (
               <div className="space-y-4">
                 <div>
-                  <label className="block text-sm font-medium text-red-800 mb-2">
+                  <label htmlFor="delete_confirm" className="block text-sm font-medium text-red-800 mb-2">
                     Pour confirmer, tapez exactement <span className="font-bold">SUPPRIMER</span>
                   </label>
                   <input
+                    id="delete_confirm"
                     type="text"
                     value={deleteConfirmText}
                     onChange={(e) => setDeleteConfirmText(e.target.value)}
                     placeholder="Tapez SUPPRIMER"
+                    aria-describedby="delete_warning"
                     className="w-full border-2 border-red-300 rounded-md shadow-sm py-2 px-3 focus:ring-red-500 focus:border-red-500"
                   />
                 </div>
@@ -1189,6 +1237,7 @@ Exemples :
                   <button
                     onClick={handleDeleteAccount}
                     disabled={deleting || deleteConfirmText !== 'SUPPRIMER'}
+                    aria-busy={deleting}
                     className="px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 font-medium transition disabled:opacity-50 disabled:cursor-not-allowed"
                   >
                     {deleting ? 'Suppression en cours...' : 'Supprimer définitivement mon compte'}
@@ -1212,10 +1261,10 @@ Exemples :
 
       {/* Notifications Toast en bas de la page */}
       {error && (
-        <div className="fixed bottom-4 right-4 left-4 md:left-auto md:w-96 z-50 animate-slide-up">
+        <div className="fixed bottom-4 right-4 left-4 md:left-auto md:w-96 z-50 animate-slide-up" role="alert" aria-live="assertive">
           <div className="bg-red-600 text-white px-6 py-4 rounded-lg shadow-2xl border-2 border-red-700">
             <div className="flex items-start gap-3">
-              <svg className="h-6 w-6 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+              <svg className="h-6 w-6 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
                 <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd" />
               </svg>
               <div className="flex-1">
@@ -1225,8 +1274,9 @@ Exemples :
               <button
                 onClick={() => setError('')}
                 className="flex-shrink-0 text-white hover:text-red-200 transition-colors"
+                aria-label="Fermer le message d'erreur"
               >
-                <svg className="h-5 w-5" fill="currentColor" viewBox="0 0 20 20">
+                <svg className="h-5 w-5" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
                   <path fillRule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clipRule="evenodd" />
                 </svg>
               </button>
@@ -1236,10 +1286,10 @@ Exemples :
       )}
 
       {success && (
-        <div className="fixed bottom-4 right-4 left-4 md:left-auto md:w-96 z-50 animate-slide-up">
+        <div className="fixed bottom-4 right-4 left-4 md:left-auto md:w-96 z-50 animate-slide-up" role="alert" aria-live="polite">
           <div className="bg-green-600 text-white px-6 py-4 rounded-lg shadow-2xl border-2 border-green-700">
             <div className="flex items-start gap-3">
-              <svg className="h-6 w-6 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+              <svg className="h-6 w-6 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
                 <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
               </svg>
               <div className="flex-1">
@@ -1249,8 +1299,9 @@ Exemples :
               <button
                 onClick={() => setSuccess('')}
                 className="flex-shrink-0 text-white hover:text-green-200 transition-colors"
+                aria-label="Fermer le message de succès"
               >
-                <svg className="h-5 w-5" fill="currentColor" viewBox="0 0 20 20">
+                <svg className="h-5 w-5" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
                   <path fillRule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clipRule="evenodd" />
                 </svg>
               </button>

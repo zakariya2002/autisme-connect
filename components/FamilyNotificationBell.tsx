@@ -58,8 +58,7 @@ export default function FamilyNotificationBell({ familyId, userId }: FamilyNotif
           id,
           content,
           created_at,
-          sender_id,
-          sender:sender_id(first_name, last_name)
+          sender_id
         `)
         .eq('receiver_id', userId)
         .eq('is_read', false)
@@ -67,20 +66,29 @@ export default function FamilyNotificationBell({ familyId, userId }: FamilyNotif
         .limit(5);
 
       if (!msgError && unreadMessages) {
-        unreadMessages.forEach((msg: any) => {
-          const senderName = msg.sender ?
-            `${msg.sender.first_name || ''} ${msg.sender.last_name || ''}`.trim() :
-            'Un professionnel';
+        for (const msg of unreadMessages) {
+          // Chercher le nom de l'expéditeur dans educator_profiles
+          let senderName = 'Un professionnel';
+          const { data: educator } = await supabase
+            .from('educator_profiles')
+            .select('first_name, last_name')
+            .eq('user_id', msg.sender_id)
+            .single();
+
+          if (educator) {
+            senderName = `${educator.first_name || ''} ${educator.last_name || ''}`.trim();
+          }
+
           notifs.push({
             id: `msg-${msg.id}`,
             type: 'message',
             title: 'Nouveau message',
             description: `${senderName}: ${msg.content?.substring(0, 50)}${msg.content?.length > 50 ? '...' : ''}`,
-            link: '/messages',
+            link: '/dashboard/family/messages',
             time: formatTime(msg.created_at),
             read: false,
           });
-        });
+        }
       }
 
       // 2. Rendez-vous confirmés récemment (dernières 48h)
@@ -268,7 +276,7 @@ export default function FamilyNotificationBell({ familyId, userId }: FamilyNotif
       {/* Bouton cloche */}
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="relative p-2 text-gray-600 hover:text-violet-600 hover:bg-violet-50 rounded-full transition-colors"
+        className="relative p-2 text-white hover:text-teal-100 rounded-full transition-colors"
         aria-label="Notifications"
       >
         <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">

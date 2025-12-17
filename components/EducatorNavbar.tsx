@@ -4,7 +4,6 @@ import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { supabase } from '@/lib/supabase';
 import { signOut } from '@/lib/auth';
-import LogoPro from '@/components/LogoPro';
 import EducatorMobileMenu from '@/components/EducatorMobileMenu';
 import NotificationBell from '@/components/NotificationBell';
 
@@ -69,34 +68,37 @@ export default function EducatorNavbar({ profile: propProfile, subscription: pro
   const isPremium = subscription && ['active', 'trialing'].includes(subscription.status);
 
   return (
-    <nav className="bg-white shadow-sm">
+    <nav className="sticky top-0 z-40" style={{ backgroundColor: '#027e7e' }}>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-between h-16 items-center">
-          {/* Logo Pro - visible sur mobile et desktop, redirige vers le dashboard */}
-          <LogoPro href="/dashboard/educator" iconSize="md" />
-
-          {/* Menu mobile (hamburger) */}
-          <div className="md:hidden flex items-center gap-2">
-            {profile?.id && userId && (
-              <NotificationBell educatorId={profile.id} userId={userId} />
-            )}
+        <div className="flex justify-between h-16 sm:h-20 items-center relative">
+          {/* Menu mobile (hamburger) à gauche */}
+          <div className="flex items-center gap-2">
             <EducatorMobileMenu profile={profile} isPremium={isPremium} onLogout={handleLogout} />
           </div>
 
-          {/* Menu desktop */}
-          <div className="hidden md:flex items-center space-x-4">
+          {/* Logo centré */}
+          <Link href="/dashboard/educator" className="absolute left-1/2 transform -translate-x-1/2" aria-label="Retour au tableau de bord éducateur">
+            <img
+              src="/images/logo-neurocare.svg"
+              alt="NeuroCare - Retour au tableau de bord"
+              className="h-20"
+            />
+          </Link>
+
+          {/* Menu desktop - Notifications et déconnexion à droite */}
+          <div className="flex items-center gap-4">
             {profile?.id && userId && (
               <NotificationBell educatorId={profile.id} userId={userId} />
             )}
             {isPremium && (
-              <Link href="/dashboard/educator/subscription" className="text-gray-700 hover:text-teal-600 px-3 py-2 font-medium transition flex items-center gap-2">
-                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <Link href="/dashboard/educator/subscription" className="hidden md:flex text-white hover:text-teal-100 px-3 py-2 font-medium transition items-center gap-2">
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z" />
                 </svg>
                 Mon abonnement
               </Link>
             )}
-            <button onClick={handleLogout} className="text-gray-700 hover:text-teal-600 px-3 py-2 font-medium transition">
+            <button onClick={handleLogout} className="hidden md:block text-white hover:text-teal-100 px-3 py-2 font-medium transition">
               Déconnexion
             </button>
           </div>

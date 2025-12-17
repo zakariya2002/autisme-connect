@@ -357,7 +357,7 @@ export default function VerificationPage() {
             </div>
           </div>
           {status && (
-            <span className={`px-4 py-2 rounded-xl text-sm font-bold shadow-md ${status.color}`}>
+            <span role="status" className={`px-4 py-2 rounded-xl text-sm font-bold shadow-md ${status.color}`}>
               {status.icon} {status.label}
             </span>
           )}
@@ -374,7 +374,7 @@ export default function VerificationPage() {
         {!doc ? (
           <div>
             <p className="text-sm text-gray-600 mb-4 flex items-start gap-2">
-              <svg className="w-5 h-5 text-blue-500 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+              <svg aria-hidden="true" className="w-5 h-5 text-blue-500 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
                 <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd" />
               </svg>
               <span>{info.help}</span>
@@ -404,7 +404,7 @@ export default function VerificationPage() {
                   </div>
                 ) : (
                   <div className="flex items-center justify-center gap-3">
-                    <svg className="w-6 h-6 text-gray-500 group-hover:text-primary-600 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <svg aria-hidden="true" className="w-6 h-6 text-gray-500 group-hover:text-primary-600 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
                     </svg>
                     <span className="text-gray-700 font-semibold group-hover:text-primary-700 transition-colors">
@@ -421,7 +421,7 @@ export default function VerificationPage() {
               <div className="flex items-center justify-between">
                 <div className="flex-1">
                   <div className="flex items-center gap-2 mb-1">
-                    <svg className="w-4 h-4 text-gray-500" fill="currentColor" viewBox="0 0 20 20">
+                    <svg aria-hidden="true" className="w-4 h-4 text-gray-500" fill="currentColor" viewBox="0 0 20 20">
                       <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z" clipRule="evenodd" />
                     </svg>
                     <p className="text-sm text-gray-700 font-medium">
@@ -430,7 +430,7 @@ export default function VerificationPage() {
                   </div>
                   {doc.verified_at && (
                     <div className="flex items-center gap-2">
-                      <svg className="w-4 h-4 text-green-600" fill="currentColor" viewBox="0 0 20 20">
+                      <svg aria-hidden="true" className="w-4 h-4 text-green-600" fill="currentColor" viewBox="0 0 20 20">
                         <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
                       </svg>
                       <p className="text-sm text-green-700 font-semibold">
@@ -442,9 +442,10 @@ export default function VerificationPage() {
                 {doc.file_url && (
                   <button
                     onClick={() => doc.file_url && handleViewDocument(doc.file_url)}
+                    aria-label={`Voir le document ${info.label}`}
                     className="ml-4 px-4 py-2 bg-primary-600 text-white rounded-lg hover:bg-primary-700 font-medium text-sm transition-colors shadow-md hover:shadow-lg flex items-center gap-2"
                   >
-                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <svg aria-hidden="true" className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
                     </svg>
@@ -469,7 +470,7 @@ export default function VerificationPage() {
                     className="hidden"
                   />
                   <div className="w-full px-4 py-3 border-2 border-dashed border-blue-300 bg-blue-50 rounded-xl text-center cursor-pointer transition-all hover:border-blue-500 hover:bg-blue-100 flex items-center justify-center gap-2">
-                    <svg className="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <svg aria-hidden="true" className="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12" />
                     </svg>
                     <span className="text-blue-700 font-semibold text-sm">
@@ -480,9 +481,10 @@ export default function VerificationPage() {
 
                 <button
                   onClick={() => handleDeleteDocument(doc.id, type)}
+                  aria-label={`Supprimer le document ${info.label}`}
                   className="w-full px-4 py-3 border-2 border-red-300 bg-red-50 rounded-xl text-center cursor-pointer transition-all hover:border-red-500 hover:bg-red-100 flex items-center justify-center gap-2"
                 >
-                  <svg className="w-5 h-5 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <svg aria-hidden="true" className="w-5 h-5 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
                   </svg>
                   <span className="text-red-700 font-semibold text-sm">
@@ -535,8 +537,8 @@ export default function VerificationPage() {
             <div className="flex items-start gap-4">
               <div className="flex-shrink-0">
                 <div className="w-16 h-16 bg-gradient-to-br from-primary-500 to-blue-600 rounded-2xl flex items-center justify-center shadow-lg">
-                  <svg className="w-9 h-9 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+                  <svg aria-hidden="true" className="w-9 h-9 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
                   </svg>
                 </div>
               </div>
@@ -585,8 +587,8 @@ export default function VerificationPage() {
                 </h2>
                 <p className="text-gray-700 text-lg leading-relaxed">{statusInfo.description}</p>
                 {isVerified && (
-                  <div className="mt-6 inline-flex items-center gap-3 px-6 py-3 bg-gradient-to-r from-green-600 to-emerald-600 text-white rounded-xl font-bold shadow-lg text-lg">
-                    <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 20 20">
+                  <div role="status" className="mt-6 inline-flex items-center gap-3 px-6 py-3 bg-gradient-to-r from-green-600 to-emerald-600 text-white rounded-xl font-bold shadow-lg text-lg">
+                    <svg aria-hidden="true" className="w-6 h-6" fill="currentColor" viewBox="0 0 20 20">
                       <path fillRule="evenodd" d="M6.267 3.455a3.066 3.066 0 001.745-.723 3.066 3.066 0 013.976 0 3.066 3.066 0 001.745.723 3.066 3.066 0 012.812 2.812c.051.643.304 1.254.723 1.745a3.066 3.066 0 010 3.976 3.066 3.066 0 00-.723 1.745 3.066 3.066 0 01-2.812 2.812 3.066 3.066 0 00-1.745.723 3.066 3.066 0 01-3.976 0 3.066 3.066 0 00-1.745-.723 3.066 3.066 0 01-2.812-2.812 3.066 3.066 0 00-.723-1.745 3.066 3.066 0 010-3.976 3.066 3.066 0 00.723-1.745 3.066 3.066 0 012.812-2.812zm7.44 5.252a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
                     </svg>
                     Badge "Vérifié" actif
@@ -601,7 +603,7 @@ export default function VerificationPage() {
         <div className="mb-8 bg-white rounded-2xl shadow-xl border border-gray-200 p-8">
           <div className="flex items-center gap-3 mb-6">
             <div className="w-10 h-10 bg-gradient-to-br from-purple-500 to-pink-600 rounded-xl flex items-center justify-center">
-              <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <svg aria-hidden="true" className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
               </svg>
             </div>
@@ -626,7 +628,7 @@ export default function VerificationPage() {
                         : 'bg-gray-100 text-gray-400 border-2 border-gray-300'
                     }`}>
                       {isComplete ? (
-                        <svg className="w-7 h-7" fill="currentColor" viewBox="0 0 20 20">
+                        <svg aria-hidden="true" className="w-7 h-7" fill="currentColor" viewBox="0 0 20 20">
                           <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
                         </svg>
                       ) : item.step}

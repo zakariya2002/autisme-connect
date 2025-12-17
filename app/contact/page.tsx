@@ -1,18 +1,14 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import Link from 'next/link';
-import Logo from '@/components/Logo';
-import MobileMenu from '@/components/MobileMenu';
+import PublicNavbar from '@/components/PublicNavbar';
 import TndToggle from '@/components/TndToggle';
 import { useTnd } from '@/contexts/TndContext';
-import { supabase } from '@/lib/supabase';
 import ContactTnd from './page-tnd';
 
 export default function ContactPage() {
   const { tndMode } = useTnd();
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [userType, setUserType] = useState<'educator' | 'family' | null>(null);
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -23,29 +19,6 @@ export default function ContactPage() {
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
   const [error, setError] = useState('');
-
-  useEffect(() => {
-    checkAuth();
-  }, []);
-
-  const checkAuth = async () => {
-    const { data: { session } } = await supabase.auth.getSession();
-    setIsLoggedIn(!!session);
-
-    if (session) {
-      const { data: educatorProfile } = await supabase
-        .from('educator_profiles')
-        .select('id')
-        .eq('user_id', session.user.id)
-        .single();
-
-      if (educatorProfile) {
-        setUserType('educator');
-      } else {
-        setUserType('family');
-      }
-    }
-  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -100,142 +73,89 @@ export default function ContactPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-primary-50 via-white to-blue-50">
+    <div className="min-h-screen" style={{ backgroundColor: '#fdf9f4' }}>
       {/* Navigation */}
-      <nav className="bg-white shadow-sm border-b border-gray-200 sticky top-0 z-50 backdrop-blur-sm bg-white/95">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between h-20 items-center">
-            <Logo />
-            <div className="xl:hidden">
-              <MobileMenu />
-            </div>
-            <div className="hidden xl:flex items-center gap-2 lg:gap-3">
-              <Link href="/about" className="text-gray-700 hover:text-primary-600 px-3 py-2 rounded-md font-medium transition-colors text-sm">
-                À propos
-              </Link>
-              <Link href="/search" className="text-gray-700 hover:text-primary-600 px-3 py-2 rounded-md font-medium transition-colors text-sm inline-flex items-center justify-center gap-1.5">
-                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-                </svg>
-                Recherche
-              </Link>
-              <Link href="/pricing" className="text-gray-700 hover:text-primary-600 px-3 py-2 rounded-md font-medium transition-colors text-sm">
-                Tarifs
-              </Link>
-              <Link href="/familles/aides-financieres" className="text-gray-700 hover:text-primary-600 px-3 py-2 rounded-md font-medium transition-colors text-sm inline-flex items-center justify-center gap-1.5">
-                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
-                </svg>
-                Aides
-              </Link>
-              <Link href="/contact" className="text-primary-600 bg-primary-50 px-3 py-2 rounded-md font-medium transition-colors text-sm">
-                Contact
-              </Link>
-              {isLoggedIn ? (
-                <Link
-                  href={userType === 'educator' ? '/dashboard/educator' : '/dashboard/family'}
-                  className={`ml-4 inline-flex items-center gap-2 text-white px-6 py-2.5 rounded-lg font-semibold transition-all duration-200 shadow-md hover:shadow-lg ${
-                    userType === 'educator'
-                      ? 'bg-gradient-to-r from-primary-500 to-green-500 hover:from-primary-600 hover:to-green-600'
-                      : 'bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700'
-                  }`}
-                >
-                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
-                  </svg>
-                  Tableau de bord
-                </Link>
-              ) : (
-                <>
-                  <Link href="/auth/login" className="ml-4 text-gray-700 hover:text-primary-600 px-3 py-2 rounded-md font-medium transition-colors text-sm">
-                    Connexion
-                  </Link>
-                  <Link href="/auth/signup" className="bg-primary-600 text-white px-5 py-2.5 rounded-md hover:bg-primary-700 font-medium transition-colors shadow-sm text-sm">
-                    Inscription
-                  </Link>
-                </>
-              )}
-            </div>
-          </div>
-        </div>
-      </nav>
+      <PublicNavbar />
 
-      {/* Hero Section */}
-      <div className="relative overflow-hidden py-16 sm:py-20">
-        <div className="absolute inset-0 bg-gradient-to-br from-primary-600/10 via-blue-500/5 to-purple-600/10"></div>
-        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center max-w-3xl mx-auto">
-            <div className="inline-flex items-center justify-center w-20 h-20 bg-primary-600 rounded-full mb-8 shadow-lg">
-              <svg className="w-10 h-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-              </svg>
-            </div>
-            <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold text-gray-900 mb-6 leading-tight">
-              Contactez-nous
-            </h1>
-            <p className="text-xl text-gray-600 leading-relaxed">
-              Une question ? Un besoin d'accompagnement ? Notre équipe est là pour vous aider.
-              Nous vous répondons sous 24h.
-            </p>
+      {/* Section Titre */}
+      <section className="py-12 sm:py-16 px-4">
+        <div className="max-w-4xl mx-auto text-center">
+          {/* Pictogramme */}
+          <div className="w-16 h-16 mx-auto mb-6 rounded-full flex items-center justify-center" style={{ backgroundColor: '#027e7e' }}>
+            <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+            </svg>
           </div>
+          <h1 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-4" style={{ fontFamily: 'Verdana, sans-serif' }}>
+            Contactez-nous
+          </h1>
+          {/* Ligne décorative */}
+          <div className="w-32 h-[2px] bg-gray-300 mx-auto mb-6"></div>
+          <p className="text-lg text-gray-600" style={{ fontFamily: 'Open Sans, sans-serif' }}>
+            Une question ? Un besoin d'accompagnement ? Notre équipe est là pour vous aider.
+          </p>
         </div>
-      </div>
+      </section>
 
       {/* Contenu Principal */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16">
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 lg:gap-12">
+      <div className="max-w-5xl mx-auto px-4 pb-16">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           {/* Formulaire de contact */}
           <div className="lg:col-span-2">
-            <div className="bg-white rounded-3xl shadow-xl p-8 sm:p-10 border border-gray-100">
-              <h2 className="text-2xl font-bold text-gray-900 mb-6">Envoyez-nous un message</h2>
+            <div className="bg-white rounded-2xl shadow-md p-6 sm:p-8">
+              <h2 className="text-xl font-bold text-gray-900 mb-6" style={{ fontFamily: 'Verdana, sans-serif' }}>
+                Envoyez-nous un message
+              </h2>
 
               {success && (
-                <div className="mb-6 bg-green-50 border-l-4 border-green-500 p-4 rounded-r-lg">
+                <div className="mb-6 bg-teal-50 border-l-4 p-4 rounded-r-lg" style={{ borderColor: '#027e7e' }} role="alert" aria-live="assertive">
                   <div className="flex items-center">
-                    <svg className="w-6 h-6 text-green-500 mr-3" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
+                    <svg className="w-6 h-6 mr-3" style={{ color: '#027e7e' }} fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
                       <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
                     </svg>
-                    <p className="text-green-700 font-medium">Votre message a été envoyé avec succès ! Nous vous répondrons dans les plus brefs délais.</p>
+                    <p className="font-medium" style={{ color: '#027e7e' }}>Votre message a été envoyé avec succès !</p>
                   </div>
                 </div>
               )}
 
               {error && (
-                <div className="mb-6 bg-red-50 border-l-4 border-red-500 p-4 rounded-r-lg">
+                <div className="mb-6 bg-red-50 border-l-4 border-red-500 p-4 rounded-r-lg" role="alert" aria-live="assertive">
                   <p className="text-red-700 font-medium">{error}</p>
                 </div>
               )}
 
-              <form onSubmit={handleSubmit} className="space-y-6">
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+              <form onSubmit={handleSubmit} className="space-y-5">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
                   <div>
                     <label htmlFor="name" className="block text-sm font-semibold text-gray-700 mb-2">
-                      Nom complet *
+                      Nom complet <span className="text-red-600" aria-label="champ requis">*</span>
                     </label>
                     <input
                       type="text"
                       id="name"
                       name="name"
                       required
+                      aria-required="true"
                       value={formData.name}
                       onChange={handleChange}
-                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all"
+                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-transparent transition-all"
                       placeholder="Votre nom"
                     />
                   </div>
 
                   <div>
                     <label htmlFor="email" className="block text-sm font-semibold text-gray-700 mb-2">
-                      Email *
+                      Email <span className="text-red-600" aria-label="champ requis">*</span>
                     </label>
                     <input
                       type="email"
                       id="email"
                       name="email"
                       required
+                      aria-required="true"
                       value={formData.email}
                       onChange={handleChange}
-                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all"
+                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-transparent transition-all"
                       placeholder="votre@email.com"
                     />
                   </div>
@@ -243,15 +163,16 @@ export default function ContactPage() {
 
                 <div>
                   <label htmlFor="userType" className="block text-sm font-semibold text-gray-700 mb-2">
-                    Vous êtes *
+                    Vous êtes <span className="text-red-600" aria-label="champ requis">*</span>
                   </label>
                   <select
                     id="userType"
                     name="userType"
                     required
+                    aria-required="true"
                     value={formData.userType}
                     onChange={handleChange}
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all"
+                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-transparent transition-all"
                   >
                     <option value="family">Aidant</option>
                     <option value="educator">Professionnel</option>
@@ -262,40 +183,69 @@ export default function ContactPage() {
 
                 <div>
                   <label htmlFor="subject" className="block text-sm font-semibold text-gray-700 mb-2">
-                    Sujet *
+                    Sujet <span className="text-red-600" aria-label="champ requis">*</span>
                   </label>
                   <input
                     type="text"
                     id="subject"
                     name="subject"
                     required
+                    aria-required="true"
                     value={formData.subject}
                     onChange={handleChange}
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all"
+                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-transparent transition-all"
                     placeholder="Comment pouvons-nous vous aider ?"
                   />
                 </div>
 
                 <div>
                   <label htmlFor="message" className="block text-sm font-semibold text-gray-700 mb-2">
-                    Message *
+                    Message <span className="text-red-600" aria-label="champ requis">*</span>
                   </label>
                   <textarea
                     id="message"
                     name="message"
                     required
-                    rows={6}
+                    aria-required="true"
+                    rows={5}
                     value={formData.message}
                     onChange={handleChange}
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all resize-none"
+                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-transparent transition-all resize-none"
                     placeholder="Décrivez votre demande en détail..."
                   />
+                </div>
+
+                {/* Mention RGPD */}
+                <div className="bg-blue-50 border-l-4 border-blue-500 p-4 rounded-r-lg">
+                  <div className="flex items-start">
+                    <svg className="w-5 h-5 text-blue-500 mr-3 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
+                      <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd" />
+                    </svg>
+                    <div className="text-sm text-gray-700">
+                      <p className="font-semibold mb-1">Protection de vos données personnelles</p>
+                      <p className="mb-2">
+                        Les informations recueillies font l'objet d'un traitement informatique destiné à répondre à votre demande de contact.
+                        Vos données sont conservées de manière sécurisée et ne seront pas transmises à des tiers.
+                      </p>
+                      <p className="text-xs text-gray-600">
+                        Conformément au RGPD, vous disposez d'un droit d'accès, de rectification et de suppression de vos données.
+                        Pour en savoir plus, consultez notre{' '}
+                        <Link href="/privacy" className="underline hover:text-blue-600" style={{ color: '#027e7e' }}>
+                          politique de confidentialité
+                        </Link>
+                        .
+                      </p>
+                    </div>
+                  </div>
                 </div>
 
                 <button
                   type="submit"
                   disabled={loading}
-                  className="w-full sm:w-auto px-8 py-4 bg-primary-600 text-white rounded-xl hover:bg-primary-700 font-bold text-lg shadow-lg hover:shadow-xl transition-all transform hover:-translate-y-0.5 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+                  aria-busy={loading}
+                  aria-label={loading ? "Envoi du message en cours" : "Envoyer le message de contact"}
+                  className="w-full sm:w-auto px-8 py-3 text-white rounded-lg font-semibold transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 hover:opacity-90"
+                  style={{ backgroundColor: '#f0879f' }}
                 >
                   {loading ? (
                     <>
@@ -321,26 +271,28 @@ export default function ContactPage() {
           {/* Informations de contact */}
           <div className="space-y-6">
             {/* Coordonnées */}
-            <div className="bg-white rounded-3xl shadow-lg p-8 border border-gray-100">
-              <h3 className="text-xl font-bold text-gray-900 mb-6">Nos coordonnées</h3>
+            <div className="bg-white rounded-2xl shadow-md p-6">
+              <h3 className="text-lg font-bold text-gray-900 mb-5" style={{ fontFamily: 'Verdana, sans-serif' }}>
+                Nos coordonnées
+              </h3>
               <div className="space-y-4">
                 <div className="flex items-start gap-4">
-                  <div className="flex-shrink-0 w-10 h-10 bg-primary-100 rounded-lg flex items-center justify-center">
-                    <svg className="w-5 h-5 text-primary-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                  <div className="flex-shrink-0 w-10 h-10 rounded-full flex items-center justify-center" style={{ backgroundColor: '#027e7e' }}>
+                    <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
                     </svg>
                   </div>
                   <div>
                     <p className="text-sm font-semibold text-gray-900">Email</p>
-                    <a href="mailto:admin@autismeconnect.fr" className="text-primary-600 hover:text-primary-700 transition-colors">
+                    <a href="mailto:admin@autismeconnect.fr" className="hover:underline" style={{ color: '#027e7e' }} aria-label="Envoyer un email à admin@autismeconnect.fr">
                       admin@autismeconnect.fr
                     </a>
                   </div>
                 </div>
 
                 <div className="flex items-start gap-4">
-                  <div className="flex-shrink-0 w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center">
-                    <svg className="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                  <div className="flex-shrink-0 w-10 h-10 rounded-full flex items-center justify-center" style={{ backgroundColor: '#3a9e9e' }}>
+                    <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
                     </svg>
                   </div>
@@ -352,8 +304,8 @@ export default function ContactPage() {
                 </div>
 
                 <div className="flex items-start gap-4">
-                  <div className="flex-shrink-0 w-10 h-10 bg-green-100 rounded-lg flex items-center justify-center">
-                    <svg className="w-5 h-5 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                  <div className="flex-shrink-0 w-10 h-10 rounded-full flex items-center justify-center" style={{ backgroundColor: '#6bbebe' }}>
+                    <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
                     </svg>
                   </div>
@@ -366,20 +318,28 @@ export default function ContactPage() {
             </div>
 
             {/* FAQ rapide */}
-            <div className="bg-gradient-to-br from-primary-50 to-blue-50 rounded-3xl p-8 border border-primary-100">
-              <h3 className="text-xl font-bold text-gray-900 mb-4">Questions fréquentes</h3>
+            <div className="bg-white rounded-2xl shadow-md p-6">
+              <h3 className="text-lg font-bold text-gray-900 mb-4" style={{ fontFamily: 'Verdana, sans-serif' }}>
+                Questions fréquentes
+              </h3>
               <div className="space-y-3">
-                <Link href="/about" className="block text-primary-700 hover:text-primary-800 font-medium transition-colors flex items-center gap-2">
+                <Link href="/about" className="block font-medium transition-colors flex items-center gap-2 hover:underline" style={{ color: '#027e7e' }}>
                   <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
                   </svg>
                   Qui sommes-nous ?
                 </Link>
-                <Link href="/search" className="block text-primary-700 hover:text-primary-800 font-medium transition-colors flex items-center gap-2">
+                <Link href="/search" className="block font-medium transition-colors flex items-center gap-2 hover:underline" style={{ color: '#027e7e' }}>
                   <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
                   </svg>
                   Trouver un professionnel
+                </Link>
+                <Link href="/familles/aides-financieres" className="block font-medium transition-colors flex items-center gap-2 hover:underline" style={{ color: '#027e7e' }}>
+                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                  </svg>
+                  Aides financières
                 </Link>
               </div>
             </div>
@@ -388,36 +348,48 @@ export default function ContactPage() {
       </div>
 
       {/* Footer */}
-      <footer className="bg-gray-900 text-gray-300 py-12 mt-20">
+      <footer className="text-white py-12" style={{ backgroundColor: '#027e7e' }}>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-8">
-            <div>
-              <h3 className="text-white font-bold text-lg mb-4">neurocare</h3>
-              <p className="text-gray-400 leading-relaxed">
-                Une plateforme humaine qui connecte les aidants avec des professionnels passionnés.
-              </p>
-            </div>
-            <div>
-              <h3 className="text-white font-bold text-lg mb-4">Liens rapides</h3>
-              <ul className="space-y-2">
-                <li><Link href="/search" className="hover:text-white transition-colors">Trouver un professionnel</Link></li>
-                <li><Link href="/about" className="hover:text-white transition-colors">Qui sommes-nous ?</Link></li>
-                <li><Link href="/pricing" className="hover:text-white transition-colors">Tarifs</Link></li>
-                <li><Link href="/contact" className="hover:text-white transition-colors">Contact</Link></li>
-              </ul>
-            </div>
-            <div>
-              <h3 className="text-white font-bold text-lg mb-4">Besoin d'aide ?</h3>
-              <p className="text-gray-400 leading-relaxed mb-4">
-                Notre équipe est là pour vous accompagner dans votre parcours.
-              </p>
-              <Link href="/contact" className="inline-block px-4 py-2 bg-primary-600 text-white rounded-lg hover:bg-primary-700 transition-colors">
-                Contactez-nous
+          <div className="text-center">
+            <div className="mb-6">
+              <Link href="/" className="inline-block">
+                <img
+                  src="/images/logo-neurocare.svg"
+                  alt="neurocare"
+                  className="h-20 brightness-0 invert mx-auto"
+                />
               </Link>
             </div>
-          </div>
-          <div className="border-t border-gray-800 pt-8 text-center text-gray-500">
-            <p>© 2024 neurocare. Tous droits réservés. Fait avec ❤️ pour les aidants et les professionnels.</p>
+            <p className="text-teal-100 text-lg mb-8">
+              Connecter les familles avec les meilleurs éducateurs spécialisés
+            </p>
+            <div className="flex justify-center gap-6 mb-8 flex-wrap">
+              <Link href="/about" className="text-teal-100 hover:text-white transition-colors">
+                Qui sommes-nous ?
+              </Link>
+              <Link href="/search" className="text-teal-100 hover:text-white transition-colors">
+                Trouver un professionnel
+              </Link>
+              <Link href="/contact" className="text-teal-100 hover:text-white transition-colors">
+                Contact
+              </Link>
+            </div>
+            <div className="flex justify-center gap-6 mb-8 flex-wrap text-sm">
+              <Link href="/privacy" className="text-teal-100 hover:text-white transition-colors">
+                Politique de confidentialité
+              </Link>
+              <Link href="/legal" className="text-teal-100 hover:text-white transition-colors">
+                Mentions légales
+              </Link>
+              <Link href="/terms" className="text-teal-100 hover:text-white transition-colors">
+                CGU
+              </Link>
+            </div>
+            <div className="border-t border-teal-600 pt-8">
+              <p className="text-teal-200">
+                © 2024 neurocare. Tous droits réservés.
+              </p>
+            </div>
           </div>
         </div>
       </footer>

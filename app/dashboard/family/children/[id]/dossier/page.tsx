@@ -33,8 +33,6 @@ interface SessionNote {
   title: string | null;
   activities: string | null;
   observations: string | null;
-  positive_points: string | null;
-  engagement_level: string | null;
   created_at: string;
 }
 
@@ -87,16 +85,7 @@ const masteryLabels: Record<string, { label: string; color: string; level: numbe
 const preferenceTypeLabels: Record<string, { label: string; icon: string; color: string }> = {
   reinforcer: { label: 'Renforçateur', icon: '⭐', color: 'bg-yellow-50 border-yellow-200' },
   interest: { label: 'Centre d\'intérêt', icon: '❤️', color: 'bg-pink-50 border-pink-200' },
-  routine: { label: 'Routine', icon: '🔄', color: 'bg-blue-50 border-blue-200' },
-  strategy: { label: 'Stratégie efficace', icon: '💡', color: 'bg-green-50 border-green-200' },
   avoid: { label: 'À éviter', icon: '⚠️', color: 'bg-red-50 border-red-200' },
-};
-
-const engagementLabels: Record<string, string> = {
-  tres_engage: 'Très engagé',
-  engage: 'Engagé',
-  moyen: 'Moyen',
-  difficile: 'Difficile',
 };
 
 export default function ChildDossierPage() {
@@ -138,8 +127,6 @@ export default function ChildDossierPage() {
     title: '',
     activities: '',
     observations: '',
-    positive_points: '',
-    engagement_level: 'engage',
   });
 
   const [skillForm, setSkillForm] = useState({
@@ -286,8 +273,6 @@ export default function ChildDossierPage() {
         title: '',
         activities: '',
         observations: '',
-        positive_points: '',
-        engagement_level: 'engage',
       });
     } catch (err: any) {
       setError(err.message);
@@ -365,10 +350,20 @@ export default function ChildDossierPage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary-600 mx-auto"></div>
-          <p className="mt-4 text-gray-600">Chargement du dossier...</p>
+      <div className="min-h-screen flex flex-col" style={{ backgroundColor: '#fdf9f4' }}>
+        <div className="sticky top-0 z-40">
+          <FamilyNavbar profile={profile} />
+        </div>
+        <div className="flex-1 flex items-center justify-center">
+          <div className="text-center py-20 bg-white rounded-2xl shadow-md border border-gray-100 mx-4 px-12">
+            <div className="relative">
+              <div className="absolute inset-0 flex items-center justify-center">
+                <div className="w-20 h-20 rounded-full border-4" style={{ borderColor: 'rgba(2, 126, 126, 0.2)' }} aria-hidden="true"></div>
+              </div>
+              <div className="animate-spin rounded-full h-20 w-20 border-4 mx-auto" style={{ borderTopColor: '#027e7e', borderRightColor: '#3a9e9e', borderBottomColor: '#6bbebe', borderLeftColor: 'rgba(2, 126, 126, 0.2)' }} aria-hidden="true"></div>
+            </div>
+            <p className="text-gray-700 font-semibold mt-6 text-lg" style={{ fontFamily: 'Verdana, sans-serif' }}>Chargement du dossier...</p>
+          </div>
         </div>
       </div>
     );
@@ -403,20 +398,23 @@ export default function ChildDossierPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      <FamilyNavbar profile={profile} />
+    <div className="min-h-screen flex flex-col" style={{ backgroundColor: '#fdf9f4' }}>
+      {/* Navigation */}
+      <div className="sticky top-0 z-40">
+        <FamilyNavbar profile={profile} />
+      </div>
 
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <div className="flex-1 max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8 w-full">
         {/* Header avec infos enfant */}
-        <div className="bg-gradient-to-r from-purple-500 via-violet-500 to-indigo-500 rounded-2xl p-4 sm:p-6 mb-6 text-white">
+        <div className="rounded-2xl p-4 sm:p-6 mb-6 text-white" style={{ background: 'linear-gradient(135deg, #3a9e9e 0%, #6bbebe 50%, #f8c3cf 100%)' }}>
           <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
             <div className="flex items-center gap-3 sm:gap-4">
-              <div className="w-12 h-12 sm:w-16 sm:h-16 bg-white/20 rounded-full flex items-center justify-center text-xl sm:text-2xl font-bold flex-shrink-0">
+              <div className="w-14 h-14 sm:w-18 sm:h-18 bg-white/20 rounded-full flex items-center justify-center text-xl sm:text-2xl font-bold flex-shrink-0 backdrop-blur">
                 {child.first_name[0].toUpperCase()}
               </div>
               <div>
-                <h1 className="text-lg sm:text-xl md:text-2xl font-bold">Dossier de {child.first_name}</h1>
-                <p className="text-white/80 text-sm sm:text-base">
+                <h1 className="text-lg sm:text-xl md:text-2xl font-bold" style={{ fontFamily: 'Verdana, sans-serif' }}>Dossier de {child.first_name}</h1>
+                <p className="text-white/90 text-sm sm:text-base" style={{ fontFamily: 'Open Sans, sans-serif' }}>
                   {child.age ? `${child.age} ans` : ''}
                   {child.accompaniment_goals && <span className="hidden sm:inline"> • {child.accompaniment_goals.substring(0, 50)}...</span>}
                 </p>
@@ -424,28 +422,29 @@ export default function ChildDossierPage() {
             </div>
             <Link
               href={`/dashboard/family/children/${childId}/ppa`}
-              className="flex items-center gap-2 px-3 sm:px-4 py-2 bg-white/20 hover:bg-white/30 rounded-lg transition backdrop-blur text-sm sm:text-base w-full sm:w-auto justify-center sm:justify-start"
+              className="flex items-center gap-2 px-4 sm:px-5 py-2.5 bg-white/20 hover:bg-white/30 rounded-xl transition backdrop-blur text-sm sm:text-base w-full sm:w-auto justify-center sm:justify-start font-semibold shadow-md"
             >
               <svg className="w-4 h-4 sm:w-5 sm:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
               </svg>
-              <span className="font-medium">Générer PPA</span>
+              <span>Générer PPA</span>
             </Link>
           </div>
         </div>
 
         {/* Onglets */}
-        <div className="bg-white rounded-xl shadow-sm border border-gray-100 mb-6">
+        <div className="bg-white rounded-2xl shadow-md border border-gray-100 mb-6">
           <div className="flex overflow-x-auto scrollbar-hide">
             {tabs.map((tab) => (
               <button
                 key={tab.id}
                 onClick={() => setActiveTab(tab.id)}
-                className={`flex items-center gap-1 sm:gap-2 px-3 sm:px-4 py-2 sm:py-3 font-medium text-xs sm:text-sm whitespace-nowrap border-b-2 transition ${
+                className={`flex items-center gap-1 sm:gap-2 px-3 sm:px-5 py-3 sm:py-4 font-medium text-xs sm:text-sm whitespace-nowrap border-b-2 transition ${
                   activeTab === tab.id
-                    ? 'border-primary-600 text-primary-600'
+                    ? 'border-transparent'
                     : 'border-transparent text-gray-500 hover:text-gray-700'
                 }`}
+                style={activeTab === tab.id ? { borderColor: '#027e7e', color: '#027e7e' } : {}}
               >
                 <svg className="w-4 h-4 sm:w-5 sm:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d={tab.icon} />
@@ -457,36 +456,36 @@ export default function ChildDossierPage() {
         </div>
 
         {error && (
-          <div className="mb-4 bg-red-50 border border-red-200 text-red-600 px-4 py-3 rounded-lg">
+          <div className="mb-4 bg-red-50 border-l-4 border-red-500 text-red-700 px-4 py-3 rounded-r">
             {error}
-            <button onClick={() => setError('')} className="float-right">&times;</button>
+            <button onClick={() => setError('')} className="float-right font-bold">&times;</button>
           </div>
         )}
 
         {/* Contenu des onglets */}
-        <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-4 sm:p-6">
+        <div className="bg-white rounded-2xl shadow-md border border-gray-100 p-4 sm:p-6">
           {/* Vue d'ensemble */}
           {activeTab === 'overview' && (
             <div className="space-y-6">
-              <h2 className="text-lg font-semibold text-gray-900">Vue d'ensemble</h2>
+              <h2 className="text-lg font-bold text-gray-900" style={{ fontFamily: 'Verdana, sans-serif' }}>Vue d'ensemble</h2>
 
               {/* Stats cards */}
               <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                <div className="bg-blue-50 rounded-xl p-4">
-                  <p className="text-sm text-blue-600 font-medium">Objectifs actifs</p>
-                  <p className="text-2xl font-bold text-blue-700">{stats.activeGoals}/{stats.totalGoals}</p>
+                <div className="rounded-xl p-4 border" style={{ backgroundColor: 'rgba(2, 126, 126, 0.1)', borderColor: 'rgba(2, 126, 126, 0.2)' }}>
+                  <p className="text-sm font-medium" style={{ color: '#027e7e' }}>Objectifs actifs</p>
+                  <p className="text-2xl font-bold" style={{ color: '#027e7e' }}>{stats.activeGoals}/{stats.totalGoals}</p>
                 </div>
-                <div className="bg-green-50 rounded-xl p-4">
-                  <p className="text-sm text-green-600 font-medium">Objectifs atteints</p>
-                  <p className="text-2xl font-bold text-green-700">{stats.achievedGoals}</p>
+                <div className="rounded-xl p-4 border" style={{ backgroundColor: 'rgba(58, 158, 158, 0.1)', borderColor: 'rgba(58, 158, 158, 0.2)' }}>
+                  <p className="text-sm font-medium" style={{ color: '#3a9e9e' }}>Objectifs atteints</p>
+                  <p className="text-2xl font-bold" style={{ color: '#3a9e9e' }}>{stats.achievedGoals}</p>
                 </div>
-                <div className="bg-purple-50 rounded-xl p-4">
-                  <p className="text-sm text-purple-600 font-medium">Séances (30j)</p>
-                  <p className="text-2xl font-bold text-purple-700">{stats.recentSessions}</p>
+                <div className="rounded-xl p-4 border" style={{ backgroundColor: 'rgba(240, 135, 159, 0.1)', borderColor: 'rgba(240, 135, 159, 0.2)' }}>
+                  <p className="text-sm font-medium" style={{ color: '#f0879f' }}>Séances (30j)</p>
+                  <p className="text-2xl font-bold" style={{ color: '#f0879f' }}>{stats.recentSessions}</p>
                 </div>
-                <div className="bg-amber-50 rounded-xl p-4">
-                  <p className="text-sm text-amber-600 font-medium">Compétences acquises</p>
-                  <p className="text-2xl font-bold text-amber-700">{stats.acquiredSkills}/{stats.totalSkills}</p>
+                <div className="rounded-xl p-4 border" style={{ backgroundColor: 'rgba(107, 190, 190, 0.1)', borderColor: 'rgba(107, 190, 190, 0.2)' }}>
+                  <p className="text-sm font-medium" style={{ color: '#6bbebe' }}>Compétences acquises</p>
+                  <p className="text-2xl font-bold" style={{ color: '#6bbebe' }}>{stats.acquiredSkills}/{stats.totalSkills}</p>
                 </div>
               </div>
 
@@ -554,10 +553,11 @@ export default function ChildDossierPage() {
           {activeTab === 'goals' && (
             <div>
               <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 mb-6">
-                <h2 className="text-base sm:text-lg font-semibold text-gray-900">Objectifs éducatifs</h2>
+                <h2 className="text-base sm:text-lg font-bold text-gray-900" style={{ fontFamily: 'Verdana, sans-serif' }}>Objectifs éducatifs</h2>
                 <button
                   onClick={() => setShowGoalModal(true)}
-                  className="flex items-center gap-2 px-3 sm:px-4 py-2 bg-primary-600 text-white rounded-lg hover:bg-primary-700 transition text-sm w-full sm:w-auto justify-center"
+                  className="flex items-center gap-2 px-4 sm:px-5 py-2.5 text-white rounded-xl hover:opacity-90 transition text-sm w-full sm:w-auto justify-center font-semibold shadow-md"
+                  style={{ backgroundColor: '#027e7e' }}
                 >
                   <svg className="w-4 h-4 sm:w-5 sm:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
@@ -641,10 +641,11 @@ export default function ChildDossierPage() {
           {activeTab === 'sessions' && (
             <div>
               <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 mb-6">
-                <h2 className="text-base sm:text-lg font-semibold text-gray-900">Notes de séances</h2>
+                <h2 className="text-base sm:text-lg font-bold text-gray-900" style={{ fontFamily: 'Verdana, sans-serif' }}>Notes de séances</h2>
                 <button
                   onClick={() => setShowSessionModal(true)}
-                  className="flex items-center gap-2 px-3 sm:px-4 py-2 bg-primary-600 text-white rounded-lg hover:bg-primary-700 transition text-sm w-full sm:w-auto justify-center"
+                  className="flex items-center gap-2 px-4 sm:px-5 py-2.5 text-white rounded-xl hover:opacity-90 transition text-sm w-full sm:w-auto justify-center font-semibold shadow-md"
+                  style={{ backgroundColor: '#f0879f' }}
                 >
                   <svg className="w-4 h-4 sm:w-5 sm:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
@@ -681,12 +682,7 @@ export default function ChildDossierPage() {
                             })}
                           </span>
                         </div>
-                        {session.engagement_level && (
-                          <span className="px-2 py-1 rounded text-xs font-medium bg-blue-100 text-blue-700">
-                            {engagementLabels[session.engagement_level]}
-                          </span>
-                        )}
-                      </div>
+                        </div>
 
                       {session.activities && (
                         <div className="mb-2">
@@ -701,13 +697,6 @@ export default function ChildDossierPage() {
                           <p className="text-sm text-gray-700">{session.observations}</p>
                         </div>
                       )}
-
-                      {session.positive_points && (
-                        <div className="bg-green-50 rounded-lg p-2 mt-2">
-                          <p className="text-xs font-medium text-green-700 mb-1">Points positifs</p>
-                          <p className="text-sm text-green-800">{session.positive_points}</p>
-                        </div>
-                      )}
                     </div>
                   ))}
                 </div>
@@ -719,10 +708,11 @@ export default function ChildDossierPage() {
           {activeTab === 'skills' && (
             <div>
               <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 mb-6">
-                <h2 className="text-base sm:text-lg font-semibold text-gray-900">Compétences</h2>
+                <h2 className="text-base sm:text-lg font-bold text-gray-900" style={{ fontFamily: 'Verdana, sans-serif' }}>Compétences</h2>
                 <button
                   onClick={() => setShowSkillModal(true)}
-                  className="flex items-center gap-2 px-3 sm:px-4 py-2 bg-primary-600 text-white rounded-lg hover:bg-primary-700 transition text-sm w-full sm:w-auto justify-center"
+                  className="flex items-center gap-2 px-4 sm:px-5 py-2.5 text-white rounded-xl hover:opacity-90 transition text-sm w-full sm:w-auto justify-center font-semibold shadow-md"
+                  style={{ backgroundColor: '#3a9e9e' }}
                 >
                   <svg className="w-4 h-4 sm:w-5 sm:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
@@ -783,10 +773,11 @@ export default function ChildDossierPage() {
           {activeTab === 'preferences' && (
             <div>
               <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 mb-6">
-                <h2 className="text-base sm:text-lg font-semibold text-gray-900">Préférences et stratégies</h2>
+                <h2 className="text-base sm:text-lg font-bold text-gray-900" style={{ fontFamily: 'Verdana, sans-serif' }}>Préférences</h2>
                 <button
                   onClick={() => setShowPreferenceModal(true)}
-                  className="flex items-center gap-2 px-3 sm:px-4 py-2 bg-primary-600 text-white rounded-lg hover:bg-primary-700 transition text-sm w-full sm:w-auto justify-center"
+                  className="flex items-center gap-2 px-4 sm:px-5 py-2.5 text-white rounded-xl hover:opacity-90 transition text-sm w-full sm:w-auto justify-center font-semibold shadow-md"
+                  style={{ backgroundColor: '#6bbebe' }}
                 >
                   <svg className="w-4 h-4 sm:w-5 sm:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
@@ -803,7 +794,7 @@ export default function ChildDossierPage() {
                     </svg>
                   </div>
                   <h3 className="text-lg font-medium text-gray-900 mb-2">Aucune préférence</h3>
-                  <p className="text-gray-500 mb-4">Notez les renforçateurs, intérêts et stratégies efficaces.</p>
+                  <p className="text-gray-500 mb-4">Notez les renforçateurs, intérêts et éléments à éviter.</p>
                 </div>
               ) : (
                 <div className="grid gap-4 md:grid-cols-2">
@@ -841,7 +832,7 @@ export default function ChildDossierPage() {
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
           <div className="bg-white rounded-2xl shadow-xl max-w-lg w-full max-h-[90vh] overflow-y-auto">
             <div className="px-4 sm:px-6 py-4 border-b border-gray-100 flex items-center justify-between">
-              <h2 className="text-lg sm:text-xl font-semibold">Nouvel objectif</h2>
+              <h2 className="text-lg sm:text-xl font-bold" style={{ fontFamily: 'Verdana, sans-serif' }}>Nouvel objectif</h2>
               <button onClick={() => setShowGoalModal(false)} className="p-2 hover:bg-gray-100 rounded-lg">
                 <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
@@ -850,22 +841,24 @@ export default function ChildDossierPage() {
             </div>
             <form onSubmit={handleAddGoal} className="p-4 sm:p-6 space-y-4">
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Titre *</label>
+                <label className="block text-sm font-semibold text-gray-700 mb-2">Titre <span className="text-red-500">*</span></label>
                 <input
                   type="text"
                   required
                   value={goalForm.title}
                   onChange={(e) => setGoalForm({ ...goalForm, title: e.target.value })}
-                  className="w-full border border-gray-300 rounded-lg py-2 px-3 focus:ring-primary-500 focus:border-primary-500"
+                  className="w-full border border-gray-300 rounded-lg py-3 px-4 focus:ring-2 focus:outline-none focus:border-transparent"
+                  style={{ '--tw-ring-color': '#027e7e' } as any}
                   placeholder="Ex: Dire bonjour aux adultes"
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Catégorie</label>
+                <label className="block text-sm font-semibold text-gray-700 mb-2">Catégorie</label>
                 <select
                   value={goalForm.category}
                   onChange={(e) => setGoalForm({ ...goalForm, category: e.target.value })}
-                  className="w-full border border-gray-300 rounded-lg py-2 px-3"
+                  className="w-full border border-gray-300 rounded-lg py-3 px-4 focus:ring-2 focus:outline-none focus:border-transparent"
+                  style={{ '--tw-ring-color': '#027e7e' } as any}
                 >
                   {Object.entries(categoryLabels).map(([value, label]) => (
                     <option key={value} value={value}>{label}</option>
@@ -873,46 +866,50 @@ export default function ChildDossierPage() {
                 </select>
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Description</label>
+                <label className="block text-sm font-semibold text-gray-700 mb-2">Description</label>
                 <textarea
                   value={goalForm.description}
                   onChange={(e) => setGoalForm({ ...goalForm, description: e.target.value })}
-                  className="w-full border border-gray-300 rounded-lg py-2 px-3"
+                  className="w-full border border-gray-300 rounded-lg py-3 px-4 focus:ring-2 focus:outline-none focus:border-transparent"
+                  style={{ '--tw-ring-color': '#027e7e' } as any}
                   rows={2}
                   placeholder="Détails de l'objectif..."
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Comment mesurer (critère de réussite)</label>
+                <label className="block text-sm font-semibold text-gray-700 mb-2">Comment mesurer (critère de réussite)</label>
                 <input
                   type="text"
                   value={goalForm.measurable}
                   onChange={(e) => setGoalForm({ ...goalForm, measurable: e.target.value })}
-                  className="w-full border border-gray-300 rounded-lg py-2 px-3"
+                  className="w-full border border-gray-300 rounded-lg py-3 px-4 focus:ring-2 focus:outline-none focus:border-transparent"
+                  style={{ '--tw-ring-color': '#027e7e' } as any}
                   placeholder="Ex: 8 fois sur 10 sans rappel"
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Date cible</label>
+                <label className="block text-sm font-semibold text-gray-700 mb-2">Date cible</label>
                 <input
                   type="date"
                   value={goalForm.target_date}
                   onChange={(e) => setGoalForm({ ...goalForm, target_date: e.target.value })}
-                  className="w-full border border-gray-300 rounded-lg py-2 px-3"
+                  className="w-full border border-gray-300 rounded-lg py-3 px-4 focus:ring-2 focus:outline-none focus:border-transparent"
+                  style={{ '--tw-ring-color': '#027e7e' } as any}
                 />
               </div>
               <div className="flex justify-end gap-3 pt-4">
                 <button
                   type="button"
                   onClick={() => setShowGoalModal(false)}
-                  className="px-4 py-2 text-gray-700 bg-gray-100 rounded-lg hover:bg-gray-200"
+                  className="px-6 py-3 text-gray-700 bg-gray-100 rounded-xl hover:bg-gray-200 font-semibold"
                 >
                   Annuler
                 </button>
                 <button
                   type="submit"
                   disabled={saving}
-                  className="px-4 py-2 bg-primary-600 text-white rounded-lg hover:bg-primary-700 disabled:opacity-50"
+                  className="px-6 py-3 text-white rounded-xl hover:opacity-90 disabled:opacity-50 font-semibold shadow-md"
+                  style={{ backgroundColor: '#027e7e' }}
                 >
                   {saving ? 'Ajout...' : 'Ajouter'}
                 </button>
@@ -927,7 +924,7 @@ export default function ChildDossierPage() {
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
           <div className="bg-white rounded-2xl shadow-xl max-w-lg w-full max-h-[90vh] overflow-y-auto">
             <div className="px-4 sm:px-6 py-4 border-b border-gray-100 flex items-center justify-between">
-              <h2 className="text-lg sm:text-xl font-semibold">Note de séance</h2>
+              <h2 className="text-lg sm:text-xl font-bold" style={{ fontFamily: 'Verdana, sans-serif' }}>Note de séance</h2>
               <button onClick={() => setShowSessionModal(false)} className="p-2 hover:bg-gray-100 rounded-lg">
                 <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
@@ -935,81 +932,62 @@ export default function ChildDossierPage() {
               </button>
             </div>
             <form onSubmit={handleAddSession} className="p-4 sm:p-6 space-y-4">
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Date</label>
-                  <input
-                    type="date"
-                    value={sessionForm.session_date}
-                    onChange={(e) => setSessionForm({ ...sessionForm, session_date: e.target.value })}
-                    className="w-full border border-gray-300 rounded-lg py-2 px-3"
-                  />
-                </div>
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Engagement</label>
-                  <select
-                    value={sessionForm.engagement_level}
-                    onChange={(e) => setSessionForm({ ...sessionForm, engagement_level: e.target.value })}
-                    className="w-full border border-gray-300 rounded-lg py-2 px-3"
-                  >
-                    {Object.entries(engagementLabels).map(([value, label]) => (
-                      <option key={value} value={value}>{label}</option>
-                    ))}
-                  </select>
-                </div>
+              <div>
+                <label className="block text-sm font-semibold text-gray-700 mb-2">Date</label>
+                <input
+                  type="date"
+                  value={sessionForm.session_date}
+                  onChange={(e) => setSessionForm({ ...sessionForm, session_date: e.target.value })}
+                  className="w-full border border-gray-300 rounded-lg py-3 px-4 focus:ring-2 focus:outline-none focus:border-transparent"
+                  style={{ '--tw-ring-color': '#f0879f' } as any}
+                />
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Titre (optionnel)</label>
+                <label className="block text-sm font-semibold text-gray-700 mb-2">Titre (optionnel)</label>
                 <input
                   type="text"
                   value={sessionForm.title}
                   onChange={(e) => setSessionForm({ ...sessionForm, title: e.target.value })}
-                  className="w-full border border-gray-300 rounded-lg py-2 px-3"
+                  className="w-full border border-gray-300 rounded-lg py-3 px-4 focus:ring-2 focus:outline-none focus:border-transparent"
+                  style={{ '--tw-ring-color': '#f0879f' } as any}
                   placeholder="Ex: Séance communication"
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Activités réalisées</label>
+                <label className="block text-sm font-semibold text-gray-700 mb-2">Activités réalisées</label>
                 <textarea
                   value={sessionForm.activities}
                   onChange={(e) => setSessionForm({ ...sessionForm, activities: e.target.value })}
-                  className="w-full border border-gray-300 rounded-lg py-2 px-3"
+                  className="w-full border border-gray-300 rounded-lg py-3 px-4 focus:ring-2 focus:outline-none focus:border-transparent"
+                  style={{ '--tw-ring-color': '#f0879f' } as any}
                   rows={2}
                   placeholder="Qu'avez-vous travaillé ?"
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Observations</label>
+                <label className="block text-sm font-semibold text-gray-700 mb-2">Observations</label>
                 <textarea
                   value={sessionForm.observations}
                   onChange={(e) => setSessionForm({ ...sessionForm, observations: e.target.value })}
-                  className="w-full border border-gray-300 rounded-lg py-2 px-3"
+                  className="w-full border border-gray-300 rounded-lg py-3 px-4 focus:ring-2 focus:outline-none focus:border-transparent"
+                  style={{ '--tw-ring-color': '#f0879f' } as any}
                   rows={2}
                   placeholder="Observations factuelles..."
-                />
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Points positifs</label>
-                <textarea
-                  value={sessionForm.positive_points}
-                  onChange={(e) => setSessionForm({ ...sessionForm, positive_points: e.target.value })}
-                  className="w-full border border-gray-300 rounded-lg py-2 px-3"
-                  rows={2}
-                  placeholder="Ce qui a bien fonctionné..."
                 />
               </div>
               <div className="flex justify-end gap-3 pt-4">
                 <button
                   type="button"
                   onClick={() => setShowSessionModal(false)}
-                  className="px-4 py-2 text-gray-700 bg-gray-100 rounded-lg hover:bg-gray-200"
+                  className="px-6 py-3 text-gray-700 bg-gray-100 rounded-xl hover:bg-gray-200 font-semibold"
                 >
                   Annuler
                 </button>
                 <button
                   type="submit"
                   disabled={saving}
-                  className="px-4 py-2 bg-primary-600 text-white rounded-lg hover:bg-primary-700 disabled:opacity-50"
+                  className="px-6 py-3 text-white rounded-xl hover:opacity-90 disabled:opacity-50 font-semibold shadow-md"
+                  style={{ backgroundColor: '#f0879f' }}
                 >
                   {saving ? 'Ajout...' : 'Ajouter'}
                 </button>
@@ -1024,7 +1002,7 @@ export default function ChildDossierPage() {
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
           <div className="bg-white rounded-2xl shadow-xl max-w-lg w-full">
             <div className="px-4 sm:px-6 py-4 border-b border-gray-100 flex items-center justify-between">
-              <h2 className="text-lg sm:text-xl font-semibold">Nouvelle compétence</h2>
+              <h2 className="text-lg sm:text-xl font-bold" style={{ fontFamily: 'Verdana, sans-serif' }}>Nouvelle compétence</h2>
               <button onClick={() => setShowSkillModal(false)} className="p-2 hover:bg-gray-100 rounded-lg">
                 <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
@@ -1033,23 +1011,25 @@ export default function ChildDossierPage() {
             </div>
             <form onSubmit={handleAddSkill} className="p-4 sm:p-6 space-y-4">
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Nom de la compétence *</label>
+                <label className="block text-sm font-semibold text-gray-700 mb-2">Nom de la compétence <span className="text-red-500">*</span></label>
                 <input
                   type="text"
                   required
                   value={skillForm.name}
                   onChange={(e) => setSkillForm({ ...skillForm, name: e.target.value })}
-                  className="w-full border border-gray-300 rounded-lg py-2 px-3"
+                  className="w-full border border-gray-300 rounded-lg py-3 px-4 focus:ring-2 focus:outline-none focus:border-transparent"
+                  style={{ '--tw-ring-color': '#3a9e9e' } as any}
                   placeholder="Ex: S'habiller seul"
                 />
               </div>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Catégorie</label>
+                  <label className="block text-sm font-semibold text-gray-700 mb-2">Catégorie</label>
                   <select
                     value={skillForm.category}
                     onChange={(e) => setSkillForm({ ...skillForm, category: e.target.value })}
-                    className="w-full border border-gray-300 rounded-lg py-2 px-3"
+                    className="w-full border border-gray-300 rounded-lg py-3 px-4 focus:ring-2 focus:outline-none focus:border-transparent"
+                    style={{ '--tw-ring-color': '#3a9e9e' } as any}
                   >
                     {Object.entries(categoryLabels).map(([value, label]) => (
                       <option key={value} value={value}>{label}</option>
@@ -1057,11 +1037,12 @@ export default function ChildDossierPage() {
                   </select>
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Niveau actuel</label>
+                  <label className="block text-sm font-semibold text-gray-700 mb-2">Niveau actuel</label>
                   <select
                     value={skillForm.mastery_level}
                     onChange={(e) => setSkillForm({ ...skillForm, mastery_level: e.target.value })}
-                    className="w-full border border-gray-300 rounded-lg py-2 px-3"
+                    className="w-full border border-gray-300 rounded-lg py-3 px-4 focus:ring-2 focus:outline-none focus:border-transparent"
+                    style={{ '--tw-ring-color': '#3a9e9e' } as any}
                   >
                     {Object.entries(masteryLabels).map(([value, { label }]) => (
                       <option key={value} value={value}>{label}</option>
@@ -1070,11 +1051,12 @@ export default function ChildDossierPage() {
                 </div>
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Notes</label>
+                <label className="block text-sm font-semibold text-gray-700 mb-2">Notes</label>
                 <textarea
                   value={skillForm.notes}
                   onChange={(e) => setSkillForm({ ...skillForm, notes: e.target.value })}
-                  className="w-full border border-gray-300 rounded-lg py-2 px-3"
+                  className="w-full border border-gray-300 rounded-lg py-3 px-4 focus:ring-2 focus:outline-none focus:border-transparent"
+                  style={{ '--tw-ring-color': '#3a9e9e' } as any}
                   rows={2}
                   placeholder="Contexte, observations..."
                 />
@@ -1083,14 +1065,15 @@ export default function ChildDossierPage() {
                 <button
                   type="button"
                   onClick={() => setShowSkillModal(false)}
-                  className="px-4 py-2 text-gray-700 bg-gray-100 rounded-lg hover:bg-gray-200"
+                  className="px-6 py-3 text-gray-700 bg-gray-100 rounded-xl hover:bg-gray-200 font-semibold"
                 >
                   Annuler
                 </button>
                 <button
                   type="submit"
                   disabled={saving}
-                  className="px-4 py-2 bg-primary-600 text-white rounded-lg hover:bg-primary-700 disabled:opacity-50"
+                  className="px-6 py-3 text-white rounded-xl hover:opacity-90 disabled:opacity-50 font-semibold shadow-md"
+                  style={{ backgroundColor: '#3a9e9e' }}
                 >
                   {saving ? 'Ajout...' : 'Ajouter'}
                 </button>
@@ -1105,7 +1088,7 @@ export default function ChildDossierPage() {
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
           <div className="bg-white rounded-2xl shadow-xl max-w-lg w-full">
             <div className="px-4 sm:px-6 py-4 border-b border-gray-100 flex items-center justify-between">
-              <h2 className="text-lg sm:text-xl font-semibold">Nouvelle préférence</h2>
+              <h2 className="text-lg sm:text-xl font-bold" style={{ fontFamily: 'Verdana, sans-serif' }}>Nouvelle préférence</h2>
               <button onClick={() => setShowPreferenceModal(false)} className="p-2 hover:bg-gray-100 rounded-lg">
                 <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
@@ -1114,11 +1097,12 @@ export default function ChildDossierPage() {
             </div>
             <form onSubmit={handleAddPreference} className="p-4 sm:p-6 space-y-4">
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Type</label>
+                <label className="block text-sm font-semibold text-gray-700 mb-2">Type</label>
                 <select
                   value={preferenceForm.type}
                   onChange={(e) => setPreferenceForm({ ...preferenceForm, type: e.target.value })}
-                  className="w-full border border-gray-300 rounded-lg py-2 px-3"
+                  className="w-full border border-gray-300 rounded-lg py-3 px-4 focus:ring-2 focus:outline-none focus:border-transparent"
+                  style={{ '--tw-ring-color': '#027e7e' } as any}
                 >
                   {Object.entries(preferenceTypeLabels).map(([value, { label, icon }]) => (
                     <option key={value} value={value}>{icon} {label}</option>
@@ -1126,22 +1110,24 @@ export default function ChildDossierPage() {
                 </select>
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Nom *</label>
+                <label className="block text-sm font-semibold text-gray-700 mb-2">Nom <span className="text-red-500">*</span></label>
                 <input
                   type="text"
                   required
                   value={preferenceForm.name}
                   onChange={(e) => setPreferenceForm({ ...preferenceForm, name: e.target.value })}
-                  className="w-full border border-gray-300 rounded-lg py-2 px-3"
+                  className="w-full border border-gray-300 rounded-lg py-3 px-4 focus:ring-2 focus:outline-none focus:border-transparent"
+                  style={{ '--tw-ring-color': '#027e7e' } as any}
                   placeholder="Ex: Dinosaures, Puzzle, Timer visuel..."
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Description</label>
+                <label className="block text-sm font-semibold text-gray-700 mb-2">Description</label>
                 <textarea
                   value={preferenceForm.description}
                   onChange={(e) => setPreferenceForm({ ...preferenceForm, description: e.target.value })}
-                  className="w-full border border-gray-300 rounded-lg py-2 px-3"
+                  className="w-full border border-gray-300 rounded-lg py-3 px-4 focus:ring-2 focus:outline-none focus:border-transparent"
+                  style={{ '--tw-ring-color': '#027e7e' } as any}
                   rows={2}
                   placeholder="Détails, comment utiliser..."
                 />
@@ -1150,14 +1136,15 @@ export default function ChildDossierPage() {
                 <button
                   type="button"
                   onClick={() => setShowPreferenceModal(false)}
-                  className="px-4 py-2 text-gray-700 bg-gray-100 rounded-lg hover:bg-gray-200"
+                  className="px-6 py-3 text-gray-700 bg-gray-100 rounded-xl hover:bg-gray-200 font-semibold"
                 >
                   Annuler
                 </button>
                 <button
                   type="submit"
                   disabled={saving}
-                  className="px-4 py-2 bg-primary-600 text-white rounded-lg hover:bg-primary-700 disabled:opacity-50"
+                  className="px-6 py-3 text-white rounded-xl hover:opacity-90 disabled:opacity-50 font-semibold shadow-md"
+                  style={{ backgroundColor: '#027e7e' }}
                 >
                   {saving ? 'Ajout...' : 'Ajouter'}
                 </button>
@@ -1166,6 +1153,9 @@ export default function ChildDossierPage() {
           </div>
         </div>
       )}
+
+      {/* Footer teal */}
+      <div className="mt-auto" style={{ backgroundColor: '#027e7e', height: '40px' }}></div>
     </div>
   );
 }

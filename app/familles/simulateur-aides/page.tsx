@@ -2,8 +2,7 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
-import Logo from '@/components/Logo';
-import MobileMenu from '@/components/MobileMenu';
+import PublicNavbar from '@/components/PublicNavbar';
 
 // Types
 interface SimulatorData {
@@ -277,33 +276,35 @@ export default function SimulateurAidesPage() {
     switch (step) {
       case 1:
         return (
-          <div className="space-y-6">
+          <div className="space-y-5">
             <div>
-              <h3 className="text-lg font-semibold text-gray-900 mb-4">Pour qui cherchez-vous des aides ?</h3>
-              <div className="grid grid-cols-2 gap-4">
+              <h3 className="text-base sm:text-lg font-semibold text-gray-900 mb-4">Pour qui cherchez-vous des aides ?</h3>
+              <div className="grid grid-cols-2 gap-3 sm:gap-4">
                 <button
                   onClick={() => updateData('beneficiaire', 'enfant')}
-                  className={`p-6 rounded-xl border-2 transition-all ${
+                  className={`p-4 sm:p-6 rounded-xl border-2 transition-all ${
                     data.beneficiaire === 'enfant'
-                      ? 'border-primary-500 bg-primary-50'
+                      ? 'border-gray-200'
                       : 'border-gray-200 hover:border-gray-300'
                   }`}
+                  style={data.beneficiaire === 'enfant' ? { borderColor: '#027e7e', backgroundColor: '#e6f4f4' } : {}}
                 >
-                  <span className="text-4xl mb-3 block">👶</span>
-                  <span className="font-medium text-gray-900">Un enfant</span>
-                  <span className="text-sm text-gray-500 block mt-1">Moins de 20 ans</span>
+                  <span className="text-3xl sm:text-4xl mb-2 sm:mb-3 block">👶</span>
+                  <span className="font-medium text-gray-900 text-sm sm:text-base">Un enfant</span>
+                  <span className="text-xs sm:text-sm text-gray-500 block mt-1">Moins de 20 ans</span>
                 </button>
                 <button
                   onClick={() => updateData('beneficiaire', 'adulte')}
-                  className={`p-6 rounded-xl border-2 transition-all ${
+                  className={`p-4 sm:p-6 rounded-xl border-2 transition-all ${
                     data.beneficiaire === 'adulte'
-                      ? 'border-primary-500 bg-primary-50'
+                      ? 'border-gray-200'
                       : 'border-gray-200 hover:border-gray-300'
                   }`}
+                  style={data.beneficiaire === 'adulte' ? { borderColor: '#027e7e', backgroundColor: '#e6f4f4' } : {}}
                 >
-                  <span className="text-4xl mb-3 block">🧑</span>
-                  <span className="font-medium text-gray-900">Un adulte</span>
-                  <span className="text-sm text-gray-500 block mt-1">20 ans et plus</span>
+                  <span className="text-3xl sm:text-4xl mb-2 sm:mb-3 block">🧑</span>
+                  <span className="font-medium text-gray-900 text-sm sm:text-base">Un adulte</span>
+                  <span className="text-xs sm:text-sm text-gray-500 block mt-1">20 ans et plus</span>
                 </button>
               </div>
             </div>
@@ -318,7 +319,8 @@ export default function SimulateurAidesPage() {
                 max="99"
                 value={data.age}
                 onChange={(e) => updateData('age', e.target.value)}
-                className="w-full border border-gray-300 rounded-lg py-3 px-4 focus:ring-primary-500 focus:border-primary-500"
+                className="w-full border border-gray-300 rounded-xl py-3 px-4 text-sm sm:text-base focus:outline-none focus:ring-2"
+                style={{ '--tw-ring-color': '#027e7e' } as any}
                 placeholder="Ex: 8"
               />
             </div>
@@ -327,9 +329,9 @@ export default function SimulateurAidesPage() {
 
       case 2:
         return (
-          <div className="space-y-6">
+          <div className="space-y-5">
             <div>
-              <h3 className="text-lg font-semibold text-gray-900 mb-4">Avez-vous un dossier MDPH ?</h3>
+              <h3 className="text-base sm:text-lg font-semibold text-gray-900 mb-4">Avez-vous un dossier MDPH ?</h3>
               <div className="space-y-3">
                 {[
                   { value: 'oui', label: 'Oui, j\'ai une reconnaissance MDPH', icon: '✅' },
@@ -339,14 +341,11 @@ export default function SimulateurAidesPage() {
                   <button
                     key={option.value}
                     onClick={() => updateData('hasMdph', option.value)}
-                    className={`w-full p-4 rounded-xl border-2 text-left flex items-center gap-3 transition-all ${
-                      data.hasMdph === option.value
-                        ? 'border-primary-500 bg-primary-50'
-                        : 'border-gray-200 hover:border-gray-300'
-                    }`}
+                    className="w-full p-3 sm:p-4 rounded-xl border-2 text-left flex items-center gap-3 transition-all border-gray-200 hover:border-gray-300"
+                    style={data.hasMdph === option.value ? { borderColor: '#027e7e', backgroundColor: '#e6f4f4' } : {}}
                   >
-                    <span className="text-2xl">{option.icon}</span>
-                    <span className="font-medium text-gray-900">{option.label}</span>
+                    <span className="text-xl sm:text-2xl">{option.icon}</span>
+                    <span className="font-medium text-gray-900 text-sm sm:text-base">{option.label}</span>
                   </button>
                 ))}
               </div>
@@ -367,11 +366,8 @@ export default function SimulateurAidesPage() {
                     <button
                       key={option.value}
                       onClick={() => updateData('tauxIncapacite', option.value)}
-                      className={`w-full p-3 rounded-lg border-2 text-left transition-all ${
-                        data.tauxIncapacite === option.value
-                          ? 'border-primary-500 bg-primary-50'
-                          : 'border-gray-200 hover:border-gray-300'
-                      }`}
+                      className="w-full p-3 rounded-xl border-2 text-left transition-all border-gray-200 hover:border-gray-300 text-sm sm:text-base"
+                      style={data.tauxIncapacite === option.value ? { borderColor: '#027e7e', backgroundColor: '#e6f4f4' } : {}}
                     >
                       {option.label}
                     </button>
@@ -385,9 +381,9 @@ export default function SimulateurAidesPage() {
                 <label className="block text-sm font-medium text-gray-700 mb-2">
                   Avez-vous une restriction substantielle d'accès à l'emploi ?
                 </label>
-                <div className="bg-gray-50 border border-gray-200 rounded-lg p-3 mb-3 text-sm text-gray-600">
+                <div className="rounded-xl p-3 mb-3 text-sm text-gray-600" style={{ backgroundColor: '#e6f4f4', border: '1px solid #c9eaea' }}>
                   <div className="flex items-start gap-2">
-                    <span className="text-blue-500 font-bold">ℹ️</span>
+                    <span style={{ color: '#027e7e' }}>ℹ️</span>
                     <p>
                       <strong>Restriction substantielle d'accès à l'emploi :</strong> cela signifie que votre handicap
                       rend très difficile la recherche ou le maintien d'un emploi, même avec des aménagements.
@@ -398,21 +394,15 @@ export default function SimulateurAidesPage() {
                 <div className="grid grid-cols-2 gap-3">
                   <button
                     onClick={() => updateData('hasRestrictionEmploi', 'oui')}
-                    className={`p-3 rounded-lg border-2 transition-all ${
-                      data.hasRestrictionEmploi === 'oui'
-                        ? 'border-primary-500 bg-primary-50'
-                        : 'border-gray-200 hover:border-gray-300'
-                    }`}
+                    className="p-3 rounded-xl border-2 transition-all border-gray-200 hover:border-gray-300 text-sm sm:text-base"
+                    style={data.hasRestrictionEmploi === 'oui' ? { borderColor: '#027e7e', backgroundColor: '#e6f4f4' } : {}}
                   >
                     Oui
                   </button>
                   <button
                     onClick={() => updateData('hasRestrictionEmploi', 'non')}
-                    className={`p-3 rounded-lg border-2 transition-all ${
-                      data.hasRestrictionEmploi === 'non'
-                        ? 'border-primary-500 bg-primary-50'
-                        : 'border-gray-200 hover:border-gray-300'
-                    }`}
+                    className="p-3 rounded-xl border-2 transition-all border-gray-200 hover:border-gray-300 text-sm sm:text-base"
+                    style={data.hasRestrictionEmploi === 'non' ? { borderColor: '#027e7e', backgroundColor: '#e6f4f4' } : {}}
                   >
                     Non
                   </button>
@@ -421,8 +411,8 @@ export default function SimulateurAidesPage() {
             )}
 
             {data.hasMdph === 'non' && (
-              <div className="bg-blue-50 border border-blue-200 rounded-xl p-4">
-                <p className="text-blue-800 text-sm">
+              <div className="rounded-xl p-4" style={{ backgroundColor: '#e6f4f4', border: '1px solid #c9eaea' }}>
+                <p className="text-sm" style={{ color: '#027e7e' }}>
                   <strong>Conseil :</strong> Pour bénéficier de la plupart des aides (AEEH, AAH, PCH),
                   vous devez d'abord constituer un dossier MDPH. C'est gratuit et c'est la première étape !
                 </p>
@@ -430,10 +420,11 @@ export default function SimulateurAidesPage() {
                   href="https://www.mdphenligne.cnsa.fr/"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-flex items-center gap-2 mt-3 text-blue-600 font-medium hover:underline"
+                  className="inline-flex items-center gap-2 mt-3 font-medium hover:underline text-sm"
+                  style={{ color: '#027e7e' }}
                 >
                   Commencer mon dossier MDPH
-                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
                   </svg>
                 </a>
@@ -444,13 +435,13 @@ export default function SimulateurAidesPage() {
 
       case 3:
         return (
-          <div className="space-y-6">
+          <div className="space-y-5">
             <div>
-              <h3 className="text-lg font-semibold text-gray-900 mb-4">
+              <h3 className="text-base sm:text-lg font-semibold text-gray-900 mb-2">
                 Quel type d'accompagnement recherchez-vous ?
               </h3>
-              <p className="text-sm text-gray-500 mb-4">Sélectionnez tous ceux qui s'appliquent</p>
-              <div className="grid grid-cols-2 gap-3">
+              <p className="text-xs sm:text-sm text-gray-500 mb-4">Sélectionnez tous ceux qui s'appliquent</p>
+              <div className="grid grid-cols-2 gap-2 sm:gap-3">
                 {[
                   { value: 'educateur', label: 'Éducateur spécialisé', icon: '👨‍🏫' },
                   { value: 'psychologue', label: 'Psychologue', icon: '🧠' },
@@ -462,14 +453,11 @@ export default function SimulateurAidesPage() {
                   <button
                     key={option.value}
                     onClick={() => toggleAccompagnement(option.value)}
-                    className={`p-4 rounded-xl border-2 text-left transition-all ${
-                      data.typeAccompagnement.includes(option.value)
-                        ? 'border-primary-500 bg-primary-50'
-                        : 'border-gray-200 hover:border-gray-300'
-                    }`}
+                    className="p-3 sm:p-4 rounded-xl border-2 text-left transition-all border-gray-200 hover:border-gray-300"
+                    style={data.typeAccompagnement.includes(option.value) ? { borderColor: '#027e7e', backgroundColor: '#e6f4f4' } : {}}
                   >
-                    <span className="text-2xl block mb-1">{option.icon}</span>
-                    <span className="text-sm font-medium text-gray-900">{option.label}</span>
+                    <span className="text-xl sm:text-2xl block mb-1">{option.icon}</span>
+                    <span className="text-xs sm:text-sm font-medium text-gray-900">{option.label}</span>
                   </button>
                 ))}
               </div>
@@ -485,7 +473,8 @@ export default function SimulateurAidesPage() {
                 max="40"
                 value={data.frequenceHebdo}
                 onChange={(e) => updateData('frequenceHebdo', e.target.value)}
-                className="w-full border border-gray-300 rounded-lg py-3 px-4 focus:ring-primary-500 focus:border-primary-500"
+                className="w-full border border-gray-300 rounded-xl py-3 px-4 text-sm sm:text-base focus:outline-none focus:ring-2"
+                style={{ '--tw-ring-color': '#027e7e' } as any}
                 placeholder="Ex: 4"
               />
             </div>
@@ -499,7 +488,8 @@ export default function SimulateurAidesPage() {
                 min="0"
                 value={data.coutMensuelEstime}
                 onChange={(e) => updateData('coutMensuelEstime', e.target.value)}
-                className="w-full border border-gray-300 rounded-lg py-3 px-4 focus:ring-primary-500 focus:border-primary-500"
+                className="w-full border border-gray-300 rounded-xl py-3 px-4 text-sm sm:text-base focus:outline-none focus:ring-2"
+                style={{ '--tw-ring-color': '#027e7e' } as any}
                 placeholder="Ex: 400"
               />
             </div>
@@ -508,8 +498,8 @@ export default function SimulateurAidesPage() {
 
       case 4:
         return (
-          <div className="space-y-6">
-            <div className="bg-gray-50 border border-gray-200 rounded-xl p-4 mb-4">
+          <div className="space-y-5">
+            <div className="rounded-xl p-4 mb-2" style={{ backgroundColor: '#e6f4f4', border: '1px solid #c9eaea' }}>
               <p className="text-sm text-gray-600">
                 <strong>Optionnel :</strong> Ces informations permettent d'affiner le calcul de l'AAH.
                 Vous pouvez passer cette étape.
@@ -525,7 +515,8 @@ export default function SimulateurAidesPage() {
                 min="0"
                 value={data.revenusFoyer}
                 onChange={(e) => updateData('revenusFoyer', e.target.value)}
-                className="w-full border border-gray-300 rounded-lg py-3 px-4 focus:ring-primary-500 focus:border-primary-500"
+                className="w-full border border-gray-300 rounded-xl py-3 px-4 text-sm sm:text-base focus:outline-none focus:ring-2"
+                style={{ '--tw-ring-color': '#027e7e' } as any}
                 placeholder="Ex: 25000"
               />
             </div>
@@ -537,21 +528,15 @@ export default function SimulateurAidesPage() {
               <div className="grid grid-cols-2 gap-3">
                 <button
                   onClick={() => updateData('situationFamiliale', 'seul')}
-                  className={`p-3 rounded-lg border-2 transition-all ${
-                    data.situationFamiliale === 'seul'
-                      ? 'border-primary-500 bg-primary-50'
-                      : 'border-gray-200 hover:border-gray-300'
-                  }`}
+                  className="p-3 rounded-xl border-2 transition-all border-gray-200 hover:border-gray-300 text-sm sm:text-base"
+                  style={data.situationFamiliale === 'seul' ? { borderColor: '#027e7e', backgroundColor: '#e6f4f4' } : {}}
                 >
                   Seul(e)
                 </button>
                 <button
                   onClick={() => updateData('situationFamiliale', 'couple')}
-                  className={`p-3 rounded-lg border-2 transition-all ${
-                    data.situationFamiliale === 'couple'
-                      ? 'border-primary-500 bg-primary-50'
-                      : 'border-gray-200 hover:border-gray-300'
-                  }`}
+                  className="p-3 rounded-xl border-2 transition-all border-gray-200 hover:border-gray-300 text-sm sm:text-base"
+                  style={data.situationFamiliale === 'couple' ? { borderColor: '#027e7e', backgroundColor: '#e6f4f4' } : {}}
                 >
                   En couple
                 </button>
@@ -568,7 +553,8 @@ export default function SimulateurAidesPage() {
                 max="10"
                 value={data.nombreEnfants}
                 onChange={(e) => updateData('nombreEnfants', e.target.value)}
-                className="w-full border border-gray-300 rounded-lg py-3 px-4 focus:ring-primary-500 focus:border-primary-500"
+                className="w-full border border-gray-300 rounded-xl py-3 px-4 text-sm sm:text-base focus:outline-none focus:ring-2"
+                style={{ '--tw-ring-color': '#027e7e' } as any}
                 placeholder="Ex: 2"
               />
             </div>
@@ -577,12 +563,12 @@ export default function SimulateurAidesPage() {
 
       case 5:
         return (
-          <div className="space-y-6">
+          <div className="space-y-5">
             <div>
-              <h3 className="text-lg font-semibold text-gray-900 mb-4">
+              <h3 className="text-base sm:text-lg font-semibold text-gray-900 mb-2">
                 Votre éducateur a-t-il l'agrément Services à la Personne (SAP) ?
               </h3>
-              <p className="text-sm text-gray-500 mb-4">
+              <p className="text-xs sm:text-sm text-gray-500 mb-4">
                 L'agrément SAP permet de bénéficier du crédit d'impôt de 50%
               </p>
               <div className="space-y-3">
@@ -594,24 +580,21 @@ export default function SimulateurAidesPage() {
                   <button
                     key={option.value}
                     onClick={() => updateData('educateurSap', option.value)}
-                    className={`w-full p-4 rounded-xl border-2 text-left flex items-center gap-3 transition-all ${
-                      data.educateurSap === option.value
-                        ? 'border-primary-500 bg-primary-50'
-                        : 'border-gray-200 hover:border-gray-300'
-                    }`}
+                    className="w-full p-3 sm:p-4 rounded-xl border-2 text-left flex items-center gap-3 transition-all border-gray-200 hover:border-gray-300"
+                    style={data.educateurSap === option.value ? { borderColor: '#027e7e', backgroundColor: '#e6f4f4' } : {}}
                   >
-                    <span className="text-2xl">{option.icon}</span>
-                    <span className="font-medium text-gray-900">{option.label}</span>
+                    <span className="text-xl sm:text-2xl">{option.icon}</span>
+                    <span className="font-medium text-gray-900 text-sm sm:text-base">{option.label}</span>
                   </button>
                 ))}
               </div>
             </div>
 
             {data.educateurSap === 'ne_sait_pas' && (
-              <div className="bg-yellow-50 border border-yellow-200 rounded-xl p-4">
-                <p className="text-yellow-800 text-sm">
+              <div className="rounded-xl p-4" style={{ backgroundColor: '#fff7e6', border: '1px solid #ffd699' }}>
+                <p className="text-sm" style={{ color: '#b36b00' }}>
                   <strong>Astuce :</strong> Demandez à votre éducateur s'il dispose de l'agrément SAP.
-                  Sur Autisme Connect, les éducateurs agréés SAP affichent le badge "Éligible crédit d'impôt 50%".
+                  Sur neurocare, les éducateurs agréés SAP affichent le badge "Éligible crédit d'impôt 50%".
                 </p>
               </div>
             )}
@@ -630,23 +613,23 @@ export default function SimulateurAidesPage() {
     const nonEligibleAides = results.filter(a => !a.eligible);
 
     return (
-      <div className="space-y-8">
+      <div className="space-y-6">
         <div className="text-center">
-          <h2 className="text-2xl font-bold text-gray-900 mb-2">Vos résultats personnalisés</h2>
-          <p className="text-gray-600">
+          <h2 className="text-lg sm:text-xl font-bold text-gray-900 mb-2">Vos résultats personnalisés</h2>
+          <p className="text-sm text-gray-500">
             Basé sur vos réponses, voici les aides auxquelles vous pourriez avoir droit
           </p>
         </div>
 
         {/* Résumé */}
-        <div className="bg-gradient-to-r from-primary-500 to-purple-600 rounded-2xl p-6 text-white">
+        <div className="rounded-xl p-4 sm:p-5 text-white" style={{ background: 'linear-gradient(135deg, #027e7e 0%, #3a9e9e 100%)' }}>
           <div className="flex items-center gap-4">
-            <div className="w-16 h-16 bg-white/20 rounded-full flex items-center justify-center">
-              <span className="text-3xl">💰</span>
+            <div className="w-14 h-14 sm:w-16 sm:h-16 bg-white/20 rounded-full flex items-center justify-center">
+              <span className="text-2xl sm:text-3xl">💰</span>
             </div>
             <div>
-              <p className="text-white/80 text-sm">Aides potentielles identifiées</p>
-              <p className="text-3xl font-bold">{eligibleAides.length} aide{eligibleAides.length > 1 ? 's' : ''}</p>
+              <p className="text-white/80 text-xs sm:text-sm">Aides potentielles identifiées</p>
+              <p className="text-2xl sm:text-3xl font-bold">{eligibleAides.length} aide{eligibleAides.length > 1 ? 's' : ''}</p>
             </div>
           </div>
         </div>
@@ -654,30 +637,30 @@ export default function SimulateurAidesPage() {
         {/* Aides éligibles */}
         {eligibleAides.length > 0 && (
           <div className="space-y-4">
-            <h3 className="text-lg font-semibold text-gray-900 flex items-center gap-2">
+            <h3 className="text-base sm:text-lg font-semibold text-gray-900 flex items-center gap-2">
               <span className="text-green-500">✅</span> Vous êtes potentiellement éligible
             </h3>
             {eligibleAides.map((aide, index) => (
-              <div key={index} className={`bg-white rounded-xl border-2 border-${aide.couleur}-200 overflow-hidden shadow-sm`}>
-                <div className={`bg-${aide.couleur}-50 px-6 py-4 border-b border-${aide.couleur}-200`}>
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-3">
-                      <span className="text-2xl">{aide.icone}</span>
-                      <h4 className="font-bold text-gray-900">{aide.nom}</h4>
+              <div key={index} className="bg-white rounded-xl border border-gray-200 overflow-hidden shadow-sm">
+                <div className="px-4 sm:px-5 py-3 sm:py-4 border-b border-gray-100" style={{ backgroundColor: '#e6f4f4' }}>
+                  <div className="flex items-start sm:items-center justify-between gap-2">
+                    <div className="flex items-center gap-2 sm:gap-3 min-w-0">
+                      <span className="text-xl sm:text-2xl flex-shrink-0">{aide.icone}</span>
+                      <h4 className="font-bold text-gray-900 text-sm sm:text-base">{aide.nom}</h4>
                     </div>
                     {aide.montantExact && (
-                      <div className="text-right">
-                        <p className="text-sm text-gray-500">Estimation</p>
-                        <p className="text-xl font-bold text-green-600">{aide.montantExact.toLocaleString()}€/mois</p>
+                      <div className="text-right flex-shrink-0">
+                        <p className="text-xs text-gray-500">Estimation</p>
+                        <p className="text-base sm:text-lg font-bold" style={{ color: '#027e7e' }}>{aide.montantExact.toLocaleString()}€/mois</p>
                       </div>
                     )}
                   </div>
                 </div>
-                <div className="p-6 space-y-4">
-                  <p className="text-gray-600">{aide.description}</p>
+                <div className="p-4 sm:p-5 space-y-3 sm:space-y-4">
+                  <p className="text-gray-600 text-sm">{aide.description}</p>
 
                   {aide.important && (
-                    <div className={`bg-${aide.couleur}-50 border border-${aide.couleur}-200 rounded-lg p-3`}>
+                    <div className="rounded-lg p-3" style={{ backgroundColor: '#e6f4f4', border: '1px solid #c9eaea' }}>
                       <p className="text-sm font-medium text-gray-800">{aide.important}</p>
                     </div>
                   )}
@@ -686,8 +669,8 @@ export default function SimulateurAidesPage() {
                     <p className="text-sm font-medium text-gray-700 mb-2">Conditions :</p>
                     <ul className="space-y-1">
                       {aide.conditions.map((condition, i) => (
-                        <li key={i} className="text-sm text-gray-600 flex items-start gap-2">
-                          <span className="text-green-500 mt-0.5">•</span>
+                        <li key={i} className="text-xs sm:text-sm text-gray-600 flex items-start gap-2">
+                          <span style={{ color: '#027e7e' }} className="mt-0.5">•</span>
                           {condition}
                         </li>
                       ))}
@@ -698,10 +681,11 @@ export default function SimulateurAidesPage() {
                     href={aide.lienFormulaire}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="inline-flex items-center gap-2 px-4 py-2 bg-primary-600 text-white rounded-lg hover:bg-primary-700 transition"
+                    className="inline-flex items-center gap-2 px-4 py-2.5 text-white rounded-xl hover:opacity-90 transition text-sm font-medium"
+                    style={{ backgroundColor: '#027e7e' }}
                   >
                     {aide.lienTexte}
-                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
                     </svg>
                   </a>
@@ -713,17 +697,17 @@ export default function SimulateurAidesPage() {
 
         {/* Aides non éligibles */}
         {nonEligibleAides.length > 0 && (
-          <div className="space-y-4">
-            <h3 className="text-lg font-semibold text-gray-900 flex items-center gap-2">
+          <div className="space-y-3">
+            <h3 className="text-base sm:text-lg font-semibold text-gray-900 flex items-center gap-2">
               <span className="text-gray-400">ℹ️</span> Autres aides (non éligible actuellement)
             </h3>
             {nonEligibleAides.map((aide, index) => (
-              <div key={index} className="bg-gray-50 rounded-xl border border-gray-200 p-4">
-                <div className="flex items-center gap-3">
-                  <span className="text-xl opacity-50">{aide.icone}</span>
-                  <div>
-                    <h4 className="font-medium text-gray-700">{aide.nom}</h4>
-                    <p className="text-sm text-gray-500">{aide.description}</p>
+              <div key={index} className="bg-gray-50 rounded-xl border border-gray-200 p-3 sm:p-4">
+                <div className="flex items-start gap-3">
+                  <span className="text-lg sm:text-xl opacity-50 flex-shrink-0">{aide.icone}</span>
+                  <div className="min-w-0">
+                    <h4 className="font-medium text-gray-700 text-sm sm:text-base">{aide.nom}</h4>
+                    <p className="text-xs sm:text-sm text-gray-500">{aide.description}</p>
                   </div>
                 </div>
               </div>
@@ -732,24 +716,25 @@ export default function SimulateurAidesPage() {
         )}
 
         {/* Avertissement */}
-        <div className="bg-amber-50 border border-amber-200 rounded-xl p-4">
-          <p className="text-amber-800 text-sm">
+        <div className="rounded-xl p-4" style={{ backgroundColor: '#fff7e6', border: '1px solid #ffd699' }}>
+          <p className="text-sm" style={{ color: '#b36b00' }}>
             <strong>⚠️ Information importante :</strong> Ces résultats sont des estimations basées sur vos déclarations.
             Les montants réels dépendent de l'évaluation officielle par les organismes compétents (MDPH, CAF, etc.).
           </p>
         </div>
 
         {/* Actions */}
-        <div className="flex flex-col sm:flex-row gap-4">
+        <div className="flex flex-col sm:flex-row gap-3">
           <button
             onClick={resetSimulator}
-            className="flex-1 px-6 py-3 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition font-medium"
+            className="flex-1 px-4 py-3 border border-gray-300 text-gray-700 rounded-xl hover:bg-gray-50 transition font-medium text-sm"
           >
             Recommencer la simulation
           </button>
           <Link
             href="/familles/aides-financieres"
-            className="flex-1 px-6 py-3 bg-primary-600 text-white rounded-lg hover:bg-primary-700 transition font-medium text-center"
+            className="flex-1 px-4 py-3 text-white rounded-xl hover:opacity-90 transition font-medium text-center text-sm"
+            style={{ backgroundColor: '#f0879f' }}
           >
             Voir le détail des aides
           </Link>
@@ -759,51 +744,38 @@ export default function SimulateurAidesPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-primary-50 via-white to-blue-50">
+    <div className="min-h-screen min-h-[100dvh] flex flex-col" style={{ backgroundColor: '#fdf9f4' }}>
       {/* Navigation */}
-      <nav className="bg-white shadow-sm border-b border-gray-200">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between h-16 items-center">
-            <Logo />
-            <div className="md:hidden">
-              <MobileMenu />
-            </div>
-            <div className="hidden md:flex items-center gap-4">
-              <Link href="/familles/aides-financieres" className="text-gray-700 hover:text-primary-600 px-3 py-2 font-medium">
-                Retour aux aides
-              </Link>
-            </div>
-          </div>
-        </div>
-      </nav>
+      <div className="sticky top-0 z-40">
+        <PublicNavbar />
+      </div>
 
-      <div className="max-w-2xl mx-auto px-4 py-8">
-        {/* Header */}
-        <div className="text-center mb-8">
-          <div className="inline-flex items-center gap-2 bg-white shadow-lg text-primary-700 px-4 py-2 rounded-full text-sm font-bold mb-4 border border-primary-200">
-            <span>🧮</span>
-            <span>Simulateur d'aides</span>
+      <div className="flex-1 max-w-2xl mx-auto px-4 py-6 sm:py-8 w-full">
+        {/* Header avec icône */}
+        <div className="text-center mb-6 sm:mb-8">
+          <div className="w-16 h-16 mx-auto mb-4 rounded-full flex items-center justify-center p-1" style={{ backgroundColor: '#027e7e' }}>
+            <img src="/images/icons/7.svg" alt="" className="w-full h-full" />
           </div>
-          <h1 className="text-3xl font-bold text-gray-900 mb-2">
-            Estimez vos aides financières
+          <h1 className="text-xl sm:text-2xl font-bold text-gray-900 mb-2">
+            Simulateur d'aides financières
           </h1>
-          <p className="text-gray-600">
+          <p className="text-sm text-gray-500">
             Répondez à quelques questions pour découvrir les aides auxquelles vous avez droit
           </p>
         </div>
 
         {!showResults ? (
-          <div className="bg-white rounded-2xl shadow-xl p-6 sm:p-8">
+          <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-4 sm:p-6">
             {/* Progress bar */}
-            <div className="mb-8">
+            <div className="mb-6 sm:mb-8">
               <div className="flex justify-between text-sm text-gray-500 mb-2">
                 <span>Étape {step} sur {totalSteps}</span>
                 <span>{Math.round((step / totalSteps) * 100)}%</span>
               </div>
               <div className="h-2 bg-gray-200 rounded-full overflow-hidden">
                 <div
-                  className="h-full bg-gradient-to-r from-primary-500 to-purple-500 transition-all duration-300"
-                  style={{ width: `${(step / totalSteps) * 100}%` }}
+                  className="h-full transition-all duration-300"
+                  style={{ width: `${(step / totalSteps) * 100}%`, background: 'linear-gradient(to right, #027e7e, #3a9e9e)' }}
                 />
               </div>
             </div>
@@ -812,11 +784,11 @@ export default function SimulateurAidesPage() {
             {renderStep()}
 
             {/* Navigation */}
-            <div className="flex justify-between mt-8 pt-6 border-t border-gray-100">
+            <div className="flex justify-between mt-6 sm:mt-8 pt-4 sm:pt-6 border-t border-gray-100">
               <button
                 onClick={() => setStep(s => s - 1)}
                 disabled={step === 1}
-                className="px-6 py-2 text-gray-600 hover:text-gray-900 disabled:opacity-50 disabled:cursor-not-allowed transition"
+                className="px-4 sm:px-6 py-2.5 text-gray-600 hover:text-gray-900 disabled:opacity-50 disabled:cursor-not-allowed transition text-sm sm:text-base"
               >
                 Précédent
               </button>
@@ -825,7 +797,8 @@ export default function SimulateurAidesPage() {
                 <button
                   onClick={() => setStep(s => s + 1)}
                   disabled={!canProceed()}
-                  className="px-6 py-2 bg-primary-600 text-white rounded-lg hover:bg-primary-700 disabled:opacity-50 disabled:cursor-not-allowed transition"
+                  className="px-4 sm:px-6 py-2.5 text-white rounded-xl hover:opacity-90 disabled:opacity-50 disabled:cursor-not-allowed transition text-sm sm:text-base font-medium"
+                  style={{ backgroundColor: '#027e7e' }}
                 >
                   Suivant
                 </button>
@@ -833,10 +806,11 @@ export default function SimulateurAidesPage() {
                 <button
                   onClick={handleSubmit}
                   disabled={!canProceed()}
-                  className="px-6 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 disabled:opacity-50 disabled:cursor-not-allowed transition flex items-center gap-2"
+                  className="px-4 sm:px-6 py-2.5 text-white rounded-xl hover:opacity-90 disabled:opacity-50 disabled:cursor-not-allowed transition flex items-center gap-2 text-sm sm:text-base font-medium"
+                  style={{ backgroundColor: '#f0879f' }}
                 >
                   <span>Voir mes résultats</span>
-                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <svg className="w-4 h-4 sm:w-5 sm:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
                   </svg>
                 </button>
@@ -844,11 +818,14 @@ export default function SimulateurAidesPage() {
             </div>
           </div>
         ) : (
-          <div className="bg-white rounded-2xl shadow-xl p-6 sm:p-8">
+          <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-4 sm:p-6">
             {renderResults()}
           </div>
         )}
       </div>
+
+      {/* Footer teal */}
+      <div className="mt-auto" style={{ backgroundColor: '#027e7e', height: '40px' }}></div>
     </div>
   );
 }

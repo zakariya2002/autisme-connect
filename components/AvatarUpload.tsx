@@ -188,7 +188,8 @@ export default function AvatarUpload({
               type="button"
               onClick={() => fileInputRef.current?.click()}
               disabled={uploading}
-              className="px-4 py-2 bg-primary-600 text-white rounded-md hover:bg-primary-700 disabled:opacity-50 disabled:cursor-not-allowed text-sm font-medium"
+              className="px-4 py-2 text-white rounded-lg disabled:opacity-50 disabled:cursor-not-allowed text-sm font-medium transition hover:opacity-90"
+              style={{ backgroundColor: '#f0879f' }}
             >
               {uploading ? 'Upload en cours...' : avatarUrl ? 'Changer la photo' : 'Ajouter une photo'}
             </button>
@@ -198,7 +199,7 @@ export default function AvatarUpload({
                 type="button"
                 onClick={handleRemoveAvatar}
                 disabled={uploading}
-                className="px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 disabled:opacity-50 disabled:cursor-not-allowed text-sm font-medium"
+                className="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 disabled:opacity-50 disabled:cursor-not-allowed text-sm font-medium transition"
               >
                 Supprimer
               </button>

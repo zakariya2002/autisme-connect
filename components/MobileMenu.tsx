@@ -138,6 +138,7 @@ export default function MobileMenu() {
               <Link
                 href="/about"
                 onClick={closeMenu}
+                aria-current={pathname === '/about' ? 'page' : undefined}
                 className={`flex items-center gap-3 px-3 py-2.5 rounded-xl font-medium transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-violet-500 focus:ring-offset-2 ${
                   pathname === '/about'
                     ? 'bg-gradient-to-r from-violet-600 to-blue-500 text-white shadow-md'
@@ -157,6 +158,7 @@ export default function MobileMenu() {
               <Link
                 href="/search"
                 onClick={closeMenu}
+                aria-current={pathname === '/search' ? 'page' : undefined}
                 className={`flex items-center gap-3 px-3 py-2.5 rounded-xl font-medium transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-violet-500 focus:ring-offset-2 ${
                   pathname === '/search'
                     ? 'bg-gradient-to-r from-violet-600 to-blue-500 text-white shadow-md'
@@ -176,6 +178,7 @@ export default function MobileMenu() {
               <Link
                 href="/pro"
                 onClick={closeMenu}
+                aria-current={pathname?.startsWith('/pro') ? 'page' : undefined}
                 className={`flex items-center gap-3 px-3 py-2.5 rounded-xl font-medium transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-teal-500 focus:ring-offset-2 ${
                   pathname?.startsWith('/pro')
                     ? 'bg-gradient-to-r from-emerald-500 via-teal-500 to-cyan-500 text-white shadow-md'
@@ -195,6 +198,7 @@ export default function MobileMenu() {
               <Link
                 href="/familles/aides-financieres"
                 onClick={closeMenu}
+                aria-current={pathname === '/familles/aides-financieres' ? 'page' : undefined}
                 className={`flex items-center gap-3 px-3 py-2.5 rounded-xl font-medium transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-violet-500 focus:ring-offset-2 ${
                   pathname === '/familles/aides-financieres'
                     ? 'bg-gradient-to-r from-violet-600 to-blue-500 text-white shadow-md'
@@ -214,6 +218,7 @@ export default function MobileMenu() {
               <Link
                 href="/contact"
                 onClick={closeMenu}
+                aria-current={pathname === '/contact' ? 'page' : undefined}
                 className={`flex items-center gap-3 px-3 py-2.5 rounded-xl font-medium transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-violet-500 focus:ring-offset-2 ${
                   pathname === '/contact'
                     ? 'bg-gradient-to-r from-violet-600 to-blue-500 text-white shadow-md'

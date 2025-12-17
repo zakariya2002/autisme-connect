@@ -29,6 +29,7 @@ export default function FamilyProfilePage() {
   const [profileData, setProfileData] = useState({
     first_name: '',
     last_name: '',
+    gender: '',
     phone: '',
     location: '',
     relationship: 'parent',
@@ -68,6 +69,7 @@ export default function FamilyProfilePage() {
         setProfileData({
           first_name: profile.first_name || '',
           last_name: profile.last_name || '',
+          gender: profile.gender || '',
           phone: profile.phone || '',
           location: profile.location || '',
           relationship: profile.relationship || 'parent',
@@ -109,6 +111,7 @@ export default function FamilyProfilePage() {
         .update({
           first_name: profileData.first_name,
           last_name: profileData.last_name,
+          gender: profileData.gender || null,
           phone: profileData.phone || null,
           location: profileData.location,
           relationship: profileData.relationship,
@@ -176,9 +179,9 @@ export default function FamilyProfilePage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+      <div className="min-h-screen flex items-center justify-center" style={{ backgroundColor: '#fdf9f4' }}>
         <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary-600 mx-auto"></div>
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 mx-auto" style={{ borderColor: '#027e7e' }}></div>
           <p className="mt-4 text-gray-600">Chargement...</p>
         </div>
       </div>
@@ -224,30 +227,62 @@ export default function FamilyProfilePage() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      <FamilyNavbar profile={profile} familyId={familyId} userId={userId} />
+    <div className="min-h-screen" style={{ backgroundColor: '#fdf9f4' }}>
+      {/* Navbar teal */}
+      <div className="sticky top-0 z-40">
+        <FamilyNavbar profile={profile} familyId={familyId} userId={userId} />
+      </div>
+
+      {/* Bandeau de bienvenue */}
+      <div className="px-4 py-6 flex items-center gap-4" style={{ backgroundColor: '#05a5a5' }}>
+        <div className="w-14 h-14 rounded-full bg-white flex items-center justify-center overflow-hidden flex-shrink-0 shadow-md">
+          {profile?.avatar_url ? (
+            <img src={profile.avatar_url} alt="" className="w-full h-full object-cover" />
+          ) : (
+            <img
+              src={profile?.gender === 'male' ? '/images/icons/avatar-male.svg' : profile?.gender === 'female' ? '/images/icons/avatar-female.svg' : ((profile?.id?.charCodeAt(0) || 0) % 2 === 0 ? '/images/icons/avatar-male.svg' : '/images/icons/avatar-female.svg')}
+              alt=""
+              className="w-full h-full object-cover"
+            />
+          )}
+        </div>
+        <div>
+          <h1 className="text-xl font-bold text-white">Mon profil</h1>
+          <p className="text-white/80 text-sm">Gérez vos informations et préférences</p>
+        </div>
+      </div>
 
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <div className="mb-8">
-          <h1 className="text-3xl font-bold text-gray-900">Mon profil</h1>
-          <p className="text-gray-600 mt-1">Gérez vos informations et préférences</p>
-        </div>
 
         {error && (
-          <div className="mb-4 bg-red-50 border border-red-200 text-red-600 px-4 py-3 rounded">
+          <div
+            className="mb-4 bg-red-50 border border-red-200 text-red-600 px-4 py-3 rounded"
+            role="alert"
+            aria-live="assertive"
+          >
             {error}
           </div>
         )}
 
         {success && (
-          <div className="mb-4 bg-green-50 border border-green-200 text-green-600 px-4 py-3 rounded">
+          <div
+            className="mb-4 bg-green-50 border border-green-200 text-green-600 px-4 py-3 rounded"
+            role="alert"
+            aria-live="polite"
+          >
             {success}
           </div>
         )}
 
-        <div className="bg-white rounded-lg shadow">
-          <div className="px-6 py-4 border-b border-gray-200">
-            <h2 className="text-lg font-semibold text-gray-900">Informations personnelles</h2>
+        <div className="bg-white rounded-2xl shadow-sm border border-gray-100">
+          <div className="px-6 py-4 border-b border-gray-100">
+            <h2 className="text-lg font-bold text-gray-900">Informations personnelles</h2>
+            <p className="text-sm text-gray-600 mt-2">
+              <svg className="w-4 h-4 inline mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+              </svg>
+              Vos données personnelles sont protégées conformément au RGPD. Toute modification est enregistrée de manière sécurisée.
+            </p>
           </div>
           <form onSubmit={handleSubmit} className="p-6 space-y-6">
             {/* Photo de profil */}
@@ -269,9 +304,11 @@ export default function FamilyProfilePage() {
                 <input
                   type="text"
                   required
+                  aria-required="true"
                   value={profileData.first_name}
                   onChange={(e) => setProfileData({ ...profileData, first_name: e.target.value })}
-                  className="w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:ring-primary-500 focus:border-primary-500"
+                  className="w-full border border-gray-300 rounded-lg shadow-sm py-3 px-4 focus:ring-2 focus:outline-none focus:border-transparent"
+                  style={{ '--tw-ring-color': '#027e7e' } as any}
                 />
               </div>
               <div>
@@ -279,21 +316,39 @@ export default function FamilyProfilePage() {
                 <input
                   type="text"
                   required
+                  aria-required="true"
                   value={profileData.last_name}
                   onChange={(e) => setProfileData({ ...profileData, last_name: e.target.value })}
-                  className="w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:ring-primary-500 focus:border-primary-500"
+                  className="w-full border border-gray-300 rounded-lg shadow-sm py-3 px-4 focus:ring-2 focus:outline-none focus:border-transparent"
+                  style={{ '--tw-ring-color': '#027e7e' } as any}
                 />
               </div>
             </div>
 
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">Téléphone</label>
-              <input
-                type="tel"
-                value={profileData.phone}
-                onChange={(e) => setProfileData({ ...profileData, phone: e.target.value })}
-                className="w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:ring-primary-500 focus:border-primary-500"
-              />
+            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">Sexe</label>
+                <select
+                  value={profileData.gender}
+                  onChange={(e) => setProfileData({ ...profileData, gender: e.target.value })}
+                  className="w-full border border-gray-300 rounded-lg shadow-sm py-3 px-4 focus:ring-2 focus:outline-none focus:border-transparent"
+                  style={{ '--tw-ring-color': '#027e7e' } as any}
+                >
+                  <option value="">Non spécifié</option>
+                  <option value="male">Homme</option>
+                  <option value="female">Femme</option>
+                </select>
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">Téléphone</label>
+                <input
+                  type="tel"
+                  value={profileData.phone}
+                  onChange={(e) => setProfileData({ ...profileData, phone: e.target.value })}
+                  className="w-full border border-gray-300 rounded-lg shadow-sm py-3 px-4 focus:ring-2 focus:outline-none focus:border-transparent"
+                  style={{ '--tw-ring-color': '#027e7e' } as any}
+                />
+              </div>
             </div>
 
             {/* Paramètres de confidentialité */}
@@ -308,7 +363,8 @@ export default function FamilyProfilePage() {
                     type="checkbox"
                     checked={profileData.show_phone}
                     onChange={(e) => setProfileData({ ...profileData, show_phone: e.target.checked })}
-                    className="h-4 w-4 text-primary-600 focus:ring-primary-500 border-gray-300 rounded mt-0.5"
+                    className="h-4 w-4 border-gray-300 rounded mt-0.5"
+                    style={{ accentColor: '#027e7e' }}
                   />
                   <span className="ml-3 text-sm text-gray-700">
                     <span className="font-medium">Afficher mon numéro de téléphone</span>
@@ -320,7 +376,8 @@ export default function FamilyProfilePage() {
                     type="checkbox"
                     checked={profileData.show_email}
                     onChange={(e) => setProfileData({ ...profileData, show_email: e.target.checked })}
-                    className="h-4 w-4 text-primary-600 focus:ring-primary-500 border-gray-300 rounded mt-0.5"
+                    className="h-4 w-4 border-gray-300 rounded mt-0.5"
+                    style={{ accentColor: '#027e7e' }}
                   />
                   <span className="ml-3 text-sm text-gray-700">
                     <span className="font-medium">Afficher mon adresse e-mail</span>
@@ -336,25 +393,30 @@ export default function FamilyProfilePage() {
                 <input
                   type="text"
                   required
+                  aria-required="true"
                   placeholder="Ex: Paris, France"
                   value={profileData.location}
                   onChange={(e) => setProfileData({ ...profileData, location: e.target.value })}
-                  className="flex-1 border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:ring-primary-500 focus:border-primary-500"
+                  className="flex-1 border border-gray-300 rounded-lg shadow-sm py-3 px-4 focus:ring-2 focus:outline-none focus:border-transparent"
+                  style={{ '--tw-ring-color': '#027e7e' } as any}
                 />
                 <button
                   type="button"
                   onClick={handleUseCurrentLocation}
                   disabled={geolocating}
-                  className="flex items-center gap-2 px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 disabled:opacity-50 disabled:cursor-not-allowed whitespace-nowrap"
+                  aria-busy={geolocating}
+                  aria-label="Utiliser ma position actuelle"
+                  className="flex items-center gap-2 px-4 py-2 text-white rounded-lg disabled:opacity-50 disabled:cursor-not-allowed whitespace-nowrap transition hover:opacity-90"
+                  style={{ backgroundColor: '#027e7e' }}
                 >
                   {geolocating ? (
                     <>
-                      <div className="animate-spin h-4 w-4 border-2 border-white border-t-transparent rounded-full"></div>
+                      <div className="animate-spin h-4 w-4 border-2 border-white border-t-transparent rounded-full" aria-hidden="true"></div>
                       <span className="hidden sm:inline">Localisation...</span>
                     </>
                   ) : (
                     <>
-                      <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
                       </svg>
@@ -370,7 +432,9 @@ export default function FamilyProfilePage() {
               <select
                 value={profileData.relationship}
                 onChange={(e) => setProfileData({ ...profileData, relationship: e.target.value })}
-                className="w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:ring-primary-500 focus:border-primary-500"
+                aria-required="true"
+                className="w-full border border-gray-300 rounded-lg shadow-sm py-3 px-4 focus:ring-2 focus:outline-none focus:border-transparent"
+                style={{ '--tw-ring-color': '#027e7e' } as any}
               >
                 <option value="parent">Parent</option>
                 <option value="guardian">Tuteur</option>
@@ -386,7 +450,8 @@ export default function FamilyProfilePage() {
                 placeholder="Ex: Communication non verbale, Gestion des comportements, Compétences sociales"
                 value={profileData.specific_needs}
                 onChange={(e) => setProfileData({ ...profileData, specific_needs: e.target.value })}
-                className="w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:ring-primary-500 focus:border-primary-500"
+                className="w-full border border-gray-300 rounded-lg shadow-sm py-3 px-4 focus:ring-2 focus:outline-none focus:border-transparent"
+                style={{ '--tw-ring-color': '#027e7e' } as any}
               />
               <p className="mt-1 text-sm text-gray-500">Séparez les besoins par des virgules</p>
             </div>
@@ -401,7 +466,8 @@ export default function FamilyProfilePage() {
                   min="0"
                   value={profileData.budget_min}
                   onChange={(e) => setProfileData({ ...profileData, budget_min: e.target.value })}
-                  className="w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:ring-primary-500 focus:border-primary-500"
+                  className="w-full border border-gray-300 rounded-lg shadow-sm py-3 px-4 focus:ring-2 focus:outline-none focus:border-transparent"
+                  style={{ '--tw-ring-color': '#027e7e' } as any}
                 />
               </div>
               <div>
@@ -412,7 +478,8 @@ export default function FamilyProfilePage() {
                   min="0"
                   value={profileData.budget_max}
                   onChange={(e) => setProfileData({ ...profileData, budget_max: e.target.value })}
-                  className="w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:ring-primary-500 focus:border-primary-500"
+                  className="w-full border border-gray-300 rounded-lg shadow-sm py-3 px-4 focus:ring-2 focus:outline-none focus:border-transparent"
+                  style={{ '--tw-ring-color': '#027e7e' } as any}
                 />
               </div>
             </div>
@@ -421,7 +488,9 @@ export default function FamilyProfilePage() {
               <button
                 type="submit"
                 disabled={saving}
-                className="px-6 py-2 bg-primary-600 text-white rounded-md hover:bg-primary-700 disabled:opacity-50"
+                aria-busy={saving}
+                className="px-6 py-3 text-white rounded-lg disabled:opacity-50 font-semibold transition hover:opacity-90 shadow-md"
+                style={{ backgroundColor: '#027e7e' }}
               >
                 {saving ? 'Enregistrement...' : 'Enregistrer les modifications'}
               </button>
@@ -430,23 +499,25 @@ export default function FamilyProfilePage() {
         </div>
 
         {/* Export des données RGPD */}
-        <div className="bg-white rounded-lg shadow-md p-6 mt-8 border-2 border-blue-200">
-          <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
-            <h3 className="font-semibold text-blue-800 mb-2 flex items-center gap-2">
-              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 mt-8">
+          <div className="rounded-xl p-4" style={{ backgroundColor: 'rgba(2, 126, 126, 0.1)' }}>
+            <h3 className="font-bold text-gray-900 mb-2 flex items-center gap-2">
+              <svg className="w-5 h-5" style={{ color: '#027e7e' }} fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
               </svg>
               Exporter mes données (RGPD)
             </h3>
-            <p className="text-sm text-blue-700 mb-4">
+            <p className="text-sm text-gray-600 mb-4">
               Conformément au RGPD, vous pouvez télécharger une copie de toutes vos données personnelles au format JSON.
             </p>
             <a
               href="/api/export-data"
               download
-              className="inline-flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 font-medium transition"
+              aria-label="Télécharger mes données personnelles au format JSON"
+              className="inline-flex items-center gap-2 px-4 py-2 text-white rounded-lg font-medium transition hover:opacity-90"
+              style={{ backgroundColor: '#027e7e' }}
             >
-              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
               </svg>
               Télécharger mes données
@@ -455,8 +526,8 @@ export default function FamilyProfilePage() {
         </div>
 
         {/* Suppression du compte */}
-        <div className="bg-white rounded-lg shadow-md p-6 mt-8 border-2 border-red-200">
-          <div className="bg-red-50 border border-red-200 rounded-lg p-4 mb-4">
+        <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 mt-8">
+          <div className="bg-red-50 border border-red-200 rounded-xl p-4">
             <h3 className="font-semibold text-red-800 mb-2">⚠️ Supprimer mon compte</h3>
             <p className="text-sm text-red-700 mb-3">
               Cette action est <strong>irréversible</strong>. Toutes vos données seront définitivement supprimées :
@@ -472,12 +543,12 @@ export default function FamilyProfilePage() {
             {!showDeleteConfirm ? (
               <button
                 onClick={() => setShowDeleteConfirm(true)}
-                className="px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 font-medium transition"
+                className="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 font-medium transition"
               >
                 Je veux supprimer mon compte
               </button>
             ) : (
-              <div className="space-y-4">
+              <div className="space-y-4 mt-4">
                 <div>
                   <label className="block text-sm font-medium text-red-800 mb-2">
                     Pour confirmer, tapez exactement <span className="font-bold">SUPPRIMER</span>
@@ -487,14 +558,15 @@ export default function FamilyProfilePage() {
                     value={deleteConfirmText}
                     onChange={(e) => setDeleteConfirmText(e.target.value)}
                     placeholder="Tapez SUPPRIMER"
-                    className="w-full border-2 border-red-300 rounded-md shadow-sm py-2 px-3 focus:ring-red-500 focus:border-red-500"
+                    className="w-full border-2 border-red-300 rounded-lg shadow-sm py-3 px-4 focus:ring-red-500 focus:border-red-500"
                   />
                 </div>
                 <div className="flex gap-3">
                   <button
                     onClick={handleDeleteAccount}
                     disabled={deleting || deleteConfirmText !== 'SUPPRIMER'}
-                    className="px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 font-medium transition disabled:opacity-50 disabled:cursor-not-allowed"
+                    aria-busy={deleting}
+                    className="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 font-medium transition disabled:opacity-50 disabled:cursor-not-allowed"
                   >
                     {deleting ? 'Suppression en cours...' : 'Supprimer définitivement mon compte'}
                   </button>
@@ -504,7 +576,8 @@ export default function FamilyProfilePage() {
                       setDeleteConfirmText('');
                     }}
                     disabled={deleting}
-                    className="px-4 py-2 bg-gray-200 text-gray-700 rounded-md hover:bg-gray-300 font-medium transition disabled:opacity-50"
+                    aria-label="Annuler la suppression du compte"
+                    className="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 font-medium transition disabled:opacity-50"
                   >
                     Annuler
                   </button>

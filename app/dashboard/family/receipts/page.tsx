@@ -141,23 +141,20 @@ export default function FamilyReceiptsPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      <FamilyNavbar profile={profile} familyId={familyId} userId={userId} />
+    <div className="min-h-screen min-h-[100dvh] flex flex-col" style={{ backgroundColor: '#fdf9f4' }}>
+      {/* Navbar */}
+      <div className="sticky top-0 z-40">
+        <FamilyNavbar profile={profile} familyId={familyId} userId={userId} />
+      </div>
 
-      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-8">
-        {/* Header */}
-        <div className="mb-4 sm:mb-8">
-          <div className="flex items-center gap-3">
-            <div className="w-10 h-10 sm:w-12 sm:h-12 bg-pink-100 rounded-xl flex items-center justify-center flex-shrink-0">
-              <svg className="w-5 h-5 sm:w-6 sm:h-6 text-pink-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-              </svg>
-            </div>
-            <div>
-              <h1 className="text-xl sm:text-2xl font-bold text-gray-900">Mes reçus</h1>
-              <p className="text-sm text-gray-500">Téléchargez vos reçus de paiement</p>
-            </div>
+      <div className="flex-1 max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8 w-full">
+        {/* Header avec icône */}
+        <div className="mb-6 sm:mb-8 text-center">
+          <div className="w-16 h-16 mx-auto mb-4 rounded-full flex items-center justify-center p-1" style={{ backgroundColor: '#027e7e' }}>
+            <img src="/images/icons/7.svg" alt="" className="w-full h-full" />
           </div>
+          <h1 className="text-xl sm:text-2xl font-bold text-gray-900">Mes reçus</h1>
+          <p className="text-sm text-gray-500 mt-1">Téléchargez vos reçus de paiement</p>
         </div>
 
         {/* Liste des reçus */}
@@ -171,13 +168,13 @@ export default function FamilyReceiptsPage() {
           <div className="p-3 sm:p-6">
             {loading ? (
               <div className="text-center py-8 sm:py-12">
-                <div className="inline-block animate-spin rounded-full h-10 w-10 sm:h-12 sm:w-12 border-b-2 border-primary-600"></div>
+                <div className="inline-block animate-spin rounded-full h-10 w-10 sm:h-12 sm:w-12 border-b-2" style={{ borderColor: '#027e7e' }}></div>
                 <p className="mt-3 sm:mt-4 text-gray-600 text-sm sm:text-base">Chargement des reçus...</p>
               </div>
             ) : receipts.length === 0 ? (
               <div className="text-center py-8 sm:py-12">
-                <div className="w-14 h-14 sm:w-16 sm:h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto">
-                  <svg className="w-7 h-7 sm:w-8 sm:h-8 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <div className="w-14 h-14 sm:w-16 sm:h-16 rounded-full flex items-center justify-center mx-auto" style={{ backgroundColor: '#e6f4f4' }}>
+                  <svg className="w-7 h-7 sm:w-8 sm:h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true" style={{ color: '#027e7e' }}>
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
                   </svg>
                 </div>
@@ -188,9 +185,10 @@ export default function FamilyReceiptsPage() {
                 <div className="mt-5">
                   <Link
                     href="/search"
-                    className="inline-flex items-center gap-2 px-4 py-2.5 bg-primary-600 text-white rounded-lg font-medium hover:bg-primary-700 transition text-sm"
+                    className="inline-flex items-center gap-2 px-4 py-2.5 text-white rounded-xl font-medium hover:opacity-90 transition text-sm"
+                    style={{ backgroundColor: '#f0879f' }}
                   >
-                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
                     </svg>
                     Chercher un professionnel
@@ -209,7 +207,7 @@ export default function FamilyReceiptsPage() {
                       <div className="flex items-center gap-3 min-w-0 flex-1">
                         <div className="flex-shrink-0">
                           <div className="h-10 w-10 sm:h-12 sm:w-12 rounded-full bg-green-100 flex items-center justify-center">
-                            <svg className="h-5 w-5 sm:h-6 sm:w-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <svg className="h-5 w-5 sm:h-6 sm:w-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
                             </svg>
                           </div>
@@ -256,9 +254,11 @@ export default function FamilyReceiptsPage() {
                       href={receipt.pdf_url}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="w-full inline-flex items-center justify-center gap-2 px-4 py-2.5 bg-primary-600 text-white rounded-lg font-medium hover:bg-primary-700 transition text-sm"
+                      aria-label={`Télécharger le reçu ${receipt.invoice_number} du ${formatDateShort(receipt.invoice_date)}`}
+                      className="w-full inline-flex items-center justify-center gap-2 px-4 py-2.5 text-white rounded-xl font-medium hover:opacity-90 transition text-sm"
+                      style={{ backgroundColor: '#027e7e' }}
                     >
-                      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
                       </svg>
                       Télécharger le reçu PDF
@@ -272,26 +272,26 @@ export default function FamilyReceiptsPage() {
 
         {/* Info box */}
         {receipts.length > 0 && (
-          <div className="mt-4 sm:mt-6 bg-blue-50 border border-blue-200 rounded-xl p-4 sm:p-5">
+          <div className="mt-4 sm:mt-6 rounded-xl p-4 sm:p-5" style={{ backgroundColor: '#e6f4f4', border: '1px solid #c9eaea' }}>
             <div className="flex gap-3">
               <div className="flex-shrink-0">
-                <svg className="h-5 w-5 text-blue-500" fill="currentColor" viewBox="0 0 20 20">
+                <svg className="h-5 w-5" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true" style={{ color: '#027e7e' }}>
                   <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd" />
                 </svg>
               </div>
               <div>
-                <h3 className="text-sm font-semibold text-blue-800">À propos de vos reçus</h3>
-                <ul className="mt-2 text-xs sm:text-sm text-blue-700 space-y-1">
+                <h3 className="text-sm font-semibold" style={{ color: '#027e7e' }}>À propos de vos reçus</h3>
+                <ul className="mt-2 text-xs sm:text-sm text-gray-700 space-y-1">
                   <li className="flex items-start gap-2">
-                    <span className="text-blue-400 mt-0.5">•</span>
+                    <span style={{ color: '#3a9e9e' }} className="mt-0.5">•</span>
                     <span>Générés automatiquement après chaque séance</span>
                   </li>
                   <li className="flex items-start gap-2">
-                    <span className="text-blue-400 mt-0.5">•</span>
+                    <span style={{ color: '#3a9e9e' }} className="mt-0.5">•</span>
                     <span>Téléchargeables au format PDF</span>
                   </li>
                   <li className="flex items-start gap-2">
-                    <span className="text-blue-400 mt-0.5">•</span>
+                    <span style={{ color: '#3a9e9e' }} className="mt-0.5">•</span>
                     <span>Conservez-les pour votre comptabilité</span>
                   </li>
                 </ul>
@@ -299,7 +299,13 @@ export default function FamilyReceiptsPage() {
             </div>
           </div>
         )}
+
+        {/* Espace pour le footer */}
+        <div className="h-8"></div>
       </div>
+
+      {/* Footer teal */}
+      <div className="mt-auto" style={{ backgroundColor: '#027e7e', height: '40px' }}></div>
     </div>
   );
 }

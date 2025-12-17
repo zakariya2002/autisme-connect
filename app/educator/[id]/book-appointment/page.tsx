@@ -431,7 +431,7 @@ export default function BookAppointmentPage({ params }: { params: { id: string }
             href={`/educator/${params.id}`}
             className="text-primary-600 hover:text-primary-700 font-medium flex items-center gap-2 mb-4"
           >
-            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
             </svg>
             Retour au profil
@@ -458,14 +458,14 @@ export default function BookAppointmentPage({ params }: { params: { id: string }
         )}
 
         {error && (
-          <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-lg">
+          <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-lg" role="alert">
             <p className="text-red-800">{error}</p>
           </div>
         )}
 
         {availableDatesSet.size === 0 ? (
           <div className="bg-white rounded-xl shadow-lg p-12 text-center">
-            <svg className="w-20 h-20 text-gray-300 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <svg className="w-20 h-20 text-gray-300 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
             </svg>
             <h3 className="text-xl font-bold text-gray-900 mb-2">
@@ -487,7 +487,7 @@ export default function BookAppointmentPage({ params }: { params: { id: string }
             {children.length > 0 && (
               <div className="bg-white rounded-xl shadow-lg p-6">
                 <label className="block text-sm font-semibold text-gray-900 mb-3">
-                  1. Sélectionnez l'enfant concerné
+                  1. Sélectionnez l'enfant concerné <span className="text-red-600" aria-label="requis">*</span>
                 </label>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                   {children.map((child) => (
@@ -500,6 +500,8 @@ export default function BookAppointmentPage({ params }: { params: { id: string }
                           ? 'border-primary-600 bg-primary-50'
                           : 'border-gray-200 hover:border-primary-300'
                       }`}
+                      aria-pressed={selectedChildId === child.id}
+                      aria-label={`Sélectionner ${child.first_name} pour le rendez-vous`}
                     >
                       <div className="flex items-center gap-3">
                         <div className="w-10 h-10 bg-primary-100 rounded-full flex items-center justify-center flex-shrink-0">
@@ -529,7 +531,7 @@ export default function BookAppointmentPage({ params }: { params: { id: string }
             <div className="bg-white rounded-xl shadow-lg overflow-hidden">
               <div className="p-6">
                 <label className="block text-sm font-semibold text-gray-900 mb-4">
-                  {children.length > 0 ? '2.' : '1.'} Choisissez une date et vos créneaux
+                  {children.length > 0 ? '2.' : '1.'} Choisissez une date et vos créneaux <span className="text-red-600" aria-label="requis">*</span>
                 </label>
 
                 {/* Calendrier */}
@@ -541,8 +543,9 @@ export default function BookAppointmentPage({ params }: { params: { id: string }
                         type="button"
                         onClick={() => setCurrentMonth(new Date(currentMonth.getFullYear(), currentMonth.getMonth() - 1, 1))}
                         className="p-2 hover:bg-white/20 rounded-lg transition text-white"
+                        aria-label="Mois précédent"
                       >
-                        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
                         </svg>
                       </button>
@@ -553,8 +556,9 @@ export default function BookAppointmentPage({ params }: { params: { id: string }
                         type="button"
                         onClick={() => setCurrentMonth(new Date(currentMonth.getFullYear(), currentMonth.getMonth() + 1, 1))}
                         className="p-2 hover:bg-white/20 rounded-lg transition text-white"
+                        aria-label="Mois suivant"
                       >
-                        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
                         </svg>
                       </button>
@@ -592,6 +596,8 @@ export default function BookAppointmentPage({ params }: { params: { id: string }
                             type="button"
                             onClick={() => handleDateClick(date)}
                             disabled={!isAvailable || isPast}
+                            aria-label={`${date.getDate()} ${monthNames[date.getMonth()]} ${date.getFullYear()}${isSelected ? ', sélectionné' : ''}${isAvailable && !isPast ? ', disponible' : ', non disponible'}`}
+                            aria-pressed={isSelected}
                             className={`
                               aspect-square p-1 rounded-lg text-sm font-semibold transition-all relative
                               ${isSelected
@@ -660,6 +666,8 @@ export default function BookAppointmentPage({ params }: { params: { id: string }
                               key={slot.start}
                               type="button"
                               onClick={() => toggleSlotSelection(slot.start, timeSlotsForSelectedDate)}
+                              aria-label={`Créneau de ${slot.start} à ${slot.end}${isSelected ? ', sélectionné' : ''}`}
+                              aria-pressed={isSelected}
                               className={`py-2 px-2 rounded-lg text-sm font-medium transition-all ${
                                 isSelected
                                   ? 'bg-primary-600 text-white shadow-md'
@@ -699,8 +707,8 @@ export default function BookAppointmentPage({ params }: { params: { id: string }
                             </div>
                           </div>
                           {calculateTotalDuration() < 120 && (
-                            <p className="text-xs text-orange-600 mt-2 flex items-center gap-1">
-                              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <p className="text-xs text-orange-600 mt-2 flex items-center gap-1" role="alert">
+                              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
                               </svg>
                               Sélectionnez plus de créneaux pour atteindre le minimum de 2h
@@ -719,7 +727,7 @@ export default function BookAppointmentPage({ params }: { params: { id: string }
               <div className="bg-white rounded-xl shadow-lg p-6 space-y-6">
                 <div>
                   <label className="block text-sm font-semibold text-gray-900 mb-3">
-                    {children.length > 0 ? '3.' : '2.'} Type de rendez-vous
+                    {children.length > 0 ? '3.' : '2.'} Type de rendez-vous <span className="text-red-600" aria-label="requis">*</span>
                   </label>
                   <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
                     <button
@@ -730,6 +738,8 @@ export default function BookAppointmentPage({ params }: { params: { id: string }
                           ? 'border-primary-600 bg-primary-50'
                           : 'border-gray-200 hover:border-primary-300'
                       }`}
+                      aria-pressed={locationType === 'online'}
+                      aria-label="Rendez-vous en ligne par visioconférence"
                     >
                       <p className="font-semibold text-gray-900">En ligne</p>
                       <p className="text-xs text-gray-600 mt-1">Visioconférence</p>
@@ -742,6 +752,8 @@ export default function BookAppointmentPage({ params }: { params: { id: string }
                           ? 'border-primary-600 bg-primary-50'
                           : 'border-gray-200 hover:border-primary-300'
                       }`}
+                      aria-pressed={locationType === 'home'}
+                      aria-label="Rendez-vous à domicile chez vous"
                     >
                       <p className="font-semibold text-gray-900">À domicile</p>
                       <p className="text-xs text-gray-600 mt-1">Chez vous</p>
@@ -754,6 +766,8 @@ export default function BookAppointmentPage({ params }: { params: { id: string }
                           ? 'border-primary-600 bg-primary-50'
                           : 'border-gray-200 hover:border-primary-300'
                       }`}
+                      aria-pressed={locationType === 'office'}
+                      aria-label="Rendez-vous au cabinet de l'éducateur"
                     >
                       <p className="font-semibold text-gray-900">Au cabinet</p>
                       <p className="text-xs text-gray-600 mt-1">Cabinet de l&apos;éducateur</p>
@@ -764,7 +778,7 @@ export default function BookAppointmentPage({ params }: { params: { id: string }
                 {(locationType === 'home' || locationType === 'office') && (
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-2">
-                      Adresse
+                      Adresse <span className="text-red-600" aria-label="requis">*</span>
                     </label>
                     <input
                       type="text"
@@ -773,6 +787,7 @@ export default function BookAppointmentPage({ params }: { params: { id: string }
                       placeholder="Entrez l'adresse complète"
                       className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
                       required
+                      aria-required="true"
                     />
                   </div>
                 )}
@@ -788,6 +803,19 @@ export default function BookAppointmentPage({ params }: { params: { id: string }
                     placeholder="Décrivez brièvement vos besoins, objectifs ou questions..."
                     className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
                   />
+                </div>
+
+                {/* Informations RGPD */}
+                <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
+                  <h3 className="text-sm font-semibold text-blue-900 mb-2">
+                    Protection de vos données personnelles
+                  </h3>
+                  <p className="text-xs text-blue-800 mb-2">
+                    Les informations collectées lors de cette réservation (données de l&apos;enfant, préférences de rendez-vous, adresse) sont utilisées uniquement pour la gestion de votre rendez-vous et la communication avec l&apos;éducateur.
+                  </p>
+                  <p className="text-xs text-blue-800">
+                    Conformément au RGPD, vous disposez d&apos;un droit d&apos;accès, de rectification et de suppression de vos données. Pour plus d&apos;informations, consultez notre <a href="/privacy" className="underline hover:text-blue-600">politique de confidentialité</a>.
+                  </p>
                 </div>
 
                 <div className="flex gap-4 pt-4">
