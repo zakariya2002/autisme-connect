@@ -131,7 +131,7 @@ export default function PinCodeModal({ isOpen, onClose, onValidate, appointmentI
 
           {/* Icône */}
           <div className="flex justify-center mb-6">
-            <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center">
+            <div className="w-16 h-16 rounded-full flex items-center justify-center" style={{ backgroundColor: '#e9d5ff' }}>
               <span className="text-3xl">🔐</span>
             </div>
           </div>
@@ -158,10 +158,11 @@ export default function PinCodeModal({ isOpen, onClose, onValidate, appointmentI
                 onKeyDown={(e) => handleKeyDown(index, e)}
                 disabled={loading}
                 className={`w-16 h-16 text-center text-3xl font-bold border-2 rounded-lg
-                  focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all
+                  focus:outline-none focus:ring-2 transition-all
                   ${error ? 'border-red-500 bg-red-50' : 'border-gray-300'}
                   ${loading ? 'opacity-50 cursor-not-allowed' : ''}
                 `}
+                style={{ '--tw-ring-color': '#41005c' } as React.CSSProperties}
               />
             ))}
           </div>
@@ -184,12 +185,12 @@ export default function PinCodeModal({ isOpen, onClose, onValidate, appointmentI
           )}
 
           {/* Informations */}
-          <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-6">
+          <div className="rounded-lg p-4 mb-6" style={{ backgroundColor: '#e9d5ff', borderColor: '#41005c', borderWidth: '1px' }}>
             <div className="flex items-start">
-              <svg className="w-5 h-5 text-blue-600 mt-0.5 mr-2 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+              <svg className="w-5 h-5 mt-0.5 mr-2 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20" style={{ color: '#41005c' }}>
                 <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd" />
               </svg>
-              <div className="text-sm text-blue-800">
+              <div className="text-sm" style={{ color: '#41005c' }}>
                 <p className="font-medium mb-1">Ce code permet de :</p>
                 <ul className="list-disc list-inside space-y-1 text-xs">
                   <li>Confirmer votre présence</li>
@@ -212,7 +213,10 @@ export default function PinCodeModal({ isOpen, onClose, onValidate, appointmentI
             <button
               onClick={() => handleValidate(pin.join(''))}
               disabled={loading || pin.some(d => !d)}
-              className="flex-1 px-4 py-3 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+              className="flex-1 px-4 py-3 text-white font-semibold rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+              style={{ backgroundColor: '#41005c' }}
+              onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#2d0040'}
+              onMouseLeave={(e) => e.currentTarget.style.backgroundColor = '#41005c'}
             >
               {loading ? (
                 <span className="flex items-center justify-center">

@@ -128,6 +128,7 @@ export default function EducatorAppointmentsPage() {
   const [subscription, setSubscription] = useState<any>(null);
   const [appointments, setAppointments] = useState<Appointment[]>([]);
   const [activeFilter, setActiveFilter] = useState<'all' | 'pending' | 'in_progress' | 'upcoming' | 'completed' | null>(null);
+  const [activeTab, setActiveTab] = useState<'appointments' | 'families'>('appointments');
 
   // Lire le paramètre tab de l'URL
   useEffect(() => {
@@ -659,6 +660,51 @@ export default function EducatorAppointmentsPage() {
   const completedAppointments = appointments.filter(a => a.status === 'completed');
   const cancelledAppointments = appointments.filter(a => a.status === 'cancelled' || a.status === 'rejected');
 
+  // Extraire les familles uniques rencontrées
+  const getUniqueFamiliesWithStats = () => {
+    const familyMap = new Map<string, {
+      id: string;
+      first_name: string;
+      last_name: string;
+      appointmentCount: number;
+      lastAppointmentDate: string;
+    }>();
+
+    appointments.forEach(apt => {
+      if (!apt.family_id) return;
+      const isPast = apt.status === 'completed' || (apt.status === 'accepted' && isAppointmentPast(apt));
+
+      if (isPast) {
+        const existing = familyMap.get(apt.family_id);
+        if (existing) {
+          existing.appointmentCount++;
+          if (apt.appointment_date > existing.lastAppointmentDate) {
+            existing.lastAppointmentDate = apt.appointment_date;
+          }
+        } else {
+          familyMap.set(apt.family_id, {
+            id: apt.family_id,
+            first_name: apt.family_first_name,
+            last_name: apt.family_last_name,
+            appointmentCount: 1,
+            lastAppointmentDate: apt.appointment_date
+          });
+        }
+      }
+    });
+
+    return Array.from(familyMap.values()).sort((a, b) =>
+      new Date(b.lastAppointmentDate).getTime() - new Date(a.lastAppointmentDate).getTime()
+    );
+  };
+
+  const uniqueFamilies = getUniqueFamiliesWithStats();
+
+  // Helper pour obtenir l'icône de profil
+  const getFamilyIcon = (id?: string) => {
+    return (id?.charCodeAt(0) || 0) % 2 === 0 ? '/images/icons/avatar-male.svg' : '/images/icons/avatar-female.svg';
+  };
+
   // Fonction pour sélectionner un filtre (un seul à la fois)
   const selectFilter = (filter: 'all' | 'pending' | 'in_progress' | 'upcoming' | 'completed') => {
     setActiveFilter(prev => prev === filter ? null : filter);
@@ -692,7 +738,7 @@ export default function EducatorAppointmentsPage() {
         <div className="p-4 border-b border-gray-100">
           <div className="flex items-center justify-between mb-2">
             <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-full bg-gradient-to-br from-primary-400 to-primary-600 flex items-center justify-center">
+              <div className="w-10 h-10 rounded-full flex items-center justify-center" style={{ background: 'linear-gradient(135deg, #5a1a75 0%, #41005c 100%)' }}>
                 <span className="text-sm font-bold text-white">
                   {appointment.family_first_name?.[0]}{appointment.family_last_name?.[0]}
                 </span>
@@ -831,7 +877,8 @@ export default function EducatorAppointmentsPage() {
                   <button
                     onClick={() => handleStartSession(appointment.id)}
                     disabled={actionLoading}
-                    className="flex-1 min-w-0 px-2 sm:px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 text-xs sm:text-sm font-medium transition flex items-center justify-center gap-1 sm:gap-2"
+                    className="flex-1 min-w-0 px-2 sm:px-4 py-2 text-white rounded-lg text-xs sm:text-sm font-medium transition flex items-center justify-center gap-1 sm:gap-2 hover:opacity-90"
+                    style={{ backgroundColor: '#8b5cf6' }}
                     aria-label="Démarrer la séance avec code PIN"
                   >
                     <svg className="w-4 h-4 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
@@ -955,99 +1002,136 @@ export default function EducatorAppointmentsPage() {
   );
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen min-h-[100dvh] flex flex-col" style={{ backgroundColor: '#fdf9f4' }}>
       {/* Navigation */}
-      <EducatorNavbar profile={profile} subscription={subscription} />
+      <div className="sticky top-0 z-40">
+        <EducatorNavbar profile={profile} subscription={subscription} />
+      </div>
 
-      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
-        {/* En-tête */}
-        <div className="mb-6">
-          <h1 className="text-2xl font-bold text-gray-900">Mes rendez-vous</h1>
+      <div className="flex-1 max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8 w-full">
+        {/* En-tête centré avec icône */}
+        <div className="mb-6 sm:mb-8 text-center">
+          <div className="w-16 h-16 mx-auto mb-4 rounded-full flex items-center justify-center p-1" style={{ backgroundColor: '#41005c' }}>
+            <img src="/images/icons/4.svg" alt="" className="w-full h-full" />
+          </div>
+          <h1 className="text-xl sm:text-2xl font-bold text-gray-900">Mes rendez-vous</h1>
           <p className="text-gray-500 text-sm mt-1">Gérez vos demandes et séances</p>
         </div>
 
-        {/* Résumé rapide - cliquable pour filtrer */}
-        <div className="grid grid-cols-3 sm:grid-cols-5 gap-2 mb-8">
+        {/* Onglets */}
+        <div className="flex bg-white rounded-xl p-1 mb-6 shadow-sm border border-gray-100">
+          <button
+            onClick={() => setActiveTab('appointments')}
+            className={`flex-1 py-2.5 px-4 rounded-lg font-medium text-sm transition-all ${
+              activeTab === 'appointments'
+                ? 'text-white shadow-sm'
+                : 'text-gray-600 hover:text-gray-900'
+            }`}
+            style={activeTab === 'appointments' ? { backgroundColor: '#41005c' } : {}}
+          >
+            <span className="flex items-center justify-center gap-2">
+              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+              </svg>
+              Rendez-vous
+            </span>
+          </button>
+          <button
+            onClick={() => setActiveTab('families')}
+            className={`flex-1 py-2.5 px-4 rounded-lg font-medium text-sm transition-all ${
+              activeTab === 'families'
+                ? 'text-white shadow-sm'
+                : 'text-gray-600 hover:text-gray-900'
+            }`}
+            style={activeTab === 'families' ? { backgroundColor: '#41005c' } : {}}
+          >
+            <span className="flex items-center justify-center gap-2">
+              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+              </svg>
+              Mes familles
+              {uniqueFamilies.length > 0 && (
+                <span className="text-xs px-1.5 py-0.5 rounded-full" style={{ backgroundColor: activeTab === 'families' ? 'rgba(255,255,255,0.2)' : 'rgba(65, 0, 92, 0.1)', color: activeTab === 'families' ? 'white' : '#41005c' }}>
+                  {uniqueFamilies.length}
+                </span>
+              )}
+            </span>
+          </button>
+        </div>
+
+        {/* Contenu de l'onglet Rendez-vous */}
+        {activeTab === 'appointments' && (
+          <>
+        {/* Boutons de filtre - 4 colonnes */}
+        <div className="grid grid-cols-4 gap-3 mb-8">
+          {/* Tous */}
           <button
             onClick={() => appointments.length > 0 && selectFilter('all')}
             disabled={appointments.length === 0}
-            className={`rounded-xl p-2 sm:p-3 text-center transition-all ${
+            className={`rounded-xl p-3 text-center transition-all ${
               appointments.length === 0
                 ? 'bg-gray-100 opacity-60 cursor-not-allowed'
                 : activeFilter === 'all'
                   ? 'bg-gray-300 ring-2 ring-gray-500'
                   : 'bg-gray-100 hover:bg-gray-200 cursor-pointer'
             }`}
-            aria-label={`Tous les rendez-vous, ${appointments.length} au total`}
           >
-            <p className="text-xl sm:text-2xl font-bold text-gray-600">{appointments.length}</p>
-            <p className="text-[10px] sm:text-xs text-gray-700 mt-0.5">Tous</p>
+            <p className="text-2xl font-bold text-gray-700">{appointments.length}</p>
+            <p className="text-xs text-gray-600 mt-1">Tous</p>
           </button>
+
+          {/* En attente */}
           <button
             onClick={() => pendingAppointments.length > 0 && selectFilter('pending')}
             disabled={pendingAppointments.length === 0}
-            className={`rounded-xl p-2 sm:p-3 text-center transition-all ${
+            className={`rounded-xl p-3 text-center transition-all ${
               pendingAppointments.length === 0
                 ? 'bg-amber-50 opacity-60 cursor-not-allowed'
                 : activeFilter === 'pending'
-                  ? 'bg-amber-200 ring-2 ring-amber-400'
+                  ? 'bg-amber-200 ring-2 ring-amber-500'
                   : 'bg-amber-50 hover:bg-amber-100 cursor-pointer'
             }`}
-            aria-label={`Rendez-vous en attente, ${pendingAppointments.length} au total`}
           >
-            <p className="text-xl sm:text-2xl font-bold text-amber-600">{pendingAppointments.length}</p>
-            <p className="text-[10px] sm:text-xs text-amber-700 mt-0.5">Attente</p>
+            <p className="text-2xl font-bold text-amber-600">{pendingAppointments.length}</p>
+            <p className="text-xs text-amber-700 mt-1">En attente</p>
           </button>
-          <button
-            onClick={() => inProgressAppointments.length > 0 && selectFilter('in_progress')}
-            disabled={inProgressAppointments.length === 0}
-            className={`rounded-xl p-2 sm:p-3 text-center transition-all ${
-              inProgressAppointments.length === 0
-                ? 'bg-indigo-50 opacity-60 cursor-not-allowed'
-                : activeFilter === 'in_progress'
-                  ? 'bg-indigo-200 ring-2 ring-indigo-400'
-                  : 'bg-indigo-50 hover:bg-indigo-100 cursor-pointer'
-            }`}
-            aria-label={`Rendez-vous en cours, ${inProgressAppointments.length} au total`}
-          >
-            <p className="text-xl sm:text-2xl font-bold text-indigo-600">{inProgressAppointments.length}</p>
-            <p className="text-[10px] sm:text-xs text-indigo-700 mt-0.5">En cours</p>
-          </button>
+
+          {/* À venir */}
           <button
             onClick={() => upcomingAppointments.length > 0 && selectFilter('upcoming')}
             disabled={upcomingAppointments.length === 0}
-            className={`rounded-xl p-2 sm:p-3 text-center transition-all col-span-1 ${
+            className={`rounded-xl p-3 text-center transition-all ${
               upcomingAppointments.length === 0
                 ? 'bg-emerald-50 opacity-60 cursor-not-allowed'
                 : activeFilter === 'upcoming'
-                  ? 'bg-emerald-200 ring-2 ring-emerald-400'
+                  ? 'bg-emerald-200 ring-2 ring-emerald-500'
                   : 'bg-emerald-50 hover:bg-emerald-100 cursor-pointer'
             }`}
-            aria-label={`Rendez-vous à venir, ${upcomingAppointments.length} au total`}
           >
-            <p className="text-xl sm:text-2xl font-bold text-emerald-600">{upcomingAppointments.length}</p>
-            <p className="text-[10px] sm:text-xs text-emerald-700 mt-0.5">À venir</p>
+            <p className="text-2xl font-bold text-emerald-600">{upcomingAppointments.length + inProgressAppointments.length}</p>
+            <p className="text-xs text-emerald-700 mt-1">À venir</p>
           </button>
+
+          {/* Passés */}
           <button
             onClick={() => completedAppointments.length > 0 && selectFilter('completed')}
             disabled={completedAppointments.length === 0}
-            className={`rounded-xl p-2 sm:p-3 text-center transition-all col-span-2 sm:col-span-1 ${
+            className={`rounded-xl p-3 text-center transition-all ${
               completedAppointments.length === 0
-                ? 'bg-blue-50 opacity-60 cursor-not-allowed'
+                ? 'bg-gray-100 opacity-60 cursor-not-allowed'
                 : activeFilter === 'completed'
-                  ? 'bg-blue-200 ring-2 ring-blue-400'
-                  : 'bg-blue-50 hover:bg-blue-100 cursor-pointer'
+                  ? 'bg-gray-300 ring-2 ring-gray-500'
+                  : 'bg-gray-100 hover:bg-gray-200 cursor-pointer'
             }`}
-            aria-label={`Rendez-vous terminés, ${completedAppointments.length} au total`}
           >
-            <p className="text-xl sm:text-2xl font-bold text-blue-600">{completedAppointments.length}</p>
-            <p className="text-[10px] sm:text-xs text-blue-700 mt-0.5">Terminés</p>
+            <p className="text-2xl font-bold text-gray-600">{completedAppointments.length}</p>
+            <p className="text-xs text-gray-600 mt-1">Passés</p>
           </button>
         </div>
 
         {loading ? (
           <div className="text-center py-12" role="status" aria-live="polite">
-            <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-primary-600 mx-auto" aria-hidden="true"></div>
+            <div className="animate-spin rounded-full h-10 w-10 border-b-2 mx-auto" style={{ borderColor: '#41005c' }} aria-hidden="true"></div>
             <p className="text-gray-500 mt-4 text-sm">Chargement...</p>
           </div>
         ) : appointments.length === 0 ? (
@@ -1183,12 +1267,96 @@ export default function EducatorAppointmentsPage() {
             )}
           </div>
         )}
+          </>
+        )}
+
+        {/* Contenu de l'onglet Mes familles */}
+        {activeTab === 'families' && (
+          <div>
+            {loading ? (
+              <div className="text-center py-12">
+                <div className="animate-spin rounded-full h-10 w-10 border-b-2 mx-auto" style={{ borderColor: '#41005c' }} role="status" aria-label="Chargement des familles"></div>
+                <p className="text-gray-500 mt-4 text-sm">Chargement...</p>
+              </div>
+            ) : uniqueFamilies.length === 0 ? (
+              <div className="text-center py-12 bg-white rounded-2xl border border-gray-100 shadow-sm">
+                <div className="w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4" style={{ backgroundColor: 'rgba(65, 0, 92, 0.1)' }}>
+                  <svg className="h-8 w-8" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true" style={{ color: '#41005c' }}>
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+                  </svg>
+                </div>
+                <h3 className="text-lg font-medium text-gray-900">Aucune famille rencontrée</h3>
+                <p className="text-gray-500 mt-2 text-sm">Les familles avec qui vous avez eu des rendez-vous apparaîtront ici.</p>
+              </div>
+            ) : (
+              <div className="space-y-3">
+                <p className="text-sm text-gray-500 mb-4">
+                  {uniqueFamilies.length} famille{uniqueFamilies.length > 1 ? 's' : ''} rencontrée{uniqueFamilies.length > 1 ? 's' : ''}
+                </p>
+                {uniqueFamilies.map((family) => (
+                  <Link
+                    key={family.id}
+                    href={`/family/${family.id}`}
+                    className="block bg-white rounded-xl border border-gray-100 shadow-sm hover:shadow-md transition-all p-4"
+                    style={{ borderColor: 'transparent' }}
+                    onMouseEnter={(e) => e.currentTarget.style.borderColor = 'rgba(65, 0, 92, 0.2)'}
+                    onMouseLeave={(e) => e.currentTarget.style.borderColor = 'transparent'}
+                  >
+                    <div className="flex items-center gap-4">
+                      {/* Avatar */}
+                      <div className="flex-shrink-0">
+                        <div className="h-14 w-14 rounded-full overflow-hidden border-2" style={{ background: 'linear-gradient(135deg, #41005c 0%, #5a1a75 100%)', borderColor: 'rgba(65, 0, 92, 0.1)' }}>
+                          <img
+                            src={getFamilyIcon(family.id)}
+                            alt=""
+                            className="w-full h-full object-cover"
+                          />
+                        </div>
+                      </div>
+
+                      {/* Infos */}
+                      <div className="flex-1 min-w-0">
+                        <h3 className="font-semibold text-gray-900 truncate">
+                          {family.first_name} {family.last_name}
+                        </h3>
+                        <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-sm text-gray-500 mt-1">
+                          <span className="flex items-center gap-1">
+                            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true" style={{ color: '#5a1a75' }}>
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                            </svg>
+                            {family.appointmentCount} rendez-vous
+                          </span>
+                          <span className="flex items-center gap-1">
+                            <svg className="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                            </svg>
+                            Dernier : {new Date(family.lastAppointmentDate).toLocaleDateString('fr-FR', { day: 'numeric', month: 'short' })}
+                          </span>
+                        </div>
+                      </div>
+
+                      {/* Flèche */}
+                      <div className="flex-shrink-0">
+                        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true" style={{ color: '#41005c' }}>
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                        </svg>
+                      </div>
+                    </div>
+                  </Link>
+                ))}
+              </div>
+            )}
+          </div>
+        )}
+
+        {/* Espace pour le footer */}
+        <div className="h-8"></div>
       </div>
 
       {/* Modal Refus */}
       {showRejectModal && selectedAppointment && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4" role="dialog" aria-modal="true" aria-labelledby="reject-modal-title">
-          <div className="bg-white rounded-lg shadow-xl max-w-md w-full p-6">
+          <div className="bg-white rounded-2xl shadow-xl max-w-md w-full p-6">
             <h3 id="reject-modal-title" className="text-xl font-bold text-gray-900 mb-4">Refuser le rendez-vous</h3>
             <p className="text-gray-600 mb-4">
               Veuillez indiquer la raison du refus. La famille recevra cette information.
@@ -1198,14 +1366,14 @@ export default function EducatorAppointmentsPage() {
               onChange={(e) => setRejectionReason(e.target.value)}
               rows={4}
               placeholder="Raison du refus..."
-              className="w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:ring-primary-500 focus:border-primary-500 mb-4"
+              className="w-full border border-gray-300 rounded-xl shadow-sm py-2 px-3 focus:ring-2 focus:ring-[#41005c] focus:border-[#41005c] mb-4"
               aria-label="Raison du refus du rendez-vous"
             />
             <div className="flex gap-2">
               <button
                 onClick={handleReject}
                 disabled={actionLoading || !rejectionReason.trim()}
-                className="flex-1 px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 disabled:opacity-50 font-medium"
+                className="flex-1 px-4 py-2 bg-red-600 text-white rounded-xl hover:bg-red-700 disabled:opacity-50 font-semibold"
               >
                 {actionLoading ? 'Envoi...' : 'Confirmer le refus'}
               </button>
@@ -1216,7 +1384,7 @@ export default function EducatorAppointmentsPage() {
                   setSelectedAppointment(null);
                 }}
                 disabled={actionLoading}
-                className="px-4 py-2 bg-gray-300 text-gray-700 rounded-md hover:bg-gray-400 disabled:opacity-50"
+                className="px-4 py-2 bg-gray-200 text-gray-700 rounded-xl hover:bg-gray-300 disabled:opacity-50 font-medium"
               >
                 Annuler
               </button>
@@ -1228,7 +1396,7 @@ export default function EducatorAppointmentsPage() {
       {/* Modal Notes */}
       {showNotesModal && selectedAppointment && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4" role="dialog" aria-modal="true" aria-labelledby="notes-modal-title">
-          <div className="bg-white rounded-lg shadow-xl max-w-md w-full p-6">
+          <div className="bg-white rounded-2xl shadow-xl max-w-md w-full p-6">
             <h3 id="notes-modal-title" className="text-xl font-bold text-gray-900 mb-4">Notes du rendez-vous</h3>
             <p className="text-gray-600 mb-4">
               Ajoutez des notes personnelles sur ce rendez-vous (visibles uniquement par vous).
@@ -1238,14 +1406,15 @@ export default function EducatorAppointmentsPage() {
               onChange={(e) => setEducatorNotes(e.target.value)}
               rows={6}
               placeholder="Vos notes..."
-              className="w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:ring-primary-500 focus:border-primary-500 mb-4"
+              className="w-full border border-gray-300 rounded-xl shadow-sm py-2 px-3 focus:ring-2 focus:ring-[#41005c] focus:border-[#41005c] mb-4"
               aria-label="Notes personnelles du rendez-vous"
             />
             <div className="flex gap-2">
               <button
                 onClick={handleSaveNotes}
                 disabled={actionLoading}
-                className="flex-1 px-4 py-2 bg-primary-600 text-white rounded-md hover:bg-primary-700 disabled:opacity-50 font-medium"
+                className="flex-1 px-4 py-2 text-white rounded-xl hover:opacity-90 disabled:opacity-50 font-semibold"
+                style={{ backgroundColor: '#41005c' }}
               >
                 {actionLoading ? 'Enregistrement...' : 'Enregistrer'}
               </button>
@@ -1256,7 +1425,7 @@ export default function EducatorAppointmentsPage() {
                   setSelectedAppointment(null);
                 }}
                 disabled={actionLoading}
-                className="px-4 py-2 bg-gray-300 text-gray-700 rounded-md hover:bg-gray-400 disabled:opacity-50"
+                className="px-4 py-2 bg-gray-200 text-gray-700 rounded-xl hover:bg-gray-300 disabled:opacity-50 font-medium"
               >
                 Annuler
               </button>
@@ -1281,9 +1450,9 @@ export default function EducatorAppointmentsPage() {
       {/* Modal Dossier Enfant */}
       {showDossierModal && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4" role="dialog" aria-modal="true" aria-labelledby="dossier-modal-title">
-          <div className="bg-white rounded-xl shadow-xl max-w-3xl w-full max-h-[90vh] overflow-hidden flex flex-col">
+          <div className="bg-white rounded-2xl shadow-xl max-w-3xl w-full max-h-[90vh] overflow-hidden flex flex-col">
             {/* Header */}
-            <div className="bg-gradient-to-r from-purple-600 to-indigo-600 px-6 py-4 flex items-center justify-between">
+            <div className="px-6 py-4 flex items-center justify-between" style={{ backgroundColor: '#41005c' }}>
               <h3 id="dossier-modal-title" className="text-xl font-bold text-white flex items-center gap-2">
                 <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
@@ -1308,7 +1477,7 @@ export default function EducatorAppointmentsPage() {
             <div className="flex-1 overflow-y-auto p-6">
               {dossierLoading ? (
                 <div className="flex items-center justify-center py-12" role="status" aria-live="polite">
-                  <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-purple-600" aria-hidden="true"></div>
+                  <div className="animate-spin rounded-full h-10 w-10 border-b-2" style={{ borderColor: '#41005c' }} aria-hidden="true"></div>
                   <span className="sr-only">Chargement du dossier...</span>
                 </div>
               ) : childDossier ? (
@@ -1492,7 +1661,8 @@ export default function EducatorAppointmentsPage() {
                   setShowDossierModal(false);
                   setChildDossier(null);
                 }}
-                className="w-full px-4 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700 font-medium transition"
+                className="w-full px-4 py-3 text-white rounded-xl hover:opacity-90 font-semibold transition"
+                style={{ backgroundColor: '#41005c' }}
               >
                 Fermer
               </button>
@@ -1500,6 +1670,9 @@ export default function EducatorAppointmentsPage() {
           </div>
         </div>
       )}
+
+      {/* Footer violet */}
+      <div className="mt-auto" style={{ backgroundColor: '#41005c', height: '40px' }}></div>
     </div>
   );
 }

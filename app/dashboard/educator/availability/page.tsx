@@ -208,9 +208,10 @@ export default function EducatorAvailability() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+      <div className="min-h-screen flex items-center justify-center" style={{ backgroundColor: '#fdf9f4' }}>
         <div
-          className="animate-spin h-12 w-12 border-4 border-primary-600 border-t-transparent rounded-full"
+          className="animate-spin h-12 w-12 border-4 border-t-transparent rounded-full"
+          style={{ borderColor: '#41005c', borderTopColor: 'transparent' }}
           role="status"
           aria-label="Chargement en cours"
         >
@@ -221,15 +222,20 @@ export default function EducatorAvailability() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      <EducatorNavbar profile={profile} subscription={subscription} />
+    <div className="min-h-screen min-h-[100dvh] flex flex-col" style={{ backgroundColor: '#fdf9f4' }}>
+      {/* Navigation */}
+      <div className="sticky top-0 z-40">
+        <EducatorNavbar profile={profile} subscription={subscription} />
+      </div>
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-8">
-        <div className="mb-6 sm:mb-8">
-          <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">Mes disponibilités</h1>
-          <p className="text-gray-600 mt-1 sm:mt-2 text-sm sm:text-base">
-            Ajoutez vos créneaux disponibles pour que les familles puissent réserver.
-          </p>
+      <div className="flex-1 max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8 w-full">
+        {/* En-tête centré avec icône */}
+        <div className="mb-6 sm:mb-8 text-center">
+          <div className="w-16 h-16 mx-auto mb-4 rounded-full flex items-center justify-center p-1" style={{ backgroundColor: '#41005c' }}>
+            <img src="/images/icons/clock.svg" alt="" className="w-full h-full" />
+          </div>
+          <h1 className="text-xl sm:text-2xl font-bold text-gray-900">Mes disponibilités</h1>
+          <p className="text-gray-500 text-sm mt-1">Ajoutez vos créneaux pour que les familles puissent réserver</p>
         </div>
 
         {/* Messages */}
@@ -247,230 +253,223 @@ export default function EducatorAvailability() {
           </div>
         )}
 
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-          {/* Formulaire d'ajout */}
-          <div className="lg:col-span-1">
-            <div className="bg-white rounded-lg shadow p-6 sticky top-4">
-              <h2 className="text-xl font-semibold text-gray-900 mb-4">
-                Ajouter une disponibilité
-              </h2>
+        {/* Formulaire d'ajout */}
+        <div className="bg-white rounded-2xl shadow-sm p-5 mb-6 border border-gray-100">
+          <h2 className="text-lg font-semibold mb-4" style={{ color: '#41005c' }}>
+            Ajouter une disponibilité
+          </h2>
 
-              <div className="space-y-4">
-                <div>
-                  <label htmlFor="availability-date" className="block text-sm font-medium text-gray-700 mb-2">
-                    Date
-                  </label>
-                  <input
-                    id="availability-date"
-                    type="date"
-                    value={selectedDate}
-                    onChange={(e) => setSelectedDate(e.target.value)}
-                    min={new Date().toISOString().split('T')[0]}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500"
-                    aria-required="true"
-                    aria-describedby="date-description"
-                  />
-                  <span id="date-description" className="sr-only">
-                    Sélectionnez une date pour votre disponibilité. Seules les dates futures sont autorisées.
-                  </span>
-                </div>
+          <div className="grid grid-cols-3 gap-3 mb-4">
+            <div>
+              <label htmlFor="availability-date" className="block text-xs font-medium text-gray-600 mb-1">
+                Date
+              </label>
+              <input
+                id="availability-date"
+                type="date"
+                value={selectedDate}
+                onChange={(e) => setSelectedDate(e.target.value)}
+                min={new Date().toISOString().split('T')[0]}
+                className="w-full px-3 py-2.5 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 text-sm"
+                style={{ '--tw-ring-color': '#41005c' } as React.CSSProperties}
+                aria-required="true"
+                aria-describedby="date-description"
+              />
+              <span id="date-description" className="sr-only">
+                Sélectionnez une date pour votre disponibilité. Seules les dates futures sont autorisées.
+              </span>
+            </div>
 
-                <div>
-                  <label htmlFor="availability-start-time" className="block text-sm font-medium text-gray-700 mb-2">
-                    Heure de début
-                  </label>
-                  <input
-                    id="availability-start-time"
-                    type="time"
-                    value={startTime}
-                    onChange={(e) => setStartTime(e.target.value)}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500"
-                    aria-required="true"
-                  />
-                </div>
+            <div>
+              <label htmlFor="availability-start-time" className="block text-xs font-medium text-gray-600 mb-1">
+                Début
+              </label>
+              <input
+                id="availability-start-time"
+                type="time"
+                value={startTime}
+                onChange={(e) => setStartTime(e.target.value)}
+                className="w-full px-3 py-2.5 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 text-sm"
+                style={{ '--tw-ring-color': '#41005c' } as React.CSSProperties}
+                aria-required="true"
+              />
+            </div>
 
-                <div>
-                  <label htmlFor="availability-end-time" className="block text-sm font-medium text-gray-700 mb-2">
-                    Heure de fin
-                  </label>
-                  <input
-                    id="availability-end-time"
-                    type="time"
-                    value={endTime}
-                    onChange={(e) => setEndTime(e.target.value)}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500"
-                    aria-required="true"
-                    aria-describedby="time-description"
-                  />
-                  <span id="time-description" className="sr-only">
-                    L'heure de fin doit être postérieure à l'heure de début.
-                  </span>
-                </div>
+            <div>
+              <label htmlFor="availability-end-time" className="block text-xs font-medium text-gray-600 mb-1">
+                Fin
+              </label>
+              <input
+                id="availability-end-time"
+                type="time"
+                value={endTime}
+                onChange={(e) => setEndTime(e.target.value)}
+                className="w-full px-3 py-2.5 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 text-sm"
+                style={{ '--tw-ring-color': '#41005c' } as React.CSSProperties}
+                aria-required="true"
+                aria-describedby="time-description"
+              />
+              <span id="time-description" className="sr-only">
+                L'heure de fin doit être postérieure à l'heure de début.
+              </span>
+            </div>
+          </div>
 
-                <button
-                  onClick={handleAddAvailability}
-                  disabled={saving}
-                  className="w-full bg-primary-600 text-white py-2 px-4 rounded-lg hover:bg-primary-700 transition disabled:opacity-50 disabled:cursor-not-allowed font-medium"
-                  aria-label="Ajouter une nouvelle disponibilité"
-                  aria-busy={saving}
-                >
-                  {saving ? 'Ajout...' : 'Ajouter'}
-                </button>
+          <button
+            onClick={handleAddAvailability}
+            disabled={saving}
+            className="w-full text-white py-3 px-4 rounded-xl transition disabled:opacity-50 disabled:cursor-not-allowed font-medium hover:opacity-90"
+            style={{ backgroundColor: '#41005c' }}
+            aria-label="Ajouter une nouvelle disponibilité"
+            aria-busy={saving}
+          >
+            {saving ? 'Ajout en cours...' : '+ Ajouter ce créneau'}
+          </button>
+        </div>
+
+        {/* Statistiques rapides */}
+        <div className="grid grid-cols-2 gap-3 mb-6">
+          <div className="bg-white rounded-xl p-4 text-center border border-gray-100 shadow-sm">
+            <p className="text-2xl font-bold" style={{ color: '#41005c' }}>{availabilities.length}</p>
+            <p className="text-xs text-gray-500 mt-1">Créneaux à venir</p>
+          </div>
+          <div className="bg-white rounded-xl p-4 text-center border border-gray-100 shadow-sm">
+            <p className="text-2xl font-bold" style={{ color: '#41005c' }}>{availabilities.filter(a => a.is_available).length}</p>
+            <p className="text-xs text-gray-500 mt-1">Disponibles</p>
+          </div>
+        </div>
+
+        {/* Liste des disponibilités */}
+        <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
+          {/* En-tête de section */}
+          <div className="px-5 py-4 border-b border-gray-100" style={{ backgroundColor: '#faf5ff' }}>
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-10 rounded-xl flex items-center justify-center" style={{ backgroundColor: '#41005c' }}>
+                <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                </svg>
               </div>
-
-              <div className="mt-6 p-4 bg-blue-50 rounded-lg">
-                <div className="flex items-start gap-2">
-                  <svg
-                    className="w-5 h-5 text-blue-600 mt-0.5 flex-shrink-0"
-                    fill="currentColor"
-                    viewBox="0 0 20 20"
-                    aria-hidden="true"
-                  >
-                    <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd" />
-                  </svg>
-                  <div className="text-sm text-blue-800">
-                    <p className="font-medium mb-1">Astuce</p>
-                    <ul className="space-y-1 text-xs">
-                      <li>• Ajoutez vos dates disponibles à l&apos;avance</li>
-                      <li>• Les familles verront ces horaires</li>
-                      <li>• Vous pouvez activer/désactiver un créneau</li>
-                      <li>• Les RDV réservés masqueront le créneau</li>
-                    </ul>
-                  </div>
-                </div>
+              <div>
+                <h2 className="text-base font-semibold text-gray-900">Vos créneaux à venir</h2>
+                <p className="text-xs text-gray-500">{availabilities.length} créneau{availabilities.length > 1 ? 'x' : ''} programmé{availabilities.length > 1 ? 's' : ''}</p>
               </div>
             </div>
           </div>
 
-          {/* Liste des disponibilités */}
-          <div className="lg:col-span-2">
-            <div className="bg-white rounded-lg shadow">
-              <div className="px-6 py-4 border-b border-gray-200">
-                <h2 className="text-xl font-semibold text-gray-900">
-                  Vos créneaux à venir ({availabilities.length})
-                </h2>
+          <div className="p-5">
+            {availabilities.length === 0 ? (
+              <div className="text-center py-8">
+                <div className="mx-auto w-14 h-14 rounded-full flex items-center justify-center mb-3" style={{ backgroundColor: '#f3e8ff' }}>
+                  <svg
+                    className="h-7 w-7"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                    aria-hidden="true"
+                    style={{ color: '#41005c' }}
+                  >
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                  </svg>
+                </div>
+                <h3 className="text-sm font-medium text-gray-900">Aucune disponibilité</h3>
+                <p className="mt-1 text-xs text-gray-500">
+                  Ajoutez vos premiers créneaux ci-dessus
+                </p>
               </div>
-
-              <div className="p-6">
-                {availabilities.length === 0 ? (
-                  <div className="text-center py-12">
-                    <svg
-                      className="mx-auto h-12 w-12 text-gray-400"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                      aria-hidden="true"
-                    >
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                    </svg>
-                    <h3 className="mt-2 text-sm font-medium text-gray-900">Aucune disponibilité</h3>
-                    <p className="mt-1 text-sm text-gray-500">
-                      Commencez par ajouter vos premiers créneaux disponibles.
-                    </p>
-                  </div>
-                ) : (
-                  <div className="space-y-6" role="list" aria-label="Liste des créneaux de disponibilité">
-                    {Object.keys(groupedAvailabilities).sort().map(date => (
-                      <div key={date}>
-                        <h3 className="text-lg font-semibold text-gray-900 mb-3 capitalize">
-                          {formatDate(date)}
-                        </h3>
-                        <div className="space-y-2" role="list">
-                          {groupedAvailabilities[date].map(slot => (
-                            <div
-                              key={slot.id}
-                              className={`p-4 rounded-lg border-2 transition ${
-                                slot.is_available
-                                  ? 'border-green-200 bg-green-50'
-                                  : 'border-gray-200 bg-gray-50'
-                              }`}
-                              role="listitem"
-                              aria-label={`Créneau de ${slot.start_time} à ${slot.end_time}, ${slot.is_available ? 'disponible' : 'désactivé'}`}
-                            >
-                              <div className="flex items-center justify-between">
-                                <div className="flex items-center gap-3">
-                                  <div
-                                    className={`w-3 h-3 rounded-full flex-shrink-0 ${
-                                      slot.is_available ? 'bg-green-500' : 'bg-gray-400'
-                                    }`}
-                                    role="status"
-                                    aria-label={slot.is_available ? 'Statut: Disponible' : 'Statut: Désactivé'}
-                                  ></div>
-                                  <div>
-                                    <p className="font-medium text-gray-900">
-                                      {slot.start_time} - {slot.end_time}
-                                    </p>
-                                    <p className={`text-xs ${
-                                      slot.is_available ? 'text-green-600' : 'text-gray-500'
-                                    }`}>
-                                      {slot.is_available ? 'Disponible' : 'Désactivé'}
-                                    </p>
-                                  </div>
-                                </div>
-
-                                {/* Actions - visible uniquement sur desktop */}
-                                <div className="hidden sm:flex items-center gap-2">
-                                  <button
-                                    onClick={() => handleToggleAvailability(slot.id, slot.is_available)}
-                                    className={`px-3 py-1 rounded text-sm font-medium transition ${
-                                      slot.is_available
-                                        ? 'bg-yellow-100 text-yellow-700 hover:bg-yellow-200'
-                                        : 'bg-green-100 text-green-700 hover:bg-green-200'
-                                    }`}
-                                    aria-label={slot.is_available ? `Désactiver le créneau de ${slot.start_time} à ${slot.end_time}` : `Activer le créneau de ${slot.start_time} à ${slot.end_time}`}
-                                    aria-pressed={slot.is_available}
-                                  >
-                                    {slot.is_available ? 'Désactiver' : 'Activer'}
-                                  </button>
-                                  <button
-                                    onClick={() => handleDeleteAvailability(slot.id)}
-                                    className="p-2 text-red-600 hover:bg-red-50 rounded transition"
-                                    aria-label={`Supprimer le créneau de ${slot.start_time} à ${slot.end_time}`}
-                                  >
-                                    <svg
-                                      className="w-5 h-5"
-                                      fill="none"
-                                      stroke="currentColor"
-                                      viewBox="0 0 24 24"
-                                      aria-hidden="true"
-                                    >
-                                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-                                    </svg>
-                                  </button>
-                                </div>
-                              </div>
-
-                              {/* Actions mobile - en dessous */}
-                              <div className="sm:hidden flex items-center gap-2 mt-3 pt-3 border-t border-gray-200">
-                                <button
-                                  onClick={() => handleToggleAvailability(slot.id, slot.is_available)}
-                                  className={`flex-1 px-3 py-2 rounded text-sm font-medium transition ${
-                                    slot.is_available
-                                      ? 'bg-yellow-100 text-yellow-700 hover:bg-yellow-200'
-                                      : 'bg-green-100 text-green-700 hover:bg-green-200'
-                                  }`}
-                                  aria-label={slot.is_available ? `Désactiver le créneau de ${slot.start_time} à ${slot.end_time}` : `Activer le créneau de ${slot.start_time} à ${slot.end_time}`}
-                                  aria-pressed={slot.is_available}
-                                >
-                                  {slot.is_available ? 'Désactiver' : 'Activer'}
-                                </button>
-                                <button
-                                  onClick={() => handleDeleteAvailability(slot.id)}
-                                  className="px-4 py-2 text-red-600 bg-red-50 hover:bg-red-100 rounded transition text-sm font-medium"
-                                  aria-label={`Supprimer le créneau de ${slot.start_time} à ${slot.end_time}`}
-                                >
-                                  Supprimer
-                                </button>
+            ) : (
+              <div className="space-y-5" role="list" aria-label="Liste des créneaux de disponibilité">
+                {Object.keys(groupedAvailabilities).sort().map(date => (
+                  <div key={date}>
+                    <h3 className="text-sm font-semibold mb-2 capitalize" style={{ color: '#41005c' }}>
+                      {formatDate(date)}
+                    </h3>
+                    <div className="space-y-2" role="list">
+                      {groupedAvailabilities[date].map(slot => (
+                        <div
+                          key={slot.id}
+                          className="p-3 rounded-xl border transition"
+                          style={{
+                            borderColor: slot.is_available ? '#d8b4fe' : '#e5e7eb',
+                            backgroundColor: slot.is_available ? '#faf5ff' : '#f9fafb'
+                          }}
+                          role="listitem"
+                          aria-label={`Créneau de ${slot.start_time} à ${slot.end_time}, ${slot.is_available ? 'disponible' : 'désactivé'}`}
+                        >
+                          <div className="flex items-center justify-between">
+                            <div className="flex items-center gap-3">
+                              <div
+                                className="w-2.5 h-2.5 rounded-full flex-shrink-0"
+                                style={{ backgroundColor: slot.is_available ? '#41005c' : '#9ca3af' }}
+                                role="status"
+                                aria-label={slot.is_available ? 'Statut: Disponible' : 'Statut: Désactivé'}
+                              ></div>
+                              <div>
+                                <p className="font-medium text-gray-900 text-sm">
+                                  {slot.start_time} - {slot.end_time}
+                                </p>
+                                <p className="text-xs" style={{ color: slot.is_available ? '#7c3aed' : '#6b7280' }}>
+                                  {slot.is_available ? 'Disponible' : 'Désactivé'}
+                                </p>
                               </div>
                             </div>
-                          ))}
+
+                            {/* Actions - visible uniquement sur desktop */}
+                            <div className="hidden sm:flex items-center gap-2">
+                              <button
+                                onClick={() => handleToggleAvailability(slot.id, slot.is_available)}
+                                className="px-3 py-1.5 rounded-lg text-xs font-medium transition hover:opacity-90"
+                                style={{
+                                  backgroundColor: slot.is_available ? '#fef3c7' : '#f3e8ff',
+                                  color: slot.is_available ? '#92400e' : '#41005c'
+                                }}
+                                aria-label={slot.is_available ? `Désactiver le créneau de ${slot.start_time} à ${slot.end_time}` : `Activer le créneau de ${slot.start_time} à ${slot.end_time}`}
+                                aria-pressed={slot.is_available}
+                              >
+                                {slot.is_available ? 'Désactiver' : 'Activer'}
+                              </button>
+                              <button
+                                onClick={() => handleDeleteAvailability(slot.id)}
+                                className="p-1.5 rounded-lg transition"
+                                style={{ color: '#f0879f', backgroundColor: '#fdf2f4' }}
+                                aria-label={`Supprimer le créneau de ${slot.start_time} à ${slot.end_time}`}
+                              >
+                                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                                </svg>
+                              </button>
+                            </div>
+                          </div>
+
+                          {/* Actions mobile - en dessous */}
+                          <div className="sm:hidden flex items-center gap-2 mt-2 pt-2 border-t border-gray-100">
+                            <button
+                              onClick={() => handleToggleAvailability(slot.id, slot.is_available)}
+                              className="flex-1 px-3 py-2 rounded-lg text-xs font-medium transition hover:opacity-90"
+                              style={{
+                                backgroundColor: slot.is_available ? '#fef3c7' : '#f3e8ff',
+                                color: slot.is_available ? '#92400e' : '#41005c'
+                              }}
+                              aria-label={slot.is_available ? `Désactiver le créneau de ${slot.start_time} à ${slot.end_time}` : `Activer le créneau de ${slot.start_time} à ${slot.end_time}`}
+                              aria-pressed={slot.is_available}
+                            >
+                              {slot.is_available ? 'Désactiver' : 'Activer'}
+                            </button>
+                            <button
+                              onClick={() => handleDeleteAvailability(slot.id)}
+                              className="px-3 py-2 rounded-lg transition text-xs font-medium"
+                              style={{ color: '#f0879f', backgroundColor: '#fdf2f4' }}
+                              aria-label={`Supprimer le créneau de ${slot.start_time} à ${slot.end_time}`}
+                            >
+                              Supprimer
+                            </button>
+                          </div>
                         </div>
-                      </div>
-                    ))}
+                      ))}
+                    </div>
                   </div>
-                )}
+                ))}
               </div>
-            </div>
+            )}
           </div>
         </div>
       </div>

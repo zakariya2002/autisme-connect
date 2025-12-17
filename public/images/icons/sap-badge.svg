@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="350" viewBox="0 0 262.5 262.5" height="350" preserveAspectRatio="xMidYMid meet" version="1.0">
+  <defs>
+    <clipPath id="circle-clip">
+      <circle cx="131" cy="131" r="131"/>
+    </clipPath>
+  </defs>
+  <!-- Background circle - green for official/approved -->
+  <g clip-path="url(#circle-clip)">
+    <rect x="0" y="0" width="262.5" height="262.5" fill="#d1fae5" fill-opacity="1"/>
+  </g>
+  <!-- Shield/Badge for SAP accreditation -->
+  <g transform="translate(131, 135)">
+    <!-- Shield shape -->
+    <path d="M0 -75 L60 -55 L60 10 C60 50 30 75 0 90 C-30 75 -60 50 -60 10 L-60 -55 Z" fill="#41005c"/>
+    <!-- Inner shield -->
+    <path d="M0 -60 L48 -43 L48 8 C48 40 24 60 0 72 C-24 60 -48 40 -48 8 L-48 -43 Z" fill="#ffffff"/>
+    <!-- Checkmark -->
+    <path d="M-25 5 L-8 22 L30 -20" stroke="#41005c" stroke-width="12" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+    <!-- Stars decoration -->
+    <circle cx="-35" cy="-30" r="6" fill="#f0879f"/>
+    <circle cx="35" cy="-30" r="6" fill="#f0879f"/>
+    <circle cx="0" cy="-45" r="8" fill="#f0879f"/>
+    <!-- SAP text banner -->
+    <rect x="-40" y="45" width="80" height="22" rx="4" fill="#f0879f"/>
+    <text x="0" y="61" text-anchor="middle" font-family="Arial, sans-serif" font-size="14" font-weight="bold" fill="#ffffff">SAP</text>
+  </g>
+</svg>

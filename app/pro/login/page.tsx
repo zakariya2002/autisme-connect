@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import { signIn } from '@/lib/auth';
-import LogoPro from '@/components/LogoPro';
+import ProNavbar from '@/components/ProNavbar';
 
 export default function ProLoginPage() {
   const [email, setEmail] = useState('');
@@ -53,18 +53,28 @@ export default function ProLoginPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-emerald-50 via-white to-cyan-50 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
-      {/* Logo et titre */}
+    <div className="min-h-screen flex flex-col" style={{ backgroundColor: '#fdf9f4' }}>
+      {/* Navigation */}
+      <ProNavbar />
+
+      {/* Login Form */}
+      <div className="flex-1 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
+      {/* Logo et Titre */}
       <div className="sm:mx-auto sm:w-full sm:max-w-md">
         <div className="flex justify-center mb-6">
-          <LogoPro iconSize="lg" href="/pro" />
+          <img
+            src="/images/logo-neurocare.svg"
+            alt="NeuroCare"
+            className="h-32"
+            style={{ filter: 'brightness(0) saturate(100%) invert(12%) sepia(50%) saturate(5000%) hue-rotate(275deg) brightness(60%) contrast(120%)' }}
+          />
         </div>
         <h2 className="text-center text-2xl font-bold text-gray-900 mb-2">
           Connexion Professionnels
         </h2>
         <p className="text-center text-sm text-gray-600">
           Pas encore de compte ?{' '}
-          <Link href="/auth/register-educator" className="font-semibold text-teal-600 hover:text-teal-500 transition-colors">
+          <Link href="/auth/register-educator" className="font-semibold transition-colors" style={{ color: '#41005c' }}>
             Inscrivez-vous gratuitement
           </Link>
         </p>
@@ -156,7 +166,7 @@ export default function ProLoginPage() {
                   id="remember-me"
                   name="remember-me"
                   type="checkbox"
-                  className="h-4 w-4 text-teal-600 focus:ring-teal-500 border-gray-300 rounded"
+                  className="h-4 w-4 text-[#41005c] focus:ring-[#41005c] border-gray-300 rounded"
                 />
                 <label htmlFor="remember-me" className="ml-2 block text-sm text-gray-700">
                   Se souvenir de moi
@@ -164,7 +174,7 @@ export default function ProLoginPage() {
               </div>
 
               <div className="text-sm">
-                <Link href="/auth/forgot-password" className="font-semibold text-teal-600 hover:text-teal-500 transition-colors">
+                <Link href="/auth/forgot-password" className="font-semibold transition-colors" style={{ color: '#41005c' }}>
                   Mot de passe oublié ?
                 </Link>
               </div>
@@ -174,7 +184,8 @@ export default function ProLoginPage() {
               <button
                 type="submit"
                 disabled={loading}
-                className="group relative w-full flex justify-center py-3 px-4 border border-transparent rounded-lg text-sm font-semibold text-white bg-gradient-to-r from-emerald-500 via-teal-500 to-cyan-500 hover:from-emerald-600 hover:via-teal-600 hover:to-cyan-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-teal-500 disabled:opacity-50 disabled:cursor-not-allowed shadow-md hover:shadow-lg transition-all transform hover:-translate-y-0.5"
+                className="group relative w-full flex justify-center py-3 px-4 border border-transparent rounded-lg text-sm font-semibold text-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#41005c] disabled:opacity-50 disabled:cursor-not-allowed shadow-md hover:shadow-lg transition-all transform hover:-translate-y-0.5 hover:opacity-90"
+                style={{ backgroundColor: '#41005c' }}
               >
                 {loading ? (
                   <div className="flex items-center">
@@ -198,7 +209,7 @@ export default function ProLoginPage() {
 
           {/* Retour à l'accueil Pro */}
           <div className="mt-6">
-            <Link href="/pro" className="flex items-center justify-center text-sm text-gray-600 hover:text-teal-600 transition-colors">
+            <Link href="/pro" className="flex items-center justify-center text-sm text-gray-600 transition-colors hover:opacity-80" style={{ color: '#41005c' }}>
               <svg className="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
               </svg>
@@ -210,12 +221,13 @@ export default function ProLoginPage() {
           <div className="mt-4 pt-4 border-t border-gray-100 text-center">
             <p className="text-sm text-gray-500">
               Vous êtes un aidant ?{' '}
-              <Link href="/auth/login" className="font-medium text-violet-600 hover:text-violet-500 transition-colors">
+              <Link href="/auth/login" className="font-medium transition-colors" style={{ color: '#41005c' }}>
                 Connectez-vous ici
               </Link>
             </p>
           </div>
         </div>
+      </div>
       </div>
 
       {/* Popup de confirmation d'email */}
@@ -224,8 +236,8 @@ export default function ProLoginPage() {
           <div className="bg-white rounded-2xl max-w-md w-full p-8 shadow-2xl animate-in fade-in zoom-in duration-300">
             <div className="text-center">
               {/* Icône de succès */}
-              <div className="mx-auto w-20 h-20 bg-teal-100 rounded-full flex items-center justify-center mb-6">
-                <svg className="w-10 h-10 text-teal-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+              <div className="mx-auto w-20 h-20 rounded-full flex items-center justify-center mb-6" style={{ backgroundColor: 'rgba(65, 0, 92, 0.1)' }}>
+                <svg className="w-10 h-10" style={{ color: '#41005c' }} fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                 </svg>
               </div>
@@ -243,7 +255,8 @@ export default function ProLoginPage() {
               {/* Bouton de fermeture */}
               <button
                 onClick={() => setShowConfirmationPopup(false)}
-                className="w-full py-3 px-4 bg-gradient-to-r from-emerald-500 via-teal-500 to-cyan-500 text-white rounded-lg font-semibold hover:from-emerald-600 hover:via-teal-600 hover:to-cyan-600 transition-all shadow-md hover:shadow-lg"
+                className="w-full py-3 px-4 text-white rounded-lg font-semibold transition-all shadow-md hover:shadow-lg hover:opacity-90"
+                style={{ backgroundColor: '#41005c' }}
               >
                 C&apos;est compris !
               </button>

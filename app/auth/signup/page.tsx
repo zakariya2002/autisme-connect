@@ -10,7 +10,7 @@ export default function SignupChoicePage() {
   const handleRoleSelection = (role: 'family' | 'educator') => {
     // Redirection directe vers les pages fusionnées
     if (role === 'educator') {
-      router.push('/auth/register-educator');
+      router.push('/pro');
     } else {
       router.push('/auth/register-family');
     }

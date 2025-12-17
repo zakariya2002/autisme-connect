@@ -87,35 +87,14 @@ export async function POST(request: Request) {
           recurring: { interval: 'month' as const },
         };
 
-    // Créer ou récupérer le coupon de lancement (10€ de réduction pendant 3 mois pour mensuel)
-    let discountCoupon = null;
-    if (planType === 'monthly') {
-      try {
-        // Vérifier si le coupon existe déjà
-        try {
-          discountCoupon = await stripe.coupons.retrieve('LANCEMENT2024');
-        } catch (err) {
-          // Coupon n'existe pas, on le crée
-          discountCoupon = await stripe.coupons.create({
-            id: 'LANCEMENT2024',
-            amount_off: 1000, // 10€ de réduction
-            currency: 'eur',
-            duration: 'repeating',
-            duration_in_months: 3,
-            name: 'Offre lancement - 19€ x 3 mois',
-          });
-        }
-      } catch (couponError) {
-        console.log('⚠️ Impossible de créer/récupérer le coupon:', couponError);
-        // On continue sans coupon si erreur
-      }
-    }
+    // Période d'essai gratuite de 3 mois pour les abonnements mensuels
+    const trialPeriodDays = planType === 'monthly' ? 90 : undefined; // 3 mois = 90 jours
 
     // Créer la session de paiement Stripe
     console.log('💳 Création session Stripe pour customer:', customerId);
 
     try {
-      const sessionData: any = {
+      const sessionData: Stripe.Checkout.SessionCreateParams = {
         customer: customerId,
         mode: 'subscription',
         payment_method_types: ['card'],
@@ -124,10 +103,10 @@ export async function POST(request: Request) {
             price_data: {
               currency: 'eur',
               product_data: {
-                name: 'Autisme Connect - Abonnement Éducateur',
+                name: 'NeuroCare Pro - Abonnement Professionnel',
                 description: planType === 'annual'
                   ? 'Abonnement annuel - 29€/mois (348€/an)'
-                  : 'Abonnement mensuel - 29€/mois (19€ les 3 premiers mois)',
+                  : 'Abonnement mensuel - 3 mois offerts puis 29€/mois',
               },
               unit_amount: priceData.unit_amount,
               recurring: priceData.recurring,
@@ -140,21 +119,16 @@ export async function POST(request: Request) {
             educator_id: educatorId,
             plan_type: planType,
           },
+          // Ajouter la période d'essai gratuite de 3 mois pour les abonnements mensuels
+          ...(trialPeriodDays && { trial_period_days: trialPeriodDays }),
         },
         success_url: `${process.env.NEXT_PUBLIC_APP_URL}/dashboard/educator?subscription=success`,
-        cancel_url: `${process.env.NEXT_PUBLIC_APP_URL}/pricing?canceled=true`,
+        cancel_url: `${process.env.NEXT_PUBLIC_APP_URL}/pro/pricing?canceled=true`,
         metadata: {
           educator_id: educatorId,
           plan_type: planType,
         },
       };
-
-      // Ajouter le coupon de lancement pour les abonnements mensuels
-      if (discountCoupon && planType === 'monthly') {
-        sessionData.discounts = [{
-          coupon: discountCoupon.id,
-        }];
-      }
 
       const session = await stripe.checkout.sessions.create(sessionData);
 

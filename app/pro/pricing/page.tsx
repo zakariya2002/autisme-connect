@@ -4,8 +4,7 @@ import Link from 'next/link';
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { supabase } from '@/lib/supabase';
-import MobileMenuPro from '@/components/MobileMenuPro';
-import LogoPro from '@/components/LogoPro';
+import ProNavbar from '@/components/ProNavbar';
 
 export default function ProPricingPage() {
   const router = useRouter();
@@ -85,7 +84,7 @@ export default function ProPricingPage() {
       name: 'OFFRE PREMIUM',
       icon: '⭐',
       price: 29,
-      launchPrice: 19,
+      launchPrice: 0,
       features: [
         'Rendez-vous illimités',
         'Conversations illimitées',
@@ -110,53 +109,16 @@ export default function ProPricingPage() {
   ];
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-emerald-50 via-white to-cyan-50">
+    <div className="min-h-screen" style={{ backgroundColor: '#fdf9f4' }}>
       {/* Navigation */}
-      <nav className="bg-white border-b border-gray-100 sticky top-0 z-50" role="navigation" aria-label="Navigation principale">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between h-16 lg:h-20 items-center">
-            <LogoPro iconSize="md" />
-
-            {/* Desktop Navigation */}
-            <div className="hidden xl:flex items-center gap-5" role="menubar">
-              <Link href="/pro/pricing" className="text-teal-600 font-medium text-sm whitespace-nowrap focus:outline-none focus:ring-2 focus:ring-teal-500 focus:ring-offset-2 rounded px-2 py-1" aria-current="page">
-                Tarifs
-              </Link>
-              <Link href="/pro/how-it-works" className="text-gray-600 hover:text-teal-600 font-medium text-sm transition-colors whitespace-nowrap focus:outline-none focus:ring-2 focus:ring-teal-500 focus:ring-offset-2 rounded px-2 py-1">
-                Comment ça marche
-              </Link>
-              <Link href="/pro/sap-accreditation" className="text-gray-600 hover:text-teal-600 font-medium text-sm transition-colors whitespace-nowrap focus:outline-none focus:ring-2 focus:ring-teal-500 focus:ring-offset-2 rounded px-2 py-1">
-                Guide SAP
-              </Link>
-              <div className="h-5 w-px bg-gray-200" aria-hidden="true"></div>
-              <Link href="/" className="text-gray-500 hover:text-gray-700 text-xs transition-colors whitespace-nowrap focus:outline-none focus:ring-2 focus:ring-teal-500 focus:ring-offset-2 rounded px-2 py-1">
-                Vous êtes un aidant ?
-              </Link>
-              <Link href="/pro/login" className="text-gray-600 hover:text-teal-600 font-medium text-sm transition-colors focus:outline-none focus:ring-2 focus:ring-teal-500 focus:ring-offset-2 rounded px-2 py-1">
-                Connexion
-              </Link>
-              <Link
-                href="/auth/register-educator"
-                className="bg-gradient-to-r from-emerald-500 via-teal-500 to-cyan-500 text-white px-4 py-2 rounded-xl font-semibold text-sm hover:from-emerald-600 hover:via-teal-600 hover:to-cyan-600 transition-all shadow-lg hover:shadow-xl whitespace-nowrap focus:outline-none focus:ring-2 focus:ring-teal-500 focus:ring-offset-2"
-              >
-                Rejoindre
-              </Link>
-            </div>
-
-            {/* Mobile menu button */}
-            <div className="xl:hidden">
-              <MobileMenuPro />
-            </div>
-          </div>
-        </div>
-      </nav>
+      <ProNavbar />
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 lg:py-20">
         {/* Hero */}
         <div className="text-center mb-16">
           <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-gray-900 mb-6">
             Des tarifs{' '}
-            <span className="bg-gradient-to-r from-emerald-500 via-teal-500 to-cyan-500 bg-clip-text text-transparent">
+            <span style={{ color: '#41005c' }}>
               transparents
             </span>
           </h1>
@@ -202,10 +164,10 @@ export default function ProPricingPage() {
           </div>
 
           {/* PRO PLAN */}
-          <div className="bg-gradient-to-br from-emerald-50 to-cyan-50 rounded-3xl shadow-2xl border-2 border-teal-300 p-8 relative hover:shadow-3xl transition-all transform hover:-translate-y-1">
+          <div className="rounded-3xl shadow-2xl border-2 p-8 relative hover:shadow-3xl transition-all transform hover:-translate-y-1" style={{ backgroundColor: 'rgba(65, 0, 92, 0.05)', borderColor: '#41005c' }}>
             <div className="absolute -top-4 left-1/2 transform -translate-x-1/2">
-              <div className="bg-gradient-to-r from-green-500 to-emerald-600 text-white px-6 py-2 rounded-full font-bold text-sm shadow-lg animate-pulse">
-                🎁 3 premiers mois à 19€
+              <div className="text-white px-6 py-2 rounded-full font-bold text-sm shadow-lg animate-pulse" style={{ backgroundColor: '#f0879f' }}>
+                🎁 3 premiers mois offerts
               </div>
             </div>
 
@@ -213,17 +175,17 @@ export default function ProPricingPage() {
               <div className="text-5xl mb-4">{plans.pro.icon}</div>
               <h3 className="text-2xl font-bold text-gray-900 mb-4">{plans.pro.name}</h3>
               <div className="flex items-center justify-center gap-2 mb-2">
-                <span className="text-3xl text-gray-400 line-through">29€</span>
-                <span className="text-5xl font-bold bg-gradient-to-r from-emerald-500 via-teal-500 to-cyan-500 bg-clip-text text-transparent">19€</span>
-                <span className="text-xl text-gray-600">/mois</span>
+                <span className="text-3xl text-gray-400 line-through">29€/mois</span>
+                <span className="text-5xl font-bold" style={{ color: '#41005c' }}>GRATUIT</span>
               </div>
-              <p className="text-teal-600 font-medium text-sm">+ {plans.pro.commission}</p>
+              <p className="font-medium text-sm" style={{ color: '#f0879f' }}>puis 29€/mois</p>
+              <p className="font-medium text-sm mt-1" style={{ color: '#41005c' }}>+ {plans.pro.commission}</p>
             </div>
 
             <ul className="space-y-4 mb-8">
               {plans.pro.features.map((feature, index) => (
                 <li key={index} className="flex items-center">
-                  <svg className="w-5 h-5 text-primary-600 mr-3 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
+                  <svg className="w-5 h-5 mr-3 flex-shrink-0" style={{ color: '#41005c' }} fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
                     <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
                   </svg>
                   <span className="text-gray-700 font-medium">{feature}</span>
@@ -234,7 +196,8 @@ export default function ProPricingPage() {
             <button
               onClick={handleStartTrial}
               disabled={loading}
-              className="w-full px-6 py-4 bg-gradient-to-r from-emerald-500 via-teal-500 to-cyan-500 text-white rounded-xl hover:from-emerald-600 hover:via-teal-600 hover:to-cyan-600 font-bold text-lg shadow-xl hover:shadow-2xl transition-all disabled:opacity-50"
+              className="w-full px-6 py-4 text-white rounded-xl font-bold text-lg shadow-xl hover:shadow-2xl transition-all disabled:opacity-50 hover:opacity-90"
+              style={{ backgroundColor: '#41005c' }}
             >
               {loading ? 'Chargement...' : 'Passer Premium'}
             </button>
@@ -251,19 +214,19 @@ export default function ProPricingPage() {
           <div className="grid md:grid-cols-2 gap-8 mb-8">
             <div className="bg-gray-50 rounded-2xl p-6">
               <h3 className="font-bold text-gray-900 mb-4 flex items-center gap-2">
-                <span className="w-8 h-8 rounded-full bg-primary-100 text-primary-600 flex items-center justify-center font-bold">1</span>
+                <span className="w-8 h-8 rounded-full flex items-center justify-center font-bold text-white" style={{ backgroundColor: '#41005c' }}>1</span>
                 Abonnement mensuel
               </h3>
               <p className="text-gray-600">
                 <span className="text-3xl font-bold text-gray-900">29€</span>/mois pour l'accès à la plateforme
                 <br />
-                <span className="text-sm text-green-600 font-medium">(19€ les 3 premiers mois)</span>
+                <span className="text-sm font-medium" style={{ color: '#f0879f' }}>(3 premiers mois offerts !)</span>
               </p>
             </div>
 
             <div className="bg-gray-50 rounded-2xl p-6">
               <h3 className="font-bold text-gray-900 mb-4 flex items-center gap-2">
-                <span className="w-8 h-8 rounded-full bg-primary-100 text-primary-600 flex items-center justify-center font-bold">2</span>
+                <span className="w-8 h-8 rounded-full flex items-center justify-center font-bold text-white" style={{ backgroundColor: '#41005c' }}>2</span>
                 Commission de succès
               </h3>
               <p className="text-gray-600">
@@ -274,22 +237,22 @@ export default function ProPricingPage() {
             </div>
           </div>
 
-          <div className="bg-gradient-to-r from-green-50 to-emerald-50 rounded-2xl p-6 border border-green-200">
+          <div className="rounded-2xl p-6 border" style={{ backgroundColor: 'rgba(65, 0, 92, 0.05)', borderColor: 'rgba(65, 0, 92, 0.2)' }}>
             <h4 className="font-bold text-gray-900 mb-4 text-lg">📊 Exemple concret :</h4>
             <p className="text-gray-700 mb-3">
-              Une famille vous réserve pour <strong className="text-green-600">400€/mois</strong> via la plateforme
+              Une famille vous réserve pour <strong style={{ color: '#41005c' }}>400€/mois</strong> via la plateforme
             </p>
             <div className="flex flex-wrap gap-6 text-gray-700">
               <div>
                 <span className="text-sm text-gray-500">Vous recevez</span>
-                <p className="text-2xl font-bold text-green-600">352€</p>
+                <p className="text-2xl font-bold" style={{ color: '#41005c' }}>352€</p>
               </div>
               <div>
                 <span className="text-sm text-gray-500">Commission</span>
                 <p className="text-2xl font-bold text-gray-600">48€</p>
               </div>
             </div>
-            <p className="text-primary-600 font-semibold mt-4">
+            <p className="font-semibold mt-4" style={{ color: '#f0879f' }}>
               💡 Sans notre plateforme, cette famille = 0€ pour vous !
             </p>
           </div>
@@ -325,7 +288,7 @@ export default function ProPricingPage() {
           </h2>
           <div className="bg-white rounded-2xl shadow-xl overflow-hidden">
             <table className="w-full">
-              <thead className="bg-gradient-to-r from-emerald-500 via-teal-500 to-cyan-500 text-white">
+              <thead className="text-white" style={{ backgroundColor: '#41005c' }}>
                 <tr>
                   <th className="py-4 px-6 text-left">Fonctionnalité</th>
                   <th className="py-4 px-6 text-center">Découverte</th>
@@ -340,7 +303,7 @@ export default function ProPricingPage() {
                   { feature: 'Mise en avant', free: false, premium: true },
                   { feature: 'Badge Premium', free: false, premium: true },
                   { feature: 'Support prioritaire', free: false, premium: true },
-                  { feature: 'Abonnement', free: 'Gratuit', premium: '29€/mois' },
+                  { feature: 'Abonnement', free: 'Gratuit', premium: '3 mois offerts puis 29€/mois' },
                   { feature: 'Commission', free: '12%*', premium: '12%*' },
                 ].map((row, index) => (
                   <tr key={index} className="hover:bg-gray-50">
@@ -356,15 +319,15 @@ export default function ProPricingPage() {
                         <span className="text-gray-700">{row.free}</span>
                       )}
                     </td>
-                    <td className="py-4 px-6 text-center bg-primary-50">
+                    <td className="py-4 px-6 text-center" style={{ backgroundColor: 'rgba(65, 0, 92, 0.05)' }}>
                       {typeof row.premium === 'boolean' ? (
                         row.premium ? (
-                          <span className="text-primary-600 text-2xl font-bold">✓</span>
+                          <span className="text-2xl font-bold" style={{ color: '#41005c' }}>✓</span>
                         ) : (
                           <span className="text-gray-300 text-2xl">✗</span>
                         )
                       ) : (
-                        <span className="text-primary-600 font-bold">{row.premium}</span>
+                        <span className="font-bold" style={{ color: '#41005c' }}>{row.premium}</span>
                       )}
                     </td>
                   </tr>
@@ -386,7 +349,7 @@ export default function ProPricingPage() {
             {[
               {
                 q: "Comment fonctionne l'offre de lancement ?",
-                a: "Les 3 premiers mois sont à 19€/mois au lieu de 29€. Vous bénéficiez d'un accès complet à toutes les fonctionnalités Premium dès votre inscription."
+                a: "Les 3 premiers mois sont entièrement gratuits ! Vous bénéficiez d'un accès complet à toutes les fonctionnalités Premium dès votre inscription. L'abonnement à 29€/mois démarre ensuite automatiquement."
               },
               {
                 q: "Comment fonctionne la commission de 12% ?",
@@ -404,7 +367,7 @@ export default function ProPricingPage() {
               <details key={index} className="bg-white rounded-xl shadow-md overflow-hidden group">
                 <summary className="px-6 py-4 cursor-pointer font-semibold text-gray-900 hover:bg-gray-50 transition flex items-center justify-between">
                   {faq.q}
-                  <svg className="w-5 h-5 text-primary-600 group-open:rotate-180 transition-transform flex-shrink-0 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                  <svg className="w-5 h-5 group-open:rotate-180 transition-transform flex-shrink-0 ml-2" style={{ color: '#41005c' }} fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
                   </svg>
                 </summary>
@@ -417,7 +380,7 @@ export default function ProPricingPage() {
         </div>
 
         {/* CTA */}
-        <div className="bg-gradient-to-r from-emerald-500 via-teal-500 to-cyan-600 rounded-3xl shadow-2xl p-12 text-center text-white">
+        <div className="rounded-3xl shadow-2xl p-12 text-center text-white" style={{ backgroundColor: '#41005c' }}>
           <h2 className="text-4xl font-bold mb-4">
             Prêt à développer votre activité ?
           </h2>
@@ -427,14 +390,16 @@ export default function ProPricingPage() {
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Link
               href="/auth/register-educator"
-              className="px-8 py-4 bg-white text-primary-600 rounded-xl hover:bg-gray-100 font-bold text-lg shadow-xl transition-all"
+              className="px-8 py-4 bg-white rounded-xl hover:bg-gray-100 font-bold text-lg shadow-xl transition-all"
+              style={{ color: '#41005c' }}
             >
               Commencer gratuitement
             </Link>
             <button
               onClick={handleStartTrial}
               disabled={loading}
-              className="px-8 py-4 bg-primary-800/50 text-white border-2 border-white/30 rounded-xl hover:bg-primary-800/70 font-bold text-lg transition-all disabled:opacity-50"
+              className="px-8 py-4 text-white border-2 border-white/30 rounded-xl hover:bg-white/10 font-bold text-lg transition-all disabled:opacity-50"
+              style={{ backgroundColor: 'rgba(240, 135, 159, 0.5)' }}
             >
               {loading ? 'Chargement...' : 'Passer Premium'}
             </button>
@@ -443,19 +408,77 @@ export default function ProPricingPage() {
       </div>
 
       {/* Footer */}
-      <footer className="bg-gray-900 text-white py-12 mt-20">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex flex-col md:flex-row justify-between items-center gap-4">
-            <div className="flex items-center gap-2">
-              <span className="font-bold">neurocare</span>
-              <span className="bg-gradient-to-r from-emerald-500 via-teal-500 to-cyan-500 text-white text-xs font-bold px-2 py-0.5 rounded-full">
-                PRO
-              </span>
+      <footer className="text-white py-12 px-6 mt-20" style={{ backgroundColor: '#41005c' }} role="contentinfo">
+        <div className="max-w-6xl mx-auto">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 mb-10">
+            {/* Logo et description */}
+            <div>
+              <Link href="/pro" className="inline-block mb-4">
+                <div className="flex items-center gap-2">
+                  <img
+                    src="/images/logo-neurocare.svg"
+                    alt="Logo NeuroCare Pro"
+                    className="h-16 brightness-0 invert"
+                  />
+                  <span className="px-2 py-0.5 text-xs font-bold rounded-full" style={{ backgroundColor: '#f0879f' }}>
+                    PRO
+                  </span>
+                </div>
+              </Link>
+              <p className="text-sm leading-relaxed" style={{ color: 'rgba(255, 255, 255, 0.7)' }}>
+                La plateforme de référence pour les professionnels de l'accompagnement des troubles neurodéveloppementaux.
+              </p>
             </div>
-            <p className="text-gray-400 text-sm">© 2025 neurocare. Tous droits réservés.</p>
-            <Link href="/" className="text-gray-400 hover:text-white text-sm transition-colors">
-              Accéder au site familles →
-            </Link>
+
+            {/* Pour les pros */}
+            <nav aria-labelledby="footer-nav-pros">
+              <h3 id="footer-nav-pros" className="font-bold text-white mb-4">Pour les pros</h3>
+              <ul className="space-y-2 text-sm" style={{ color: 'rgba(255, 255, 255, 0.7)' }}>
+                <li><Link href="/pro/pricing" className="hover:text-white transition-colors">Tarifs</Link></li>
+                <li><Link href="/pro/how-it-works" className="hover:text-white transition-colors">Comment ça marche</Link></li>
+                <li><Link href="/pro/sap-accreditation" className="hover:text-white transition-colors">Guide SAP</Link></li>
+                <li><Link href="/auth/register-educator" className="hover:text-white transition-colors">S'inscrire</Link></li>
+              </ul>
+            </nav>
+
+            {/* Ressources */}
+            <nav aria-labelledby="footer-nav-ressources">
+              <h3 id="footer-nav-ressources" className="font-bold text-white mb-4">Ressources</h3>
+              <ul className="space-y-2 text-sm" style={{ color: 'rgba(255, 255, 255, 0.7)' }}>
+                <li><Link href="/about" className="hover:text-white transition-colors">À propos</Link></li>
+                <li><Link href="/contact" className="hover:text-white transition-colors">Contact</Link></li>
+                <li><Link href="/faq" className="hover:text-white transition-colors">FAQ</Link></li>
+              </ul>
+            </nav>
+
+            {/* Familles */}
+            <nav aria-labelledby="footer-nav-familles">
+              <h3 id="footer-nav-familles" className="font-bold text-white mb-4">Familles</h3>
+              <ul className="space-y-2 text-sm" style={{ color: 'rgba(255, 255, 255, 0.7)' }}>
+                <li><Link href="/" className="hover:text-white transition-colors">Accueil familles</Link></li>
+                <li><Link href="/search" className="hover:text-white transition-colors">Trouver un professionnel</Link></li>
+                <li><Link href="/familles/aides-financieres" className="hover:text-white transition-colors">Aides financières</Link></li>
+              </ul>
+            </nav>
+          </div>
+
+          {/* Séparateur */}
+          <div className="border-t pt-8" style={{ borderColor: 'rgba(255, 255, 255, 0.2)' }}>
+            <div className="flex flex-col sm:flex-row justify-between items-center gap-4">
+              {/* Liens légaux */}
+              <nav aria-label="Informations légales">
+                <div className="flex flex-wrap justify-center gap-4 text-sm" style={{ color: 'rgba(255, 255, 255, 0.7)' }}>
+                  <Link href="/mentions-legales" className="hover:text-white transition-colors">Mentions légales</Link>
+                  <Link href="/politique-confidentialite" className="hover:text-white transition-colors">Confidentialité</Link>
+                  <Link href="/cgu" className="hover:text-white transition-colors">CGU</Link>
+                </div>
+              </nav>
+
+              {/* Copyright */}
+              <p className="text-sm" style={{ color: 'rgba(255, 255, 255, 0.7)' }}>
+                © 2025 neurocare. Tous droits réservés.
+              </p>
+            </div>
           </div>
         </div>
       </footer>

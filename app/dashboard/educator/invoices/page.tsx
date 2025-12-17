@@ -100,66 +100,66 @@ export default function EducatorInvoices() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary-600"></div>
+      <div className="min-h-screen flex items-center justify-center" style={{ backgroundColor: '#fdf9f4' }}>
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2" style={{ borderColor: '#41005c' }}></div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      <EducatorNavbar profile={profile} subscription={subscription} />
+    <div className="min-h-screen min-h-[100dvh] flex flex-col" style={{ backgroundColor: '#fdf9f4' }}>
+      <div className="sticky top-0 z-40">
+        <EducatorNavbar profile={profile} subscription={subscription} />
+      </div>
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-8">
-        <div className="mb-6 sm:mb-8">
-          <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 flex items-center gap-2 sm:gap-3">
-            <svg className="h-6 w-6 sm:h-8 sm:w-8 text-primary-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-            </svg>
-            Mes factures
-          </h1>
-          <p className="text-gray-600 mt-1 sm:mt-2 text-sm sm:text-base">
-            Toutes vos factures pour vos déclarations URSSAF
-          </p>
+      <div className="flex-1 max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8 w-full">
+        {/* En-tête centré avec icône */}
+        <div className="mb-6 sm:mb-8 text-center">
+          <div className="w-16 h-16 mx-auto mb-4 rounded-full flex items-center justify-center p-1" style={{ backgroundColor: '#41005c' }}>
+            <img src="/images/icons/7.svg" alt="" className="w-full h-full" />
+          </div>
+          <h1 className="text-xl sm:text-2xl font-bold text-gray-900">Mes factures</h1>
+          <p className="text-gray-500 text-sm mt-1">Toutes vos factures pour vos déclarations URSSAF</p>
         </div>
 
         {/* Information URSSAF */}
-        <div className="bg-blue-50 border-l-4 border-blue-400 p-4 mb-8">
-          <div className="flex">
-            <div className="flex-shrink-0">
-              <svg className="h-5 w-5 text-blue-400" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
+        <div className="rounded-xl p-4 mb-6" style={{ backgroundColor: '#f3e8ff', border: '1px solid #d8b4fe' }}>
+          <div className="flex items-start gap-3">
+            <div className="w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0" style={{ backgroundColor: '#41005c' }}>
+              <svg className="h-4 w-4 text-white" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
                 <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd" />
               </svg>
             </div>
-            <div className="ml-3">
-              <h3 className="text-sm font-medium text-blue-800">
+            <div className="flex-1">
+              <h3 className="text-sm font-semibold" style={{ color: '#41005c' }}>
                 Information importante
               </h3>
-              <div className="mt-2 text-sm text-blue-700">
-                <p>
-                  Ces factures sont générées automatiquement après chaque prestation terminée et sont prêtes pour vos déclarations URSSAF.
-                </p>
-              </div>
+              <p className="mt-1 text-sm" style={{ color: '#5a1a75' }}>
+                Ces factures sont générées automatiquement après chaque prestation terminée et sont prêtes pour vos déclarations URSSAF.
+              </p>
             </div>
           </div>
         </div>
 
         {/* Liste des factures */}
         {invoices.length === 0 ? (
-          <div className="bg-white rounded-lg shadow p-12 text-center">
-            <svg className="mx-auto h-12 w-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-            </svg>
-            <h3 className="mt-4 text-lg font-medium text-gray-900">
+          <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-8 text-center">
+            <div className="w-14 h-14 rounded-full flex items-center justify-center mx-auto mb-4" style={{ backgroundColor: '#f3e8ff' }}>
+              <svg className="h-7 w-7" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true" style={{ color: '#41005c' }}>
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+              </svg>
+            </div>
+            <h3 className="text-base font-semibold text-gray-900">
               Aucune facture disponible
             </h3>
             <p className="mt-2 text-sm text-gray-500">
               Les factures seront générées automatiquement après vos premières prestations terminées.
             </p>
-            <div className="mt-6">
+            <div className="mt-5">
               <Link
                 href="/dashboard/educator/appointments"
-                className="inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-primary-600 hover:bg-primary-700"
+                className="inline-flex items-center px-5 py-2.5 text-sm font-medium rounded-xl text-white hover:opacity-90 transition"
+                style={{ backgroundColor: '#41005c' }}
               >
                 Voir mes rendez-vous
               </Link>
@@ -168,20 +168,20 @@ export default function EducatorInvoices() {
         ) : (
           <>
             {/* Vue mobile - Cartes */}
-            <div className="md:hidden space-y-4">
+            <div className="md:hidden space-y-3">
               {invoices.map((invoice) => (
-                <div key={invoice.id} className="bg-white shadow rounded-lg p-4 border border-gray-200">
+                <div key={invoice.id} className="bg-white shadow-sm rounded-xl p-4 border border-gray-100">
                   <div className="flex items-start justify-between mb-3">
                     <div className="flex-1">
-                      <h3 className="text-lg font-semibold text-gray-900">{invoice.invoice_number}</h3>
-                      <p className="text-sm text-gray-500 mt-1">{formatDate(invoice.invoice_date)}</p>
+                      <h3 className="text-base font-semibold" style={{ color: '#41005c' }}>{invoice.invoice_number}</h3>
+                      <p className="text-xs text-gray-500 mt-0.5">{formatDate(invoice.invoice_date)}</p>
                     </div>
-                    <span className={`px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full ${
-                      invoice.status === 'generated' ? 'bg-blue-100 text-blue-800' :
-                      invoice.status === 'sent' ? 'bg-yellow-100 text-yellow-800' :
-                      invoice.status === 'paid' ? 'bg-green-100 text-green-800' :
-                      'bg-gray-100 text-gray-800'
-                    }`}>
+                    <span className={`px-2.5 py-1 text-xs font-semibold rounded-full ${
+                      invoice.status === 'generated' ? 'text-white' :
+                      invoice.status === 'sent' ? 'bg-amber-100 text-amber-700' :
+                      invoice.status === 'paid' ? 'bg-green-100 text-green-700' :
+                      'bg-gray-100 text-gray-700'
+                    }`} style={invoice.status === 'generated' ? { backgroundColor: '#41005c' } : {}}>
                       {invoice.status === 'generated' ? 'Générée' :
                        invoice.status === 'sent' ? 'Envoyée' :
                        invoice.status === 'paid' ? 'Payée' :
@@ -189,21 +189,21 @@ export default function EducatorInvoices() {
                     </span>
                   </div>
 
-                  <div className="space-y-2 mb-4">
-                    <div className="flex justify-between text-sm">
-                      <span className="text-gray-500">Client:</span>
+                  <div className="space-y-1.5 mb-4 text-sm">
+                    <div className="flex justify-between">
+                      <span className="text-gray-500">Client</span>
                       <span className="font-medium text-gray-900">{invoice.client_name}</span>
                     </div>
-                    <div className="flex justify-between text-sm">
-                      <span className="text-gray-500">Montant TTC:</span>
+                    <div className="flex justify-between">
+                      <span className="text-gray-500">Montant TTC</span>
                       <span className="font-medium text-gray-900">{formatAmount(invoice.amount_total)}</span>
                     </div>
-                    <div className="flex justify-between text-sm">
-                      <span className="text-gray-500">Commission:</span>
-                      <span className="font-medium text-red-600">-{formatAmount(invoice.amount_commission)}</span>
+                    <div className="flex justify-between">
+                      <span className="text-gray-500">Commission</span>
+                      <span className="font-medium" style={{ color: '#f0879f' }}>-{formatAmount(invoice.amount_commission)}</span>
                     </div>
-                    <div className="flex justify-between text-sm pt-2 border-t border-gray-200">
-                      <span className="text-gray-700 font-medium">Net perçu:</span>
+                    <div className="flex justify-between pt-2 border-t border-gray-100">
+                      <span className="text-gray-700 font-medium">Net perçu</span>
                       <span className="font-bold text-green-600">{formatAmount(invoice.amount_net)}</span>
                     </div>
                   </div>
@@ -212,95 +212,85 @@ export default function EducatorInvoices() {
                     href={invoice.pdf_url}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="w-full inline-flex items-center justify-center gap-2 px-4 py-3 bg-primary-600 text-white rounded-lg hover:bg-primary-700 font-medium transition shadow-md"
+                    className="w-full inline-flex items-center justify-center gap-2 px-4 py-2.5 text-white rounded-xl hover:opacity-90 font-medium transition text-sm"
+                    style={{ backgroundColor: '#41005c' }}
                     aria-label={`Télécharger la facture ${invoice.invoice_number}`}
                   >
-                    <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                    <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
                     </svg>
-                    Télécharger la facture
+                    Télécharger
                   </a>
                 </div>
               ))}
             </div>
 
             {/* Vue desktop - Tableau */}
-            <div className="hidden md:block bg-white shadow overflow-hidden sm:rounded-lg">
-              <table className="min-w-full divide-y divide-gray-200">
-                <thead className="bg-gray-50">
+            <div className="hidden md:block bg-white shadow-sm overflow-hidden rounded-2xl border border-gray-100">
+              <table className="min-w-full divide-y divide-gray-100">
+                <thead style={{ backgroundColor: '#faf5ff' }}>
                   <tr>
-                    <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    <th scope="col" className="px-5 py-3 text-left text-xs font-semibold uppercase tracking-wider" style={{ color: '#41005c' }}>
                       Numéro
                     </th>
-                    <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    <th scope="col" className="px-5 py-3 text-left text-xs font-semibold uppercase tracking-wider" style={{ color: '#41005c' }}>
                       Date
                     </th>
-                    <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    <th scope="col" className="px-5 py-3 text-left text-xs font-semibold uppercase tracking-wider" style={{ color: '#41005c' }}>
                       Client
                     </th>
-                    <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                      Montant TTC
-                    </th>
-                    <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                      Commission
-                    </th>
-                    <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    <th scope="col" className="px-5 py-3 text-left text-xs font-semibold uppercase tracking-wider" style={{ color: '#41005c' }}>
                       Net perçu
                     </th>
-                    <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    <th scope="col" className="px-5 py-3 text-left text-xs font-semibold uppercase tracking-wider" style={{ color: '#41005c' }}>
                       Statut
                     </th>
-                    <th scope="col" className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    <th scope="col" className="px-5 py-3 text-right text-xs font-semibold uppercase tracking-wider" style={{ color: '#41005c' }}>
                       Actions
                     </th>
                   </tr>
                 </thead>
-                <tbody className="bg-white divide-y divide-gray-200">
+                <tbody className="bg-white divide-y divide-gray-100">
                   {invoices.map((invoice) => (
-                    <tr key={invoice.id} className="hover:bg-gray-50">
-                      <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                    <tr key={invoice.id} className="hover:bg-gray-50 transition-colors">
+                      <td className="px-5 py-4 whitespace-nowrap text-sm font-semibold" style={{ color: '#41005c' }}>
                         {invoice.invoice_number}
                       </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                      <td className="px-5 py-4 whitespace-nowrap text-sm text-gray-500">
                         {formatDate(invoice.invoice_date)}
                       </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                      <td className="px-5 py-4 whitespace-nowrap text-sm text-gray-900">
                         {invoice.client_name}
                       </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                        {formatAmount(invoice.amount_total)}
-                      </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-red-600">
-                        -{formatAmount(invoice.amount_commission)}
-                      </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm font-semibold text-green-600">
+                      <td className="px-5 py-4 whitespace-nowrap text-sm font-bold text-green-600">
                         {formatAmount(invoice.amount_net)}
                       </td>
-                      <td className="px-6 py-4 whitespace-nowrap">
-                        <span className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${
-                          invoice.status === 'generated' ? 'bg-blue-100 text-blue-800' :
-                          invoice.status === 'sent' ? 'bg-yellow-100 text-yellow-800' :
-                          invoice.status === 'paid' ? 'bg-green-100 text-green-800' :
-                          'bg-gray-100 text-gray-800'
-                        }`}>
+                      <td className="px-5 py-4 whitespace-nowrap">
+                        <span className={`px-2.5 py-1 text-xs font-semibold rounded-full ${
+                          invoice.status === 'generated' ? 'text-white' :
+                          invoice.status === 'sent' ? 'bg-amber-100 text-amber-700' :
+                          invoice.status === 'paid' ? 'bg-green-100 text-green-700' :
+                          'bg-gray-100 text-gray-700'
+                        }`} style={invoice.status === 'generated' ? { backgroundColor: '#41005c' } : {}}>
                           {invoice.status === 'generated' ? 'Générée' :
                            invoice.status === 'sent' ? 'Envoyée' :
                            invoice.status === 'paid' ? 'Payée' :
                            invoice.status}
                         </span>
                       </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                      <td className="px-5 py-4 whitespace-nowrap text-right text-sm font-medium">
                         <a
                           href={invoice.pdf_url}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="inline-flex items-center gap-2 text-primary-600 hover:text-primary-900"
+                          className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-white text-xs font-medium hover:opacity-90 transition"
+                          style={{ backgroundColor: '#41005c' }}
                           aria-label={`Télécharger la facture ${invoice.invoice_number}`}
                         >
-                          <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                          <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
                           </svg>
-                          Télécharger
+                          PDF
                         </a>
                       </td>
                     </tr>
@@ -313,71 +303,18 @@ export default function EducatorInvoices() {
 
         {/* Statistiques des factures */}
         {invoices.length > 0 && (
-          <div className="mt-8 grid grid-cols-1 gap-5 sm:grid-cols-3">
-            <div className="bg-white overflow-hidden shadow rounded-lg">
-              <div className="p-5">
-                <div className="flex items-center">
-                  <div className="flex-shrink-0">
-                    <svg className="h-6 w-6 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-                    </svg>
-                  </div>
-                  <div className="ml-5 w-0 flex-1">
-                    <dl>
-                      <dt className="text-sm font-medium text-gray-500 truncate">
-                        Total factures
-                      </dt>
-                      <dd className="text-lg font-semibold text-gray-900">
-                        {invoices.length}
-                      </dd>
-                    </dl>
-                  </div>
-                </div>
-              </div>
+          <div className="mt-6 grid grid-cols-3 gap-3">
+            <div className="bg-white rounded-xl p-4 text-center border border-gray-100 shadow-sm">
+              <p className="text-2xl font-bold" style={{ color: '#41005c' }}>{invoices.length}</p>
+              <p className="text-xs text-gray-500 mt-1">Factures</p>
             </div>
-
-            <div className="bg-white overflow-hidden shadow rounded-lg">
-              <div className="p-5">
-                <div className="flex items-center">
-                  <div className="flex-shrink-0">
-                    <svg className="h-6 w-6 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                    </svg>
-                  </div>
-                  <div className="ml-5 w-0 flex-1">
-                    <dl>
-                      <dt className="text-sm font-medium text-gray-500 truncate">
-                        Revenu total net
-                      </dt>
-                      <dd className="text-lg font-semibold text-gray-900">
-                        {formatAmount(invoices.reduce((sum, inv) => sum + inv.amount_net, 0))}
-                      </dd>
-                    </dl>
-                  </div>
-                </div>
-              </div>
+            <div className="bg-white rounded-xl p-4 text-center border border-gray-100 shadow-sm">
+              <p className="text-2xl font-bold text-green-600">{formatAmount(invoices.reduce((sum, inv) => sum + inv.amount_net, 0))}</p>
+              <p className="text-xs text-gray-500 mt-1">Revenu net</p>
             </div>
-
-            <div className="bg-white overflow-hidden shadow rounded-lg">
-              <div className="p-5">
-                <div className="flex items-center">
-                  <div className="flex-shrink-0">
-                    <svg className="h-6 w-6 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z" />
-                    </svg>
-                  </div>
-                  <div className="ml-5 w-0 flex-1">
-                    <dl>
-                      <dt className="text-sm font-medium text-gray-500 truncate">
-                        Total commissions
-                      </dt>
-                      <dd className="text-lg font-semibold text-gray-900">
-                        {formatAmount(invoices.reduce((sum, inv) => sum + inv.amount_commission, 0))}
-                      </dd>
-                    </dl>
-                  </div>
-                </div>
-              </div>
+            <div className="bg-white rounded-xl p-4 text-center border border-gray-100 shadow-sm">
+              <p className="text-2xl font-bold" style={{ color: '#f0879f' }}>{formatAmount(invoices.reduce((sum, inv) => sum + inv.amount_commission, 0))}</p>
+              <p className="text-xs text-gray-500 mt-1">Commissions</p>
             </div>
           </div>
         )}

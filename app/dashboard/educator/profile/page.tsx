@@ -539,9 +539,9 @@ export default function EducatorProfilePage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center" role="status" aria-live="polite">
+      <div className="min-h-screen flex items-center justify-center" style={{ backgroundColor: '#fdf9f4' }} role="status" aria-live="polite">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary-600 mx-auto" aria-hidden="true"></div>
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 mx-auto" style={{ borderColor: '#41005c' }} aria-hidden="true"></div>
           <p className="mt-4 text-gray-600">Chargement...</p>
           <span className="sr-only">Chargement de votre profil en cours</span>
         </div>
@@ -550,20 +550,33 @@ export default function EducatorProfilePage() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen" style={{ backgroundColor: '#fdf9f4' }}>
       <EducatorNavbar profile={profile} subscription={subscription} />
 
-      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <div className="mb-8">
-          <h1 className="text-3xl font-bold text-gray-900">Mon profil</h1>
-          <p className="text-gray-600 mt-1">Gérez vos informations professionnelles</p>
+      {/* Header violet clair */}
+      <div className="px-4 py-6" style={{ backgroundColor: '#5a1a75' }}>
+        <div className="max-w-4xl mx-auto">
+          <div className="flex items-center gap-4">
+            <div className="w-14 h-14 rounded-full bg-white shadow-md overflow-hidden flex-shrink-0">
+              <img
+                src={profile?.gender === 'female' ? '/images/icons/avatar-female.svg' : '/images/icons/avatar-male.svg'}
+                alt=""
+                className="w-full h-full object-cover"
+              />
+            </div>
+            <div>
+              <h1 className="text-2xl font-bold text-white">Mon profil</h1>
+              <p className="text-white/70 text-sm">Gérez vos informations professionnelles</p>
+            </div>
+          </div>
         </div>
+      </div>
 
-
+      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Informations personnelles */}
-        <div className="bg-white rounded-lg shadow mb-6">
-          <div className="px-6 py-4 border-b border-gray-200">
-            <h2 className="text-lg font-semibold text-gray-900">Informations personnelles</h2>
+        <div className="bg-white rounded-2xl shadow-sm border border-gray-100 mb-6 overflow-hidden">
+          <div className="px-6 py-4" style={{ backgroundColor: '#41005c' }}>
+            <h2 className="text-lg font-semibold text-white">Informations personnelles</h2>
           </div>
           <form onSubmit={handleSubmit} className="p-6 space-y-6">
             {/* Photo de profil */}
@@ -598,7 +611,7 @@ export default function EducatorProfilePage() {
             {/* Vidéo de présentation */}
             <div className="pt-4 border-t border-gray-200">
               <div className="flex items-center gap-3 mb-4">
-                <div className="w-10 h-10 bg-gradient-to-br from-violet-500 to-purple-600 rounded-xl flex items-center justify-center">
+                <div className="w-10 h-10 rounded-xl flex items-center justify-center" style={{ backgroundColor: '#41005c' }}>
                   <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z" />
                   </svg>
@@ -629,7 +642,7 @@ export default function EducatorProfilePage() {
                   aria-required="true"
                   value={profileData.first_name}
                   onChange={(e) => setProfileData({ ...profileData, first_name: e.target.value })}
-                  className="w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:ring-primary-500 focus:border-primary-500"
+                  className="w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:ring-2 focus:ring-[#41005c] focus:border-[#41005c]"
                 />
               </div>
               <div>
@@ -641,7 +654,7 @@ export default function EducatorProfilePage() {
                   aria-required="true"
                   value={profileData.last_name}
                   onChange={(e) => setProfileData({ ...profileData, last_name: e.target.value })}
-                  className="w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:ring-primary-500 focus:border-primary-500"
+                  className="w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:ring-2 focus:ring-[#41005c] focus:border-[#41005c]"
                 />
               </div>
             </div>
@@ -653,7 +666,7 @@ export default function EducatorProfilePage() {
                 type="tel"
                 value={profileData.phone}
                 onChange={(e) => setProfileData({ ...profileData, phone: e.target.value })}
-                className="w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:ring-primary-500 focus:border-primary-500"
+                className="w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:ring-2 focus:ring-[#41005c] focus:border-[#41005c]"
               />
             </div>
 
@@ -675,7 +688,7 @@ export default function EducatorProfilePage() {
                   onChange={(e) => setProfileData({ ...profileData, linkedin_url: e.target.value })}
                   placeholder="https://www.linkedin.com/in/votre-profil"
                   aria-describedby="linkedin_help"
-                  className="flex-1 border border-gray-300 rounded-r-md shadow-sm py-2 px-3 focus:ring-primary-500 focus:border-primary-500"
+                  className="flex-1 border border-gray-300 rounded-r-md shadow-sm py-2 px-3 focus:ring-2 focus:ring-[#41005c] focus:border-[#41005c]"
                 />
               </div>
               <p id="linkedin_help" className="mt-1 text-xs text-gray-500">
@@ -706,7 +719,7 @@ export default function EducatorProfilePage() {
                       setProfileData({ ...profileData, siret: value });
                     }}
                     placeholder="12345678901234"
-                    className="w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:ring-primary-500 focus:border-primary-500"
+                    className="w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:ring-2 focus:ring-[#41005c] focus:border-[#41005c]"
                   />
                   <p id="siret_help" className="mt-1 text-xs text-gray-500">
                     14 chiffres - Obligatoire pour la facturation et les paiements
@@ -726,7 +739,7 @@ export default function EducatorProfilePage() {
                     onChange={(e) => setProfileData({ ...profileData, sap_number: e.target.value.toUpperCase() })}
                     placeholder="SAP123456789"
                     aria-describedby="sap_info"
-                    className="w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:ring-primary-500 focus:border-primary-500"
+                    className="w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:ring-2 focus:ring-[#41005c] focus:border-[#41005c]"
                   />
                   <div id="sap_info" className="mt-2 bg-blue-50 border border-blue-200 rounded-lg p-3">
                     <p className="text-xs text-blue-800 mb-2">
@@ -763,7 +776,7 @@ export default function EducatorProfilePage() {
                     checked={profileData.show_phone}
                     onChange={(e) => setProfileData({ ...profileData, show_phone: e.target.checked })}
                     aria-describedby="show_phone_desc"
-                    className="h-4 w-4 text-primary-600 focus:ring-primary-500 border-gray-300 rounded mt-0.5"
+                    className="h-4 w-4 text-[#41005c] focus:ring-[#41005c] border-gray-300 rounded mt-0.5"
                   />
                   <label htmlFor="show_phone" className="ml-3 text-sm text-gray-700 cursor-pointer">
                     <span className="font-medium">Afficher mon numéro de téléphone</span>
@@ -777,7 +790,7 @@ export default function EducatorProfilePage() {
                     checked={profileData.show_email}
                     onChange={(e) => setProfileData({ ...profileData, show_email: e.target.checked })}
                     aria-describedby="show_email_desc"
-                    className="h-4 w-4 text-primary-600 focus:ring-primary-500 border-gray-300 rounded mt-0.5"
+                    className="h-4 w-4 text-[#41005c] focus:ring-[#41005c] border-gray-300 rounded mt-0.5"
                   />
                   <label htmlFor="show_email" className="ml-3 text-sm text-gray-700 cursor-pointer">
                     <span className="font-medium">Afficher mon adresse e-mail</span>
@@ -798,7 +811,7 @@ export default function EducatorProfilePage() {
                   placeholder="Ex: Paris, France"
                   value={profileData.location}
                   onChange={(e) => setProfileData({ ...profileData, location: e.target.value })}
-                  className="flex-1 border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:ring-primary-500 focus:border-primary-500"
+                  className="flex-1 border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:ring-2 focus:ring-[#41005c] focus:border-[#41005c]"
                 />
                 <button
                   type="button"
@@ -806,7 +819,8 @@ export default function EducatorProfilePage() {
                   disabled={geolocating}
                   aria-label="Utiliser ma position actuelle"
                   aria-busy={geolocating}
-                  className="flex items-center gap-2 px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 disabled:opacity-50 disabled:cursor-not-allowed whitespace-nowrap"
+                  className="flex items-center gap-2 px-4 py-2 text-white rounded-xl hover:opacity-90 disabled:opacity-50 disabled:cursor-not-allowed whitespace-nowrap font-medium transition shadow-md"
+                  style={{ backgroundColor: '#f0879f' }}
                 >
                   {geolocating ? (
                     <>
@@ -834,7 +848,7 @@ export default function EducatorProfilePage() {
                 value={profileData.bio}
                 onChange={(e) => setProfileData({ ...profileData, bio: e.target.value })}
                 placeholder="Parlez de vous, votre expérience, votre approche..."
-                className="w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:ring-primary-500 focus:border-primary-500"
+                className="w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:ring-2 focus:ring-[#41005c] focus:border-[#41005c]"
               />
             </div>
 
@@ -849,7 +863,7 @@ export default function EducatorProfilePage() {
                   min="0"
                   value={profileData.years_of_experience}
                   onChange={(e) => setProfileData({ ...profileData, years_of_experience: parseInt(e.target.value) })}
-                  className="w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:ring-primary-500 focus:border-primary-500"
+                  className="w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:ring-2 focus:ring-[#41005c] focus:border-[#41005c]"
                 />
               </div>
               <div>
@@ -861,7 +875,7 @@ export default function EducatorProfilePage() {
                   min="0"
                   value={profileData.hourly_rate}
                   onChange={(e) => setProfileData({ ...profileData, hourly_rate: e.target.value })}
-                  className="w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:ring-primary-500 focus:border-primary-500"
+                  className="w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:ring-2 focus:ring-[#41005c] focus:border-[#41005c]"
                 />
               </div>
             </div>
@@ -882,7 +896,7 @@ Exemples :
 • Communication augmentée (PECS, Makaton)
 • Gestion des troubles du comportement
 • Soutien scolaire adapté"
-                className="w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:ring-primary-500 focus:border-primary-500"
+                className="w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:ring-2 focus:ring-[#41005c] focus:border-[#41005c]"
               />
               <p id="skills_help" className="mt-1 text-sm text-gray-500">
                 Décrivez librement vos compétences, vos spécialités et ce qui vous distingue
@@ -898,7 +912,7 @@ Exemples :
                 value={profileData.languages}
                 onChange={(e) => setProfileData({ ...profileData, languages: e.target.value })}
                 aria-describedby="languages_help"
-                className="w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:ring-primary-500 focus:border-primary-500"
+                className="w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:ring-2 focus:ring-[#41005c] focus:border-[#41005c]"
               />
               <p id="languages_help" className="mt-1 text-sm text-gray-500">Séparez les langues par des virgules</p>
             </div>
@@ -908,7 +922,8 @@ Exemples :
                 type="submit"
                 disabled={saving}
                 aria-busy={saving}
-                className="px-6 py-2 bg-primary-600 text-white rounded-md hover:bg-primary-700 disabled:opacity-50"
+                className="px-6 py-3 text-white rounded-xl font-semibold hover:opacity-90 disabled:opacity-50 transition-all shadow-md"
+                style={{ backgroundColor: '#41005c' }}
               >
                 {saving ? 'Enregistrement...' : 'Enregistrer les modifications'}
               </button>
@@ -917,9 +932,9 @@ Exemples :
         </div>
 
         {/* Changement d'email */}
-        <div className="bg-white rounded-lg shadow mb-6">
-          <div className="px-6 py-4 border-b border-gray-200">
-            <h2 className="text-lg font-semibold text-gray-900">Adresse email</h2>
+        <div className="bg-white rounded-2xl shadow-sm border border-gray-100 mb-6 overflow-hidden">
+          <div className="px-6 py-4" style={{ backgroundColor: '#41005c' }}>
+            <h2 className="text-lg font-semibold text-white">Adresse email</h2>
           </div>
           <div className="p-6 space-y-4">
             <div className="bg-gray-50 border border-gray-200 rounded-lg p-4">
@@ -944,7 +959,7 @@ Exemples :
                   onChange={(e) => setNewEmail(e.target.value)}
                   placeholder="nouvelle@email.com"
                   aria-describedby="email_change_help"
-                  className="w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:ring-primary-500 focus:border-primary-500"
+                  className="w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:ring-2 focus:ring-[#41005c] focus:border-[#41005c]"
                 />
               </div>
               <div className="flex gap-3 items-center">
@@ -952,7 +967,8 @@ Exemples :
                   type="submit"
                   disabled={updatingEmail || !newEmail}
                   aria-busy={updatingEmail}
-                  className="px-4 py-2 bg-primary-600 text-white rounded-md hover:bg-primary-700 disabled:opacity-50 disabled:cursor-not-allowed text-sm font-medium transition"
+                  className="px-4 py-2 text-white rounded-xl hover:opacity-90 disabled:opacity-50 disabled:cursor-not-allowed text-sm font-semibold transition shadow-md"
+                  style={{ backgroundColor: '#41005c' }}
                 >
                   {updatingEmail ? 'Envoi en cours...' : 'Changer mon email'}
                 </button>
@@ -965,13 +981,14 @@ Exemples :
         </div>
 
         {/* Certifications */}
-        <div className="bg-white rounded-lg shadow">
-          <div className="px-6 py-4 border-b border-gray-200 flex justify-between items-center">
-            <h2 className="text-lg font-semibold text-gray-900">Mes certifications</h2>
+        <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
+          <div className="px-6 py-4 flex justify-between items-center" style={{ backgroundColor: '#41005c' }}>
+            <h2 className="text-lg font-semibold text-white">Mes certifications</h2>
             <button
               type="button"
               onClick={addCertification}
-              className="px-4 py-2 bg-primary-600 text-white rounded-md hover:bg-primary-700 text-sm"
+              className="px-4 py-2 text-white rounded-xl text-sm font-semibold hover:opacity-90 transition shadow-md"
+              style={{ backgroundColor: '#f0879f' }}
             >
               Ajouter une certification
             </button>
@@ -983,7 +1000,7 @@ Exemples :
               </p>
             ) : (
               certifications.map((cert, index) => (
-                <div key={index} className="border border-gray-200 rounded-lg p-4 bg-gray-50">
+                <div key={index} className="border border-gray-200 rounded-xl p-4 bg-gray-50">
                   {/* Statut de vérification */}
                   {cert.verification_status && cert.verification_status !== 'pending' && (
                     <div className="mb-4">
@@ -1022,7 +1039,7 @@ Exemples :
                         onChange={(e) => updateCertification(index, 'type', e.target.value)}
                         aria-required="true"
                         required
-                        className="w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:ring-primary-500 focus:border-primary-500"
+                        className="w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:ring-2 focus:ring-[#41005c] focus:border-[#41005c]"
                       >
                         <option value="ABA">ABA (Applied Behavior Analysis)</option>
                         <option value="TEACCH">TEACCH</option>
@@ -1042,7 +1059,7 @@ Exemples :
                         placeholder="Ex: Diplôme d'État d'Éducateur Spécialisé"
                         required
                         aria-required="true"
-                        className="w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:ring-primary-500 focus:border-primary-500"
+                        className="w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:ring-2 focus:ring-[#41005c] focus:border-[#41005c]"
                       />
                     </div>
                     <div>
@@ -1054,7 +1071,7 @@ Exemples :
                         placeholder="Ex: IRTS Paris Île-de-France"
                         required
                         aria-required="true"
-                        className="w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:ring-primary-500 focus:border-primary-500"
+                        className="w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:ring-2 focus:ring-[#41005c] focus:border-[#41005c]"
                       />
                     </div>
                     <div>
@@ -1065,7 +1082,7 @@ Exemples :
                         onChange={(e) => updateCertification(index, 'issue_date', e.target.value)}
                         required
                         aria-required="true"
-                        className="w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:ring-primary-500 focus:border-primary-500"
+                        className="w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:ring-2 focus:ring-[#41005c] focus:border-[#41005c]"
                       />
                     </div>
                     <div>
@@ -1083,7 +1100,7 @@ Exemples :
                         }
                         required={cert.type === 'DEES' || cert.type === 'DEME'}
                         aria-required={cert.type === 'DEES' || cert.type === 'DEME' ? 'true' : 'false'}
-                        className={`w-full border rounded-md shadow-sm py-2 px-3 focus:ring-primary-500 focus:border-primary-500 ${
+                        className={`w-full border rounded-md shadow-sm py-2 px-3 focus:ring-2 focus:ring-[#41005c] focus:border-[#41005c] ${
                           (cert.type === 'DEES' || cert.type === 'DEME') && (!cert.diploma_number || cert.diploma_number === '')
                             ? 'border-red-300'
                             : 'border-gray-300'
@@ -1102,7 +1119,7 @@ Exemples :
                       <select
                         value={cert.issuing_region || ''}
                         onChange={(e) => updateCertification(index, 'issuing_region', e.target.value)}
-                        className="w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:ring-primary-500 focus:border-primary-500"
+                        className="w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:ring-2 focus:ring-[#41005c] focus:border-[#41005c]"
                       >
                         <option value="">Sélectionnez une région</option>
                         <option value="Île-de-France">Île-de-France</option>
@@ -1161,7 +1178,8 @@ Exemples :
                   onClick={saveCertifications}
                   disabled={saving}
                   aria-busy={saving}
-                  className="px-6 py-2 bg-primary-600 text-white rounded-md hover:bg-primary-700 disabled:opacity-50"
+                  className="px-6 py-3 text-white rounded-xl font-semibold hover:opacity-90 disabled:opacity-50 transition-all shadow-md"
+                  style={{ backgroundColor: '#41005c' }}
                 >
                   {saving ? 'Enregistrement...' : 'Enregistrer ma certification'}
                 </button>
@@ -1171,21 +1189,22 @@ Exemples :
         </div>
 
         {/* Export des données RGPD */}
-        <div className="bg-white rounded-lg shadow-md p-6 mt-8 border-2 border-blue-200">
-          <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
-            <h3 className="font-semibold text-blue-800 mb-2 flex items-center gap-2">
+        <div className="bg-white rounded-2xl shadow-sm p-6 mt-8 border border-gray-100">
+          <div className="rounded-xl p-4" style={{ backgroundColor: 'rgba(65, 0, 92, 0.08)' }}>
+            <h3 className="font-semibold mb-2 flex items-center gap-2" style={{ color: '#41005c' }}>
               <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
               </svg>
               Exporter mes données (RGPD)
             </h3>
-            <p className="text-sm text-blue-700 mb-4">
+            <p className="text-sm text-gray-700 mb-4">
               Conformément au RGPD, vous pouvez télécharger une copie de toutes vos données personnelles au format JSON.
             </p>
             <a
               href="/api/export-data"
               download
-              className="inline-flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 font-medium transition"
+              className="inline-flex items-center gap-2 px-4 py-2 text-white rounded-xl hover:opacity-90 font-semibold transition shadow-md"
+              style={{ backgroundColor: '#41005c' }}
             >
               <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
@@ -1196,7 +1215,7 @@ Exemples :
         </div>
 
         {/* Suppression du compte */}
-        <div className="bg-white rounded-lg shadow-md p-6 mt-8 border-2 border-red-200">
+        <div className="bg-white rounded-2xl shadow-sm p-6 mt-8 border border-red-200">
           <div className="bg-red-50 border border-red-200 rounded-lg p-4 mb-4">
             <h3 className="font-semibold text-red-800 mb-2">⚠️ Supprimer mon compte</h3>
             <p id="delete_warning" className="text-sm text-red-700 mb-3">
@@ -1257,12 +1276,18 @@ Exemples :
             )}
           </div>
         </div>
+
+        {/* Espace pour iOS */}
+        <div className="h-10"></div>
       </div>
+
+      {/* Footer violet */}
+      <div className="mt-auto" style={{ backgroundColor: '#41005c', height: '40px' }}></div>
 
       {/* Notifications Toast en bas de la page */}
       {error && (
         <div className="fixed bottom-4 right-4 left-4 md:left-auto md:w-96 z-50 animate-slide-up" role="alert" aria-live="assertive">
-          <div className="bg-red-600 text-white px-6 py-4 rounded-lg shadow-2xl border-2 border-red-700">
+          <div className="bg-red-600 text-white px-6 py-4 rounded-2xl shadow-2xl border border-red-700">
             <div className="flex items-start gap-3">
               <svg className="h-6 w-6 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
                 <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd" />
@@ -1287,7 +1312,7 @@ Exemples :
 
       {success && (
         <div className="fixed bottom-4 right-4 left-4 md:left-auto md:w-96 z-50 animate-slide-up" role="alert" aria-live="polite">
-          <div className="bg-green-600 text-white px-6 py-4 rounded-lg shadow-2xl border-2 border-green-700">
+          <div className="bg-green-600 text-white px-6 py-4 rounded-2xl shadow-2xl border border-green-700">
             <div className="flex items-start gap-3">
               <svg className="h-6 w-6 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
                 <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />

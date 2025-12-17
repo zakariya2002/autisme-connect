@@ -1,8 +1,7 @@
 'use client';
 
 import Link from 'next/link';
-import MobileMenuPro from '@/components/MobileMenuPro';
-import LogoPro from '@/components/LogoPro';
+import ProNavbar from '@/components/ProNavbar';
 
 export default function ProHowItWorksPage() {
 
@@ -88,53 +87,20 @@ export default function ProHowItWorksPage() {
   ];
 
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen" style={{ backgroundColor: '#fdf9f4' }}>
       {/* Navigation */}
-      <nav className="bg-white border-b border-gray-100 sticky top-0 z-50" role="navigation" aria-label="Navigation principale">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between h-16 lg:h-20 items-center">
-            <LogoPro iconSize="md" />
-
-            {/* Desktop Navigation */}
-            <div className="hidden xl:flex items-center gap-5" role="menubar">
-              <Link href="/pro/pricing" className="text-gray-600 hover:text-teal-600 font-medium text-sm transition-colors whitespace-nowrap focus:outline-none focus:ring-2 focus:ring-teal-500 focus:ring-offset-2 rounded px-2 py-1">
-                Tarifs
-              </Link>
-              <Link href="/pro/how-it-works" className="text-teal-600 font-medium text-sm whitespace-nowrap focus:outline-none focus:ring-2 focus:ring-teal-500 focus:ring-offset-2 rounded px-2 py-1" aria-current="page">
-                Comment ça marche
-              </Link>
-              <Link href="/pro/sap-accreditation" className="text-gray-600 hover:text-teal-600 font-medium text-sm transition-colors whitespace-nowrap focus:outline-none focus:ring-2 focus:ring-teal-500 focus:ring-offset-2 rounded px-2 py-1">
-                Guide SAP
-              </Link>
-              <div className="h-5 w-px bg-gray-200" aria-hidden="true"></div>
-              <Link href="/" className="text-gray-500 hover:text-gray-700 text-xs transition-colors whitespace-nowrap focus:outline-none focus:ring-2 focus:ring-teal-500 focus:ring-offset-2 rounded px-2 py-1">
-                Vous êtes un aidant ?
-              </Link>
-              <Link href="/pro/login" className="text-gray-600 hover:text-teal-600 font-medium text-sm transition-colors focus:outline-none focus:ring-2 focus:ring-teal-500 focus:ring-offset-2 rounded px-2 py-1">
-                Connexion
-              </Link>
-              <Link
-                href="/auth/register-educator"
-                className="bg-gradient-to-r from-emerald-500 via-teal-500 to-cyan-500 text-white px-4 py-2 rounded-xl font-semibold text-sm hover:from-emerald-600 hover:via-teal-600 hover:to-cyan-600 transition-all shadow-lg hover:shadow-xl whitespace-nowrap focus:outline-none focus:ring-2 focus:ring-teal-500 focus:ring-offset-2"
-              >
-                Rejoindre
-              </Link>
-            </div>
-
-            {/* Mobile menu button */}
-            <div className="xl:hidden">
-              <MobileMenuPro />
-            </div>
-          </div>
-        </div>
-      </nav>
+      <ProNavbar />
 
       {/* Hero */}
-      <section className="bg-gradient-to-br from-emerald-50 via-white to-cyan-50 py-20">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+      <section className="py-20 relative overflow-hidden" style={{ backgroundColor: '#fdf9f4' }}>
+        {/* Background decorations */}
+        <div className="absolute top-0 right-0 w-96 h-96 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2" style={{ backgroundColor: 'rgba(65, 0, 92, 0.08)' }} aria-hidden="true"></div>
+        <div className="absolute bottom-0 left-0 w-80 h-80 rounded-full blur-3xl translate-y-1/2 -translate-x-1/2" style={{ backgroundColor: 'rgba(240, 135, 159, 0.15)' }} aria-hidden="true"></div>
+
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative">
           <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-gray-900 mb-6">
             Comment ça{' '}
-            <span className="bg-gradient-to-r from-emerald-500 via-teal-500 to-cyan-500 bg-clip-text text-transparent">
+            <span style={{ color: '#41005c' }}>
               marche ?
             </span>
           </h1>
@@ -143,7 +109,8 @@ export default function ProHowItWorksPage() {
           </p>
           <Link
             href="/auth/register-educator"
-            className="inline-flex items-center gap-2 bg-gradient-to-r from-emerald-500 via-teal-500 to-cyan-500 text-white px-8 py-4 rounded-xl font-bold text-lg hover:from-emerald-600 hover:via-teal-600 hover:to-cyan-600 transition-all shadow-lg hover:shadow-xl"
+            className="inline-flex items-center gap-2 text-white px-8 py-4 rounded-xl font-bold text-lg transition-all shadow-lg hover:shadow-xl hover:opacity-90"
+            style={{ backgroundColor: '#41005c' }}
           >
             Créer mon profil gratuitement
             <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -154,7 +121,7 @@ export default function ProHowItWorksPage() {
       </section>
 
       {/* Steps */}
-      <section className="py-20">
+      <section className="py-20" style={{ backgroundColor: '#fdf9f4' }}>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="space-y-16">
             {steps.map((step, index) => (
@@ -167,10 +134,10 @@ export default function ProHowItWorksPage() {
                 {/* Content */}
                 <div className="flex-1">
                   <div className="flex items-center gap-4 mb-4">
-                    <span className="text-6xl font-bold bg-gradient-to-r from-emerald-200 to-cyan-200 bg-clip-text text-transparent">
+                    <span className="text-6xl font-bold" style={{ color: 'rgba(65, 0, 92, 0.2)' }}>
                       {step.number}
                     </span>
-                    <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-emerald-100 to-cyan-100 flex items-center justify-center text-primary-600">
+                    <div className="w-14 h-14 rounded-2xl flex items-center justify-center" style={{ backgroundColor: index % 2 === 0 ? 'rgba(65, 0, 92, 0.1)' : 'rgba(240, 135, 159, 0.2)', color: index % 2 === 0 ? '#41005c' : '#f0879f' }}>
                       {step.icon}
                     </div>
                   </div>
@@ -180,7 +147,8 @@ export default function ProHowItWorksPage() {
                     {step.tips.map((tip, tipIndex) => (
                       <span
                         key={tipIndex}
-                        className="inline-flex items-center gap-2 px-4 py-2 bg-primary-50 text-primary-700 rounded-full text-sm font-medium"
+                        className="inline-flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium"
+                        style={{ backgroundColor: 'rgba(65, 0, 92, 0.1)', color: '#41005c' }}
                       >
                         <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
                           <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
@@ -193,8 +161,8 @@ export default function ProHowItWorksPage() {
 
                 {/* Illustration placeholder */}
                 <div className="flex-1">
-                  <div className="bg-gradient-to-br from-emerald-100 to-cyan-100 rounded-3xl p-12 aspect-square max-w-md mx-auto flex items-center justify-center">
-                    <div className="text-primary-600 transform scale-150">
+                  <div className="rounded-3xl p-12 aspect-square max-w-md mx-auto flex items-center justify-center" style={{ backgroundColor: index % 2 === 0 ? 'rgba(65, 0, 92, 0.1)' : 'rgba(240, 135, 159, 0.15)' }}>
+                    <div className="transform scale-150" style={{ color: index % 2 === 0 ? '#41005c' : '#f0879f' }}>
                       {step.icon}
                     </div>
                   </div>
@@ -206,11 +174,13 @@ export default function ProHowItWorksPage() {
       </section>
 
       {/* Benefits */}
-      <section className="py-20 bg-gradient-to-b from-white to-gray-50">
+      <section className="py-20 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
             <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-4">
-              Pourquoi rejoindre neurocare ?
+              Pourquoi rejoindre{' '}
+              <span style={{ color: '#41005c' }}>neurocare</span>{' '}
+              <span style={{ color: '#f0879f' }}>pro</span> ?
             </h2>
             <p className="text-xl text-gray-600">
               Des avantages concrets pour développer votre activité.
@@ -222,6 +192,9 @@ export default function ProHowItWorksPage() {
               <div
                 key={index}
                 className="bg-white rounded-2xl p-8 shadow-lg border border-gray-100 text-center hover:shadow-xl transition-all hover:-translate-y-1"
+                style={{ borderColor: 'transparent' }}
+                onMouseOver={(e) => e.currentTarget.style.borderColor = 'rgba(65, 0, 92, 0.3)'}
+                onMouseOut={(e) => e.currentTarget.style.borderColor = 'transparent'}
               >
                 <div className="text-5xl mb-4">{benefit.icon}</div>
                 <h3 className="text-xl font-bold text-gray-900 mb-2">{benefit.title}</h3>
@@ -233,9 +206,9 @@ export default function ProHowItWorksPage() {
       </section>
 
       {/* CTA */}
-      <section className="py-20">
+      <section className="py-20" style={{ backgroundColor: '#fdf9f4' }}>
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="bg-gradient-to-r from-emerald-500 via-teal-500 to-cyan-600 rounded-3xl shadow-2xl p-12 text-center text-white">
+          <div className="rounded-3xl shadow-2xl p-12 text-center text-white" style={{ backgroundColor: '#41005c' }}>
             <h2 className="text-4xl font-bold mb-4">
               Prêt à vous lancer ?
             </h2>
@@ -245,13 +218,15 @@ export default function ProHowItWorksPage() {
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Link
                 href="/auth/register-educator"
-                className="px-8 py-4 bg-white text-primary-600 rounded-xl hover:bg-gray-100 font-bold text-lg shadow-xl transition-all"
+                className="px-8 py-4 bg-white rounded-xl hover:bg-gray-100 font-bold text-lg shadow-xl transition-all"
+                style={{ color: '#41005c' }}
               >
                 Créer mon profil gratuit
               </Link>
               <Link
                 href="/pro/pricing"
-                className="px-8 py-4 bg-white/10 text-white border-2 border-white/30 rounded-xl hover:bg-white/20 font-bold text-lg transition-all"
+                className="px-8 py-4 text-white border-2 border-white/30 rounded-xl hover:bg-white/10 font-bold text-lg transition-all"
+                style={{ backgroundColor: 'rgba(240, 135, 159, 0.5)' }}
               >
                 Voir les tarifs
               </Link>
@@ -261,19 +236,77 @@ export default function ProHowItWorksPage() {
       </section>
 
       {/* Footer */}
-      <footer className="bg-gray-900 text-white py-12">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex flex-col md:flex-row justify-between items-center gap-4">
-            <div className="flex items-center gap-2">
-              <span className="font-bold">neurocare</span>
-              <span className="bg-gradient-to-r from-emerald-500 via-teal-500 to-cyan-500 text-white text-xs font-bold px-2 py-0.5 rounded-full">
-                PRO
-              </span>
+      <footer className="text-white py-12 px-6" style={{ backgroundColor: '#41005c' }} role="contentinfo">
+        <div className="max-w-6xl mx-auto">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 mb-10">
+            {/* Logo et description */}
+            <div>
+              <Link href="/pro" className="inline-block mb-4">
+                <div className="flex items-center gap-2">
+                  <img
+                    src="/images/logo-neurocare.svg"
+                    alt="Logo NeuroCare Pro"
+                    className="h-16 brightness-0 invert"
+                  />
+                  <span className="px-2 py-0.5 text-xs font-bold rounded-full" style={{ backgroundColor: '#f0879f' }}>
+                    PRO
+                  </span>
+                </div>
+              </Link>
+              <p className="text-sm leading-relaxed" style={{ color: 'rgba(255, 255, 255, 0.7)' }}>
+                La plateforme de référence pour les professionnels de l'accompagnement des troubles neurodéveloppementaux.
+              </p>
             </div>
-            <p className="text-gray-400 text-sm">© 2025 neurocare. Tous droits réservés.</p>
-            <Link href="/" className="text-gray-400 hover:text-white text-sm transition-colors">
-              Accéder au site familles →
-            </Link>
+
+            {/* Pour les pros */}
+            <nav aria-labelledby="footer-nav-pros">
+              <h3 id="footer-nav-pros" className="font-bold text-white mb-4">Pour les pros</h3>
+              <ul className="space-y-2 text-sm" style={{ color: 'rgba(255, 255, 255, 0.7)' }}>
+                <li><Link href="/pro/pricing" className="hover:text-white transition-colors">Tarifs</Link></li>
+                <li><Link href="/pro/how-it-works" className="hover:text-white transition-colors">Comment ça marche</Link></li>
+                <li><Link href="/pro/sap-accreditation" className="hover:text-white transition-colors">Guide SAP</Link></li>
+                <li><Link href="/auth/register-educator" className="hover:text-white transition-colors">S'inscrire</Link></li>
+              </ul>
+            </nav>
+
+            {/* Ressources */}
+            <nav aria-labelledby="footer-nav-ressources">
+              <h3 id="footer-nav-ressources" className="font-bold text-white mb-4">Ressources</h3>
+              <ul className="space-y-2 text-sm" style={{ color: 'rgba(255, 255, 255, 0.7)' }}>
+                <li><Link href="/about" className="hover:text-white transition-colors">À propos</Link></li>
+                <li><Link href="/contact" className="hover:text-white transition-colors">Contact</Link></li>
+                <li><Link href="/faq" className="hover:text-white transition-colors">FAQ</Link></li>
+              </ul>
+            </nav>
+
+            {/* Familles */}
+            <nav aria-labelledby="footer-nav-familles">
+              <h3 id="footer-nav-familles" className="font-bold text-white mb-4">Familles</h3>
+              <ul className="space-y-2 text-sm" style={{ color: 'rgba(255, 255, 255, 0.7)' }}>
+                <li><Link href="/" className="hover:text-white transition-colors">Accueil familles</Link></li>
+                <li><Link href="/search" className="hover:text-white transition-colors">Trouver un professionnel</Link></li>
+                <li><Link href="/familles/aides-financieres" className="hover:text-white transition-colors">Aides financières</Link></li>
+              </ul>
+            </nav>
+          </div>
+
+          {/* Séparateur */}
+          <div className="border-t pt-8" style={{ borderColor: 'rgba(255, 255, 255, 0.2)' }}>
+            <div className="flex flex-col sm:flex-row justify-between items-center gap-4">
+              {/* Liens légaux */}
+              <nav aria-label="Informations légales">
+                <div className="flex flex-wrap justify-center gap-4 text-sm" style={{ color: 'rgba(255, 255, 255, 0.7)' }}>
+                  <Link href="/mentions-legales" className="hover:text-white transition-colors">Mentions légales</Link>
+                  <Link href="/politique-confidentialite" className="hover:text-white transition-colors">Confidentialité</Link>
+                  <Link href="/cgu" className="hover:text-white transition-colors">CGU</Link>
+                </div>
+              </nav>
+
+              {/* Copyright */}
+              <p className="text-sm" style={{ color: 'rgba(255, 255, 255, 0.7)' }}>
+                © 2025 neurocare. Tous droits réservés.
+              </p>
+            </div>
           </div>
         </div>
       </footer>

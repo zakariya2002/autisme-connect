@@ -1,0 +1,33 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="350" viewBox="0 0 262.5 262.5" height="350" preserveAspectRatio="xMidYMid meet" version="1.0">
+  <defs>
+    <clipPath id="circle-clip">
+      <circle cx="131" cy="131" r="131"/>
+    </clipPath>
+  </defs>
+  <!-- Background circle -->
+  <g clip-path="url(#circle-clip)">
+    <rect x="0" y="0" width="262.5" height="262.5" fill="#fef3c7" fill-opacity="1"/>
+  </g>
+  <!-- Diploma/Certificate -->
+  <g transform="translate(50, 55)">
+    <!-- Main document -->
+    <rect x="20" y="20" width="120" height="150" rx="8" fill="#ffffff" stroke="#5d6d7e" stroke-width="3"/>
+    <!-- Header ribbon -->
+    <rect x="20" y="20" width="120" height="35" rx="8" fill="#41005c"/>
+    <rect x="20" y="40" width="120" height="15" fill="#41005c"/>
+    <!-- Star decoration -->
+    <path d="M80 35 L83 44 L92 44 L85 50 L88 59 L80 54 L72 59 L75 50 L68 44 L77 44 Z" fill="#f0879f"/>
+    <!-- Text lines -->
+    <rect x="40" y="70" width="80" height="6" rx="3" fill="#a6dbf4"/>
+    <rect x="50" y="85" width="60" height="5" rx="2.5" fill="#5d6d7e" opacity="0.5"/>
+    <rect x="45" y="100" width="70" height="5" rx="2.5" fill="#5d6d7e" opacity="0.5"/>
+    <rect x="55" y="115" width="50" height="5" rx="2.5" fill="#5d6d7e" opacity="0.5"/>
+    <!-- Seal/Badge -->
+    <circle cx="80" cy="145" r="18" fill="#f0879f"/>
+    <circle cx="80" cy="145" r="12" fill="#41005c"/>
+    <path d="M80 138 L82 143 L87 143 L83 147 L85 152 L80 149 L75 152 L77 147 L73 143 L78 143 Z" fill="#ffffff"/>
+    <!-- Ribbon tails -->
+    <path d="M70 160 L65 180 L72 175 L79 180 L74 160" fill="#f0879f"/>
+    <path d="M90 160 L95 180 L88 175 L81 180 L86 160" fill="#41005c"/>
+  </g>
+</svg>

@@ -442,6 +442,11 @@ export default function MessagesPage() {
 
   const isPremium = !!(subscription && ['active', 'trialing'].includes(subscription.status));
 
+  // Helper pour obtenir l'icône de profil
+  const getAvatarIcon = (id?: string) => {
+    return (id?.charCodeAt(0) || 0) % 2 === 0 ? '/images/icons/avatar-male.svg' : '/images/icons/avatar-female.svg';
+  };
+
   // Composant pour afficher l'avatar
   const Avatar = ({ participant, size = 'md' }: { participant: any; size?: 'sm' | 'md' | 'lg' }) => {
     const sizeClasses = {
@@ -450,102 +455,140 @@ export default function MessagesPage() {
       lg: 'h-16 w-16'
     };
 
+    const fullName = `${participant?.first_name || 'Utilisateur'} ${participant?.last_name || ''}`.trim();
+
     if (participant?.avatar_url) {
       return (
         <img
           src={participant.avatar_url}
-          alt={`${participant.first_name} ${participant.last_name}`}
+          alt={`Photo de profil de ${fullName}`}
           className={`${sizeClasses[size]} rounded-full object-cover flex-shrink-0`}
         />
       );
     }
 
-    // Avatar par défaut si pas de photo
     return (
-      <div className={`${sizeClasses[size]} rounded-full bg-primary-100 flex items-center justify-center flex-shrink-0`}>
-        <span className="text-primary-600 font-semibold text-sm">
-          {participant?.first_name?.[0]}{participant?.last_name?.[0]}
-        </span>
+      <div
+        className={`${sizeClasses[size]} rounded-full overflow-hidden flex-shrink-0`}
+        style={{ background: userProfile?.role === 'educator' ? 'linear-gradient(135deg, #41005c 0%, #5a1a75 100%)' : 'linear-gradient(135deg, #027e7e 0%, #3a9e9e 100%)' }}
+        aria-label={`Avatar de ${fullName}`}
+        role="img"
+      >
+        <img
+          src={getAvatarIcon(participant?.id)}
+          alt=""
+          className="w-full h-full object-cover"
+        />
       </div>
     );
   };
 
+  // Couleurs selon le rôle
+  const primaryColor = userProfile?.role === 'educator' ? '#41005c' : '#027e7e';
+  const lightBgColor = userProfile?.role === 'educator' ? '#f3e8ff' : '#e6f4f4';
+  const accentColor = userProfile?.role === 'educator' ? '#f0879f' : '#f0879f';
+
   if (loading && !userProfile) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-        <p className="text-gray-500">Chargement...</p>
+      <div className="min-h-screen flex items-center justify-center" style={{ backgroundColor: '#fdf9f4' }}>
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 mx-auto" style={{ borderColor: '#41005c' }} role="status" aria-label="Chargement en cours"></div>
+          <p className="text-gray-500 mt-4">Chargement...</p>
+        </div>
       </div>
     );
   }
 
   return (
-    <div className="h-screen bg-gray-50 flex flex-col">
+    <div className="h-screen h-[100dvh] flex flex-col" style={{ backgroundColor: '#fdf9f4' }}>
       {/* Navigation */}
-      {userProfile?.role === 'educator' ? (
-        <EducatorNavbar profile={userProfile} subscription={subscription} />
-      ) : (
-        <nav className="bg-white shadow-sm">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="flex justify-between h-16 items-center">
-              <Logo href="/dashboard/family" />
-              <div className="md:hidden">
-                <FamilyMobileMenu profile={userProfile} onLogout={handleLogout} />
-              </div>
-              <div className="hidden md:flex space-x-4 items-center">
-                <Link
-                  href="/dashboard/family"
-                  className="inline-flex items-center gap-2 text-white px-6 py-2.5 rounded-lg font-semibold transition-all duration-200 shadow-md hover:shadow-lg bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700"
-                >
-                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
-                  </svg>
-                  Tableau de bord
-                </Link>
-                <button onClick={handleLogout} className="text-gray-700 hover:text-primary-600 px-3 py-2 font-medium transition">
-                  Déconnexion
-                </button>
+      <div className="sticky top-0 z-40">
+        {userProfile?.role === 'educator' ? (
+          <EducatorNavbar profile={userProfile} subscription={subscription} />
+        ) : (
+          <nav className="bg-white shadow-sm">
+            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+              <div className="flex justify-between h-16 items-center">
+                <Logo href="/dashboard/family" />
+                <div className="md:hidden">
+                  <FamilyMobileMenu profile={userProfile} onLogout={handleLogout} />
+                </div>
+                <div className="hidden md:flex space-x-4 items-center">
+                  <Link
+                    href="/dashboard/family"
+                    className="inline-flex items-center gap-2 text-white px-6 py-2.5 rounded-xl font-semibold transition-all duration-200 shadow-md hover:shadow-lg hover:opacity-90"
+                    style={{ backgroundColor: '#027e7e' }}
+                  >
+                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
+                    </svg>
+                    Tableau de bord
+                  </Link>
+                  <button onClick={handleLogout} className="text-gray-700 hover:opacity-80 px-3 py-2 font-medium transition" style={{ color: '#027e7e' }}>
+                    Déconnexion
+                  </button>
+                </div>
               </div>
             </div>
-          </div>
-        </nav>
-      )}
+          </nav>
+        )}
+      </div>
 
       {/* Zone de messagerie */}
-      <div className="flex-1 overflow-hidden">
-        <div className="max-w-7xl mx-auto h-full px-4 sm:px-6 lg:px-8 py-6 pb-10 sm:pb-12">
-          <div className="h-full bg-white rounded-lg shadow flex">
-            {/* Liste des conversations - affichée seulement sur desktop OU sur mobile quand aucune conversation sélectionnée */}
-            <div className={`w-full lg:w-1/3 border-r border-gray-200 flex flex-col ${selectedConversation && !showConversationList ? 'hidden lg:flex' : 'flex'}`}>
-              <div className="p-4 border-b border-gray-200">
-                <h2 className="text-lg font-semibold text-gray-900">Messages</h2>
+      <div className="flex-1 overflow-hidden flex flex-col">
+        {/* En-tête avec icône - visible uniquement sur mobile quand on voit la liste */}
+        {showConversationList && (
+          <div className="lg:hidden text-center py-4 px-4">
+            <div className="w-14 h-14 mx-auto mb-2 rounded-full flex items-center justify-center p-1" style={{ backgroundColor: primaryColor }}>
+              <img src="/images/icons/5.svg" alt="" className="w-full h-full" />
+            </div>
+            <h1 className="text-lg font-bold text-gray-900">Mes messages</h1>
+          </div>
+        )}
+
+        <div className="flex-1 max-w-7xl mx-auto w-full px-4 sm:px-6 lg:px-8 py-2 sm:py-4 pb-4 overflow-hidden">
+          <div className="h-full bg-white rounded-xl shadow-sm border border-gray-100 flex overflow-hidden">
+            {/* Liste des conversations */}
+            <div className={`w-full lg:w-1/3 border-r border-gray-100 flex flex-col ${selectedConversation && !showConversationList ? 'hidden lg:flex' : 'flex'}`}>
+              <div className="p-4 border-b border-gray-100 hidden lg:block">
+                <div className="flex items-center gap-3">
+                  <div className="w-10 h-10 rounded-full flex items-center justify-center p-0.5" style={{ backgroundColor: primaryColor }}>
+                    <img src="/images/icons/5.svg" alt="" className="w-full h-full" />
+                  </div>
+                  <h2 className="text-lg font-semibold text-gray-900">Messages</h2>
+                </div>
               </div>
               <div className="flex-1 overflow-y-auto">
                 {conversations.length === 0 ? (
-                  <div className="p-4 text-center text-gray-500">
-                    Aucune conversation
+                  <div className="p-6 text-center">
+                    <div className="w-14 h-14 rounded-full flex items-center justify-center mx-auto mb-3" style={{ backgroundColor: lightBgColor }}>
+                      <svg className="h-7 w-7" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true" style={{ color: primaryColor }}>
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+                      </svg>
+                    </div>
+                    <p className="text-gray-500 text-sm">Aucune conversation</p>
                   </div>
                 ) : (
                   conversations.map((conv) => {
                     const other = getOtherParticipant(conv);
-                    if (!other) return null; // Ignorer les conversations sans profil valide
-                    // Ne pas afficher les conversations refusées
+                    if (!other) return null;
                     if (conv.status === 'rejected') return null;
-                    // Vérifier si l'autre personne est un éducateur ou une famille
                     const isOtherEducator = conv.educator_profiles?.id === other?.id;
                     const isOtherFamily = conv.family_profiles?.id === other?.id;
                     const profileUrl = isOtherEducator ? `/educator/${other?.id}` : (isOtherFamily ? `/family/${other?.id}` : null);
                     const isPending = conv.status === 'pending';
+                    const isSelected = selectedConversation?.id === conv.id;
 
                     return (
                       <div
                         key={conv.id}
-                        className={`w-full p-4 hover:bg-gray-50 border-b border-gray-100 cursor-pointer ${
-                          selectedConversation?.id === conv.id ? 'bg-primary-50' : ''
-                        } ${isPending ? 'bg-yellow-50' : ''}`}
+                        className={`w-full p-4 border-b border-gray-100 cursor-pointer transition-colors ${
+                          isSelected ? '' : 'hover:bg-gray-50'
+                        } ${isPending && !isSelected ? 'bg-amber-50' : ''}`}
+                        style={isSelected ? { backgroundColor: lightBgColor } : {}}
                         onClick={() => {
                           setSelectedConversation(conv);
-                          setShowConversationList(false); // Masquer la liste sur mobile
-                          // Marquer comme vue si c'est une demande pending vue par l'éducateur
+                          setShowConversationList(false);
                           if (conv.status === 'pending' && userProfile?.role === 'educator') {
                             markConversationAsSeen(conv.id);
                           }
@@ -555,8 +598,8 @@ export default function MessagesPage() {
                           <div className="flex-shrink-0 relative">
                             <Avatar participant={other} size="md" />
                             {isPending && (
-                              <span className="absolute -top-1 -right-1 w-4 h-4 bg-yellow-500 rounded-full flex items-center justify-center">
-                                <svg className="w-2.5 h-2.5 text-white" fill="currentColor" viewBox="0 0 20 20">
+                              <span className="absolute -top-1 -right-1 w-4 h-4 bg-amber-500 rounded-full flex items-center justify-center" aria-label="Demande en attente">
+                                <svg className="w-2.5 h-2.5 text-white" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
                                   <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z" clipRule="evenodd" />
                                 </svg>
                               </span>
@@ -568,7 +611,7 @@ export default function MessagesPage() {
                                 {other.first_name || 'Utilisateur'} {other.last_name || ''}
                               </p>
                               {isPending && (
-                                <span className="text-xs px-2 py-0.5 bg-yellow-100 text-yellow-700 rounded-full font-medium">
+                                <span className="text-xs px-2 py-0.5 bg-amber-100 text-amber-700 rounded-full font-medium">
                                   En attente
                                 </span>
                               )}
@@ -577,6 +620,9 @@ export default function MessagesPage() {
                               {isPending ? (conv.request_message || 'Demande de contact') : (other.location || 'Localisation non renseignée')}
                             </p>
                           </div>
+                          {isSelected && (
+                            <div className="w-1 h-10 rounded-full" style={{ backgroundColor: primaryColor }}></div>
+                          )}
                         </div>
                       </div>
                     );
@@ -585,29 +631,34 @@ export default function MessagesPage() {
               </div>
             </div>
 
-            {/* Zone de conversation - affichée sur desktop OU sur mobile quand conversation sélectionnée */}
+            {/* Zone de conversation */}
             <div className={`flex-1 flex flex-col ${!selectedConversation || showConversationList ? 'hidden lg:flex' : 'flex'} w-full lg:w-auto`}>
               {!selectedConversation ? (
-                <div className="flex-1 flex items-center justify-center text-gray-500">
-                  Sélectionnez une conversation
+                <div className="flex-1 flex flex-col items-center justify-center text-gray-500 p-6">
+                  <div className="w-16 h-16 rounded-full flex items-center justify-center mb-4" style={{ backgroundColor: lightBgColor }}>
+                    <svg className="h-8 w-8" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true" style={{ color: primaryColor }}>
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+                    </svg>
+                  </div>
+                  <p className="text-sm">Sélectionnez une conversation</p>
                 </div>
               ) : (
                 <>
                   {/* En-tête de la conversation */}
-                  <div className="p-4 border-b border-gray-200">
-                    {/* Bouton retour pour mobile */}
+                  <div className="p-4 border-b border-gray-100">
                     <button
                       onClick={() => setShowConversationList(true)}
-                      className="lg:hidden mb-3 flex items-center text-primary-600 hover:text-primary-700 font-medium"
+                      className="lg:hidden mb-3 flex items-center font-medium"
+                      style={{ color: primaryColor }}
+                      aria-label="Retour à la liste des conversations"
                     >
-                      <svg className="w-5 h-5 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <svg className="w-5 h-5 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
                       </svg>
                       Retour aux conversations
                     </button>
                     {(() => {
                       const other = getOtherParticipant(selectedConversation);
-                      // Vérifier si l'autre personne est un éducateur ou une famille
                       const isOtherEducator = selectedConversation.educator_profiles?.id === other?.id;
                       const isOtherFamily = selectedConversation.family_profiles?.id === other?.id;
                       const profileUrl = isOtherEducator ? `/educator/${other?.id}` : (isOtherFamily ? `/family/${other?.id}` : null);
@@ -621,7 +672,7 @@ export default function MessagesPage() {
                             <div>
                               {profileUrl ? (
                                 <Link href={profileUrl}>
-                                  <h3 className="text-lg font-semibold text-gray-900 hover:text-primary-600 cursor-pointer transition-colors">
+                                  <h3 className="text-lg font-semibold text-gray-900 hover:opacity-80 cursor-pointer transition-colors" style={{ color: primaryColor }}>
                                     {other?.first_name || 'Utilisateur'}{' '}
                                     {other?.last_name || ''}
                                   </h3>
@@ -641,20 +692,21 @@ export default function MessagesPage() {
                             {appointmentUrl && (
                               <Link
                                 href={appointmentUrl}
-                                className="inline-flex items-center px-3 py-2 sm:px-4 bg-green-600 text-white rounded-lg hover:bg-green-700 font-medium transition-colors text-xs sm:text-sm"
+                                className="inline-flex items-center px-3 py-2 sm:px-4 text-white rounded-xl hover:opacity-90 font-medium transition-colors text-xs sm:text-sm"
+                                style={{ backgroundColor: accentColor }}
+                                aria-label={appointmentLabel}
                               >
-                                <svg className="w-4 h-4 mr-1 sm:mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <svg className="w-4 h-4 mr-1 sm:mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
                                 </svg>
                                 <span className="hidden sm:inline">{appointmentLabel}</span>
                                 <span className="sm:hidden">RDV</span>
                               </Link>
                             )}
-                            {/* Bouton bloquer pour les éducateurs */}
                             {userProfile?.role === 'educator' && isOtherFamily && (
                               <button
                                 onClick={() => setShowBlockModal(true)}
-                                className="inline-flex items-center px-3 py-2 bg-red-100 text-red-600 rounded-lg hover:bg-red-200 font-medium transition-colors text-xs sm:text-sm"
+                                className="inline-flex items-center px-3 py-2 bg-red-100 text-red-600 rounded-xl hover:bg-red-200 font-medium transition-colors text-xs sm:text-sm"
                                 title="Bloquer cette famille"
                               >
                                 <svg className="w-4 h-4 sm:mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -876,18 +928,20 @@ export default function MessagesPage() {
 
                       {/* Formulaire d'envoi pour les familles en attente */}
                       {userProfile.role === 'family' && !selectedConversation.request_message && !selectedConversation.questionnaire_data && (
-                        <div className="p-3 sm:p-4 border-t border-gray-200">
+                        <div className="p-3 sm:p-4 border-t border-gray-100">
                           <form onSubmit={sendMessage} className="flex flex-col sm:flex-row gap-2">
                             <input
                               type="text"
                               value={newMessage}
                               onChange={(e) => setNewMessage(e.target.value)}
                               placeholder="Présentez-vous..."
-                              className="flex-1 border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:ring-primary-500 focus:border-primary-500 text-sm sm:text-base"
+                              className="flex-1 border border-gray-200 rounded-xl shadow-sm py-2.5 px-4 focus:outline-none focus:ring-2 text-sm sm:text-base"
+                              style={{ '--tw-ring-color': primaryColor } as any}
                             />
                             <button
                               type="submit"
-                              className="px-4 sm:px-6 py-2 bg-primary-600 text-white rounded-md hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 font-medium text-sm sm:text-base w-full sm:w-auto"
+                              className="px-4 sm:px-6 py-2.5 text-white rounded-xl hover:opacity-90 focus:outline-none font-medium text-sm sm:text-base w-full sm:w-auto transition"
+                              style={{ backgroundColor: primaryColor }}
                             >
                               Envoyer
                             </button>
@@ -898,7 +952,7 @@ export default function MessagesPage() {
                   ) : (
                     <>
                       {/* Messages normaux pour les conversations acceptées */}
-                      <div className="flex-1 overflow-y-auto p-3 sm:p-4 space-y-3 sm:space-y-4">
+                      <div className="flex-1 overflow-y-auto p-3 sm:p-4 space-y-3 sm:space-y-4" aria-live="polite" aria-atomic="false">
                         {messages.map((message) => {
                           const isSender = message.sender_id === currentUser?.id;
                           const other = getOtherParticipant(selectedConversation);
@@ -907,20 +961,20 @@ export default function MessagesPage() {
                               key={message.id}
                               className={`flex items-end gap-1.5 sm:gap-2 ${isSender ? 'justify-end' : 'justify-start'}`}
                             >
-                              {/* Avatar pour les messages reçus */}
                               {!isSender && <Avatar participant={other} size="sm" />}
 
                               <div
-                                className={`max-w-[75%] sm:max-w-xs lg:max-w-md px-3 sm:px-4 py-2 rounded-lg ${
+                                className={`max-w-[75%] sm:max-w-xs lg:max-w-md px-3 sm:px-4 py-2 rounded-2xl ${
                                   isSender
-                                    ? 'bg-primary-600 text-white'
-                                    : 'bg-gray-200 text-gray-900'
+                                    ? 'text-white'
+                                    : 'bg-gray-100 text-gray-900'
                                 }`}
+                                style={isSender ? { backgroundColor: primaryColor } : {}}
                               >
                                 <p className="text-sm sm:text-base break-words">{message.content}</p>
                                 <p
                                   className={`text-xs mt-1 ${
-                                    isSender ? 'text-primary-100' : 'text-gray-500'
+                                    isSender ? 'text-white/70' : 'text-gray-500'
                                   }`}
                                 >
                                   {new Date(message.created_at).toLocaleTimeString('fr-FR', {
@@ -936,11 +990,10 @@ export default function MessagesPage() {
                       </div>
 
                       {/* Formulaire d'envoi */}
-                      <div className="p-3 sm:p-4 border-t border-gray-200">
-                        {/* Avertissement de modération */}
+                      <div className="p-3 sm:p-4 border-t border-gray-100">
                         {moderationWarning && (
-                          <div className="mb-3 p-3 bg-red-50 border border-red-200 rounded-lg flex items-start gap-2">
-                            <svg className="w-5 h-5 text-red-500 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <div className="mb-3 p-3 bg-red-50 border border-red-200 rounded-xl flex items-start gap-2" role="alert" aria-live="assertive">
+                            <svg className="w-5 h-5 text-red-500 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
                             </svg>
                             <div className="flex-1">
@@ -948,6 +1001,7 @@ export default function MessagesPage() {
                               <button
                                 onClick={() => setModerationWarning(null)}
                                 className="text-xs text-red-600 hover:text-red-800 underline mt-1"
+                                aria-label="Fermer l'avertissement"
                               >
                                 Fermer
                               </button>
@@ -963,16 +1017,19 @@ export default function MessagesPage() {
                               if (moderationWarning) setModerationWarning(null);
                             }}
                             placeholder="Message..."
-                            className={`flex-1 border rounded-md shadow-sm py-2 px-3 focus:ring-primary-500 focus:border-primary-500 text-sm sm:text-base min-w-0 ${
-                              moderationWarning ? 'border-red-300 bg-red-50' : 'border-gray-300'
+                            className={`flex-1 border rounded-xl shadow-sm py-2.5 px-4 focus:outline-none focus:ring-2 text-sm sm:text-base min-w-0 ${
+                              moderationWarning ? 'border-red-300 bg-red-50' : 'border-gray-200'
                             }`}
+                            style={{ '--tw-ring-color': primaryColor } as any}
                           />
                           <button
                             type="submit"
-                            className="px-3 sm:px-6 py-2 bg-primary-600 text-white rounded-md hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 flex-shrink-0 text-sm sm:text-base"
+                            className="px-3 sm:px-6 py-2.5 text-white rounded-xl hover:opacity-90 focus:outline-none flex-shrink-0 text-sm sm:text-base transition"
+                            style={{ backgroundColor: primaryColor }}
+                            aria-label="Envoyer le message"
                           >
                             <span className="hidden sm:inline">Envoyer</span>
-                            <svg className="w-5 h-5 sm:hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <svg className="w-5 h-5 sm:hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" />
                             </svg>
                           </button>
