@@ -268,15 +268,15 @@ export default function NotificationBell({ educatorId, userId }: NotificationBel
         );
       case 'message':
         return (
-          <div className="w-8 h-8 rounded-full flex items-center justify-center" style={{ backgroundColor: '#e6f4f4' }}>
-            <svg className="w-4 h-4" style={{ color: '#027e7e' }} fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+          <div className="w-8 h-8 rounded-full flex items-center justify-center" style={{ backgroundColor: '#f3e8ff' }}>
+            <svg className="w-4 h-4" style={{ color: '#41005c' }} fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z" />
             </svg>
           </div>
         );
       case 'appointment':
         return (
-          <div className="w-8 h-8 bg-amber-100 rounded-full flex items-center justify-center">
+          <div className="w-8 h-8 rounded-full flex items-center justify-center" style={{ backgroundColor: '#fef3c7' }}>
             <svg className="w-4 h-4 text-amber-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
             </svg>
@@ -284,7 +284,7 @@ export default function NotificationBell({ educatorId, userId }: NotificationBel
         );
       case 'invoice':
         return (
-          <div className="w-8 h-8 bg-green-100 rounded-full flex items-center justify-center">
+          <div className="w-8 h-8 rounded-full flex items-center justify-center" style={{ backgroundColor: '#dcfce7' }}>
             <svg className="w-4 h-4 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
             </svg>
@@ -301,7 +301,7 @@ export default function NotificationBell({ educatorId, userId }: NotificationBel
       <button
         ref={buttonRef}
         onClick={() => setIsOpen(!isOpen)}
-        className="relative p-2 text-white hover:text-teal-100 rounded-full transition-colors"
+        className="relative p-2 text-white hover:opacity-80 rounded-full transition-colors"
         aria-label="Notifications"
         aria-expanded={isOpen}
         aria-describedby={unreadCount > 0 ? "notification-count" : undefined}
@@ -314,7 +314,8 @@ export default function NotificationBell({ educatorId, userId }: NotificationBel
         {unreadCount > 0 && (
           <span
             id="notification-count"
-            className="absolute -top-1 -right-1 flex items-center justify-center min-w-[20px] h-5 px-1.5 text-xs font-bold text-white bg-red-500 rounded-full animate-pulse"
+            className="absolute -top-1 -right-1 flex items-center justify-center min-w-[20px] h-5 px-1.5 text-xs font-bold text-white rounded-full animate-pulse"
+            style={{ backgroundColor: '#f0879f' }}
             aria-label={`${unreadCount} notification${unreadCount > 1 ? 's' : ''} non lue${unreadCount > 1 ? 's' : ''}`}
           >
             {unreadCount > 9 ? '9+' : unreadCount}
@@ -330,12 +331,12 @@ export default function NotificationBell({ educatorId, userId }: NotificationBel
       {/* Dropdown */}
       {isOpen && (
         <div
-          className="absolute right-0 mt-2 w-80 sm:w-96 bg-white rounded-xl shadow-xl border border-gray-100 overflow-hidden z-50"
+          className="absolute right-0 mt-2 w-80 sm:w-96 bg-white rounded-2xl shadow-xl border border-gray-100 overflow-hidden z-50"
           role="region"
           aria-label="Panneau de notifications"
         >
           {/* Header */}
-          <div className="px-4 py-3 text-white" style={{ background: 'linear-gradient(135deg, #027e7e 0%, #3a9e9e 100%)' }}>
+          <div className="px-4 py-3 text-white" style={{ backgroundColor: '#41005c' }}>
             <h3 className="font-semibold" id="notifications-heading">Notifications</h3>
             <p className="text-sm text-white/80">
               {unreadCount > 0 ? `${unreadCount} nouvelle${unreadCount > 1 ? 's' : ''}` : 'Aucune nouvelle'}
@@ -346,13 +347,13 @@ export default function NotificationBell({ educatorId, userId }: NotificationBel
           <div className="max-h-96 overflow-y-auto">
             {loading ? (
               <div className="flex items-center justify-center py-8" role="status" aria-live="polite">
-                <div className="animate-spin rounded-full h-6 w-6 border-b-2" style={{ borderColor: '#027e7e' }} aria-hidden="true"></div>
+                <div className="animate-spin rounded-full h-6 w-6 border-b-2" style={{ borderColor: '#41005c' }} aria-hidden="true"></div>
                 <span className="sr-only">Chargement des notifications</span>
               </div>
             ) : notifications.length === 0 ? (
               <div className="py-8 text-center">
-                <div className="w-12 h-12 rounded-full flex items-center justify-center mx-auto mb-3" style={{ backgroundColor: '#e6f4f4' }}>
-                  <svg className="w-6 h-6" style={{ color: '#027e7e' }} fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                <div className="w-12 h-12 rounded-full flex items-center justify-center mx-auto mb-3" style={{ backgroundColor: '#f3e8ff' }}>
+                  <svg className="w-6 h-6" style={{ color: '#41005c' }} fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
                   </svg>
                 </div>
@@ -374,11 +375,11 @@ export default function NotificationBell({ educatorId, userId }: NotificationBel
                     >
                       {getIcon(notif.type)}
                       <div className="flex-1 min-w-0">
-                        <p className="text-sm font-medium text-gray-900">{notif.title}</p>
+                        <p className="text-sm font-semibold text-gray-900">{notif.title}</p>
                         <p className="text-sm text-gray-500 truncate">{notif.description}</p>
                         <p className="text-xs text-gray-400 mt-1">{notif.time}</p>
                       </div>
-                      <div className="w-2 h-2 rounded-full flex-shrink-0 mt-2" style={{ backgroundColor: '#027e7e' }} aria-label="Non lu"></div>
+                      <div className="w-2 h-2 rounded-full flex-shrink-0 mt-2" style={{ backgroundColor: '#41005c' }} aria-label="Non lu"></div>
                     </Link>
                   </li>
                 ))}
@@ -388,25 +389,21 @@ export default function NotificationBell({ educatorId, userId }: NotificationBel
 
           {/* Footer */}
           {notifications.length > 0 && (
-            <div className="px-4 py-3 bg-gray-50 border-t border-gray-100">
+            <div className="px-4 py-3 border-t border-gray-100" style={{ backgroundColor: '#faf5ff' }}>
               <div className="flex gap-2">
                 <Link
                   href="/messages"
                   onClick={() => setIsOpen(false)}
-                  className="flex-1 text-center text-sm font-medium py-2 rounded-lg transition"
-                  style={{ color: '#027e7e' }}
-                  onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#e6f4f4'}
-                  onMouseLeave={(e) => e.currentTarget.style.backgroundColor = 'transparent'}
+                  className="flex-1 text-center text-sm font-medium py-2 rounded-xl transition hover:opacity-80"
+                  style={{ color: '#41005c' }}
                 >
                   Messages
                 </Link>
                 <Link
                   href="/dashboard/educator/appointments"
                   onClick={() => setIsOpen(false)}
-                  className="flex-1 text-center text-sm font-medium py-2 rounded-lg transition"
-                  style={{ color: '#027e7e' }}
-                  onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#e6f4f4'}
-                  onMouseLeave={(e) => e.currentTarget.style.backgroundColor = 'transparent'}
+                  className="flex-1 text-center text-sm font-medium py-2 rounded-xl transition hover:opacity-80"
+                  style={{ color: '#41005c' }}
                 >
                   Rendez-vous
                 </Link>
