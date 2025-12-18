@@ -42,6 +42,7 @@ export interface EducatorProfile {
   total_reviews: number;
   verification_badge?: boolean;
   profession_type?: string;
+  gender?: 'male' | 'female' | null;
   created_at: string;
   updated_at: string;
 }
