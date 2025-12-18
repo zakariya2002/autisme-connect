@@ -1,12 +1,12 @@
 import type { Metadata } from 'next'
 
 export const metadata: Metadata = {
-  title: 'Connexion | Autisme Connect',
-  description: 'Connectez-vous à votre espace Autisme Connect. Accédez à votre tableau de bord famille ou éducateur pour gérer vos rendez-vous et messages.',
+  title: 'Connexion | NeuroCare',
+  description: 'Connectez-vous à votre espace NeuroCare. Accédez à votre tableau de bord famille ou éducateur pour gérer vos rendez-vous et messages.',
   openGraph: {
-    title: 'Connexion | Autisme Connect',
-    description: 'Connectez-vous à votre espace Autisme Connect. Accédez à votre tableau de bord famille ou éducateur.',
-    url: 'https://www.autismeconnect.fr/auth/login',
+    title: 'Connexion | NeuroCare',
+    description: 'Connectez-vous à votre espace NeuroCare. Accédez à votre tableau de bord famille ou éducateur.',
+    url: 'https://www.neuro-care.fr/auth/login',
   },
   alternates: {
     canonical: '/auth/login',

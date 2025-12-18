@@ -95,7 +95,7 @@ NEXT_PUBLIC_APP_URL=http://localhost:3000
 
 # Emails
 RESEND_API_KEY=re_...
-RESEND_FROM_EMAIL=verification@autismeconnect.fr
+RESEND_FROM_EMAIL=verification@neuro-care.fr
 ```
 
 ### Configuration Stripe

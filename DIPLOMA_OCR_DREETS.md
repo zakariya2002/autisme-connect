@@ -94,8 +94,8 @@ npm install resend
 Dans `.env.local` :
 ```env
 RESEND_API_KEY=re_...
-ADMIN_EMAIL=admin@autismeconnect.fr
-NEXT_PUBLIC_APP_URL=https://autismeconnect.fr
+ADMIN_EMAIL=admin@neuro-care.fr
+NEXT_PUBLIC_APP_URL=https://neuro-care.fr
 ```
 
 Décommenter le code dans :

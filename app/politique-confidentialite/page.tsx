@@ -9,7 +9,7 @@ export default function PolitiqueConfidentialite() {
       <header className="bg-white shadow-sm">
         <div className="max-w-4xl mx-auto px-4 py-6">
           <Link href="/" className="text-violet-600 hover:text-violet-700 font-semibold text-xl">
-            ← Autisme Connect
+            ← NeuroCare
           </Link>
         </div>
       </header>
@@ -24,14 +24,14 @@ export default function PolitiqueConfidentialite() {
             <h2 className="text-xl font-semibold text-gray-900 mb-4">1. Introduction</h2>
             <div className="text-gray-600 space-y-3">
               <p>
-                Autisme Connect accorde une grande importance à la protection de vos données personnelles.
+                NeuroCare accorde une grande importance à la protection de vos données personnelles.
                 Cette politique de confidentialité vous informe sur la manière dont nous collectons,
                 utilisons et protégeons vos informations conformément au Règlement Général sur la
                 Protection des Données (RGPD).
               </p>
               <p>
-                <strong>Responsable du traitement :</strong> Autisme Connect<br />
-                <strong>Email :</strong> contact@autismeconnect.fr
+                <strong>Responsable du traitement :</strong> NeuroCare<br />
+                <strong>Email :</strong> contact@neuro-care.fr
               </p>
             </div>
           </section>
@@ -152,7 +152,7 @@ export default function PolitiqueConfidentialite() {
                 <li><strong>Droit de retirer votre consentement :</strong> À tout moment</li>
               </ul>
               <p className="mt-4">
-                Pour exercer ces droits, contactez-nous à : <a href="mailto:contact@autismeconnect.fr" className="text-violet-600 hover:underline">contact@autismeconnect.fr</a>
+                Pour exercer ces droits, contactez-nous à : <a href="mailto:contact@neuro-care.fr" className="text-violet-600 hover:underline">contact@neuro-care.fr</a>
               </p>
               <p>
                 Vous pouvez également introduire une réclamation auprès de la CNIL : <a href="https://www.cnil.fr" target="_blank" rel="noopener noreferrer" className="text-violet-600 hover:underline">www.cnil.fr</a>
@@ -222,7 +222,7 @@ export default function PolitiqueConfidentialite() {
             <div className="text-gray-600 space-y-3">
               <p>
                 Pour toute question concernant cette politique de confidentialité ou vos données personnelles,
-                contactez-nous à : <a href="mailto:contact@autismeconnect.fr" className="text-violet-600 hover:underline">contact@autismeconnect.fr</a>
+                contactez-nous à : <a href="mailto:contact@neuro-care.fr" className="text-violet-600 hover:underline">contact@neuro-care.fr</a>
               </p>
             </div>
           </section>

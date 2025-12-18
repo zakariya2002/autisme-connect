@@ -74,7 +74,7 @@ export async function POST(request: NextRequest) {
       if (status === 'verified') {
         // Email d'acceptation
         await resend.emails.send({
-          from: process.env.RESEND_FROM_EMAIL || 'Autisme Connect <noreply@autismeconnect.fr>',
+          from: process.env.RESEND_FROM_EMAIL || 'NeuroCare <noreply@neuro-care.fr>',
           to: educatorEmail,
           subject: '✅ Votre diplôme a été vérifié !',
           html: `
@@ -121,12 +121,12 @@ export async function POST(request: NextRequest) {
                   </div>
 
                   <p style="margin-top: 30px;">
-                    Merci de faire partie d'Autisme Connect !<br>
-                    <strong>L'équipe Autisme Connect</strong>
+                    Merci de faire partie d'NeuroCare !<br>
+                    <strong>L'équipe NeuroCare</strong>
                   </p>
                 </div>
                 <div class="footer">
-                  <p>Autisme Connect - Plateforme de mise en relation familles-éducateurs</p>
+                  <p>NeuroCare - Plateforme de mise en relation familles-éducateurs</p>
                   <p>${process.env.NEXT_PUBLIC_APP_URL}</p>
                 </div>
               </div>
@@ -138,7 +138,7 @@ export async function POST(request: NextRequest) {
       } else {
         // Email de rejet
         await resend.emails.send({
-          from: process.env.RESEND_FROM_EMAIL || 'Autisme Connect <noreply@autismeconnect.fr>',
+          from: process.env.RESEND_FROM_EMAIL || 'NeuroCare <noreply@neuro-care.fr>',
           to: educatorEmail,
           subject: '❌ Problème avec votre diplôme',
           html: `
@@ -185,11 +185,11 @@ export async function POST(request: NextRequest) {
 
                   <p style="margin-top: 30px;">
                     Si vous avez des questions, n'hésitez pas à nous contacter.<br>
-                    <strong>L'équipe Autisme Connect</strong>
+                    <strong>L'équipe NeuroCare</strong>
                   </p>
                 </div>
                 <div class="footer">
-                  <p>Autisme Connect - Plateforme de mise en relation familles-éducateurs</p>
+                  <p>NeuroCare - Plateforme de mise en relation familles-éducateurs</p>
                   <p>${process.env.NEXT_PUBLIC_APP_URL}</p>
                 </div>
               </div>

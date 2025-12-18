@@ -41,7 +41,7 @@ export async function sendDiplomaStatusEmail(
     const resend = new Resend(process.env.RESEND_API_KEY);
 
     await resend.emails.send({
-      from: 'neurocare Pro <noreply@autismeconnect.fr>',
+      from: 'neurocare Pro <noreply@neuro-care.fr>',
       to: educator.email,
       subject: getEmailSubject(status),
       html: getEmailHtml(educator, status),
@@ -55,7 +55,7 @@ export async function sendDiplomaStatusEmail(
 
     await sgMail.send({
       to: educator.email,
-      from: 'noreply@autismeconnect.fr',
+      from: 'noreply@neuro-care.fr',
       subject: getEmailSubject(status),
       html: getEmailHtml(educator, status),
     });
@@ -207,7 +207,7 @@ export async function notifyAdminNewDiploma(
   educator: EducatorEmailData
 ): Promise<void> {
   try {
-    const adminEmail = process.env.ADMIN_EMAIL || 'admin@autismeconnect.fr';
+    const adminEmail = process.env.ADMIN_EMAIL || 'admin@neuro-care.fr';
 
     // TODO: Implémenter avec votre service d'email
     console.log('📧 Notification admin:', {

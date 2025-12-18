@@ -113,7 +113,7 @@ export function getNewsletterWelcomeEmail(firstName?: string, audience?: string)
                 <table role="presentation" style="margin: 0 auto;">
                   <tr>
                     <td style="border-radius: 8px; background: linear-gradient(135deg, #027e7e 0%, #05a5a5 100%); box-shadow: 0 4px 12px rgba(2, 126, 126, 0.3);">
-                      <a href="https://www.autismeconnect.fr"
+                      <a href="https://www.neuro-care.fr"
                          style="display: inline-block; padding: 14px 35px; color: #ffffff; text-decoration: none; font-weight: bold; font-size: 15px;">
                         Découvrir neurocare
                       </a>
@@ -136,7 +136,7 @@ export function getNewsletterWelcomeEmail(firstName?: string, audience?: string)
                 Vous recevez cet email car vous vous êtes inscrit à la newsletter neurocare.
               </p>
               <p style="margin: 0 0 10px 0; font-size: 13px;">
-                <a href="https://www.autismeconnect.fr/unsubscribe" style="color: #027e7e; text-decoration: underline;">
+                <a href="https://www.neuro-care.fr/unsubscribe" style="color: #027e7e; text-decoration: underline;">
                   Se désabonner
                 </a>
               </p>

@@ -1,12 +1,12 @@
 import type { Metadata } from 'next'
 
 export const metadata: Metadata = {
-  title: 'Qui sommes-nous ? | Autisme Connect',
-  description: 'Découvrez l\'équipe Autisme Connect. Notre mission : faciliter la rencontre entre les familles concernées par l\'autisme et les éducateurs spécialisés qualifiés.',
+  title: 'Qui sommes-nous ? | NeuroCare',
+  description: 'Découvrez l\'équipe NeuroCare. Notre mission : faciliter la rencontre entre les familles concernées par l\'autisme et les éducateurs spécialisés qualifiés.',
   openGraph: {
-    title: 'Qui sommes-nous ? | Autisme Connect',
-    description: 'Découvrez l\'équipe Autisme Connect. Notre mission : faciliter la rencontre entre les familles concernées par l\'autisme et les éducateurs spécialisés qualifiés.',
-    url: 'https://www.autismeconnect.fr/about',
+    title: 'Qui sommes-nous ? | NeuroCare',
+    description: 'Découvrez l\'équipe NeuroCare. Notre mission : faciliter la rencontre entre les familles concernées par l\'autisme et les éducateurs spécialisés qualifiés.',
+    url: 'https://www.neuro-care.fr/about',
   },
   alternates: {
     canonical: '/about',

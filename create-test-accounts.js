@@ -23,7 +23,7 @@ const supabase = createClient(supabaseUrl, supabaseServiceKey, {
 // Liste des professionnels à créer
 const professionals = [
   {
-    email: 'test.educateur@autismeconnect.fr',
+    email: 'test.educateur@neuro-care.fr',
     profession_type: 'educator',
     first_name: 'Marie',
     last_name: 'Dupont',
@@ -31,7 +31,7 @@ const professionals = [
     rpps_number: null,
   },
   {
-    email: 'test.moniteur@autismeconnect.fr',
+    email: 'test.moniteur@neuro-care.fr',
     profession_type: 'moniteur_educateur',
     first_name: 'Pierre',
     last_name: 'Martin',
@@ -39,7 +39,7 @@ const professionals = [
     rpps_number: null,
   },
   {
-    email: 'test.psychologue@autismeconnect.fr',
+    email: 'test.psychologue@neuro-care.fr',
     profession_type: 'psychologist',
     first_name: 'Sophie',
     last_name: 'Bernard',
@@ -47,7 +47,7 @@ const professionals = [
     rpps_number: '10100166294',
   },
   {
-    email: 'test.psychiatre@autismeconnect.fr',
+    email: 'test.psychiatre@neuro-care.fr',
     profession_type: 'psychiatrist',
     first_name: 'Lucas',
     last_name: 'Petit',
@@ -55,7 +55,7 @@ const professionals = [
     rpps_number: '10100113965',
   },
   {
-    email: 'test.pedopsychiatre@autismeconnect.fr',
+    email: 'test.pedopsychiatre@neuro-care.fr',
     profession_type: 'child_psychiatrist',
     first_name: 'Claire',
     last_name: 'Moreau',
@@ -63,7 +63,7 @@ const professionals = [
     rpps_number: '10003486586',
   },
   {
-    email: 'test.psychomotricien@autismeconnect.fr',
+    email: 'test.psychomotricien@neuro-care.fr',
     profession_type: 'psychomotricist',
     first_name: 'Thomas',
     last_name: 'Leroy',
@@ -71,7 +71,7 @@ const professionals = [
     rpps_number: '10100166294',
   },
   {
-    email: 'test.ergotherapeute@autismeconnect.fr',
+    email: 'test.ergotherapeute@neuro-care.fr',
     profession_type: 'occupational_therapist',
     first_name: 'Julie',
     last_name: 'Dubois',
@@ -79,7 +79,7 @@ const professionals = [
     rpps_number: '10100113965',
   },
   {
-    email: 'test.orthophoniste@autismeconnect.fr',
+    email: 'test.orthophoniste@neuro-care.fr',
     profession_type: 'speech_therapist',
     first_name: 'Emma',
     last_name: 'Laurent',
@@ -87,7 +87,7 @@ const professionals = [
     rpps_number: '10003486586',
   },
   {
-    email: 'test.kinesitherapeute@autismeconnect.fr',
+    email: 'test.kinesitherapeute@neuro-care.fr',
     profession_type: 'physiotherapist',
     first_name: 'Antoine',
     last_name: 'Simon',
@@ -95,7 +95,7 @@ const professionals = [
     rpps_number: '10100166294',
   },
   {
-    email: 'test.apa@autismeconnect.fr',
+    email: 'test.apa@neuro-care.fr',
     profession_type: 'apa_teacher',
     first_name: 'Camille',
     last_name: 'Michel',
@@ -103,7 +103,7 @@ const professionals = [
     rpps_number: null,
   },
   {
-    email: 'test.musicotherapeute@autismeconnect.fr',
+    email: 'test.musicotherapeute@neuro-care.fr',
     profession_type: 'music_therapist',
     first_name: 'Léa',
     last_name: 'Garcia',

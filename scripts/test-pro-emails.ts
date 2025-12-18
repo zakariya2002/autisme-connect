@@ -14,10 +14,10 @@ async function testProEmails() {
   console.log('1. Envoi email de bienvenue éducateur avec confirmation...');
   try {
     const { data, error } = await resend.emails.send({
-      from: 'neurocare Pro <admin@autismeconnect.fr>',
+      from: 'neurocare Pro <admin@neuro-care.fr>',
       to: [email],
       subject: `Confirmez votre email - Bienvenue sur neurocare Pro, ${firstName} !`,
-      html: getEducatorWelcomeEmail(firstName, 'https://www.autismeconnect.fr/auth/confirm?token=test123'),
+      html: getEducatorWelcomeEmail(firstName, 'https://www.neuro-care.fr/auth/confirm?token=test123'),
     });
     if (error) {
       console.log('❌ Échec', error);
@@ -35,7 +35,7 @@ async function testProEmails() {
   console.log('\n2. Envoi email Premium...');
   try {
     const { data, error } = await resend.emails.send({
-      from: 'neurocare Pro <admin@autismeconnect.fr>',
+      from: 'neurocare Pro <admin@neuro-care.fr>',
       to: [email],
       subject: `🌟 Bienvenue dans la famille Premium neurocare Pro, ${firstName} !`,
       html: getPremiumWelcomeEmail(firstName),

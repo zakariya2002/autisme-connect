@@ -1,4 +1,4 @@
-# Autisme Connect 🌟
+# NeuroCare 🌟
 
 Plateforme SaaS de mise en relation entre éducateurs spécialisés et familles de personnes avec Troubles du Spectre de l'Autisme (TSA).
 
@@ -83,7 +83,7 @@ https://nodejs.org/
 
 1. **Cloner le projet**
 ```bash
-cd autisme-connect
+cd neuro-care
 ```
 
 2. **Installer les dépendances**
@@ -129,7 +129,7 @@ Le site sera accessible sur [http://localhost:3000](http://localhost:3000)
 ## 📁 Structure du Projet
 
 ```
-autisme-connect/
+neuro-care/
 ├── app/
 │   ├── auth/                 # Pages d'authentification
 │   │   ├── login/
@@ -218,13 +218,13 @@ netlify deploy --prod
 
 ```bash
 # Build l'image
-docker build -t autisme-connect .
+docker build -t neuro-care .
 
 # Lancer le conteneur
 docker run -p 3000:3000 \
   -e NEXT_PUBLIC_SUPABASE_URL=votre_url \
   -e NEXT_PUBLIC_SUPABASE_ANON_KEY=votre_cle \
-  autisme-connect
+  neuro-care
 ```
 
 ## 👥 Utilisation
@@ -303,7 +303,7 @@ Les contributions sont les bienvenues ! N'hésitez pas à :
 
 Pour toute question ou problème :
 - Ouvrez une issue sur GitHub
-- Email: support@autismeconnect.com (exemple)
+- Email: support@neuro-care.fr
 
 ---
 

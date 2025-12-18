@@ -1,4 +1,4 @@
-# 🚀 Guide de déploiement en PRODUCTION sur autismeconnect.fr
+# 🚀 Guide de déploiement en PRODUCTION sur neuro-care.fr
 
 ## 📋 Checklist avant le déploiement
 
@@ -37,8 +37,8 @@ Secret key: sk_live_[VOTRE_CLE_SECRETE] (cliquer sur "Reveal live key")
 2. S'assurer d'être en mode **LIVE**
 3. Cliquer sur "Add endpoint"
 4. Remplir :
-   - **Endpoint URL** : `https://www.autismeconnect.fr/api/webhooks/stripe`
-   - **Description** : Webhooks Autisme Connect Production
+   - **Endpoint URL** : `https://www.neuro-care.fr/api/webhooks/stripe`
+   - **Description** : Webhooks NeuroCare Production
 
 ### 2.2 Sélectionner les événements
 Cocher les événements suivants :
@@ -63,7 +63,7 @@ Signing secret: whsec_[VOTRE_SIGNING_SECRET]
 
 ### 3.1 Accéder aux paramètres Vercel
 1. Aller sur https://vercel.com/dashboard
-2. Sélectionner votre projet **autisme-connect**
+2. Sélectionner votre projet **neuro-care**
 3. Aller dans **Settings** → **Environment Variables**
 
 ### 3.2 Ajouter/Mettre à jour les variables suivantes
@@ -75,7 +75,7 @@ Signing secret: whsec_[VOTRE_SIGNING_SECRET]
 | `STRIPE_SECRET_KEY` | Votre Secret Key LIVE | Production |
 | `NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY` | Votre Publishable Key LIVE | Production |
 | `STRIPE_WEBHOOK_SECRET` | Votre Webhook Signing Secret | Production |
-| `NEXT_PUBLIC_APP_URL` | `https://www.autismeconnect.fr` | Production |
+| `NEXT_PUBLIC_APP_URL` | `https://www.neuro-care.fr` | Production |
 
 **Variables Supabase** (déjà configurées normalement) :
 | Variable | Environnement |
@@ -112,7 +112,7 @@ Après avoir ajouté les variables :
 ### 5.1 Test avec une vraie carte (mode LIVE)
 ⚠️ **ATTENTION** : En mode LIVE, les paiements sont RÉELS !
 
-1. Aller sur https://www.autismeconnect.fr/pricing
+1. Aller sur https://www.neuro-care.fr/pricing
 2. Cliquer sur "Commencer gratuitement"
 3. Créer un compte éducateur (ou se connecter)
 4. Remplir avec une VRAIE carte bancaire
@@ -198,7 +198,7 @@ Après avoir ajouté les variables :
 ### Problème : Redirection après paiement ne fonctionne pas
 **Solution** :
 - Vérifier que `NEXT_PUBLIC_APP_URL` est bien défini sur Vercel
-- Vérifier que l'URL est : `https://www.autismeconnect.fr` (sans slash final)
+- Vérifier que l'URL est : `https://www.neuro-care.fr` (sans slash final)
 
 ## 📊 Statistiques à surveiller
 
@@ -221,7 +221,7 @@ Dashboard Stripe vous donnera toutes ces métriques automatiquement !
 - [ ] Test de paiement effectué et annulé ✓
 - [ ] Webhooks reçus avec succès (200 OK) ✓
 - [ ] Abonnement créé dans Supabase ✓
-- [ ] Page pricing accessible sur autismeconnect.fr ✓
+- [ ] Page pricing accessible sur neuro-care.fr ✓
 
 ---
 

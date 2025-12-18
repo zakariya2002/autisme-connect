@@ -10,7 +10,7 @@ Le webhook Stripe ne se déclenche pas automatiquement lors de la création d'un
 1. Allez sur https://dashboard.stripe.com/webhooks
 2. Vérifiez qu'il existe un webhook pointant vers votre site :
    ```
-   https://www.autismeconnect.fr/api/webhooks/stripe
+   https://www.neuro-care.fr/api/webhooks/stripe
    ```
 
 ### 2. Vérifier les événements écoutés
@@ -53,8 +53,8 @@ Sur la page du webhook dans Stripe :
 
 1. Allez sur https://dashboard.stripe.com/webhooks
 2. Cliquez sur "+ Add endpoint"
-3. Endpoint URL : `https://www.autismeconnect.fr/api/webhooks/stripe`
-4. Description : `Autisme Connect - Production`
+3. Endpoint URL : `https://www.neuro-care.fr/api/webhooks/stripe`
+4. Description : `NeuroCare - Production`
 5. Sélectionnez "Latest API version"
 6. Dans "Select events to listen to", ajoutez :
    - `checkout.session.completed`
@@ -98,7 +98,7 @@ Ceci vous donnera un webhook secret temporaire pour tester en local.
 
 1. Créez un nouvel abonnement de test :
    ```
-   https://www.autismeconnect.fr/pricing
+   https://www.neuro-care.fr/pricing
    ```
 
 2. Complétez le paiement avec une carte de test :
@@ -133,7 +133,7 @@ Utilisez la **synchronisation manuelle** :
 ## Checklist
 
 - [ ] Webhook configuré sur Stripe
-- [ ] URL correcte : `https://www.autismeconnect.fr/api/webhooks/stripe`
+- [ ] URL correcte : `https://www.neuro-care.fr/api/webhooks/stripe`
 - [ ] Événements sélectionnés (6 événements)
 - [ ] Webhook secret copié dans Vercel
 - [ ] Application redéployée après modification

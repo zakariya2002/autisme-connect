@@ -1,4 +1,4 @@
-# 📧 Configuration des emails personnalisés avec admin@autismeconnect.fr
+# 📧 Configuration des emails personnalisés avec admin@neuro-care.fr
 
 ## Étape 1️⃣ : Vérifier le domaine sur Resend
 
@@ -6,9 +6,9 @@
 1. Aller sur https://resend.com/domains
 2. Se connecter avec votre compte
 
-### 1.2 Ajouter le domaine autismeconnect.fr
+### 1.2 Ajouter le domaine neuro-care.fr
 1. Cliquer sur "Add Domain"
-2. Entrer : `autismeconnect.fr`
+2. Entrer : `neuro-care.fr`
 3. Cliquer sur "Add"
 
 ### 1.3 Configurer les enregistrements DNS
@@ -50,8 +50,8 @@ Une fois les DNS propagés, Resend vérifiera automatiquement le domaine ✅
 3. Remplir les champs :
 
 ```
-Sender name: Autisme Connect
-Sender email: admin@autismeconnect.fr
+Sender name: NeuroCare
+Sender email: admin@neuro-care.fr
 
 Host: smtp.resend.com
 Port number: 587
@@ -81,7 +81,7 @@ Password: re_32KAQ9Hr_7VDuUc8U6nhczWoBQu3Hvf3k
 
 ### 3.3 Personnaliser le sujet de l'email
 
-**Sujet** : `Confirmez votre adresse email - Autisme Connect ✓`
+**Sujet** : `Confirmez votre adresse email - NeuroCare ✓`
 
 ### 3.4 Sauvegarder
 Cliquer sur **"Save"**
@@ -91,7 +91,7 @@ Cliquer sur **"Save"**
 ## Étape 4️⃣ : Tester l'envoi d'email
 
 ### 4.1 Test depuis votre application
-1. Aller sur https://www.autismeconnect.fr/auth/signup
+1. Aller sur https://www.neuro-care.fr/auth/signup
 2. Créer un nouveau compte avec un email de test
 3. Vérifier la réception de l'email
 
@@ -101,7 +101,7 @@ Cliquer sur **"Save"**
 
 ### 4.3 Points à vérifier
 - ✅ Email reçu dans la boîte de réception (pas spam)
-- ✅ Expéditeur : "Autisme Connect <admin@autismeconnect.fr>"
+- ✅ Expéditeur : "NeuroCare <admin@neuro-care.fr>"
 - ✅ Design correct avec les couleurs bleues
 - ✅ Bouton de confirmation fonctionne
 - ✅ Lien alternatif fonctionne
@@ -151,7 +151,7 @@ Remplacer dans le HTML :
 ### Ajouter votre logo
 Remplacer le SVG par :
 ```html
-<img src="https://www.autismeconnect.fr/logo.png" alt="Autisme Connect" width="60" height="60" style="border-radius: 12px;">
+<img src="https://www.neuro-care.fr/logo.png" alt="NeuroCare" width="60" height="60" style="border-radius: 12px;">
 ```
 
 ---
@@ -216,4 +216,4 @@ Pour augmenter : Passer au plan payant sur https://resend.com/pricing
 
 ---
 
-🎉 **Vos emails sont maintenant configurés avec admin@autismeconnect.fr !**
+🎉 **Vos emails sont maintenant configurés avec admin@neuro-care.fr !**

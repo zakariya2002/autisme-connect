@@ -9,7 +9,7 @@ export default function CGU() {
       <header className="bg-white shadow-sm">
         <div className="max-w-4xl mx-auto px-4 py-6">
           <Link href="/" className="text-violet-600 hover:text-violet-700 font-semibold text-xl">
-            ← Autisme Connect
+            ← NeuroCare
           </Link>
         </div>
       </header>
@@ -25,11 +25,11 @@ export default function CGU() {
             <div className="text-gray-600 space-y-3">
               <p>
                 Les présentes Conditions Générales d'Utilisation (CGU) ont pour objet de définir les
-                modalités d'accès et d'utilisation de la plateforme Autisme Connect, accessible à
-                l'adresse https://www.autismeconnect.fr
+                modalités d'accès et d'utilisation de la plateforme NeuroCare, accessible à
+                l'adresse https://www.neuro-care.fr
               </p>
               <p>
-                Autisme Connect est une plateforme de mise en relation entre les familles ayant un
+                NeuroCare est une plateforme de mise en relation entre les familles ayant un
                 enfant avec un Trouble du Spectre de l'Autisme (TSA) et les éducateurs spécialisés
                 diplômés.
               </p>
@@ -45,7 +45,7 @@ export default function CGU() {
                 Si vous n'acceptez pas ces conditions, vous ne devez pas utiliser nos services.
               </p>
               <p>
-                Autisme Connect se réserve le droit de modifier les présentes CGU à tout moment.
+                NeuroCare se réserve le droit de modifier les présentes CGU à tout moment.
                 Les utilisateurs seront informés de toute modification par email ou notification sur le site.
               </p>
             </div>
@@ -119,7 +119,7 @@ export default function CGU() {
               </p>
               <p>
                 <strong>5.3 Indépendance :</strong> Les éducateurs exercent leur activité de manière
-                indépendante. Autisme Connect n'est pas leur employeur et n'intervient pas dans la
+                indépendante. NeuroCare n'est pas leur employeur et n'intervient pas dans la
                 relation contractuelle entre l'éducateur et la famille.
               </p>
               <p>
@@ -188,7 +188,7 @@ export default function CGU() {
                 <li>Ne pas utiliser la plateforme à des fins commerciales non autorisées</li>
                 <li>Ne pas tenter de contourner les mesures de sécurité</li>
                 <li>Ne pas collecter des données personnelles d'autres utilisateurs</li>
-                <li>Signaler tout comportement inapproprié à l'équipe Autisme Connect</li>
+                <li>Signaler tout comportement inapproprié à l'équipe NeuroCare</li>
               </ul>
             </div>
           </section>
@@ -198,7 +198,7 @@ export default function CGU() {
             <h2 className="text-xl font-semibold text-gray-900 mb-4">Article 9 - Responsabilité</h2>
             <div className="text-gray-600 space-y-3">
               <p>
-                <strong>9.1 Rôle d'intermédiaire :</strong> Autisme Connect agit uniquement en qualité
+                <strong>9.1 Rôle d'intermédiaire :</strong> NeuroCare agit uniquement en qualité
                 d'intermédiaire technique. Nous ne sommes pas partie aux contrats conclus entre les
                 familles et les éducateurs.
               </p>
@@ -212,7 +212,7 @@ export default function CGU() {
                 de la plateforme mais ne garantissons pas un accès ininterrompu.
               </p>
               <p>
-                <strong>9.4 Limitation :</strong> La responsabilité d'Autisme Connect ne peut excéder
+                <strong>9.4 Limitation :</strong> La responsabilité d'NeuroCare ne peut excéder
                 le montant des sommes versées par l'utilisateur au cours des 12 derniers mois.
               </p>
             </div>
@@ -237,13 +237,13 @@ export default function CGU() {
             <h2 className="text-xl font-semibold text-gray-900 mb-4">Article 11 - Propriété intellectuelle</h2>
             <div className="text-gray-600 space-y-3">
               <p>
-                La marque Autisme Connect, le logo, le design et l'ensemble des contenus du site
+                La marque NeuroCare, le logo, le design et l'ensemble des contenus du site
                 sont protégés par les droits de propriété intellectuelle. Toute reproduction non
                 autorisée est interdite.
               </p>
               <p>
                 Les utilisateurs conservent leurs droits sur le contenu qu'ils publient mais
-                accordent à Autisme Connect une licence d'utilisation pour l'affichage sur la plateforme.
+                accordent à NeuroCare une licence d'utilisation pour l'affichage sur la plateforme.
               </p>
             </div>
           </section>
@@ -253,7 +253,7 @@ export default function CGU() {
             <h2 className="text-xl font-semibold text-gray-900 mb-4">Article 12 - Suspension et résiliation</h2>
             <div className="text-gray-600 space-y-3">
               <p>
-                Autisme Connect se réserve le droit de suspendre ou supprimer tout compte en cas de :
+                NeuroCare se réserve le droit de suspendre ou supprimer tout compte en cas de :
               </p>
               <ul className="list-disc list-inside space-y-2 ml-4">
                 <li>Non-respect des présentes CGU</li>
@@ -292,8 +292,8 @@ export default function CGU() {
             <div className="text-gray-600 space-y-3">
               <p>
                 Pour toute question concernant ces CGU, contactez-nous à :{' '}
-                <a href="mailto:contact@autismeconnect.fr" className="text-violet-600 hover:underline">
-                  contact@autismeconnect.fr
+                <a href="mailto:contact@neuro-care.fr" className="text-violet-600 hover:underline">
+                  contact@neuro-care.fr
                 </a>
               </p>
             </div>

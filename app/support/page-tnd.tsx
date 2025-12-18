@@ -20,8 +20,8 @@ export default function SupportTnd() {
           <div className="bg-blue-50 p-6 sm:p-12 rounded-2xl sm:rounded-3xl border-2 sm:border-4 border-blue-200">
             <div className="text-3xl sm:text-5xl mb-3 sm:mb-6">📧</div>
             <h2 className="text-xl sm:text-2xl md:text-3xl font-bold text-black mb-3 sm:mb-6">Email</h2>
-            <a href="mailto:contact@autismeconnect.fr" className="text-lg sm:text-2xl md:text-3xl text-blue-600 font-bold hover:underline break-all">
-              contact@autismeconnect.fr
+            <a href="mailto:contact@neuro-care.fr" className="text-lg sm:text-2xl md:text-3xl text-blue-600 font-bold hover:underline break-all">
+              contact@neuro-care.fr
             </a>
           </div>
 

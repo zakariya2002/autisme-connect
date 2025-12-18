@@ -1,9 +1,9 @@
 # 📋 Guide Complet : Système de Vérification des Diplômes
-## Autisme Connect - Documentation Technique et Fonctionnelle
+## NeuroCare - Documentation Technique et Fonctionnelle
 
 **Date** : 22 Novembre 2025
 **Version** : 1.0
-**Projet** : Autisme Connect
+**Projet** : NeuroCare
 **Auteur** : Claude Code pour Zakariya Nebbache
 
 ---
@@ -27,7 +27,7 @@
 
 ### 1.1 Objectif
 
-Le système de vérification des diplômes d'Autisme Connect garantit que seuls les éducateurs qualifiés et certifiés peuvent apparaître dans les résultats de recherche de la plateforme. Cela protège les familles et assure la qualité des services proposés.
+Le système de vérification des diplômes d'NeuroCare garantit que seuls les éducateurs qualifiés et certifiés peuvent apparaître dans les résultats de recherche de la plateforme. Cela protège les familles et assure la qualité des services proposés.
 
 ### 1.2 Principes de fonctionnement
 
@@ -149,7 +149,7 @@ CREATE TABLE diploma_verification_history (
 ### 2.3 Fichiers clés du projet
 
 ```
-autisme-connect/
+neuro-care/
 ├── app/
 │   ├── dashboard/educator/diploma/
 │   │   └── page.tsx                    # Upload et gestion du diplôme (éducateur)
@@ -288,7 +288,7 @@ Télécharger : [lien vers le diplôme]
 Pourriez-vous nous confirmer l'authenticité de ce diplôme ?
 
 Cordialement,
-L'équipe Autisme Connect
+L'équipe NeuroCare
 ```
 
 **Routage régional :**
@@ -609,8 +609,8 @@ try {
     </div>
 
     <div class="footer">
-      <p>Autisme Connect<br>
-      www.autismeconnect.fr</p>
+      <p>NeuroCare<br>
+      www.neuro-care.fr</p>
     </div>
   </div>
 </body>
@@ -618,7 +618,7 @@ try {
 ```
 
 **Personnalisation :**
-- Logo Autisme Connect
+- Logo NeuroCare
 - Couleurs de la marque
 - Informations complètes
 - Lien de téléchargement sécurisé
@@ -653,7 +653,7 @@ const checkAdminAuth = async () => {
 ```
 
 **Compte admin :**
-- Email : `admin@autismeconnect.fr`
+- Email : `admin@neuro-care.fr`
 - Rôle : `admin` (dans `user_metadata`)
 
 ### 6.2 Interface utilisateur
@@ -801,8 +801,8 @@ Chaque action est enregistrée dans `diploma_verification_history` via un trigge
 
 ```bash
 # Cloner le projet
-git clone https://github.com/zakariya2002/autisme-connect.git
-cd autisme-connect
+git clone https://github.com/zakariya2002/neuro-care.git
+cd neuro-care
 
 # Installer les dépendances
 npm install
@@ -906,14 +906,14 @@ Dans `.env.local` :
 
 ```env
 RESEND_API_KEY=re_xxxxxxxxxxxxxxxxxxxxx
-RESEND_FROM_EMAIL=Autisme Connect <verification@autismeconnect.fr>
+RESEND_FROM_EMAIL=NeuroCare <verification@neuro-care.fr>
 ADMIN_EMAIL=zakariyanebbache@gmail.com
 ```
 
 #### Étape 4 : Vérifier votre domaine (optionnel mais recommandé)
 
 1. Dashboard Resend → Domains
-2. Ajoutez votre domaine `autismeconnect.fr`
+2. Ajoutez votre domaine `neuro-care.fr`
 3. Configurez les DNS (SPF, DKIM, DMARC)
 4. Vérifiez le domaine
 
@@ -939,7 +939,7 @@ Vous devriez recevoir un email de test à `ADMIN_EMAIL`.
 #### Méthode 1 : Via SQL (recommandée)
 
 1. Créez d'abord le compte sur `/auth/signup` :
-   - Email : `admin@autismeconnect.fr`
+   - Email : `admin@neuro-care.fr`
    - Mot de passe : (choisissez un mot de passe fort)
 
 2. Exécutez ce SQL dans Supabase :
@@ -951,12 +951,12 @@ SET raw_user_meta_data = jsonb_set(
   '{role}',
   '"admin"'
 )
-WHERE email = 'admin@autismeconnect.fr';
+WHERE email = 'admin@neuro-care.fr';
 
 -- Vérifier
 SELECT email, raw_user_meta_data->>'role' as role
 FROM auth.users
-WHERE email = 'admin@autismeconnect.fr';
+WHERE email = 'admin@neuro-care.fr';
 ```
 
 #### Méthode 2 : Via script automatique
@@ -998,7 +998,7 @@ npm run lint
 
 #### Créer un compte
 
-1. Allez sur https://www.autismeconnect.fr/auth/signup
+1. Allez sur https://www.neuro-care.fr/auth/signup
 2. Choisissez "Je suis un éducateur"
 3. Remplissez le formulaire :
    - Prénom, Nom
@@ -1062,8 +1062,8 @@ Veuillez uploader un nouveau document de meilleure qualité.
 
 #### Se connecter
 
-1. Allez sur https://www.autismeconnect.fr/auth/login
-2. Connectez-vous avec `admin@autismeconnect.fr`
+1. Allez sur https://www.neuro-care.fr/auth/login
+2. Connectez-vous avec `admin@neuro-care.fr`
 3. Vous êtes redirigé vers `/admin/verify-diplomas`
 
 #### Consulter les statistiques
@@ -1124,7 +1124,7 @@ Les familles ne voient **QUE** les éducateurs vérifiés.
 
 #### Rechercher un éducateur
 
-1. Allez sur https://www.autismeconnect.fr/search
+1. Allez sur https://www.neuro-care.fr/search
 2. Filtrez par :
    - Localisation
    - Spécialisation
@@ -1145,7 +1145,7 @@ Les familles ne voient **QUE** les éducateurs vérifiés.
 
 #### Faire confiance aux éducateurs
 
-🔒 **Garanties Autisme Connect :**
+🔒 **Garanties NeuroCare :**
 
 ✅ Tous les éducateurs visibles ont un diplôme vérifié
 ✅ Vérification manuelle par notre équipe
@@ -1346,7 +1346,7 @@ Prochaines étapes :
 2. Ajoutez vos tarifs
 3. Consultez votre dashboard pour voir les demandes
 
-À bientôt sur Autisme Connect !
+À bientôt sur NeuroCare !
 ```
 
 #### Tableau de bord éducateur amélioré
@@ -1554,7 +1554,7 @@ WHERE diploma_submitted_at IS NOT NULL;
 
 **Support technique :**
 - Email : zakariyanebbache@gmail.com
-- GitHub : https://github.com/zakariya2002/autisme-connect
+- GitHub : https://github.com/zakariya2002/neuro-care
 
 **Services utilisés :**
 - Supabase Support : https://supabase.com/support
@@ -1588,11 +1588,11 @@ WHERE diploma_submitted_at IS NOT NULL;
 
 ### Auteur
 
-Ce système a été conçu et développé par **Claude Code** (Anthropic) en collaboration avec **Zakariya Nebbache** pour la plateforme **Autisme Connect**.
+Ce système a été conçu et développé par **Claude Code** (Anthropic) en collaboration avec **Zakariya Nebbache** pour la plateforme **NeuroCare**.
 
 ### Licence
 
-Ce document et le code associé sont propriété d'Autisme Connect.
+Ce document et le code associé sont propriété d'NeuroCare.
 
 ### Mises à jour
 
@@ -1615,4 +1615,4 @@ Ce document et le code associé sont propriété d'Autisme Connect.
 ---
 
 *Document généré automatiquement par Claude Code*
-*Autisme Connect © 2025*
+*NeuroCare © 2025*

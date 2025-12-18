@@ -38,8 +38,8 @@ export async function POST(request: NextRequest) {
 
     // Envoyer l'email via Resend
     const emailData = await resend.emails.send({
-      from: 'Support Autisme Connect <noreply@autismeconnect.fr>',
-      to: ['admin@autismeconnect.fr'],
+      from: 'Support NeuroCare <noreply@neuro-care.fr>',
+      to: ['admin@neuro-care.fr'],
       replyTo: userEmail,
       subject: `[Support] ${subject}`,
       html: `
@@ -141,7 +141,7 @@ export async function POST(request: NextRequest) {
               </div>
             </div>
             <div class="footer">
-              <p>Autisme Connect - Centre d'Assistance</p>
+              <p>NeuroCare - Centre d'Assistance</p>
               <p>Cet email a été envoyé automatiquement depuis le formulaire de support.</p>
             </div>
           </body>

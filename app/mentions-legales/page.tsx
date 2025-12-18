@@ -9,7 +9,7 @@ export default function MentionsLegales() {
       <header className="bg-white shadow-sm">
         <div className="max-w-4xl mx-auto px-4 py-6">
           <Link href="/" className="text-violet-600 hover:text-violet-700 font-semibold text-xl">
-            ← Autisme Connect
+            ← NeuroCare
           </Link>
         </div>
       </header>
@@ -23,12 +23,12 @@ export default function MentionsLegales() {
           <section>
             <h2 className="text-xl font-semibold text-gray-900 mb-4">1. Éditeur du site</h2>
             <div className="text-gray-600 space-y-2">
-              <p><strong>Nom du site :</strong> Autisme Connect</p>
-              <p><strong>URL :</strong> https://www.autismeconnect.fr</p>
+              <p><strong>Nom du site :</strong> NeuroCare</p>
+              <p><strong>URL :</strong> https://www.neuro-care.fr</p>
               <p><strong>Statut juridique :</strong> Auto-entrepreneur</p>
               <p><strong>Nom du responsable :</strong> [Votre nom complet]</p>
               <p><strong>Adresse :</strong> [Votre adresse]</p>
-              <p><strong>Email :</strong> contact@autismeconnect.fr</p>
+              <p><strong>Email :</strong> contact@neuro-care.fr</p>
               <p><strong>SIRET :</strong> [Votre numéro SIRET]</p>
             </div>
           </section>
@@ -51,7 +51,7 @@ export default function MentionsLegales() {
             <h2 className="text-xl font-semibold text-gray-900 mb-4">3. Propriété intellectuelle</h2>
             <div className="text-gray-600 space-y-3">
               <p>
-                L'ensemble du contenu du site Autisme Connect (textes, images, graphismes, logo, icônes,
+                L'ensemble du contenu du site NeuroCare (textes, images, graphismes, logo, icônes,
                 sons, logiciels, etc.) est la propriété exclusive de l'éditeur, à l'exception des marques,
                 logos ou contenus appartenant à d'autres sociétés partenaires ou auteurs.
               </p>
@@ -68,19 +68,19 @@ export default function MentionsLegales() {
             <h2 className="text-xl font-semibold text-gray-900 mb-4">4. Limitation de responsabilité</h2>
             <div className="text-gray-600 space-y-3">
               <p>
-                Autisme Connect s'efforce de fournir des informations aussi précises que possible.
+                NeuroCare s'efforce de fournir des informations aussi précises que possible.
                 Toutefois, il ne pourra être tenu responsable des omissions, des inexactitudes et des
                 carences dans la mise à jour, qu'elles soient de son fait ou du fait des tiers partenaires
                 qui lui fournissent ces informations.
               </p>
               <p>
-                Autisme Connect est une plateforme de mise en relation entre familles et éducateurs
-                spécialisés. Nous ne sommes pas responsables des prestations fournies par les éducateurs
+                NeuroCare est une plateforme de mise en relation entre familles et professionnels
+                spécialisés. Nous ne sommes pas responsables des prestations fournies par les professionnels
                 référencés sur notre plateforme.
               </p>
               <p>
-                Les éducateurs présents sur la plateforme sont des professionnels indépendants.
-                Autisme Connect vérifie les diplômes et certifications déclarés mais n'est pas
+                Les professionnels présents sur la plateforme sont indépendants.
+                NeuroCare vérifie les diplômes et certifications déclarés mais n'est pas
                 responsable de la qualité des interventions réalisées.
               </p>
             </div>
@@ -91,7 +91,7 @@ export default function MentionsLegales() {
             <h2 className="text-xl font-semibold text-gray-900 mb-4">5. Liens hypertextes</h2>
             <div className="text-gray-600 space-y-3">
               <p>
-                Le site Autisme Connect peut contenir des liens hypertextes vers d'autres sites.
+                Le site NeuroCare peut contenir des liens hypertextes vers d'autres sites.
                 Cependant, l'éditeur n'a pas la possibilité de vérifier le contenu des sites ainsi
                 visités et n'assumera en conséquence aucune responsabilité de ce fait.
               </p>
@@ -116,7 +116,7 @@ export default function MentionsLegales() {
               <p>
                 Pour toute question ou demande d'information concernant le site, ou tout signalement
                 de contenu ou d'activités illicites, l'utilisateur peut contacter l'éditeur à l'adresse
-                email suivante : <a href="mailto:contact@autismeconnect.fr" className="text-violet-600 hover:underline">contact@autismeconnect.fr</a>
+                email suivante : <a href="mailto:contact@neuro-care.fr" className="text-violet-600 hover:underline">contact@neuro-care.fr</a>
               </p>
             </div>
           </section>

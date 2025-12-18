@@ -284,8 +284,8 @@ export default function ContactPage() {
                   </div>
                   <div>
                     <p className="text-sm font-semibold text-gray-900">Email</p>
-                    <a href="mailto:admin@autismeconnect.fr" className="hover:underline" style={{ color: '#027e7e' }} aria-label="Envoyer un email à admin@autismeconnect.fr">
-                      admin@autismeconnect.fr
+                    <a href="mailto:admin@neuro-care.fr" className="hover:underline" style={{ color: '#027e7e' }} aria-label="Envoyer un email à admin@neuro-care.fr">
+                      admin@neuro-care.fr
                     </a>
                   </div>
                 </div>

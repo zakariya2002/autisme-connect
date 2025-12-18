@@ -25,10 +25,10 @@ export default function ContactTnd() {
           <div className="text-3xl sm:text-5xl mb-4 sm:mb-8">✉️</div>
           <h2 className="text-xl sm:text-2xl md:text-3xl font-bold text-black mb-3 sm:mb-6">Email</h2>
           <a
-            href="mailto:admin@autismeconnect.fr"
+            href="mailto:admin@neuro-care.fr"
             className="text-lg sm:text-2xl md:text-3xl text-blue-600 font-bold hover:underline break-all"
           >
-            admin@autismeconnect.fr
+            admin@neuro-care.fr
           </a>
         </div>
 

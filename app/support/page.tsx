@@ -34,7 +34,7 @@ export default function SupportPage() {
       ),
       questions: [
         {
-          question: "Comment créer un compte sur Autisme Connect ?",
+          question: "Comment créer un compte sur NeuroCare ?",
           answer: "Cliquez sur 'Inscription' dans la barre de navigation, choisissez votre type de compte (Famille ou Éducateur), puis remplissez le formulaire avec vos informations. Pour les éducateurs, vous devrez fournir vos diplômes pour vérification."
         },
         {
@@ -191,7 +191,7 @@ export default function SupportPage() {
       console.error('Erreur:', error);
       setSubmitMessage({
         type: 'error',
-        text: 'Une erreur est survenue lors de l\'envoi. Veuillez réessayer ou nous contacter directement à admin@autismeconnect.fr'
+        text: 'Une erreur est survenue lors de l\'envoi. Veuillez réessayer ou nous contacter directement à admin@neuro-care.fr'
       });
     } finally {
       setIsSubmitting(false);

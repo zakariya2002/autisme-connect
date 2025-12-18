@@ -32,7 +32,7 @@ Ce guide vous explique comment configurer Resend pour envoyer les emails de vér
 
 1. Dans le dashboard Resend, allez dans **"Domains"**
 2. Cliquez sur **"Add Domain"**
-3. Entrez votre domaine : `autismeconnect.fr`
+3. Entrez votre domaine : `neuro-care.fr`
 4. Resend vous donnera des enregistrements DNS à configurer :
 
 **Enregistrements DNS à ajouter** :
@@ -54,7 +54,7 @@ Valeur: feedback-smtp.resend.com
 
 5. Ajoutez ces enregistrements dans votre gestionnaire DNS (OVH, Cloudflare, etc.)
 6. Attendez la vérification (peut prendre jusqu'à 24h, généralement 5-10 min)
-7. Une fois vérifié, vous pouvez envoyer depuis `nom@autismeconnect.fr`
+7. Une fois vérifié, vous pouvez envoyer depuis `nom@neuro-care.fr`
 
 **Option B : Utiliser le domaine Resend (Pour les tests)**
 
@@ -69,7 +69,7 @@ Si vous voulez tester rapidement :
 
 1. Dans le dashboard Resend, allez dans **"API Keys"**
 2. Cliquez sur **"Create API Key"**
-3. Donnez-lui un nom : `Production Autisme Connect`
+3. Donnez-lui un nom : `Production NeuroCare`
 4. Permissions : **Full Access** (ou au minimum "Sending Access")
 5. Cliquez sur **"Create"**
 6. **COPIEZ LA CLÉ IMMÉDIATEMENT** (elle ne sera plus visible après)
@@ -88,13 +88,13 @@ Ouvrez (ou créez) le fichier `.env.local` à la racine du projet :
 ```bash
 # Resend Email Service
 RESEND_API_KEY=re_VotreCléAPIResend
-RESEND_FROM_EMAIL=Autisme Connect <verification@autismeconnect.fr>
+RESEND_FROM_EMAIL=NeuroCare <verification@neuro-care.fr>
 
 # Admin Email (pour recevoir les copies)
-ADMIN_EMAIL=admin@autismeconnect.fr
+ADMIN_EMAIL=admin@neuro-care.fr
 
 # URL de l'application
-NEXT_PUBLIC_APP_URL=https://autismeconnect.fr
+NEXT_PUBLIC_APP_URL=https://neuro-care.fr
 ```
 
 ### 3.2 Vérifier le fichier `.gitignore`
@@ -132,12 +132,12 @@ export async function GET() {
     const resend = new Resend(process.env.RESEND_API_KEY);
 
     const { data, error } = await resend.emails.send({
-      from: process.env.RESEND_FROM_EMAIL || 'Autisme Connect <onboarding@resend.dev>',
+      from: process.env.RESEND_FROM_EMAIL || 'NeuroCare <onboarding@resend.dev>',
       to: process.env.ADMIN_EMAIL || 'votre-email@example.com',
-      subject: 'Test Resend - Autisme Connect',
+      subject: 'Test Resend - NeuroCare',
       html: `
         <h1>✅ Resend fonctionne !</h1>
-        <p>Ceci est un email de test depuis Autisme Connect.</p>
+        <p>Ceci est un email de test depuis NeuroCare.</p>
         <p>Si vous recevez cet email, Resend est correctement configuré.</p>
         <hr>
         <p><small>Date: ${new Date().toLocaleString('fr-FR')}</small></p>
@@ -211,9 +211,9 @@ Si vous déployez sur Vercel :
 2. Ajoutez :
    ```
    RESEND_API_KEY = re_VotreCléAPIResend
-   RESEND_FROM_EMAIL = Autisme Connect <verification@autismeconnect.fr>
-   ADMIN_EMAIL = admin@autismeconnect.fr
-   NEXT_PUBLIC_APP_URL = https://autismeconnect.fr
+   RESEND_FROM_EMAIL = NeuroCare <verification@neuro-care.fr>
+   ADMIN_EMAIL = admin@neuro-care.fr
+   NEXT_PUBLIC_APP_URL = https://neuro-care.fr
    ```
 3. Redéployez votre application
 

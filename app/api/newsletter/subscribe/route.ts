@@ -132,7 +132,7 @@ export async function POST(request: NextRequest) {
     // Envoyer l'email de bienvenue via Resend
     try {
       await resend.emails.send({
-        from: 'neurocare <newsletter@autismeconnect.fr>',
+        from: 'neurocare <newsletter@neuro-care.fr>',
         to: email.toLowerCase(),
         subject: 'Bienvenue dans la newsletter neurocare !',
         html: getNewsletterWelcomeEmail(firstName, audience),

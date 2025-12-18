@@ -230,7 +230,7 @@ export async function GET() {
               fontWeight: '500',
             }}
           >
-            autismeconnect.fr
+            neuro-care.fr
           </div>
         </div>
       </div>

@@ -7,7 +7,7 @@ const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.
 const supabase = createClient(supabaseUrl, supabaseServiceKey);
 
 const resend = new Resend(process.env.RESEND_API_KEY);
-const ADMIN_EMAIL = process.env.ADMIN_EMAIL || 'admin@autismeconnect.fr';
+const ADMIN_EMAIL = process.env.ADMIN_EMAIL || 'admin@neuro-care.fr';
 
 export async function POST(request: NextRequest) {
   try {
@@ -97,7 +97,7 @@ export async function POST(request: NextRequest) {
     // Envoyer un email à l'admin
     try {
       await resend.emails.send({
-        from: process.env.RESEND_FROM_EMAIL || 'Autisme Connect <noreply@autismeconnect.fr>',
+        from: process.env.RESEND_FROM_EMAIL || 'NeuroCare <noreply@neuro-care.fr>',
         to: ADMIN_EMAIL,
         subject: `🚨 Signalement No-Show - ${appointment.educator.first_name} ${appointment.educator.last_name}`,
         html: `

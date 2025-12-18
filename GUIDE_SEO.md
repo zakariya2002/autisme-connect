@@ -1,4 +1,4 @@
-# 🚀 Guide SEO - Autisme Connect
+# 🚀 Guide SEO - NeuroCare
 
 ## ✅ Ce qui a été fait
 
@@ -27,7 +27,7 @@
 
 ### 1. Google Search Console (PRIORITAIRE)
 1. Allez sur : https://search.google.com/search-console
-2. Ajoutez votre site : `www.autismeconnect.fr`
+2. Ajoutez votre site : `www.neuro-care.fr`
 3. Vérifiez la propriété (méthode recommandée : balise HTML)
 4. Une fois vérifié, copiez le code de vérification
 5. Remplacez dans `app/layout.tsx` ligne 69 :
@@ -36,13 +36,13 @@
      google: 'VOTRE_CODE_ICI', // Remplacez par le vrai code
    },
    ```
-6. Soumettez votre sitemap : `https://www.autismeconnect.fr/sitemap.xml`
+6. Soumettez votre sitemap : `https://www.neuro-care.fr/sitemap.xml`
 
 ### 2. Google Business Profile (LOCAL SEO)
 Si vous avez une adresse physique :
 1. Créez un profil sur : https://business.google.com
 2. Renseignez :
-   - Nom : Autisme Connect
+   - Nom : NeuroCare
    - Catégorie : Service de conseil, Service social
    - Description avec mots-clés "éducateur spécialisé autisme"
    - Photos de qualité
@@ -114,7 +114,7 @@ Puis vérifiez :
 ## 📊 Suivi des résultats
 
 ### Après 1 semaine
-- [ ] Site indexé sur Google (cherchez : `site:autismeconnect.fr`)
+- [ ] Site indexé sur Google (cherchez : `site:neuro-care.fr`)
 - [ ] Google Search Console configuré
 - [ ] Sitemap soumis
 
@@ -155,7 +155,7 @@ Puis vérifiez :
 ## 📱 Vérifier que tout fonctionne
 
 1. **Favicon visible** :
-   - Ouvrez https://www.autismeconnect.fr
+   - Ouvrez https://www.neuro-care.fr
    - Vous devez voir "AC" en bleu dans l'onglet
 
 2. **Métadonnées OK** :
@@ -163,11 +163,11 @@ Puis vérifiez :
    - Une belle preview doit apparaître
 
 3. **Sitemap accessible** :
-   - Ouvrez https://www.autismeconnect.fr/sitemap.xml
+   - Ouvrez https://www.neuro-care.fr/sitemap.xml
    - Vous devez voir un XML avec toutes vos pages
 
 4. **Robots.txt OK** :
-   - Ouvrez https://www.autismeconnect.fr/robots.txt
+   - Ouvrez https://www.neuro-care.fr/robots.txt
    - Vous devez voir les règles pour les crawlers
 
 ## 🆘 Support

@@ -686,7 +686,7 @@ export default function VerificationPage() {
           </ul>
           <div className="mt-4 pt-4 border-t border-blue-300">
             <p className="text-sm text-gray-600">
-              ❓ Questions ? Contactez-nous à <a href="mailto:admin@autismeconnect.fr" className="text-primary-600 hover:underline">admin@autismeconnect.fr</a>
+              ❓ Questions ? Contactez-nous à <a href="mailto:admin@neuro-care.fr" className="text-primary-600 hover:underline">admin@neuro-care.fr</a>
             </p>
           </div>
         </div>

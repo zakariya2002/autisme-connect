@@ -40,7 +40,7 @@ export async function POST() {
               'Content-Type': 'application/json'
             },
             body: JSON.stringify({
-              from: 'Autisme Connect <notifications@autisme-connect.fr>',
+              from: 'Autisme Connect <notifications@neuro-care.fr>',
               to: email.recipient_email,
               subject: email.subject,
               text: email.body
@@ -69,7 +69,7 @@ export async function POST() {
         // Méthode 3 : Fallback - juste logger (pour le développement)
         else {
           console.log('📧 EMAIL À ENVOYER:');
-          console.log('De: notifications@autisme-connect.fr');
+          console.log('De: notifications@neuro-care.fr');
           console.log('À:', email.recipient_email);
           console.log('Sujet:', email.subject);
           console.log('Corps:\n', email.body);

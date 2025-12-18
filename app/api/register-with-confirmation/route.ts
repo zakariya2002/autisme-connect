@@ -33,7 +33,7 @@ export async function POST(request: Request) {
       password,
       options: {
         data: { role },
-        redirectTo: `${baseUrl || 'https://www.autismeconnect.fr'}/auth/login?confirmed=true`
+        redirectTo: `${baseUrl || 'https://www.neuro-care.fr'}/auth/login?confirmed=true`
       }
     });
 

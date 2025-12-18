@@ -1,4 +1,4 @@
-# Guide de déploiement - Autisme Connect
+# Guide de déploiement - NeuroCare
 
 Ce guide vous accompagne dans le déploiement de votre SaaS sur Vercel avec un nom de domaine personnalisé.
 
@@ -18,7 +18,7 @@ Votre code est déjà commité localement. Il faut maintenant le pousser sur Git
 1. **Créer un Personal Access Token GitHub** :
    - Allez sur https://github.com/settings/tokens
    - Cliquez sur "Generate new token" → "Generate new token (classic)"
-   - Donnez un nom : "Autisme Connect Deploy"
+   - Donnez un nom : "NeuroCare Deploy"
    - Sélectionnez les permissions : `repo` (toutes les sous-options)
    - Durée : 90 jours ou "No expiration"
    - Cliquez sur "Generate token"
@@ -33,7 +33,7 @@ Votre code est déjà commité localement. Il faut maintenant le pousser sur Git
 
 ### Option B : Vérifier que le repository existe
 
-Vérifiez que votre repository https://github.com/zakariya2002/autisme-connect existe bien et est accessible.
+Vérifiez que votre repository https://github.com/zakariya2002/neuro-care existe bien et est accessible.
 
 ---
 
@@ -49,7 +49,7 @@ Vérifiez que votre repository https://github.com/zakariya2002/autisme-connect e
 ### 2.2 Importer votre projet
 
 1. Sur le dashboard Vercel, cliquez sur **"Add New..."** → **"Project"**
-2. Cherchez et sélectionnez le repository `autisme-connect`
+2. Cherchez et sélectionnez le repository `neuro-care`
 3. Cliquez sur **"Import"**
 
 ### 2.3 Configuration du projet
@@ -97,7 +97,7 @@ Le déploiement prendra environ 2-3 minutes.
 ## 🎯 Étape 4 : Vérifier le déploiement
 
 1. Attendez que le déploiement se termine (statut "Ready")
-2. Cliquez sur le bouton **"Visit"** ou sur l'URL générée (ex: `autisme-connect.vercel.app`)
+2. Cliquez sur le bouton **"Visit"** ou sur l'URL générée (ex: `neuro-care.vercel.app`)
 3. Testez votre application :
    - Créez un compte
    - Connectez-vous
@@ -122,14 +122,14 @@ Prix moyen : 10-15€/an pour un .com, 5-10€/an pour un .fr
 1. Dans votre projet Vercel, allez dans l'onglet **"Settings"**
 2. Cliquez sur **"Domains"** dans le menu latéral
 3. Cliquez sur **"Add"**
-4. Entrez votre nom de domaine (ex: `autismeconnect.fr` ou `www.autismeconnect.fr`)
+4. Entrez votre nom de domaine (ex: `neuro-care.fr` ou `www.neuro-care.fr`)
 5. Cliquez sur **"Add"**
 
 ### 5.3 Configurer les DNS chez votre registrar
 
 Vercel vous donnera des instructions spécifiques, mais voici les étapes générales :
 
-#### Option A : Configuration avec un domaine racine (autismeconnect.fr)
+#### Option A : Configuration avec un domaine racine (neuro-care.fr)
 
 Ajoutez un enregistrement **A** :
 - Type : `A`
@@ -137,7 +137,7 @@ Ajoutez un enregistrement **A** :
 - Valeur : `76.76.21.21`
 - TTL : Automatique ou 3600
 
-#### Option B : Configuration avec www (www.autismeconnect.fr)
+#### Option B : Configuration avec www (www.neuro-care.fr)
 
 Ajoutez un enregistrement **CNAME** :
 - Type : `CNAME`
@@ -169,7 +169,7 @@ Une fois votre domaine configuré, mettez à jour Supabase :
    - Redirect URLs :
      - `https://votredomaine.fr/auth/callback`
      - `https://votredomaine.fr/**`
-     - `https://autisme-connect.vercel.app/**` (gardez l'URL Vercel en backup)
+     - `https://neuro-care.vercel.app/**` (gardez l'URL Vercel en backup)
 
 ---
 

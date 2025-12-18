@@ -28,7 +28,7 @@ const DREETS_EMAILS: { [region: string]: string } = {
   'Martinique': 'deets-martinique@deets.gouv.fr',
   'Mayotte': 'deets-mayotte@deets.gouv.fr',
   // Email par défaut si région non trouvée
-  'default': 'contact@autismeconnect.fr' // Email de votre plateforme pour traitement manuel
+  'default': 'contact@neuro-care.fr' // Email de votre plateforme pour traitement manuel
 };
 
 export interface DREETSVerificationRequest {
@@ -57,7 +57,7 @@ export async function sendDREETSVerificationRequest(
       : DREETS_EMAILS['default'];
 
     // En mode développement, envoyer à l'admin au lieu de DREETS
-    const isDevelopment = process.env.NODE_ENV === 'development' || !process.env.NEXT_PUBLIC_APP_URL?.includes('autismeconnect.fr');
+    const isDevelopment = process.env.NODE_ENV === 'development' || !process.env.NEXT_PUBLIC_APP_URL?.includes('neuro-care.fr');
     if (isDevelopment) {
       console.log('🔧 MODE DÉVELOPPEMENT: Email DREETS redirigé vers admin');
       console.log(`📧 Email DREETS original: ${dreetsEmail} (région: ${request.region})`);
@@ -68,7 +68,7 @@ export async function sendDREETSVerificationRequest(
 
     const emailData = {
       to: dreetsEmail,
-      cc: process.env.ADMIN_EMAIL || 'admin@autismeconnect.fr',
+      cc: process.env.ADMIN_EMAIL || 'admin@neuro-care.fr',
       subject: `Demande de vérification de diplôme - ${request.educatorLastName} ${request.educatorFirstName}`,
       html: generateDREETSEmailTemplate(request),
       attachments: [
@@ -86,7 +86,7 @@ export async function sendDREETSVerificationRequest(
         const resend = new Resend(process.env.RESEND_API_KEY);
 
         await resend.emails.send({
-          from: process.env.RESEND_FROM_EMAIL || 'Autisme Connect <verification@autismeconnect.fr>',
+          from: process.env.RESEND_FROM_EMAIL || 'NeuroCare <verification@neuro-care.fr>',
           to: dreetsEmail,
           cc: process.env.ADMIN_EMAIL,
           subject: emailData.subject,
@@ -146,7 +146,7 @@ function generateDREETSEmailTemplate(request: DREETSVerificationRequest): string
       <div class="container">
         <div class="header">
           <h1>Demande de Vérification de Diplôme</h1>
-          <p>Plateforme Autisme Connect</p>
+          <p>Plateforme NeuroCare</p>
         </div>
 
         <div class="content">
@@ -243,16 +243,16 @@ function generateDREETSEmailTemplate(request: DREETSVerificationRequest): string
 
           <p>
             Cordialement,<br>
-            <strong>L'équipe Autisme Connect</strong>
+            <strong>L'équipe NeuroCare</strong>
           </p>
         </div>
 
         <div class="footer">
           <p>
-            <strong>Autisme Connect</strong><br>
+            <strong>NeuroCare</strong><br>
             Plateforme de mise en relation familles-éducateurs<br>
-            ${process.env.NEXT_PUBLIC_APP_URL || 'https://autismeconnect.fr'}<br>
-            ${process.env.ADMIN_EMAIL || 'contact@autismeconnect.fr'}
+            ${process.env.NEXT_PUBLIC_APP_URL || 'https://neuro-care.fr'}<br>
+            ${process.env.ADMIN_EMAIL || 'contact@neuro-care.fr'}
           </p>
           <p style="margin-top: 20px; font-size: 10px; color: #999;">
             Cet email est envoyé automatiquement dans le cadre de la vérification des diplômes
@@ -282,7 +282,7 @@ export async function notifyAdminDREETSResponse(
 
     // TODO: Implémenter l'envoi d'email à l'admin
     const emailData = {
-      to: process.env.ADMIN_EMAIL || 'admin@autismeconnect.fr',
+      to: process.env.ADMIN_EMAIL || 'admin@neuro-care.fr',
       subject: `Réponse DREETS - ${educatorName}`,
       html: `
         <h2>Réponse de la DREETS reçue</h2>
