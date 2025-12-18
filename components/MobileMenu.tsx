@@ -179,20 +179,21 @@ export default function MobileMenu() {
                 href="/pro"
                 onClick={closeMenu}
                 aria-current={pathname?.startsWith('/pro') ? 'page' : undefined}
-                className={`flex items-center gap-3 px-3 py-2.5 rounded-xl font-medium transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-teal-500 focus:ring-offset-2 ${
-                  pathname?.startsWith('/pro')
-                    ? 'bg-gradient-to-r from-emerald-500 via-teal-500 to-cyan-500 text-white shadow-md'
-                    : 'text-teal-700 bg-teal-50 hover:bg-teal-100 hover:shadow-sm hover:scale-[1.02]'
-                }`}
+                className="flex items-center gap-3 px-3 py-2.5 rounded-xl font-medium transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 hover:shadow-sm hover:scale-[1.02]"
+                style={{
+                  backgroundColor: '#f3e8ff',
+                  color: '#41005c'
+                }}
               >
-                <div className={`w-9 h-9 rounded-lg flex items-center justify-center ${
-                  pathname?.startsWith('/pro') ? 'bg-white/20' : 'bg-teal-100'
-                }`}>
-                  <svg className={`w-5 h-5 ${pathname?.startsWith('/pro') ? 'text-white' : 'text-teal-600'}`} fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                <div
+                  className="w-9 h-9 rounded-lg flex items-center justify-center"
+                  style={{ backgroundColor: '#41005c' }}
+                >
+                  <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
                   </svg>
                 </div>
-                <span>Espace Pro</span>
+                <span className="font-semibold">Vous êtes professionnel ?</span>
               </Link>
 
               <Link

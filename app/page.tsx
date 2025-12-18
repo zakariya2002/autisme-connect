@@ -288,6 +288,16 @@ export default function Home() {
               >
                 Contact
               </Link>
+              <Link
+                href="/pro"
+                className="block py-2 px-4 rounded-lg font-semibold text-center mt-2"
+                style={{
+                  backgroundColor: '#f3e8ff',
+                  color: '#41005c'
+                }}
+              >
+                Vous êtes professionnel ?
+              </Link>
               <hr className="my-2" />
               {user ? (
                 <Link
