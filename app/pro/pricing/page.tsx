@@ -283,59 +283,61 @@ export default function ProPricingPage() {
 
         {/* Comparison Table */}
         <div className="max-w-4xl mx-auto mb-20">
-          <h2 className="text-3xl font-bold text-center text-gray-900 mb-12">
+          <h2 className="text-2xl sm:text-3xl font-bold text-center text-gray-900 mb-8 sm:mb-12">
             Comparaison des offres
           </h2>
           <div className="bg-white rounded-2xl shadow-xl overflow-hidden">
-            <table className="w-full">
-              <thead className="text-white" style={{ backgroundColor: '#41005c' }}>
-                <tr>
-                  <th className="py-4 px-6 text-left">Fonctionnalité</th>
-                  <th className="py-4 px-6 text-center">Découverte</th>
-                  <th className="py-4 px-6 text-center bg-white/10">Premium</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-gray-200">
-                {[
-                  { feature: 'Profil vérifié', free: true, premium: true },
-                  { feature: 'Rendez-vous', free: '3/mois', premium: 'Illimité' },
-                  { feature: 'Conversations', free: '5 actives', premium: 'Illimité' },
-                  { feature: 'Mise en avant', free: false, premium: true },
-                  { feature: 'Badge Premium', free: false, premium: true },
-                  { feature: 'Support prioritaire', free: false, premium: true },
-                  { feature: 'Abonnement', free: 'Gratuit', premium: '3 mois offerts puis 29€/mois' },
-                  { feature: 'Commission', free: '12%*', premium: '12%*' },
-                ].map((row, index) => (
-                  <tr key={index} className="hover:bg-gray-50">
-                    <td className="py-4 px-6 font-medium text-gray-900">{row.feature}</td>
-                    <td className="py-4 px-6 text-center">
-                      {typeof row.free === 'boolean' ? (
-                        row.free ? (
-                          <span className="text-green-600 text-2xl">✓</span>
-                        ) : (
-                          <span className="text-gray-300 text-2xl">✗</span>
-                        )
-                      ) : (
-                        <span className="text-gray-700">{row.free}</span>
-                      )}
-                    </td>
-                    <td className="py-4 px-6 text-center" style={{ backgroundColor: 'rgba(65, 0, 92, 0.05)' }}>
-                      {typeof row.premium === 'boolean' ? (
-                        row.premium ? (
-                          <span className="text-2xl font-bold" style={{ color: '#41005c' }}>✓</span>
-                        ) : (
-                          <span className="text-gray-300 text-2xl">✗</span>
-                        )
-                      ) : (
-                        <span className="font-bold" style={{ color: '#41005c' }}>{row.premium}</span>
-                      )}
-                    </td>
+            <div className="overflow-x-auto">
+              <table className="w-full min-w-[400px]">
+                <thead className="text-white" style={{ backgroundColor: '#41005c' }}>
+                  <tr>
+                    <th className="py-3 sm:py-4 px-3 sm:px-6 text-left text-xs sm:text-base">Fonctionnalité</th>
+                    <th className="py-3 sm:py-4 px-2 sm:px-6 text-center text-xs sm:text-base">Découverte</th>
+                    <th className="py-3 sm:py-4 px-2 sm:px-6 text-center bg-white/10 text-xs sm:text-base">Premium</th>
                   </tr>
-                ))}
-              </tbody>
-            </table>
+                </thead>
+                <tbody className="divide-y divide-gray-200">
+                  {[
+                    { feature: 'Profil vérifié', free: true, premium: true },
+                    { feature: 'Rendez-vous', free: '3/mois', premium: 'Illimité' },
+                    { feature: 'Conversations', free: '5 actives', premium: 'Illimité' },
+                    { feature: 'Mise en avant', free: false, premium: true },
+                    { feature: 'Badge Premium', free: false, premium: true },
+                    { feature: 'Support prioritaire', free: false, premium: true },
+                    { feature: 'Abonnement', free: 'Gratuit', premium: '3 mois offerts puis 29€/mois' },
+                    { feature: 'Commission', free: '12%*', premium: '12%*' },
+                  ].map((row, index) => (
+                    <tr key={index} className="hover:bg-gray-50">
+                      <td className="py-3 sm:py-4 px-3 sm:px-6 font-medium text-gray-900 text-xs sm:text-base">{row.feature}</td>
+                      <td className="py-3 sm:py-4 px-2 sm:px-6 text-center">
+                        {typeof row.free === 'boolean' ? (
+                          row.free ? (
+                            <span className="text-green-600 text-lg sm:text-2xl">✓</span>
+                          ) : (
+                            <span className="text-gray-300 text-lg sm:text-2xl">✗</span>
+                          )
+                        ) : (
+                          <span className="text-gray-700 text-xs sm:text-base">{row.free}</span>
+                        )}
+                      </td>
+                      <td className="py-3 sm:py-4 px-2 sm:px-6 text-center" style={{ backgroundColor: 'rgba(65, 0, 92, 0.05)' }}>
+                        {typeof row.premium === 'boolean' ? (
+                          row.premium ? (
+                            <span className="text-lg sm:text-2xl font-bold" style={{ color: '#41005c' }}>✓</span>
+                          ) : (
+                            <span className="text-gray-300 text-lg sm:text-2xl">✗</span>
+                          )
+                        ) : (
+                          <span className="font-bold text-xs sm:text-base" style={{ color: '#41005c' }}>{row.premium}</span>
+                        )}
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
           </div>
-          <p className="text-sm text-gray-500 text-center mt-4">
+          <p className="text-xs sm:text-sm text-gray-500 text-center mt-4 px-4">
             * Commission uniquement sur les prestations trouvées via la plateforme
           </p>
         </div>

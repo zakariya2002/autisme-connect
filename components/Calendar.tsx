@@ -103,9 +103,9 @@ export default function Calendar({ selectedDate, onDateSelect, availableDays = [
   };
 
   return (
-    <div className="bg-gradient-to-br from-white to-primary-50/30 border-2 border-primary-200 rounded-xl shadow-lg overflow-hidden" role="application" aria-label="Calendrier de sélection de date">
+    <div className="bg-white border border-gray-200 rounded-2xl shadow-sm overflow-hidden" role="application" aria-label="Calendrier de sélection de date">
       {/* En-tête du calendrier */}
-      <div className="bg-gradient-to-r from-primary-600 to-primary-700 px-3 sm:px-6 py-3 sm:py-4">
+      <div className="px-3 sm:px-6 py-3 sm:py-4" style={{ background: 'linear-gradient(135deg, #f0879f 0%, #e86b8a 100%)' }}>
         <div className="flex items-center justify-between">
           <button
             type="button"
@@ -134,11 +134,11 @@ export default function Calendar({ selectedDate, onDateSelect, availableDays = [
         </div>
       </div>
 
-      <div className="p-3 sm:p-6">
+      <div className="p-3 sm:p-5">
         {/* Jours de la semaine */}
         <div className="grid grid-cols-7 gap-1 sm:gap-2 mb-2 sm:mb-3" role="row">
           {dayNames.map((day) => (
-            <div key={day} className="text-center text-[10px] sm:text-xs font-bold text-primary-700 py-1 sm:py-2" role="columnheader">
+            <div key={day} className="text-center text-[10px] sm:text-xs font-bold py-1 sm:py-2" style={{ color: '#f0879f' }} role="columnheader">
               {day}
             </div>
           ))}
@@ -167,25 +167,32 @@ export default function Calendar({ selectedDate, onDateSelect, availableDays = [
                 aria-label={`${date.getDate()} ${monthNames[currentMonth.getMonth()]} ${currentMonth.getFullYear()}${today ? ', aujourd\'hui' : ''}${fullyBooked ? ', complet' : ''}${!selectable ? ', non disponible' : ''}`}
                 tabIndex={selectable && !fullyBooked ? 0 : -1}
                 className={`
-                  aspect-square p-1 sm:p-2 rounded-lg text-xs sm:text-sm font-semibold transition-all duration-200 relative
+                  aspect-square p-1 sm:p-2 rounded-xl text-xs sm:text-sm font-semibold transition-all duration-200 relative
                   ${selected
-                    ? 'bg-primary-600 text-white shadow-lg scale-105 ring-2 sm:ring-4 ring-primary-200'
+                    ? 'text-white shadow-lg scale-105'
                     : fullyBooked && selectable
-                    ? 'bg-orange-100 text-orange-700 border-2 border-orange-300 cursor-not-allowed'
+                    ? 'bg-orange-50 text-orange-600 border-2 border-orange-200 cursor-not-allowed'
                     : today && selectable
-                    ? 'bg-primary-100 text-primary-800 border-2 border-primary-400 hover:bg-primary-200'
+                    ? 'border-2 hover:opacity-80'
                     : selectable
-                    ? 'bg-white text-gray-900 border-2 border-gray-200 hover:border-primary-400 hover:bg-primary-50 sm:hover:scale-105 hover:shadow-md'
+                    ? 'bg-gray-50 text-gray-900 border border-gray-200 hover:border-[#f0879f] hover:bg-[#fdf2f4] sm:hover:scale-105 hover:shadow-sm'
                     : 'bg-gray-50 text-gray-300 cursor-not-allowed'
                   }
                 `}
+                style={
+                  selected
+                    ? { backgroundColor: '#f0879f', boxShadow: '0 0 0 3px rgba(240, 135, 159, 0.3)' }
+                    : today && selectable && !fullyBooked
+                    ? { backgroundColor: '#fdf2f4', borderColor: '#f0879f', color: '#e86b8a' }
+                    : {}
+                }
               >
                 <span className="relative z-10">{date.getDate()}</span>
                 {fullyBooked && selectable && (
-                  <span className="absolute top-0.5 right-0.5 text-[8px] sm:text-[10px] text-orange-600 font-bold" aria-hidden="true">✕</span>
+                  <span className="absolute top-0.5 right-0.5 text-[8px] sm:text-[10px] text-orange-500 font-bold" aria-hidden="true">✕</span>
                 )}
                 {today && !selected && selectable && !fullyBooked && (
-                  <span className="absolute bottom-1 left-1/2 transform -translate-x-1/2 w-1 h-1 bg-primary-600 rounded-full" aria-hidden="true"></span>
+                  <span className="absolute bottom-1 left-1/2 transform -translate-x-1/2 w-1 h-1 rounded-full" style={{ backgroundColor: '#f0879f' }} aria-hidden="true"></span>
                 )}
               </button>
             );
@@ -193,27 +200,23 @@ export default function Calendar({ selectedDate, onDateSelect, availableDays = [
         </div>
 
         {/* Légende */}
-        <div className="mt-4 sm:mt-6 pt-3 sm:pt-4 border-t-2 border-primary-100" role="region" aria-label="Légende du calendrier">
+        <div className="mt-4 sm:mt-5 pt-3 sm:pt-4 border-t border-gray-100" role="region" aria-label="Légende du calendrier">
           <div className="grid grid-cols-2 sm:flex sm:flex-wrap items-center justify-center gap-2 sm:gap-4 text-[10px] sm:text-xs">
-            <div className="flex items-center gap-1 sm:gap-2">
-              <div className="w-3 h-3 sm:w-4 sm:h-4 rounded-md bg-primary-600 shadow-sm" aria-hidden="true"></div>
-              <span className="font-medium text-gray-700">Sélectionné</span>
+            <div className="flex items-center gap-1.5 sm:gap-2">
+              <div className="w-3 h-3 sm:w-4 sm:h-4 rounded-md shadow-sm" style={{ backgroundColor: '#f0879f' }} aria-hidden="true"></div>
+              <span className="font-medium text-gray-600">Sélectionné</span>
             </div>
-            <div className="flex items-center gap-1 sm:gap-2">
-              <div className="w-3 h-3 sm:w-4 sm:h-4 rounded-md bg-primary-100 border-2 border-primary-400" aria-hidden="true"></div>
-              <span className="font-medium text-gray-700">Aujourd'hui</span>
+            <div className="flex items-center gap-1.5 sm:gap-2">
+              <div className="w-3 h-3 sm:w-4 sm:h-4 rounded-md border-2" style={{ backgroundColor: '#fdf2f4', borderColor: '#f0879f' }} aria-hidden="true"></div>
+              <span className="font-medium text-gray-600">Aujourd'hui</span>
             </div>
-            <div className="flex items-center gap-1 sm:gap-2">
-              <div className="w-3 h-3 sm:w-4 sm:h-4 rounded-md bg-white border-2 border-gray-200" aria-hidden="true"></div>
-              <span className="font-medium text-gray-700">Disponible</span>
+            <div className="flex items-center gap-1.5 sm:gap-2">
+              <div className="w-3 h-3 sm:w-4 sm:h-4 rounded-md bg-gray-50 border border-gray-200" aria-hidden="true"></div>
+              <span className="font-medium text-gray-600">Disponible</span>
             </div>
-            <div className="flex items-center gap-1 sm:gap-2">
-              <div className="w-3 h-3 sm:w-4 sm:h-4 rounded-md bg-orange-100 border-2 border-orange-300" aria-hidden="true"></div>
-              <span className="font-medium text-gray-700">Complet</span>
-            </div>
-            <div className="flex items-center gap-1 sm:gap-2">
-              <div className="w-3 h-3 sm:w-4 sm:h-4 rounded-md bg-gray-50" aria-hidden="true"></div>
-              <span className="font-medium text-gray-700">Non dispo</span>
+            <div className="flex items-center gap-1.5 sm:gap-2">
+              <div className="w-3 h-3 sm:w-4 sm:h-4 rounded-md bg-orange-50 border-2 border-orange-200" aria-hidden="true"></div>
+              <span className="font-medium text-gray-600">Complet</span>
             </div>
           </div>
         </div>

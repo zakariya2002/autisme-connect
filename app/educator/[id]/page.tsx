@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { supabase } from '@/lib/supabase';
 import PublicNavbar from '@/components/PublicNavbar';
+import FamilyNavbar from '@/components/FamilyNavbar';
 import ContactQuestionnaireModal from '@/components/ContactQuestionnaireModal';
 import { canEducatorCreateConversation } from '@/lib/subscription-utils';
 import TndToggle from '@/components/TndToggle';
@@ -114,6 +115,8 @@ export default function EducatorPublicProfile({ params }: { params: { id: string
   const [userRole, setUserRole] = useState<'educator' | 'family' | null>(null);
   const [activeTab, setActiveTab] = useState<'about' | 'certifications' | 'availability' | 'cv' | 'video'>('about');
   const [familyProfileId, setFamilyProfileId] = useState<string | null>(null);
+  const [familyProfile, setFamilyProfile] = useState<any>(null);
+  const [userId, setUserId] = useState<string | null>(null);
   const [showContactModal, setShowContactModal] = useState(false);
   const [isBlockedByEducator, setIsBlockedByEducator] = useState(false);
 
@@ -126,6 +129,7 @@ export default function EducatorPublicProfile({ params }: { params: { id: string
         const { data: { session } } = await supabase.auth.getSession();
         if (isMounted && session?.user) {
           setIsAuthenticated(true);
+          setUserId(session.user.id);
 
           // Déterminer le rôle de l'utilisateur
           const { data: educatorProfile } = await supabase
@@ -137,19 +141,20 @@ export default function EducatorPublicProfile({ params }: { params: { id: string
           if (educatorProfile) {
             setUserRole('educator');
           } else {
-            const { data: familyProfile } = await supabase
+            const { data: familyProfileData } = await supabase
               .from('family_profiles')
-              .select('id')
+              .select('*')
               .eq('user_id', session.user.id)
               .single();
 
-            if (familyProfile) {
+            if (familyProfileData) {
               setUserRole('family');
-              setFamilyProfileId(familyProfile.id);
+              setFamilyProfileId(familyProfileData.id);
+              setFamilyProfile(familyProfileData);
 
               // Vérifier si la famille est bloquée par cet éducateur
               try {
-                const response = await fetch(`/api/check-blocked?educatorId=${params.id}&familyId=${familyProfile.id}`);
+                const response = await fetch(`/api/check-blocked?educatorId=${params.id}&familyId=${familyProfileData.id}`);
                 if (response.ok) {
                   const data = await response.json();
                   if (data.isBlocked) {
@@ -443,7 +448,11 @@ export default function EducatorPublicProfile({ params }: { params: { id: string
   return (
     <div className="min-h-screen overflow-x-hidden" style={{ backgroundColor: '#fdf9f4' }}>
       {/* Navigation */}
-      <PublicNavbar />
+      {userRole === 'family' ? (
+        <FamilyNavbar profile={familyProfile} familyId={familyProfileId} userId={userId} />
+      ) : (
+        <PublicNavbar />
+      )}
 
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8 lg:py-12">
         {/* En-tête du profil */}

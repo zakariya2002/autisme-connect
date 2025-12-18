@@ -303,18 +303,18 @@ export default function EducatorInvoices() {
 
         {/* Statistiques des factures */}
         {invoices.length > 0 && (
-          <div className="mt-6 grid grid-cols-3 gap-3">
-            <div className="bg-white rounded-xl p-4 text-center border border-gray-100 shadow-sm">
-              <p className="text-2xl font-bold" style={{ color: '#41005c' }}>{invoices.length}</p>
-              <p className="text-xs text-gray-500 mt-1">Factures</p>
+          <div className="mt-6 grid grid-cols-3 gap-2 sm:gap-3">
+            <div className="bg-white rounded-xl p-2.5 sm:p-4 text-center border border-gray-100 shadow-sm">
+              <p className="text-lg sm:text-2xl font-bold" style={{ color: '#41005c' }}>{invoices.length}</p>
+              <p className="text-[10px] sm:text-xs text-gray-500 mt-0.5 sm:mt-1">Factures</p>
             </div>
-            <div className="bg-white rounded-xl p-4 text-center border border-gray-100 shadow-sm">
-              <p className="text-2xl font-bold text-green-600">{formatAmount(invoices.reduce((sum, inv) => sum + inv.amount_net, 0))}</p>
-              <p className="text-xs text-gray-500 mt-1">Revenu net</p>
+            <div className="bg-white rounded-xl p-2.5 sm:p-4 text-center border border-gray-100 shadow-sm">
+              <p className="text-sm sm:text-2xl font-bold text-green-600">{formatAmount(invoices.reduce((sum, inv) => sum + inv.amount_net, 0))}</p>
+              <p className="text-[10px] sm:text-xs text-gray-500 mt-0.5 sm:mt-1">Revenu net</p>
             </div>
-            <div className="bg-white rounded-xl p-4 text-center border border-gray-100 shadow-sm">
-              <p className="text-2xl font-bold" style={{ color: '#f0879f' }}>{formatAmount(invoices.reduce((sum, inv) => sum + inv.amount_commission, 0))}</p>
-              <p className="text-xs text-gray-500 mt-1">Commissions</p>
+            <div className="bg-white rounded-xl p-2.5 sm:p-4 text-center border border-gray-100 shadow-sm">
+              <p className="text-sm sm:text-2xl font-bold" style={{ color: '#f0879f' }}>{formatAmount(invoices.reduce((sum, inv) => sum + inv.amount_commission, 0))}</p>
+              <p className="text-[10px] sm:text-xs text-gray-500 mt-0.5 sm:mt-1">Commissions</p>
             </div>
           </div>
         )}

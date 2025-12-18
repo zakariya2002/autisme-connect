@@ -254,12 +254,12 @@ export default function EducatorAvailability() {
         )}
 
         {/* Formulaire d'ajout */}
-        <div className="bg-white rounded-2xl shadow-sm p-5 mb-6 border border-gray-100">
-          <h2 className="text-lg font-semibold mb-4" style={{ color: '#41005c' }}>
+        <div className="bg-white rounded-2xl shadow-sm p-4 sm:p-5 mb-6 border border-gray-100">
+          <h2 className="text-base sm:text-lg font-semibold mb-3 sm:mb-4" style={{ color: '#41005c' }}>
             Ajouter une disponibilité
           </h2>
 
-          <div className="grid grid-cols-3 gap-3 mb-4">
+          <div className="space-y-3 sm:space-y-0 sm:grid sm:grid-cols-3 sm:gap-3 mb-4">
             <div>
               <label htmlFor="availability-date" className="block text-xs font-medium text-gray-600 mb-1">
                 Date
@@ -270,7 +270,7 @@ export default function EducatorAvailability() {
                 value={selectedDate}
                 onChange={(e) => setSelectedDate(e.target.value)}
                 min={new Date().toISOString().split('T')[0]}
-                className="w-full px-3 py-2.5 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 text-sm"
+                className="w-full px-3 py-2.5 sm:py-2.5 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 text-base sm:text-sm"
                 style={{ '--tw-ring-color': '#41005c' } as React.CSSProperties}
                 aria-required="true"
                 aria-describedby="date-description"
@@ -280,45 +280,47 @@ export default function EducatorAvailability() {
               </span>
             </div>
 
-            <div>
-              <label htmlFor="availability-start-time" className="block text-xs font-medium text-gray-600 mb-1">
-                Début
-              </label>
-              <input
-                id="availability-start-time"
-                type="time"
-                value={startTime}
-                onChange={(e) => setStartTime(e.target.value)}
-                className="w-full px-3 py-2.5 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 text-sm"
-                style={{ '--tw-ring-color': '#41005c' } as React.CSSProperties}
-                aria-required="true"
-              />
-            </div>
+            <div className="grid grid-cols-2 gap-3 sm:contents">
+              <div>
+                <label htmlFor="availability-start-time" className="block text-xs font-medium text-gray-600 mb-1">
+                  Début
+                </label>
+                <input
+                  id="availability-start-time"
+                  type="time"
+                  value={startTime}
+                  onChange={(e) => setStartTime(e.target.value)}
+                  className="w-full px-3 py-2.5 sm:py-2.5 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 text-base sm:text-sm"
+                  style={{ '--tw-ring-color': '#41005c' } as React.CSSProperties}
+                  aria-required="true"
+                />
+              </div>
 
-            <div>
-              <label htmlFor="availability-end-time" className="block text-xs font-medium text-gray-600 mb-1">
-                Fin
-              </label>
-              <input
-                id="availability-end-time"
-                type="time"
-                value={endTime}
-                onChange={(e) => setEndTime(e.target.value)}
-                className="w-full px-3 py-2.5 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 text-sm"
-                style={{ '--tw-ring-color': '#41005c' } as React.CSSProperties}
-                aria-required="true"
-                aria-describedby="time-description"
-              />
-              <span id="time-description" className="sr-only">
-                L'heure de fin doit être postérieure à l'heure de début.
-              </span>
+              <div>
+                <label htmlFor="availability-end-time" className="block text-xs font-medium text-gray-600 mb-1">
+                  Fin
+                </label>
+                <input
+                  id="availability-end-time"
+                  type="time"
+                  value={endTime}
+                  onChange={(e) => setEndTime(e.target.value)}
+                  className="w-full px-3 py-2.5 sm:py-2.5 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 text-base sm:text-sm"
+                  style={{ '--tw-ring-color': '#41005c' } as React.CSSProperties}
+                  aria-required="true"
+                  aria-describedby="time-description"
+                />
+                <span id="time-description" className="sr-only">
+                  L'heure de fin doit être postérieure à l'heure de début.
+                </span>
+              </div>
             </div>
           </div>
 
           <button
             onClick={handleAddAvailability}
             disabled={saving}
-            className="w-full text-white py-3 px-4 rounded-xl transition disabled:opacity-50 disabled:cursor-not-allowed font-medium hover:opacity-90"
+            className="w-full text-white py-3 px-4 rounded-xl transition disabled:opacity-50 disabled:cursor-not-allowed font-medium hover:opacity-90 text-sm sm:text-base"
             style={{ backgroundColor: '#41005c' }}
             aria-label="Ajouter une nouvelle disponibilité"
             aria-busy={saving}
