@@ -5,7 +5,6 @@ import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { supabase } from '@/lib/supabase';
 import PublicNavbar from '@/components/PublicNavbar';
-import HelpButton from '@/components/HelpButton';
 import ContactQuestionnaireModal from '@/components/ContactQuestionnaireModal';
 import { canEducatorCreateConversation } from '@/lib/subscription-utils';
 import TndToggle from '@/components/TndToggle';
@@ -29,6 +28,7 @@ interface EducatorProfile {
   linkedin_url: string | null;
   video_presentation_url: string | null;
   video_duration_seconds: number | null;
+  gender: 'male' | 'female' | null;
   created_at: string;
 }
 
@@ -452,21 +452,23 @@ export default function EducatorPublicProfile({ params }: { params: { id: string
             <div className="flex flex-col sm:flex-row items-center sm:items-start gap-6">
               {/* Avatar */}
               <div className="flex-shrink-0">
-                <div className="w-36 h-36 rounded-full bg-white p-2 shadow-xl ring-4 ring-gray-100">
-                  {showAvatar ? (
+                {showAvatar ? (
+                  <div className="w-36 h-36 rounded-full bg-white p-2 shadow-xl ring-4 ring-gray-100">
                     <img
                       src={educator.avatar_url || undefined}
                       alt={`${educator.first_name} ${educator.last_name}`}
                       className="w-full h-full rounded-full object-cover"
                     />
-                  ) : (
-                    <div className="w-full h-full rounded-full flex items-center justify-center shadow-inner" style={{ background: 'linear-gradient(135deg, #027e7e 0%, #3a9e9e 100%)' }}>
-                      <span className="text-5xl font-bold text-white">
-                        {educator.first_name?.[0]?.toUpperCase()}{educator.last_name?.[0]?.toUpperCase()}
-                      </span>
-                    </div>
-                  )}
-                </div>
+                  </div>
+                ) : (
+                  <div className="w-36 h-36 rounded-full bg-white p-1 shadow-xl ring-4 ring-gray-100 flex items-center justify-center">
+                    <img
+                      src={educator.gender === 'male' ? '/images/icons/avatar-male.svg' : educator.gender === 'female' ? '/images/icons/avatar-female.svg' : ((educator.id?.charCodeAt(0) || 0) % 2 === 0 ? '/images/icons/avatar-male.svg' : '/images/icons/avatar-female.svg')}
+                      alt=""
+                      className="w-full h-full object-contain"
+                    />
+                  </div>
+                )}
               </div>
 
               {/* Informations principales */}
@@ -578,13 +580,13 @@ export default function EducatorPublicProfile({ params }: { params: { id: string
 
         {/* Onglets */}
         <div className="mb-6" role="tablist" aria-label="Sections du profil">
-          <div className="bg-white rounded-lg shadow-md p-2 inline-flex gap-2 flex-wrap">
+          <div className="bg-white rounded-lg shadow-md p-1.5 sm:p-2 flex gap-1 sm:gap-2 overflow-x-auto" style={{ scrollbarWidth: 'none', msOverflowStyle: 'none', WebkitOverflowScrolling: 'touch' }}>
             <button
               onClick={() => setActiveTab('about')}
               role="tab"
               aria-selected={activeTab === 'about'}
               aria-controls="about-panel"
-              className={`px-6 py-2.5 rounded-md font-medium transition-all duration-200 ${
+              className={`px-3 sm:px-6 py-2 sm:py-2.5 rounded-md font-medium transition-all duration-200 whitespace-nowrap text-sm sm:text-base flex-shrink-0 ${
                 activeTab === 'about'
                   ? 'text-white shadow-md'
                   : 'text-gray-700 hover:bg-gray-100'
@@ -598,7 +600,7 @@ export default function EducatorPublicProfile({ params }: { params: { id: string
               role="tab"
               aria-selected={activeTab === 'certifications'}
               aria-controls="certifications-panel"
-              className={`px-6 py-2.5 rounded-md font-medium transition-all duration-200 ${
+              className={`px-3 sm:px-6 py-2 sm:py-2.5 rounded-md font-medium transition-all duration-200 whitespace-nowrap text-sm sm:text-base flex-shrink-0 ${
                 activeTab === 'certifications'
                   ? 'text-white shadow-md'
                   : 'text-gray-700 hover:bg-gray-100'
@@ -612,7 +614,7 @@ export default function EducatorPublicProfile({ params }: { params: { id: string
               role="tab"
               aria-selected={activeTab === 'cv'}
               aria-controls="cv-panel"
-              className={`px-6 py-2.5 rounded-md font-medium transition-all duration-200 ${
+              className={`px-3 sm:px-6 py-2 sm:py-2.5 rounded-md font-medium transition-all duration-200 whitespace-nowrap text-sm sm:text-base flex-shrink-0 ${
                 activeTab === 'cv'
                   ? 'text-white shadow-md'
                   : 'text-gray-700 hover:bg-gray-100'
@@ -627,7 +629,7 @@ export default function EducatorPublicProfile({ params }: { params: { id: string
                 role="tab"
                 aria-selected={activeTab === 'video'}
                 aria-controls="video-panel"
-                className={`px-6 py-2.5 rounded-md font-medium transition-all duration-200 flex items-center gap-2 ${
+                className={`px-3 sm:px-6 py-2 sm:py-2.5 rounded-md font-medium transition-all duration-200 flex items-center gap-1.5 sm:gap-2 whitespace-nowrap text-sm sm:text-base flex-shrink-0 ${
                   activeTab === 'video'
                     ? 'text-white shadow-md'
                     : 'text-gray-700 hover:bg-gray-100'
@@ -645,7 +647,7 @@ export default function EducatorPublicProfile({ params }: { params: { id: string
               role="tab"
               aria-selected={activeTab === 'availability'}
               aria-controls="availability-panel"
-              className={`px-6 py-2.5 rounded-md font-medium transition-all duration-200 ${
+              className={`px-3 sm:px-6 py-2 sm:py-2.5 rounded-md font-medium transition-all duration-200 whitespace-nowrap text-sm sm:text-base flex-shrink-0 ${
                 activeTab === 'availability'
                   ? 'text-white shadow-md'
                   : 'text-gray-700 hover:bg-gray-100'
@@ -797,36 +799,36 @@ export default function EducatorPublicProfile({ params }: { params: { id: string
 
             {/* Onglet CV */}
             {activeTab === 'cv' && (
-              <div role="tabpanel" id="cv-panel" aria-labelledby="cv-tab" className="bg-white rounded-xl shadow-lg p-8 border border-gray-100 hover:shadow-xl transition-shadow duration-300">
-                <div className="flex items-center mb-6">
-                  <div className="w-10 h-10 bg-purple-100 rounded-lg flex items-center justify-center mr-3">
-                    <svg className="w-6 h-6 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+              <div role="tabpanel" id="cv-panel" aria-labelledby="cv-tab" className="bg-white rounded-xl shadow-lg p-4 sm:p-8 border border-gray-100 hover:shadow-xl transition-shadow duration-300">
+                <div className="flex items-center mb-4 sm:mb-6">
+                  <div className="w-8 h-8 sm:w-10 sm:h-10 bg-purple-100 rounded-lg flex items-center justify-center mr-2 sm:mr-3">
+                    <svg className="w-5 h-5 sm:w-6 sm:h-6 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
                     </svg>
                   </div>
-                  <h2 className="text-2xl font-bold text-gray-900">Curriculum Vitae</h2>
+                  <h2 className="text-xl sm:text-2xl font-bold text-gray-900">Curriculum Vitae</h2>
                 </div>
 
                 {educator.cv_url ? (
                   <div className="space-y-4">
-                    <p className="text-gray-600">Consultez le CV de l'éducateur ci-dessous :</p>
+                    <p className="text-gray-600 text-sm sm:text-base">Consultez le CV de l'éducateur ci-dessous :</p>
                     <div className="border-2 border-gray-200 rounded-lg overflow-hidden">
                       <iframe
                         src={educator.cv_url}
-                        className="w-full h-[600px]"
+                        className="w-full h-[400px] sm:h-[600px]"
                         title="CV de l'éducateur"
                       />
                     </div>
-                    <div className="flex gap-3">
+                    <div className="flex flex-col sm:flex-row gap-2 sm:gap-3">
                       <a
                         href={educator.cv_url}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="inline-flex items-center gap-2 px-6 py-3 text-white rounded-lg hover:opacity-90 font-medium transition shadow-md hover:shadow-lg"
+                        className="inline-flex items-center justify-center gap-2 px-4 sm:px-6 py-2.5 sm:py-3 text-white rounded-lg hover:opacity-90 font-medium transition shadow-md hover:shadow-lg text-sm sm:text-base"
                         style={{ backgroundColor: '#027e7e' }}
                         aria-label="Ouvrir le CV en plein écran dans un nouvel onglet"
                       >
-                        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                        <svg className="w-4 h-4 sm:w-5 sm:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
                         </svg>
@@ -835,10 +837,10 @@ export default function EducatorPublicProfile({ params }: { params: { id: string
                       <a
                         href={educator.cv_url}
                         download
-                        className="inline-flex items-center gap-2 px-6 py-3 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 font-medium transition"
+                        className="inline-flex items-center justify-center gap-2 px-4 sm:px-6 py-2.5 sm:py-3 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 font-medium transition text-sm sm:text-base"
                         aria-label="Télécharger le CV"
                       >
-                        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                        <svg className="w-4 h-4 sm:w-5 sm:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
                         </svg>
                         Télécharger
@@ -859,17 +861,17 @@ export default function EducatorPublicProfile({ params }: { params: { id: string
 
             {/* Onglet Vidéo de présentation */}
             {activeTab === 'video' && educator.video_presentation_url && (
-              <div role="tabpanel" id="video-panel" aria-labelledby="video-tab" className="bg-white rounded-xl shadow-lg p-8 border border-gray-100 hover:shadow-xl transition-shadow duration-300">
-                <div className="flex items-center mb-6">
-                  <div className="w-10 h-10 bg-gradient-to-br from-violet-500 to-purple-600 rounded-lg flex items-center justify-center mr-3">
-                    <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+              <div role="tabpanel" id="video-panel" aria-labelledby="video-tab" className="bg-white rounded-xl shadow-lg p-4 sm:p-8 border border-gray-100 hover:shadow-xl transition-shadow duration-300">
+                <div className="flex items-center mb-4 sm:mb-6">
+                  <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-lg flex items-center justify-center mr-2 sm:mr-3" style={{ backgroundColor: '#f0879f' }}>
+                    <svg className="w-5 h-5 sm:w-6 sm:h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z" />
                     </svg>
                   </div>
                   <div>
-                    <h2 className="text-2xl font-bold text-gray-900">Vidéo de présentation</h2>
+                    <h2 className="text-lg sm:text-2xl font-bold text-gray-900">Vidéo de présentation</h2>
                     {educator.video_duration_seconds && (
-                      <p className="text-sm text-gray-500">
+                      <p className="text-xs sm:text-sm text-gray-500">
                         Durée : {Math.floor(educator.video_duration_seconds / 60)}:{(educator.video_duration_seconds % 60).toString().padStart(2, '0')}
                       </p>
                     )}
@@ -888,16 +890,16 @@ export default function EducatorPublicProfile({ params }: { params: { id: string
                   </video>
                 </div>
 
-                <div className="mt-6 bg-violet-50 border border-violet-200 rounded-lg p-4">
-                  <div className="flex items-start gap-3">
-                    <div className="w-10 h-10 bg-violet-100 rounded-full flex items-center justify-center flex-shrink-0">
-                      <svg className="w-5 h-5 text-violet-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                <div className="mt-4 sm:mt-6 rounded-lg p-3 sm:p-4" style={{ backgroundColor: 'rgba(240, 135, 159, 0.1)', border: '1px solid rgba(240, 135, 159, 0.3)' }}>
+                  <div className="flex items-start gap-2 sm:gap-3">
+                    <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-full flex items-center justify-center flex-shrink-0" style={{ backgroundColor: 'rgba(240, 135, 159, 0.2)' }}>
+                      <svg className="w-4 h-4 sm:w-5 sm:h-5" style={{ color: '#f0879f' }} fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                       </svg>
                     </div>
                     <div>
-                      <p className="text-violet-900 font-medium">Découvrez {capitalizeFirstName(educator.first_name)} en vidéo</p>
-                      <p className="text-violet-700 text-sm mt-1">
+                      <p className="font-medium text-sm sm:text-base" style={{ color: '#c4607a' }}>Découvrez {capitalizeFirstName(educator.first_name)} en vidéo</p>
+                      <p className="text-xs sm:text-sm mt-1" style={{ color: '#d4768c' }}>
                         Cette vidéo vous permet de mieux connaître le professionnel avant de prendre rendez-vous.
                       </p>
                     </div>
@@ -1047,8 +1049,8 @@ export default function EducatorPublicProfile({ params }: { params: { id: string
 
           {/* Barre latérale */}
           <div className="space-y-6">
-            {/* LinkedIn */}
-            {educator.linkedin_url && (
+            {/* LinkedIn - visible uniquement sur À propos et Certifications */}
+            {educator.linkedin_url && (activeTab === 'about' || activeTab === 'certifications') && (
               <div className="bg-white rounded-xl shadow-lg p-6 border border-gray-100 hover:shadow-xl transition-shadow duration-300">
                 <div className="flex items-center mb-4">
                   <div className="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center mr-2">
@@ -1072,8 +1074,8 @@ export default function EducatorPublicProfile({ params }: { params: { id: string
               </div>
             )}
 
-            {/* Langues */}
-            {educator.languages && educator.languages.length > 0 && (
+            {/* Langues - visible uniquement sur À propos */}
+            {educator.languages && educator.languages.length > 0 && activeTab === 'about' && (
               <div className="bg-white rounded-xl shadow-lg p-6 border border-gray-100 hover:shadow-xl transition-shadow duration-300">
                 <div className="flex items-center mb-4">
                   <div className="w-8 h-8 bg-green-100 rounded-lg flex items-center justify-center mr-2">
@@ -1207,9 +1209,6 @@ export default function EducatorPublicProfile({ params }: { params: { id: string
           </div>
         </div>
       </footer>
-
-      {/* Bouton d'aide flottant */}
-      <HelpButton />
 
       <TndToggle />
 

@@ -557,7 +557,7 @@ export default function PPAPage() {
         <FamilyNavbar profile={family} />
       </div>
 
-      {/* Styles d'impression */}
+      {/* Styles d'impression et mobile */}
       <style jsx global>{`
         @media print {
           body * {
@@ -584,11 +584,14 @@ export default function PPAPage() {
             background: #fff !important;
           }
         }
+        .safe-area-bottom {
+          padding-bottom: env(safe-area-inset-bottom, 12px);
+        }
       `}</style>
 
       {/* Barre d'outils (non imprimée) */}
       <div className="no-print bg-white border-b border-gray-200">
-        <div className="max-w-5xl mx-auto px-3 sm:px-4 py-2 sm:py-3 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 sm:gap-0">
+        <div className="max-w-5xl mx-auto px-4 py-2 sm:py-3 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 sm:gap-0">
           <Link
             href={`/dashboard/family/children/${childId}/dossier`}
             className="flex items-center gap-2 text-gray-600 hover:opacity-80 text-sm sm:text-base"
@@ -691,8 +694,8 @@ export default function PPAPage() {
       </div>
 
       {/* Document PPA */}
-      <div className="flex-1 pb-8">
-      <div id="ppa-document" ref={printRef} className="max-w-5xl mx-auto bg-white p-4 sm:p-6 md:p-8 print:my-0 shadow-sm rounded-lg my-4 mx-4 sm:mx-auto">
+      <div className="flex-1 pb-24 sm:pb-8">
+      <div id="ppa-document" ref={printRef} className="max-w-5xl mx-auto bg-white p-4 sm:p-6 md:p-8 print:my-0 sm:shadow-sm sm:rounded-lg sm:my-4">
 
         {/* En-tête */}
         <div className="border-b-4 pb-4 sm:pb-6 mb-6 sm:mb-8" style={{ borderColor: '#027e7e' }}>
@@ -1821,8 +1824,43 @@ export default function PPAPage() {
         </div>
       )}
 
+      {/* Barre d'action fixe mobile */}
+      <div className="no-print fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 px-4 py-3 sm:hidden z-50 safe-area-bottom">
+        <div className="flex items-center justify-between gap-2">
+          <button
+            onClick={() => setShowHistoryModal(true)}
+            className="flex-1 flex items-center justify-center gap-1.5 px-3 py-2.5 border border-gray-300 text-gray-700 rounded-lg text-xs"
+          >
+            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+            <span>Versions</span>
+          </button>
+          <button
+            onClick={savePPA}
+            disabled={saving}
+            className="flex-1 flex items-center justify-center gap-1.5 px-3 py-2.5 border border-gray-300 text-gray-700 rounded-lg disabled:opacity-50 text-xs"
+          >
+            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+            </svg>
+            <span>{saving ? 'Sauvegarde...' : 'Sauvegarder'}</span>
+          </button>
+          <button
+            onClick={handlePrint}
+            className="flex-1 flex items-center justify-center gap-1.5 px-3 py-2.5 text-white rounded-lg text-xs"
+            style={{ backgroundColor: '#027e7e' }}
+          >
+            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z" />
+            </svg>
+            <span>Imprimer</span>
+          </button>
+        </div>
+      </div>
+
       {/* Footer teal */}
-      <div className="no-print mt-auto" style={{ backgroundColor: '#027e7e', height: '40px' }}></div>
+      <div className="no-print mt-auto hidden sm:block" style={{ backgroundColor: '#027e7e', height: '40px' }}></div>
     </div>
   );
 }

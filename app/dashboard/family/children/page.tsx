@@ -513,8 +513,28 @@ export default function ChildrenPage() {
                     </div>
                   </div>
 
-                  {/* Bouton dossier - bien visible */}
-                  <div className="mt-4 pt-4 border-t border-gray-100">
+                  {/* Boutons d'action - bien visibles */}
+                  <div className="mt-4 pt-4 border-t border-gray-100 space-y-3">
+                    {/* Bouton Modifier le profil - fixe et visible sur mobile */}
+                    <button
+                      onClick={() => openEditModal(child)}
+                      className="flex items-center justify-between w-full p-3 sm:p-4 rounded-xl transition-all group/link border sm:hidden"
+                      style={{ backgroundColor: 'rgba(240, 135, 159, 0.1)', borderColor: 'rgba(240, 135, 159, 0.3)' }}
+                    >
+                      <div className="flex items-center gap-3">
+                        <div className="w-10 h-10 rounded-xl flex items-center justify-center transition flex-shrink-0 shadow-md" style={{ backgroundColor: '#f0879f' }}>
+                          <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                          </svg>
+                        </div>
+                        <span className="font-bold text-sm" style={{ color: '#f0879f', fontFamily: 'Verdana, sans-serif' }}>Modifier le profil</span>
+                      </div>
+                      <svg className="w-5 h-5 group-hover/link:translate-x-1 transition-transform flex-shrink-0" style={{ color: '#f0879f' }} fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                      </svg>
+                    </button>
+
+                    {/* Bouton dossier */}
                     <Link
                       href={`/dashboard/family/children/${child.id}/dossier`}
                       className="flex items-center justify-between w-full p-3 sm:p-4 rounded-xl transition-all group/link border"

@@ -863,10 +863,12 @@ export default function FamilySearchPage() {
                             ) : (
                               <div className="relative group/avatar">
                                 <div className="absolute -inset-1 rounded-full blur opacity-25 group-hover/avatar:opacity-50 transition-opacity" style={{ backgroundColor: '#027e7e' }} aria-hidden="true"></div>
-                                <div className="relative w-16 h-16 sm:w-28 sm:h-28 rounded-full flex items-center justify-center border-2 sm:border-3 border-white shadow-xl ring-2 ring-[rgba(2,126,126,0.2)] transition-all" style={{ backgroundColor: 'rgba(2, 126, 126, 0.1)' }}>
-                                  <svg className="w-8 h-8 sm:w-14 sm:h-14" style={{ color: '#027e7e' }} fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-                                  </svg>
+                                <div className="relative w-16 h-16 sm:w-28 sm:h-28 rounded-full bg-white border-2 sm:border-3 border-white shadow-xl ring-2 ring-[rgba(2,126,126,0.2)] flex items-center justify-center p-0.5 sm:p-1 transition-all">
+                                  <img
+                                    src={educator.gender === 'male' ? '/images/icons/avatar-male.svg' : educator.gender === 'female' ? '/images/icons/avatar-female.svg' : ((educator.id?.charCodeAt(0) || 0) % 2 === 0 ? '/images/icons/avatar-male.svg' : '/images/icons/avatar-female.svg')}
+                                    alt=""
+                                    className="w-full h-full object-contain"
+                                  />
                                 </div>
                               </div>
                             )}

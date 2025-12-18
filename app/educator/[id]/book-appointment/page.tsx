@@ -4,8 +4,7 @@ import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { supabase } from '@/lib/supabase';
-import Logo from '@/components/Logo';
-import FamilyMobileMenu from '@/components/FamilyMobileMenu';
+import PublicNavbar from '@/components/PublicNavbar';
 import { canEducatorCreateBooking } from '@/lib/subscription-utils';
 
 interface Educator {
@@ -404,8 +403,8 @@ export default function BookAppointmentPage({ params }: { params: { id: string }
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-        <div className="animate-spin h-12 w-12 border-4 border-primary-600 border-t-transparent rounded-full"></div>
+      <div className="min-h-screen flex items-center justify-center" style={{ backgroundColor: '#fdf9f4' }}>
+        <div className="animate-spin h-12 w-12 border-4 border-t-transparent rounded-full" style={{ borderColor: '#027e7e', borderTopColor: 'transparent' }}></div>
       </div>
     );
   }
@@ -415,35 +414,29 @@ export default function BookAppointmentPage({ params }: { params: { id: string }
   const timeSlotsForSelectedDate = selectedDate ? getTimeSlotsForDate(selectedDate) : [];
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      <nav className="bg-white shadow-sm">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between h-16 items-center">
-            <Logo />
-            <FamilyMobileMenu />
-          </div>
-        </div>
-      </nav>
+    <div className="min-h-screen" style={{ backgroundColor: '#fdf9f4' }}>
+      <PublicNavbar />
 
-      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <div className="mb-8">
+      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8">
+        <div className="mb-6 sm:mb-8">
           <Link
             href={`/educator/${params.id}`}
-            className="text-primary-600 hover:text-primary-700 font-medium flex items-center gap-2 mb-4"
+            className="font-medium flex items-center gap-2 mb-4 hover:opacity-80 transition"
+            style={{ color: '#027e7e' }}
           >
             <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
             </svg>
             Retour au profil
           </Link>
-          <h1 className="text-3xl font-bold text-gray-900">
+          <h1 className="text-2xl sm:text-3xl font-bold text-gray-900" style={{ fontFamily: 'Verdana, sans-serif' }}>
             Réserver un rendez-vous
           </h1>
           {educator && (
-            <p className="text-gray-600 mt-2">
+            <p className="text-gray-600 mt-2" style={{ fontFamily: 'Open Sans, sans-serif' }}>
               Avec {educator.first_name} {educator.last_name}
               {educator.hourly_rate && (
-                <span className="ml-2 text-primary-600 font-semibold">
+                <span className="ml-2 font-semibold" style={{ color: '#027e7e' }}>
                   {educator.hourly_rate}€/heure
                 </span>
               )}
@@ -464,19 +457,20 @@ export default function BookAppointmentPage({ params }: { params: { id: string }
         )}
 
         {availableDatesSet.size === 0 ? (
-          <div className="bg-white rounded-xl shadow-lg p-12 text-center">
-            <svg className="w-20 h-20 text-gray-300 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+          <div className="bg-white rounded-xl shadow-lg p-8 sm:p-12 text-center border border-gray-100">
+            <svg className="w-16 h-16 sm:w-20 sm:h-20 text-gray-300 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
             </svg>
-            <h3 className="text-xl font-bold text-gray-900 mb-2">
+            <h3 className="text-lg sm:text-xl font-bold text-gray-900 mb-2" style={{ fontFamily: 'Verdana, sans-serif' }}>
               Aucune disponibilité configurée
             </h3>
-            <p className="text-gray-600 mb-6">
+            <p className="text-gray-600 mb-6 text-sm sm:text-base">
               Cet éducateur n&apos;a pas encore défini ses disponibilités.
             </p>
             <Link
               href="/messages"
-              className="inline-block bg-primary-600 text-white px-6 py-3 rounded-lg hover:bg-primary-700 transition font-medium"
+              className="inline-block text-white px-6 py-3 rounded-lg hover:opacity-90 transition font-medium"
+              style={{ backgroundColor: '#027e7e' }}
             >
               Contactez-le directement par message
             </Link>
@@ -485,7 +479,7 @@ export default function BookAppointmentPage({ params }: { params: { id: string }
           <form onSubmit={handleSubmit} className="space-y-6">
             {/* Sélection de l'enfant */}
             {children.length > 0 && (
-              <div className="bg-white rounded-xl shadow-lg p-6">
+              <div className="bg-white rounded-xl shadow-sm p-4 sm:p-6 border border-gray-100">
                 <label className="block text-sm font-semibold text-gray-900 mb-3">
                   1. Sélectionnez l'enfant concerné <span className="text-red-600" aria-label="requis">*</span>
                 </label>
@@ -497,15 +491,16 @@ export default function BookAppointmentPage({ params }: { params: { id: string }
                       onClick={() => setSelectedChildId(child.id)}
                       className={`p-4 rounded-lg border-2 transition text-left ${
                         selectedChildId === child.id
-                          ? 'border-primary-600 bg-primary-50'
-                          : 'border-gray-200 hover:border-primary-300'
+                          ? 'border-gray-200'
+                          : 'border-gray-200 hover:border-gray-300'
                       }`}
+                      style={selectedChildId === child.id ? { borderColor: '#027e7e', backgroundColor: 'rgba(2, 126, 126, 0.05)' } : {}}
                       aria-pressed={selectedChildId === child.id}
                       aria-label={`Sélectionner ${child.first_name} pour le rendez-vous`}
                     >
                       <div className="flex items-center gap-3">
-                        <div className="w-10 h-10 bg-primary-100 rounded-full flex items-center justify-center flex-shrink-0">
-                          <span className="text-sm font-semibold text-primary-600">
+                        <div className="w-10 h-10 rounded-full flex items-center justify-center flex-shrink-0" style={{ backgroundColor: 'rgba(2, 126, 126, 0.1)' }}>
+                          <span className="text-sm font-semibold" style={{ color: '#027e7e' }}>
                             {child.first_name[0].toUpperCase()}
                           </span>
                         </div>
@@ -528,16 +523,16 @@ export default function BookAppointmentPage({ params }: { params: { id: string }
             )}
 
             {/* Calendrier et créneaux fusionnés */}
-            <div className="bg-white rounded-xl shadow-lg overflow-hidden">
-              <div className="p-6">
+            <div className="bg-white rounded-xl shadow-sm overflow-hidden border border-gray-100">
+              <div className="p-4 sm:p-6">
                 <label className="block text-sm font-semibold text-gray-900 mb-4">
                   {children.length > 0 ? '2.' : '1.'} Choisissez une date et vos créneaux <span className="text-red-600" aria-label="requis">*</span>
                 </label>
 
                 {/* Calendrier */}
-                <div className="border-2 border-primary-200 rounded-xl overflow-hidden">
+                <div className="border-2 rounded-xl overflow-hidden" style={{ borderColor: 'rgba(2, 126, 126, 0.3)' }}>
                   {/* En-tête du calendrier */}
-                  <div className="bg-gradient-to-r from-primary-600 to-primary-700 px-4 py-3">
+                  <div className="px-4 py-3" style={{ backgroundColor: '#027e7e' }}>
                     <div className="flex items-center justify-between">
                       <button
                         type="button"
@@ -549,7 +544,7 @@ export default function BookAppointmentPage({ params }: { params: { id: string }
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
                         </svg>
                       </button>
-                      <h3 className="text-lg font-bold text-white">
+                      <h3 className="text-base sm:text-lg font-bold text-white">
                         {monthNames[currentMonth.getMonth()]} {currentMonth.getFullYear()}
                       </h3>
                       <button
@@ -565,11 +560,11 @@ export default function BookAppointmentPage({ params }: { params: { id: string }
                     </div>
                   </div>
 
-                  <div className="p-4">
+                  <div className="p-3 sm:p-4">
                     {/* Jours de la semaine */}
                     <div className="grid grid-cols-7 gap-1 mb-2">
                       {dayNames.map((day) => (
-                        <div key={day} className="text-center text-xs font-bold text-primary-700 py-2">
+                        <div key={day} className="text-center text-xs font-bold py-2" style={{ color: '#027e7e' }}>
                           {day}
                         </div>
                       ))}
@@ -599,20 +594,27 @@ export default function BookAppointmentPage({ params }: { params: { id: string }
                             aria-label={`${date.getDate()} ${monthNames[date.getMonth()]} ${date.getFullYear()}${isSelected ? ', sélectionné' : ''}${isAvailable && !isPast ? ', disponible' : ', non disponible'}`}
                             aria-pressed={isSelected}
                             className={`
-                              aspect-square p-1 rounded-lg text-sm font-semibold transition-all relative
+                              aspect-square p-1 rounded-lg text-xs sm:text-sm font-semibold transition-all relative
                               ${isSelected
-                                ? 'bg-primary-600 text-white shadow-lg ring-2 ring-primary-200'
+                                ? 'text-white shadow-lg'
                                 : isAvailable && !isPast
-                                ? 'bg-green-100 text-green-800 border-2 border-green-300 hover:bg-green-200 hover:scale-105'
+                                ? 'border-2 hover:scale-105'
                                 : isToday && !isAvailable
                                 ? 'bg-gray-100 text-gray-400'
                                 : 'bg-gray-50 text-gray-300 cursor-not-allowed'
                               }
                             `}
+                            style={
+                              isSelected
+                                ? { backgroundColor: '#027e7e', boxShadow: '0 0 0 2px rgba(2, 126, 126, 0.3)' }
+                                : isAvailable && !isPast
+                                ? { backgroundColor: 'rgba(2, 126, 126, 0.1)', borderColor: 'rgba(2, 126, 126, 0.4)', color: '#027e7e' }
+                                : {}
+                            }
                           >
                             {date.getDate()}
                             {isAvailable && !isPast && !isSelected && (
-                              <span className="absolute bottom-1 left-1/2 transform -translate-x-1/2 w-1 h-1 bg-green-600 rounded-full"></span>
+                              <span className="absolute bottom-0.5 sm:bottom-1 left-1/2 transform -translate-x-1/2 w-1 h-1 rounded-full" style={{ backgroundColor: '#027e7e' }}></span>
                             )}
                           </button>
                         );
@@ -620,13 +622,13 @@ export default function BookAppointmentPage({ params }: { params: { id: string }
                     </div>
 
                     {/* Légende */}
-                    <div className="mt-4 pt-3 border-t border-gray-200 flex flex-wrap justify-center gap-4 text-xs">
+                    <div className="mt-4 pt-3 border-t border-gray-200 flex flex-wrap justify-center gap-3 sm:gap-4 text-xs">
                       <div className="flex items-center gap-2">
-                        <div className="w-4 h-4 rounded bg-primary-600"></div>
+                        <div className="w-4 h-4 rounded" style={{ backgroundColor: '#027e7e' }}></div>
                         <span className="text-gray-700">Sélectionné</span>
                       </div>
                       <div className="flex items-center gap-2">
-                        <div className="w-4 h-4 rounded bg-green-100 border-2 border-green-300"></div>
+                        <div className="w-4 h-4 rounded border-2" style={{ backgroundColor: 'rgba(2, 126, 126, 0.1)', borderColor: 'rgba(2, 126, 126, 0.4)' }}></div>
                         <span className="text-gray-700">Disponible</span>
                       </div>
                       <div className="flex items-center gap-2">
@@ -640,16 +642,16 @@ export default function BookAppointmentPage({ params }: { params: { id: string }
 
               {/* Créneaux horaires pour la date sélectionnée */}
               {selectedDate && (
-                <div className="border-t border-gray-200 bg-gray-50 p-6">
+                <div className="border-t border-gray-200 p-4 sm:p-6" style={{ backgroundColor: '#fdf9f4' }}>
                   <div className="mb-4">
-                    <h4 className="font-semibold text-gray-900">
+                    <h4 className="font-semibold text-gray-900 text-sm sm:text-base">
                       Créneaux disponibles le {new Date(selectedDate + 'T00:00:00').toLocaleDateString('fr-FR', {
                         weekday: 'long',
                         day: 'numeric',
                         month: 'long'
                       })}
                     </h4>
-                    <p className="text-sm text-gray-600 mt-1">
+                    <p className="text-xs sm:text-sm text-gray-600 mt-1">
                       Sélectionnez les créneaux souhaités (minimum 2 heures)
                     </p>
                   </div>
@@ -668,11 +670,12 @@ export default function BookAppointmentPage({ params }: { params: { id: string }
                               onClick={() => toggleSlotSelection(slot.start, timeSlotsForSelectedDate)}
                               aria-label={`Créneau de ${slot.start} à ${slot.end}${isSelected ? ', sélectionné' : ''}`}
                               aria-pressed={isSelected}
-                              className={`py-2 px-2 rounded-lg text-sm font-medium transition-all ${
+                              className={`py-2 px-2 rounded-lg text-xs sm:text-sm font-medium transition-all ${
                                 isSelected
-                                  ? 'bg-primary-600 text-white shadow-md'
-                                  : 'bg-white text-gray-700 border border-gray-300 hover:border-primary-400 hover:bg-primary-50'
+                                  ? 'text-white shadow-md'
+                                  : 'bg-white text-gray-700 border border-gray-300 hover:bg-gray-50'
                               }`}
+                              style={isSelected ? { backgroundColor: '#027e7e' } : {}}
                             >
                               {slot.start}
                             </button>
@@ -682,13 +685,13 @@ export default function BookAppointmentPage({ params }: { params: { id: string }
 
                       {/* Résumé de la sélection */}
                       {selectedSlots.length > 0 && (
-                        <div className="mt-4 p-4 bg-primary-50 rounded-lg border border-primary-200">
+                        <div className="mt-4 p-4 rounded-lg border" style={{ backgroundColor: 'rgba(2, 126, 126, 0.05)', borderColor: 'rgba(2, 126, 126, 0.2)' }}>
                           <div className="flex items-center justify-between flex-wrap gap-2">
                             <div>
-                              <p className="text-sm font-medium text-primary-900">
+                              <p className="text-sm font-medium" style={{ color: '#027e7e' }}>
                                 {selectedSlots.length} créneau{selectedSlots.length > 1 ? 'x' : ''} sélectionné{selectedSlots.length > 1 ? 's' : ''}
                               </p>
-                              <p className="text-xs text-primary-700">
+                              <p className="text-xs" style={{ color: '#3a9e9e' }}>
                                 De {selectedSlots[0]} à {(() => {
                                   const last = selectedSlots[selectedSlots.length - 1];
                                   const [h, m] = last.split(':').map(Number);
@@ -698,10 +701,10 @@ export default function BookAppointmentPage({ params }: { params: { id: string }
                               </p>
                             </div>
                             <div className="text-right">
-                              <p className="text-lg font-bold text-primary-900">
+                              <p className="text-lg font-bold" style={{ color: '#027e7e' }}>
                                 {formatDuration(calculateTotalDuration())}
                               </p>
-                              <p className="text-sm text-primary-700">
+                              <p className="text-sm" style={{ color: '#3a9e9e' }}>
                                 {calculateTotalPrice().toFixed(2)}€
                               </p>
                             </div>
@@ -724,7 +727,7 @@ export default function BookAppointmentPage({ params }: { params: { id: string }
 
             {/* Type de rendez-vous et reste du formulaire */}
             {selectedSlots.length > 0 && calculateTotalDuration() >= 120 && (
-              <div className="bg-white rounded-xl shadow-lg p-6 space-y-6">
+              <div className="bg-white rounded-xl shadow-sm p-4 sm:p-6 space-y-6 border border-gray-100">
                 <div>
                   <label className="block text-sm font-semibold text-gray-900 mb-3">
                     {children.length > 0 ? '3.' : '2.'} Type de rendez-vous <span className="text-red-600" aria-label="requis">*</span>
@@ -735,9 +738,10 @@ export default function BookAppointmentPage({ params }: { params: { id: string }
                       onClick={() => setLocationType('online')}
                       className={`p-4 rounded-lg border-2 transition ${
                         locationType === 'online'
-                          ? 'border-primary-600 bg-primary-50'
-                          : 'border-gray-200 hover:border-primary-300'
+                          ? 'border-gray-200'
+                          : 'border-gray-200 hover:border-gray-300'
                       }`}
+                      style={locationType === 'online' ? { borderColor: '#027e7e', backgroundColor: 'rgba(2, 126, 126, 0.05)' } : {}}
                       aria-pressed={locationType === 'online'}
                       aria-label="Rendez-vous en ligne par visioconférence"
                     >
@@ -749,9 +753,10 @@ export default function BookAppointmentPage({ params }: { params: { id: string }
                       onClick={() => setLocationType('home')}
                       className={`p-4 rounded-lg border-2 transition ${
                         locationType === 'home'
-                          ? 'border-primary-600 bg-primary-50'
-                          : 'border-gray-200 hover:border-primary-300'
+                          ? 'border-gray-200'
+                          : 'border-gray-200 hover:border-gray-300'
                       }`}
+                      style={locationType === 'home' ? { borderColor: '#027e7e', backgroundColor: 'rgba(2, 126, 126, 0.05)' } : {}}
                       aria-pressed={locationType === 'home'}
                       aria-label="Rendez-vous à domicile chez vous"
                     >
@@ -763,9 +768,10 @@ export default function BookAppointmentPage({ params }: { params: { id: string }
                       onClick={() => setLocationType('office')}
                       className={`p-4 rounded-lg border-2 transition ${
                         locationType === 'office'
-                          ? 'border-primary-600 bg-primary-50'
-                          : 'border-gray-200 hover:border-primary-300'
+                          ? 'border-gray-200'
+                          : 'border-gray-200 hover:border-gray-300'
                       }`}
+                      style={locationType === 'office' ? { borderColor: '#027e7e', backgroundColor: 'rgba(2, 126, 126, 0.05)' } : {}}
                       aria-pressed={locationType === 'office'}
                       aria-label="Rendez-vous au cabinet de l'éducateur"
                     >
@@ -785,7 +791,8 @@ export default function BookAppointmentPage({ params }: { params: { id: string }
                       value={address}
                       onChange={(e) => setAddress(e.target.value)}
                       placeholder="Entrez l'adresse complète"
-                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:border-transparent"
+                      style={{ outlineColor: '#027e7e' }}
                       required
                       aria-required="true"
                     />
@@ -801,24 +808,25 @@ export default function BookAppointmentPage({ params }: { params: { id: string }
                     onChange={(e) => setFamilyNotes(e.target.value)}
                     rows={4}
                     placeholder="Décrivez brièvement vos besoins, objectifs ou questions..."
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:border-transparent"
+                    style={{ outlineColor: '#027e7e' }}
                   />
                 </div>
 
                 {/* Informations RGPD */}
-                <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
-                  <h3 className="text-sm font-semibold text-blue-900 mb-2">
+                <div className="rounded-lg p-4" style={{ backgroundColor: 'rgba(2, 126, 126, 0.05)', border: '1px solid rgba(2, 126, 126, 0.2)' }}>
+                  <h3 className="text-sm font-semibold mb-2" style={{ color: '#027e7e' }}>
                     Protection de vos données personnelles
                   </h3>
-                  <p className="text-xs text-blue-800 mb-2">
+                  <p className="text-xs text-gray-700 mb-2">
                     Les informations collectées lors de cette réservation (données de l&apos;enfant, préférences de rendez-vous, adresse) sont utilisées uniquement pour la gestion de votre rendez-vous et la communication avec l&apos;éducateur.
                   </p>
-                  <p className="text-xs text-blue-800">
-                    Conformément au RGPD, vous disposez d&apos;un droit d&apos;accès, de rectification et de suppression de vos données. Pour plus d&apos;informations, consultez notre <a href="/privacy" className="underline hover:text-blue-600">politique de confidentialité</a>.
+                  <p className="text-xs text-gray-700">
+                    Conformément au RGPD, vous disposez d&apos;un droit d&apos;accès, de rectification et de suppression de vos données. Pour plus d&apos;informations, consultez notre <a href="/privacy" className="underline" style={{ color: '#027e7e' }}>politique de confidentialité</a>.
                   </p>
                 </div>
 
-                <div className="flex gap-4 pt-4">
+                <div className="flex flex-col-reverse sm:flex-row gap-3 sm:gap-4 pt-4">
                   <Link
                     href={`/educator/${params.id}`}
                     className="flex-1 px-6 py-3 border-2 border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 font-medium transition text-center"
@@ -828,7 +836,8 @@ export default function BookAppointmentPage({ params }: { params: { id: string }
                   <button
                     type="submit"
                     disabled={submitting}
-                    className="flex-1 px-6 py-3 bg-primary-600 text-white rounded-lg hover:bg-primary-700 font-medium transition disabled:opacity-50 disabled:cursor-not-allowed"
+                    className="flex-1 px-6 py-3 text-white rounded-lg hover:opacity-90 font-medium transition disabled:opacity-50 disabled:cursor-not-allowed"
+                    style={{ backgroundColor: '#027e7e' }}
                   >
                     {submitting ? 'Envoi...' : `Réserver (${calculateTotalPrice().toFixed(2)}€)`}
                   </button>
