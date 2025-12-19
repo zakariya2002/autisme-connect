@@ -8,22 +8,23 @@ export default function ArticleNutrition() {
       {/* Header */}
       <header className="bg-white shadow-sm sticky top-0 z-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center justify-between h-16">
+          <div className="flex items-center justify-between h-14 sm:h-16">
             <Link href="/" className="flex items-center gap-2">
-              <img src="/images/logo-neurocare.svg" alt="NeuroCare" className="h-8" />
+              <img src="/images/logo-neurocare.svg" alt="NeuroCare" className="h-7 sm:h-8" />
             </Link>
-            <Link href="/blog" className="text-gray-600 hover:text-teal-600 transition-colors flex items-center gap-2">
-              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <Link href="/blog" className="text-gray-600 hover:text-teal-600 transition-colors flex items-center gap-1.5 sm:gap-2 text-sm sm:text-base">
+              <svg className="w-4 h-4 sm:w-5 sm:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
               </svg>
-              Retour au blog
+              <span className="hidden sm:inline">Retour au blog</span>
+              <span className="sm:hidden">Blog</span>
             </Link>
           </div>
         </div>
       </header>
 
       {/* Hero Image */}
-      <div className="relative h-64 sm:h-96 bg-gray-200">
+      <div className="relative h-48 sm:h-64 md:h-80 lg:h-96 bg-gray-200">
         <div
           className="absolute inset-0 bg-cover bg-center"
           style={{ backgroundImage: "url('/images/articles/nutrition.png')" }}
@@ -32,10 +33,10 @@ export default function ArticleNutrition() {
       </div>
 
       {/* Article Content */}
-      <article className="max-w-3xl mx-auto px-4 py-12">
+      <article className="max-w-3xl mx-auto px-4 sm:px-6 py-8 sm:py-12">
         {/* Meta */}
-        <div className="flex items-center gap-4 text-sm text-gray-500 mb-4">
-          <span className="px-3 py-1 rounded-full text-sm font-medium" style={{ backgroundColor: 'rgba(239, 68, 68, 0.1)', color: '#ef4444' }}>
+        <div className="flex flex-wrap items-center gap-2 sm:gap-4 text-xs sm:text-sm text-gray-500 mb-3 sm:mb-4">
+          <span className="px-2.5 py-1 sm:px-3 rounded-full text-xs sm:text-sm font-medium" style={{ backgroundColor: 'rgba(239, 68, 68, 0.1)', color: '#ef4444' }}>
             Santé
           </span>
           <span>10 décembre 2024</span>
@@ -44,103 +45,103 @@ export default function ArticleNutrition() {
         </div>
 
         {/* Title */}
-        <h1 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-8">
+        <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-900 mb-6 sm:mb-8 leading-tight">
           Nutrition et autisme : Les bases d'une alimentation adaptée
         </h1>
 
         {/* Content */}
-        <div className="prose prose-lg max-w-none">
-          <p className="text-xl text-gray-600 mb-8">
+        <div className="prose prose-sm sm:prose-lg max-w-none">
+          <p className="text-base sm:text-xl text-gray-600 mb-6 sm:mb-8">
             L'alimentation joue un rôle crucial dans le bien-être des personnes autistes. Entre sensibilités sensorielles, sélectivité alimentaire et besoins nutritionnels spécifiques, découvrez comment adapter l'alimentation au quotidien.
           </p>
 
-          <h2 className="text-2xl font-bold text-gray-900 mt-10 mb-4">Comprendre les particularités alimentaires</h2>
-          <p className="text-gray-700 mb-4">
+          <h2 className="text-xl sm:text-2xl font-bold text-gray-900 mt-8 sm:mt-10 mb-3 sm:mb-4">Comprendre les particularités alimentaires</h2>
+          <p className="text-sm sm:text-base text-gray-700 mb-4">
             De nombreuses personnes autistes présentent des particularités alimentaires qui peuvent être liées à plusieurs facteurs :
           </p>
-          <ul className="list-disc pl-6 mb-6 text-gray-700 space-y-2">
+          <ul className="list-disc pl-5 sm:pl-6 mb-5 sm:mb-6 text-sm sm:text-base text-gray-700 space-y-1.5 sm:space-y-2">
             <li><strong>Sensibilités sensorielles</strong> : textures, couleurs, odeurs ou températures peuvent être difficiles à tolérer</li>
             <li><strong>Besoin de routine</strong> : préférence pour des aliments familiers et présentés de manière identique</li>
             <li><strong>Troubles gastro-intestinaux</strong> : plus fréquents chez les personnes TSA</li>
             <li><strong>Difficultés motrices</strong> : mastication ou déglutition parfois compliquées</li>
           </ul>
 
-          <h2 className="text-2xl font-bold text-gray-900 mt-10 mb-4">Les nutriments essentiels à surveiller</h2>
+          <h2 className="text-xl sm:text-2xl font-bold text-gray-900 mt-8 sm:mt-10 mb-3 sm:mb-4">Les nutriments essentiels à surveiller</h2>
 
-          <h3 className="text-xl font-semibold text-gray-900 mt-6 mb-3">Les oméga-3</h3>
-          <p className="text-gray-700 mb-4">
+          <h3 className="text-lg sm:text-xl font-semibold text-gray-900 mt-5 sm:mt-6 mb-2 sm:mb-3">Les oméga-3</h3>
+          <p className="text-sm sm:text-base text-gray-700 mb-4">
             Ces acides gras essentiels jouent un rôle important dans le développement cérébral et la régulation de l'inflammation. On les trouve dans les poissons gras (saumon, maquereau, sardines), les noix et les graines de lin.
           </p>
 
-          <h3 className="text-xl font-semibold text-gray-900 mt-6 mb-3">Le magnésium</h3>
-          <p className="text-gray-700 mb-4">
+          <h3 className="text-lg sm:text-xl font-semibold text-gray-900 mt-5 sm:mt-6 mb-2 sm:mb-3">Le magnésium</h3>
+          <p className="text-sm sm:text-base text-gray-700 mb-4">
             Souvent déficitaire chez les personnes autistes, le magnésium contribue à la régulation du système nerveux. Sources : légumes verts, chocolat noir, amandes, bananes.
           </p>
 
-          <h3 className="text-xl font-semibold text-gray-900 mt-6 mb-3">La vitamine D</h3>
-          <p className="text-gray-700 mb-4">
+          <h3 className="text-lg sm:text-xl font-semibold text-gray-900 mt-5 sm:mt-6 mb-2 sm:mb-3">La vitamine D</h3>
+          <p className="text-sm sm:text-base text-gray-700 mb-4">
             Essentielle pour l'immunité et le bien-être mental, elle est souvent insuffisante. L'exposition au soleil et certains aliments (poissons gras, œufs) peuvent aider.
           </p>
 
-          <h3 className="text-xl font-semibold text-gray-900 mt-6 mb-3">Le zinc</h3>
-          <p className="text-gray-700 mb-4">
+          <h3 className="text-lg sm:text-xl font-semibold text-gray-900 mt-5 sm:mt-6 mb-2 sm:mb-3">Le zinc</h3>
+          <p className="text-sm sm:text-base text-gray-700 mb-4">
             Important pour la fonction cognitive et immunitaire. On le trouve dans la viande, les fruits de mer, les légumineuses et les graines de courge.
           </p>
 
-          <h2 className="text-2xl font-bold text-gray-900 mt-10 mb-4">Stratégies pour diversifier l'alimentation</h2>
+          <h2 className="text-xl sm:text-2xl font-bold text-gray-900 mt-8 sm:mt-10 mb-3 sm:mb-4">Stratégies pour diversifier l'alimentation</h2>
 
-          <h3 className="text-xl font-semibold text-gray-900 mt-6 mb-3">1. Introduire progressivement</h3>
-          <p className="text-gray-700 mb-4">
+          <h3 className="text-lg sm:text-xl font-semibold text-gray-900 mt-5 sm:mt-6 mb-2 sm:mb-3">1. Introduire progressivement</h3>
+          <p className="text-sm sm:text-base text-gray-700 mb-4">
             Ne proposez qu'un nouvel aliment à la fois, en petite quantité, sans pression. Plusieurs expositions (parfois 15 à 20) peuvent être nécessaires avant l'acceptation.
           </p>
 
-          <h3 className="text-xl font-semibold text-gray-900 mt-6 mb-3">2. Jouer sur les présentations</h3>
-          <p className="text-gray-700 mb-4">
+          <h3 className="text-lg sm:text-xl font-semibold text-gray-900 mt-5 sm:mt-6 mb-2 sm:mb-3">2. Jouer sur les présentations</h3>
+          <p className="text-sm sm:text-base text-gray-700 mb-4">
             Un même aliment peut être mieux accepté sous une forme différente : cru vs cuit, mixé vs entier, en purée vs en morceaux.
           </p>
 
-          <h3 className="text-xl font-semibold text-gray-900 mt-6 mb-3">3. Impliquer l'enfant</h3>
-          <p className="text-gray-700 mb-4">
+          <h3 className="text-lg sm:text-xl font-semibold text-gray-900 mt-5 sm:mt-6 mb-2 sm:mb-3">3. Impliquer l'enfant</h3>
+          <p className="text-sm sm:text-base text-gray-700 mb-4">
             Participer à la préparation des repas peut aider à familiariser avec les aliments. Commencez par des tâches simples : laver les légumes, mélanger...
           </p>
 
-          <h3 className="text-xl font-semibold text-gray-900 mt-6 mb-3">4. Créer un environnement calme</h3>
-          <p className="text-gray-700 mb-4">
+          <h3 className="text-lg sm:text-xl font-semibold text-gray-900 mt-5 sm:mt-6 mb-2 sm:mb-3">4. Créer un environnement calme</h3>
+          <p className="text-sm sm:text-base text-gray-700 mb-4">
             Réduisez les stimulations sensorielles pendant les repas : lumière douce, musique calme ou silence, pas de télévision.
           </p>
 
-          <div className="bg-amber-50 border-l-4 border-amber-500 p-6 my-8 rounded-r-lg">
-            <h4 className="font-bold text-amber-800 mb-2">À retenir</h4>
-            <p className="text-amber-700">
+          <div className="bg-amber-50 border-l-4 border-amber-500 p-4 sm:p-6 my-6 sm:my-8 rounded-r-lg">
+            <h4 className="font-bold text-amber-800 mb-2 text-sm sm:text-base">À retenir</h4>
+            <p className="text-amber-700 text-sm sm:text-base">
               Chaque personne autiste est unique. Ce qui fonctionne pour l'une peut ne pas convenir à une autre. N'hésitez pas à consulter un nutritionniste spécialisé pour un accompagnement personnalisé.
             </p>
           </div>
 
-          <h2 className="text-2xl font-bold text-gray-900 mt-10 mb-4">Les régimes spécifiques : que dit la science ?</h2>
-          <p className="text-gray-700 mb-4">
+          <h2 className="text-xl sm:text-2xl font-bold text-gray-900 mt-8 sm:mt-10 mb-3 sm:mb-4">Les régimes spécifiques : que dit la science ?</h2>
+          <p className="text-sm sm:text-base text-gray-700 mb-4">
             Certains régimes sont parfois proposés dans le cadre de l'autisme :
           </p>
 
-          <h3 className="text-xl font-semibold text-gray-900 mt-6 mb-3">Régime sans gluten et sans caséine (SGSC)</h3>
-          <p className="text-gray-700 mb-4">
+          <h3 className="text-lg sm:text-xl font-semibold text-gray-900 mt-5 sm:mt-6 mb-2 sm:mb-3">Régime sans gluten et sans caséine (SGSC)</h3>
+          <p className="text-sm sm:text-base text-gray-700 mb-4">
             Bien que certaines familles rapportent des améliorations, les études scientifiques ne montrent pas de bénéfice systématique. Ce régime peut être essayé sous supervision médicale, en veillant à ne pas créer de carences.
           </p>
 
-          <h3 className="text-xl font-semibold text-gray-900 mt-6 mb-3">Régime pauvre en sucres</h3>
-          <p className="text-gray-700 mb-4">
+          <h3 className="text-lg sm:text-xl font-semibold text-gray-900 mt-5 sm:mt-6 mb-2 sm:mb-3">Régime pauvre en sucres</h3>
+          <p className="text-sm sm:text-base text-gray-700 mb-4">
             Réduire les sucres raffinés peut améliorer la stabilité de l'humeur et de l'énergie chez certaines personnes.
           </p>
 
-          <h2 className="text-2xl font-bold text-gray-900 mt-10 mb-4">Exemple de journée alimentaire équilibrée</h2>
-          <div className="bg-gray-50 rounded-xl p-6 my-6">
-            <p className="text-gray-700 mb-3"><strong>Petit-déjeuner :</strong> Porridge aux flocons d'avoine avec banane et amandes</p>
-            <p className="text-gray-700 mb-3"><strong>Déjeuner :</strong> Filet de poulet, riz complet, carottes vapeur, compote de pommes</p>
-            <p className="text-gray-700 mb-3"><strong>Goûter :</strong> Yaourt nature avec un peu de miel, quelques noix</p>
-            <p className="text-gray-700"><strong>Dîner :</strong> Saumon, purée de patates douces, haricots verts, fruit frais</p>
+          <h2 className="text-xl sm:text-2xl font-bold text-gray-900 mt-8 sm:mt-10 mb-3 sm:mb-4">Exemple de journée alimentaire équilibrée</h2>
+          <div className="bg-gray-50 rounded-xl p-4 sm:p-6 my-5 sm:my-6">
+            <p className="text-sm sm:text-base text-gray-700 mb-2 sm:mb-3"><strong>Petit-déjeuner :</strong> Porridge aux flocons d'avoine avec banane et amandes</p>
+            <p className="text-sm sm:text-base text-gray-700 mb-2 sm:mb-3"><strong>Déjeuner :</strong> Filet de poulet, riz complet, carottes vapeur, compote de pommes</p>
+            <p className="text-sm sm:text-base text-gray-700 mb-2 sm:mb-3"><strong>Goûter :</strong> Yaourt nature avec un peu de miel, quelques noix</p>
+            <p className="text-sm sm:text-base text-gray-700"><strong>Dîner :</strong> Saumon, purée de patates douces, haricots verts, fruit frais</p>
           </div>
 
-          <h2 className="text-2xl font-bold text-gray-900 mt-10 mb-4">Conclusion</h2>
-          <p className="text-gray-700 mb-4">
+          <h2 className="text-xl sm:text-2xl font-bold text-gray-900 mt-8 sm:mt-10 mb-3 sm:mb-4">Conclusion</h2>
+          <p className="text-sm sm:text-base text-gray-700 mb-4">
             L'alimentation des personnes autistes demande patience et adaptation. L'objectif n'est pas la perfection mais de tendre vers un équilibre qui respecte les particularités de chacun tout en assurant les apports nutritionnels essentiels.
           </p>
         </div>
@@ -180,22 +181,22 @@ export default function ArticleNutrition() {
       </article>
 
       {/* Related Articles */}
-      <section className="bg-gray-50 py-12 px-4">
+      <section className="bg-gray-50 py-8 sm:py-12 px-4">
         <div className="max-w-7xl mx-auto">
-          <h2 className="text-2xl font-bold text-gray-900 mb-8">Articles similaires</h2>
-          <div className="grid md:grid-cols-2 gap-6">
-            <Link href="/blog/harcelement-scolaire" className="bg-white rounded-xl p-6 shadow-sm hover:shadow-md transition-shadow flex gap-4">
-              <div className="w-24 h-24 rounded-lg bg-gray-200 flex-shrink-0" style={{ backgroundImage: "url('/images/articles/harcelement.png')", backgroundSize: 'cover' }} />
-              <div>
-                <h3 className="font-semibold text-gray-900 mb-2">Harcèlement scolaire et TSA</h3>
-                <p className="text-sm text-gray-600 line-clamp-2">Comment protéger son enfant du harcèlement scolaire.</p>
+          <h2 className="text-xl sm:text-2xl font-bold text-gray-900 mb-5 sm:mb-8">Articles similaires</h2>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
+            <Link href="/blog/harcelement-scolaire" className="bg-white rounded-xl p-4 sm:p-6 shadow-sm hover:shadow-md transition-shadow flex gap-3 sm:gap-4">
+              <div className="w-20 h-20 sm:w-24 sm:h-24 rounded-lg bg-gray-200 flex-shrink-0" style={{ backgroundImage: "url('/images/articles/harcelement.png')", backgroundSize: 'cover' }} />
+              <div className="min-w-0">
+                <h3 className="font-semibold text-gray-900 mb-1 sm:mb-2 text-sm sm:text-base">Harcèlement scolaire et TSA</h3>
+                <p className="text-xs sm:text-sm text-gray-600 line-clamp-2">Comment protéger son enfant du harcèlement scolaire.</p>
               </div>
             </Link>
-            <Link href="/blog/activite-physique" className="bg-white rounded-xl p-6 shadow-sm hover:shadow-md transition-shadow flex gap-4">
-              <div className="w-24 h-24 rounded-lg bg-gray-200 flex-shrink-0" style={{ backgroundImage: "url('/images/articles/sport.png')", backgroundSize: 'cover' }} />
-              <div>
-                <h3 className="font-semibold text-gray-900 mb-2">Sport et autisme</h3>
-                <p className="text-sm text-gray-600 line-clamp-2">Les bienfaits de l'activité physique adaptée.</p>
+            <Link href="/blog/activite-physique" className="bg-white rounded-xl p-4 sm:p-6 shadow-sm hover:shadow-md transition-shadow flex gap-3 sm:gap-4">
+              <div className="w-20 h-20 sm:w-24 sm:h-24 rounded-lg bg-gray-200 flex-shrink-0" style={{ backgroundImage: "url('/images/articles/sport.png')", backgroundSize: 'cover' }} />
+              <div className="min-w-0">
+                <h3 className="font-semibold text-gray-900 mb-1 sm:mb-2 text-sm sm:text-base">Sport et autisme</h3>
+                <p className="text-xs sm:text-sm text-gray-600 line-clamp-2">Les bienfaits de l'activité physique adaptée.</p>
               </div>
             </Link>
           </div>
@@ -203,7 +204,7 @@ export default function ArticleNutrition() {
       </section>
 
       {/* Footer */}
-      <footer className="py-8 px-4 text-center text-gray-500 text-sm">
+      <footer className="py-6 sm:py-8 px-4 text-center text-gray-500 text-xs sm:text-sm">
         <p>© 2024 NeuroCare. Tous droits réservés.</p>
       </footer>
     </div>

@@ -8,22 +8,23 @@ export default function ArticleHarcelementScolaire() {
       {/* Header */}
       <header className="bg-white shadow-sm sticky top-0 z-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center justify-between h-16">
+          <div className="flex items-center justify-between h-14 sm:h-16">
             <Link href="/" className="flex items-center gap-2">
-              <img src="/images/logo-neurocare.svg" alt="NeuroCare" className="h-8" />
+              <img src="/images/logo-neurocare.svg" alt="NeuroCare" className="h-7 sm:h-8" />
             </Link>
-            <Link href="/blog" className="text-gray-600 hover:text-teal-600 transition-colors flex items-center gap-2">
-              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <Link href="/blog" className="text-gray-600 hover:text-teal-600 transition-colors flex items-center gap-1.5 sm:gap-2 text-sm sm:text-base">
+              <svg className="w-4 h-4 sm:w-5 sm:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
               </svg>
-              Retour au blog
+              <span className="hidden sm:inline">Retour au blog</span>
+              <span className="sm:hidden">Blog</span>
             </Link>
           </div>
         </div>
       </header>
 
       {/* Hero Image */}
-      <div className="relative h-64 sm:h-96 bg-gray-200">
+      <div className="relative h-48 sm:h-64 md:h-80 lg:h-96 bg-gray-200">
         <div
           className="absolute inset-0 bg-cover bg-center"
           style={{ backgroundImage: "url('/images/articles/harcelement.png')" }}
@@ -32,10 +33,10 @@ export default function ArticleHarcelementScolaire() {
       </div>
 
       {/* Article Content */}
-      <article className="max-w-3xl mx-auto px-4 py-12">
+      <article className="max-w-3xl mx-auto px-4 sm:px-6 py-8 sm:py-12">
         {/* Meta */}
-        <div className="flex items-center gap-4 text-sm text-gray-500 mb-4">
-          <span className="px-3 py-1 rounded-full text-sm font-medium" style={{ backgroundColor: 'rgba(2, 126, 126, 0.1)', color: '#027e7e' }}>
+        <div className="flex flex-wrap items-center gap-2 sm:gap-4 text-xs sm:text-sm text-gray-500 mb-3 sm:mb-4">
+          <span className="px-2.5 py-1 sm:px-3 rounded-full text-xs sm:text-sm font-medium" style={{ backgroundColor: 'rgba(2, 126, 126, 0.1)', color: '#027e7e' }}>
             Éducation
           </span>
           <span>15 décembre 2024</span>
@@ -44,32 +45,32 @@ export default function ArticleHarcelementScolaire() {
         </div>
 
         {/* Title */}
-        <h1 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-8">
+        <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-900 mb-6 sm:mb-8 leading-tight">
           Harcèlement scolaire et TSA : Comment protéger son enfant ?
         </h1>
 
         {/* Content */}
-        <div className="prose prose-lg max-w-none">
-          <p className="text-xl text-gray-600 mb-8">
+        <div className="prose prose-sm sm:prose-lg max-w-none">
+          <p className="text-base sm:text-xl text-gray-600 mb-6 sm:mb-8">
             Les enfants avec un trouble du spectre de l'autisme (TSA) sont malheureusement plus exposés au harcèlement scolaire. Comprendre les mécanismes et connaître les stratégies de protection est essentiel pour les parents et les professionnels.
           </p>
 
-          <h2 className="text-2xl font-bold text-gray-900 mt-10 mb-4">Pourquoi les enfants TSA sont-ils plus vulnérables ?</h2>
-          <p className="text-gray-700 mb-4">
+          <h2 className="text-xl sm:text-2xl font-bold text-gray-900 mt-8 sm:mt-10 mb-3 sm:mb-4">Pourquoi les enfants TSA sont-ils plus vulnérables ?</h2>
+          <p className="text-sm sm:text-base text-gray-700 mb-4">
             Les difficultés de communication sociale, les comportements atypiques ou les centres d'intérêt spécifiques peuvent malheureusement faire des enfants autistes des cibles privilégiées. Leur difficulté à décoder les intentions des autres les rend également plus vulnérables aux manipulations.
           </p>
-          <ul className="list-disc pl-6 mb-6 text-gray-700 space-y-2">
+          <ul className="list-disc pl-5 sm:pl-6 mb-6 text-sm sm:text-base text-gray-700 space-y-2">
             <li>Difficultés à comprendre les codes sociaux implicites</li>
             <li>Tendance à prendre les choses au premier degré</li>
             <li>Comportements ou intérêts perçus comme "différents"</li>
             <li>Isolement social qui peut les rendre plus vulnérables</li>
           </ul>
 
-          <h2 className="text-2xl font-bold text-gray-900 mt-10 mb-4">Les signes à surveiller</h2>
-          <p className="text-gray-700 mb-4">
+          <h2 className="text-xl sm:text-2xl font-bold text-gray-900 mt-8 sm:mt-10 mb-3 sm:mb-4">Les signes à surveiller</h2>
+          <p className="text-sm sm:text-base text-gray-700 mb-4">
             Repérer le harcèlement peut être plus complexe chez un enfant autiste, car certains signes peuvent être confondus avec des manifestations du TSA. Soyez attentifs à :
           </p>
-          <ul className="list-disc pl-6 mb-6 text-gray-700 space-y-2">
+          <ul className="list-disc pl-5 sm:pl-6 mb-5 sm:mb-6 text-sm sm:text-base text-gray-700 space-y-1.5 sm:space-y-2">
             <li>Un changement soudain de comportement (repli, agressivité)</li>
             <li>Un refus d'aller à l'école plus marqué qu'habituellement</li>
             <li>Des troubles du sommeil ou de l'alimentation</li>
@@ -77,33 +78,33 @@ export default function ArticleHarcelementScolaire() {
             <li>Une augmentation des crises ou des comportements d'automutilation</li>
           </ul>
 
-          <h2 className="text-2xl font-bold text-gray-900 mt-10 mb-4">Stratégies de protection</h2>
+          <h2 className="text-xl sm:text-2xl font-bold text-gray-900 mt-8 sm:mt-10 mb-3 sm:mb-4">Stratégies de protection</h2>
 
-          <h3 className="text-xl font-semibold text-gray-900 mt-6 mb-3">1. Établir une communication ouverte</h3>
-          <p className="text-gray-700 mb-4">
+          <h3 className="text-lg sm:text-xl font-semibold text-gray-900 mt-5 sm:mt-6 mb-2 sm:mb-3">1. Établir une communication ouverte</h3>
+          <p className="text-sm sm:text-base text-gray-700 mb-4">
             Utilisez des supports visuels ou des scénarios sociaux pour aider votre enfant à identifier et exprimer les situations de harcèlement. Posez des questions concrètes : "Est-ce que quelqu'un t'a dit des mots méchants aujourd'hui ?"
           </p>
 
-          <h3 className="text-xl font-semibold text-gray-900 mt-6 mb-3">2. Travailler avec l'école</h3>
-          <p className="text-gray-700 mb-4">
+          <h3 className="text-lg sm:text-xl font-semibold text-gray-900 mt-5 sm:mt-6 mb-2 sm:mb-3">2. Travailler avec l'école</h3>
+          <p className="text-sm sm:text-base text-gray-700 mb-4">
             Impliquez l'équipe éducative dès le début de l'année. Demandez la mise en place d'un protocole de vigilance et identifiez un adulte référent que votre enfant peut solliciter.
           </p>
 
-          <h3 className="text-xl font-semibold text-gray-900 mt-6 mb-3">3. Développer les compétences sociales</h3>
-          <p className="text-gray-700 mb-4">
+          <h3 className="text-lg sm:text-xl font-semibold text-gray-900 mt-5 sm:mt-6 mb-2 sm:mb-3">3. Développer les compétences sociales</h3>
+          <p className="text-sm sm:text-base text-gray-700 mb-4">
             Les groupes d'habiletés sociales peuvent aider votre enfant à mieux comprendre les interactions et à développer des stratégies pour répondre aux moqueries.
           </p>
 
-          <h3 className="text-xl font-semibold text-gray-900 mt-6 mb-3">4. Favoriser les amitiés protectrices</h3>
-          <p className="text-gray-700 mb-4">
+          <h3 className="text-lg sm:text-xl font-semibold text-gray-900 mt-5 sm:mt-6 mb-2 sm:mb-3">4. Favoriser les amitiés protectrices</h3>
+          <p className="text-sm sm:text-base text-gray-700 mb-4">
             Encouragez les liens avec des camarades bienveillants. Un ou deux amis fidèles peuvent constituer un facteur de protection important.
           </p>
 
-          <h2 className="text-2xl font-bold text-gray-900 mt-10 mb-4">Que faire en cas de harcèlement avéré ?</h2>
-          <p className="text-gray-700 mb-4">
+          <h2 className="text-xl sm:text-2xl font-bold text-gray-900 mt-8 sm:mt-10 mb-3 sm:mb-4">Que faire en cas de harcèlement avéré ?</h2>
+          <p className="text-sm sm:text-base text-gray-700 mb-4">
             Si vous constatez une situation de harcèlement :
           </p>
-          <ol className="list-decimal pl-6 mb-6 text-gray-700 space-y-2">
+          <ol className="list-decimal pl-5 sm:pl-6 mb-5 sm:mb-6 text-sm sm:text-base text-gray-700 space-y-1.5 sm:space-y-2">
             <li>Écoutez votre enfant sans minimiser ses ressentis</li>
             <li>Documentez les faits (dates, témoins, preuves)</li>
             <li>Alertez l'établissement par écrit</li>
@@ -119,8 +120,8 @@ export default function ArticleHarcelementScolaire() {
             </p>
           </div>
 
-          <h2 className="text-2xl font-bold text-gray-900 mt-10 mb-4">Conclusion</h2>
-          <p className="text-gray-700 mb-4">
+          <h2 className="text-xl sm:text-2xl font-bold text-gray-900 mt-8 sm:mt-10 mb-3 sm:mb-4">Conclusion</h2>
+          <p className="text-sm sm:text-base text-gray-700 mb-4">
             La prévention du harcèlement scolaire chez les enfants TSA passe par une vigilance accrue, une bonne communication avec l'école et un accompagnement adapté. N'hésitez pas à vous entourer de professionnels spécialisés pour vous accompagner.
           </p>
         </div>
@@ -160,22 +161,22 @@ export default function ArticleHarcelementScolaire() {
       </article>
 
       {/* Related Articles */}
-      <section className="bg-gray-50 py-12 px-4">
+      <section className="bg-gray-50 py-8 sm:py-12 px-4">
         <div className="max-w-7xl mx-auto">
-          <h2 className="text-2xl font-bold text-gray-900 mb-8">Articles similaires</h2>
-          <div className="grid md:grid-cols-2 gap-6">
-            <Link href="/blog/nutrition" className="bg-white rounded-xl p-6 shadow-sm hover:shadow-md transition-shadow flex gap-4">
-              <div className="w-24 h-24 rounded-lg bg-gray-200 flex-shrink-0" style={{ backgroundImage: "url('/images/articles/nutrition.png')", backgroundSize: 'cover' }} />
-              <div>
-                <h3 className="font-semibold text-gray-900 mb-2">Nutrition et autisme</h3>
-                <p className="text-sm text-gray-600 line-clamp-2">Les bases d'une alimentation adaptée pour les personnes autistes.</p>
+          <h2 className="text-xl sm:text-2xl font-bold text-gray-900 mb-5 sm:mb-8">Articles similaires</h2>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
+            <Link href="/blog/nutrition" className="bg-white rounded-xl p-4 sm:p-6 shadow-sm hover:shadow-md transition-shadow flex gap-3 sm:gap-4">
+              <div className="w-20 h-20 sm:w-24 sm:h-24 rounded-lg bg-gray-200 flex-shrink-0" style={{ backgroundImage: "url('/images/articles/nutrition.png')", backgroundSize: 'cover' }} />
+              <div className="min-w-0">
+                <h3 className="font-semibold text-gray-900 mb-1 sm:mb-2 text-sm sm:text-base">Nutrition et autisme</h3>
+                <p className="text-xs sm:text-sm text-gray-600 line-clamp-2">Les bases d'une alimentation adaptée pour les personnes autistes.</p>
               </div>
             </Link>
-            <Link href="/blog/activite-physique" className="bg-white rounded-xl p-6 shadow-sm hover:shadow-md transition-shadow flex gap-4">
-              <div className="w-24 h-24 rounded-lg bg-gray-200 flex-shrink-0" style={{ backgroundImage: "url('/images/articles/sport.png')", backgroundSize: 'cover' }} />
-              <div>
-                <h3 className="font-semibold text-gray-900 mb-2">Sport et autisme</h3>
-                <p className="text-sm text-gray-600 line-clamp-2">Les bienfaits de l'activité physique adaptée.</p>
+            <Link href="/blog/activite-physique" className="bg-white rounded-xl p-4 sm:p-6 shadow-sm hover:shadow-md transition-shadow flex gap-3 sm:gap-4">
+              <div className="w-20 h-20 sm:w-24 sm:h-24 rounded-lg bg-gray-200 flex-shrink-0" style={{ backgroundImage: "url('/images/articles/sport.png')", backgroundSize: 'cover' }} />
+              <div className="min-w-0">
+                <h3 className="font-semibold text-gray-900 mb-1 sm:mb-2 text-sm sm:text-base">Sport et autisme</h3>
+                <p className="text-xs sm:text-sm text-gray-600 line-clamp-2">Les bienfaits de l'activité physique adaptée.</p>
               </div>
             </Link>
           </div>
@@ -183,7 +184,7 @@ export default function ArticleHarcelementScolaire() {
       </section>
 
       {/* Footer */}
-      <footer className="py-8 px-4 text-center text-gray-500 text-sm">
+      <footer className="py-6 sm:py-8 px-4 text-center text-gray-500 text-xs sm:text-sm">
         <p>© 2024 NeuroCare. Tous droits réservés.</p>
       </footer>
     </div>
