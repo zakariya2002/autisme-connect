@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { supabase } from '@/lib/supabase';
 import { professions } from '@/lib/professions-config';
+import CommunityPreview from '@/components/community/CommunityPreview';
 
 // Types de suggestions pour la recherche
 type SuggestionType = 'profession' | 'city' | 'tnd';
@@ -556,6 +557,9 @@ export default function Home() {
           </Link>
         </div>
       </section>
+
+      {/* Section Communauté */}
+      <CommunityPreview />
 
       {/* Section Vous êtes aidants / professionnel */}
       <section className="py-10 px-4" aria-labelledby="section-cta">
