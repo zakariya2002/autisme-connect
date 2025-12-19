@@ -259,11 +259,11 @@ export default function FamilyDashboard() {
         )}
 
         {/* Section Mes prochains rendez-vous */}
-        {upcomingAppointments.length > 0 && (
-          <div className="mt-6 px-4">
-            <h2 className="text-lg font-bold text-gray-900 mb-3">Mes prochains rendez-vous</h2>
+        <div className="mt-6 px-4">
+          <h2 className="text-lg font-bold text-gray-900 mb-3">Mes prochains rendez-vous</h2>
 
-            <div className="flex gap-4 overflow-x-auto pb-3 -mx-4 px-4 scrollbar-hide" style={{ scrollSnapType: 'x mandatory' }}>
+          {upcomingAppointments.length > 0 ? (
+            <div className="flex gap-4 overflow-x-auto pb-3 scrollbar-hide" style={{ scrollSnapType: 'x mandatory' }}>
               {upcomingAppointments.map((apt) => (
                 <div
                   key={apt.id}
@@ -319,8 +319,27 @@ export default function FamilyDashboard() {
                 </div>
               ))}
             </div>
-          </div>
-        )}
+          ) : (
+            <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 text-center">
+              <div className="w-16 h-16 mx-auto mb-4 rounded-full flex items-center justify-center" style={{ backgroundColor: '#e6f5f5' }}>
+                <svg className="w-8 h-8" style={{ color: '#027e7e' }} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                </svg>
+              </div>
+              <p className="text-gray-600 text-sm mb-4">Vous n'avez pas encore de rendez-vous prévu</p>
+              <Link
+                href="/dashboard/family/search"
+                className="inline-flex items-center gap-2 px-5 py-2.5 text-white font-semibold rounded-xl transition-all hover:opacity-90"
+                style={{ backgroundColor: '#027e7e' }}
+              >
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                </svg>
+                Rechercher un professionnel
+              </Link>
+            </div>
+          )}
+        </div>
 
         {/* Section Mon compte */}
         <div className="mt-6 mx-4 bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">

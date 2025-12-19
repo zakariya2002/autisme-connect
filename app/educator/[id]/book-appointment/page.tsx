@@ -433,14 +433,22 @@ export default function BookAppointmentPage({ params }: { params: { id: string }
             Réserver un rendez-vous
           </h1>
           {educator && (
-            <p className="text-gray-600 mt-2" style={{ fontFamily: 'Open Sans, sans-serif' }}>
-              Avec {educator.first_name} {educator.last_name}
+            <div className="mt-3 flex flex-wrap items-center gap-3">
+              <p className="text-gray-600" style={{ fontFamily: 'Open Sans, sans-serif' }}>
+                Avec {educator.first_name} {educator.last_name}
+              </p>
               {educator.hourly_rate && (
-                <span className="ml-2 font-semibold" style={{ color: '#027e7e' }}>
-                  {educator.hourly_rate}€/heure
+                <span
+                  className="inline-flex items-center gap-1.5 px-4 py-2 rounded-full text-white font-bold text-lg shadow-md"
+                  style={{ backgroundColor: '#027e7e' }}
+                >
+                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                  </svg>
+                  {educator.hourly_rate}€/h
                 </span>
               )}
-            </p>
+            </div>
           )}
         </div>
 
@@ -701,10 +709,10 @@ export default function BookAppointmentPage({ params }: { params: { id: string }
                               </p>
                             </div>
                             <div className="text-right">
-                              <p className="text-lg font-bold" style={{ color: '#027e7e' }}>
+                              <p className="text-sm text-gray-600">
                                 {formatDuration(calculateTotalDuration())}
                               </p>
-                              <p className="text-sm" style={{ color: '#3a9e9e' }}>
+                              <p className="text-xl font-bold" style={{ color: '#027e7e' }}>
                                 {calculateTotalPrice().toFixed(2)}€
                               </p>
                             </div>

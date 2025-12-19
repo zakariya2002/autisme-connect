@@ -81,7 +81,8 @@ export default function CommunityFeed({
         {showCreateButton && (
           <Link
             href="/community/new"
-            className="inline-flex items-center justify-center gap-2 px-4 sm:px-6 py-2.5 sm:py-3 bg-gradient-to-r from-teal-500 to-teal-600 text-white font-semibold rounded-xl hover:from-teal-600 hover:to-teal-700 transition-all shadow-md hover:shadow-lg text-sm sm:text-base"
+            className="inline-flex items-center justify-center gap-2 px-4 sm:px-6 py-2.5 sm:py-3 text-white font-semibold rounded-xl hover:opacity-90 transition-all shadow-md hover:shadow-lg text-sm sm:text-base"
+            style={{ backgroundColor: '#027e7e' }}
           >
             <svg className="w-4 h-4 sm:w-5 sm:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />

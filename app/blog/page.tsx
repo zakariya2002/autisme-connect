@@ -3,47 +3,19 @@
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { supabase } from '@/lib/supabase';
-
-const articles = [
-  {
-    id: 1,
-    slug: 'harcelement-scolaire',
-    title: "Harcèlement scolaire et TSA : Comment protéger son enfant ?",
-    excerpt: "Les enfants avec un trouble du spectre de l'autisme sont malheureusement plus exposés au harcèlement scolaire. Découvrez les signes à surveiller et les stratégies pour protéger votre enfant.",
-    image: "/images/articles/harcelement.png",
-    category: "Éducation",
-    date: "15 décembre 2024",
-    readTime: "8 min"
-  },
-  {
-    id: 2,
-    slug: 'nutrition',
-    title: "Nutrition et autisme : Les bases d'une alimentation adaptée",
-    excerpt: "L'alimentation peut jouer un rôle important dans le bien-être des personnes autistes. Découvrez les principes d'une nutrition adaptée et les aliments à privilégier.",
-    image: "/images/articles/nutrition.png",
-    category: "Santé",
-    date: "10 décembre 2024",
-    readTime: "6 min"
-  },
-  {
-    id: 3,
-    slug: 'activite-physique',
-    title: "Sport et autisme : Les bienfaits de l'activité physique adaptée",
-    excerpt: "L'activité physique offre de nombreux bénéfices pour les personnes avec TSA. Découvrez quels sports privilégier et comment adapter la pratique.",
-    image: "/images/articles/sport.png",
-    category: "Bien-être",
-    date: "5 décembre 2024",
-    readTime: "7 min"
-  }
-];
+import { BlogPost, getCategoryInfo } from '@/types/blog';
+import { getPublishedPosts } from '@/lib/blog/actions';
 
 export default function BlogPage() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [user, setUser] = useState<any>(null);
   const [userType, setUserType] = useState<'educator' | 'family' | null>(null);
+  const [articles, setArticles] = useState<BlogPost[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     checkUser();
+    fetchArticles();
 
     const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
       if (event === 'SIGNED_OUT' || !session) {
@@ -57,6 +29,13 @@ export default function BlogPage() {
 
     return () => subscription.unsubscribe();
   }, []);
+
+  const fetchArticles = async () => {
+    setIsLoading(true);
+    const result = await getPublishedPosts({ limit: 20 });
+    setArticles(result.posts);
+    setIsLoading(false);
+  };
 
   const checkUserType = async (userId: string) => {
     const { data: educator } = await supabase
@@ -145,6 +124,13 @@ export default function BlogPage() {
                 Blog
               </Link>
               <Link
+                href="/community"
+                className="block py-2 font-medium"
+                style={{ color: '#374151' }}
+              >
+                Communauté
+              </Link>
+              <Link
                 href="/familles/aides-financieres"
                 className="block py-2 font-medium"
                 style={{ color: '#374151' }}
@@ -200,59 +186,136 @@ export default function BlogPage() {
         )}
       </header>
 
-      {/* Hero */}
-      <section className="py-10 sm:py-16 px-4" style={{ backgroundColor: '#027e7e' }}>
+      {/* Hero - Plus clair que la navbar */}
+      <section className="py-10 sm:py-16 px-4" style={{ backgroundColor: '#0a9a9a' }}>
         <div className="max-w-4xl mx-auto text-center text-white">
           <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold mb-3 sm:mb-4">
             Blog NeuroCare
           </h1>
-          <p className="text-base sm:text-xl text-teal-100 px-2">
+          <p className="text-base sm:text-xl text-white/80 px-2">
             Ressources, conseils et actualités pour accompagner les personnes neuro-atypiques
           </p>
+          {/* Bouton Mes articles pour les professionnels */}
+          {userType === 'educator' && (
+            <Link
+              href="/dashboard/educator/blog"
+              className="inline-flex items-center gap-2 mt-6 px-6 py-3 bg-white text-teal-700 font-semibold rounded-xl hover:bg-teal-50 transition-colors"
+            >
+              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+              </svg>
+              Mes articles
+            </Link>
+          )}
         </div>
       </section>
 
       {/* Articles Grid */}
       <section className="py-8 sm:py-16 px-4">
         <div className="max-w-7xl mx-auto">
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 lg:gap-8">
-            {articles.map((article) => (
-              <Link
-                key={article.id}
-                href={`/blog/${article.slug}`}
-                className="bg-white rounded-xl sm:rounded-2xl shadow-md sm:shadow-lg overflow-hidden hover:shadow-xl transition-shadow group"
-              >
-                {/* Image - Sans texte */}
-                <div className="relative h-40 sm:h-48 bg-gray-200 overflow-hidden">
-                  <div
-                    className="absolute inset-0 bg-cover bg-center group-hover:scale-105 transition-transform duration-300"
-                    style={{ backgroundImage: `url('${article.image}')` }}
-                  />
+          {isLoading ? (
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 lg:gap-8">
+              {[1, 2, 3].map((i) => (
+                <div key={i} className="bg-white rounded-xl sm:rounded-2xl shadow-md overflow-hidden animate-pulse">
+                  <div className="h-40 sm:h-48 bg-gray-200" />
+                  <div className="p-4 sm:p-6">
+                    <div className="h-4 bg-gray-200 rounded w-1/3 mb-3" />
+                    <div className="h-6 bg-gray-200 rounded w-3/4 mb-2" />
+                    <div className="h-4 bg-gray-200 rounded w-full mb-1" />
+                    <div className="h-4 bg-gray-200 rounded w-2/3" />
+                  </div>
                 </div>
+              ))}
+            </div>
+          ) : articles.length === 0 ? (
+            <div className="text-center py-12">
+              <div className="w-16 h-16 mx-auto mb-4 bg-gray-100 rounded-full flex items-center justify-center">
+                <svg className="w-8 h-8 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 8h6v4H7V8z" />
+                </svg>
+              </div>
+              <h3 className="text-lg font-semibold text-gray-900 mb-2">Aucun article pour le moment</h3>
+              <p className="text-gray-600">Les articles seront bientôt disponibles.</p>
+            </div>
+          ) : (
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 lg:gap-8">
+              {articles.map((article) => {
+                const categoryInfo = getCategoryInfo(article.category);
+                const formatDate = (dateStr: string) => {
+                  return new Date(dateStr).toLocaleDateString('fr-FR', {
+                    day: 'numeric',
+                    month: 'long',
+                    year: 'numeric',
+                  });
+                };
 
-                {/* Content */}
-                <div className="p-4 sm:p-6">
-                  <div className="flex items-center gap-2 sm:gap-4 text-xs sm:text-sm text-gray-500 mb-2 sm:mb-3">
-                    <span>{article.date}</span>
-                    <span>•</span>
-                    <span>{article.readTime}</span>
-                  </div>
-                  <h2 className="text-base sm:text-xl font-bold text-gray-900 mb-2 sm:mb-3 group-hover:text-teal-600 transition-colors line-clamp-2">
-                    {article.title}
-                  </h2>
-                  <p className="text-sm sm:text-base text-gray-600 line-clamp-2 sm:line-clamp-3">
-                    {article.excerpt}
-                  </p>
-                  <div className="mt-3 sm:mt-4 flex items-center gap-2 text-sm sm:text-base font-medium" style={{ color: '#027e7e' }}>
-                    Lire l'article
-                    <svg className="w-4 h-4 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                    </svg>
-                  </div>
-                </div>
-              </Link>
-            ))}
-          </div>
+                return (
+                  <Link
+                    key={article.id}
+                    href={`/blog/${article.slug}`}
+                    className="bg-white rounded-xl sm:rounded-2xl shadow-md sm:shadow-lg overflow-hidden hover:shadow-xl transition-shadow group"
+                  >
+                    {/* Image */}
+                    <div className="relative h-40 sm:h-48 bg-gray-200 overflow-hidden">
+                      {article.image_url ? (
+                        <div
+                          className="absolute inset-0 bg-cover bg-center group-hover:scale-105 transition-transform duration-300"
+                          style={{ backgroundImage: `url('${article.image_url}')` }}
+                        />
+                      ) : (
+                        <div className="absolute inset-0 flex items-center justify-center bg-gradient-to-br from-teal-100 to-teal-200">
+                          <svg className="w-12 h-12 text-teal-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 8h6v4H7V8z" />
+                          </svg>
+                        </div>
+                      )}
+                      {/* Category badge */}
+                      <div className="absolute top-3 left-3">
+                        <span
+                          className="px-2 py-1 text-xs font-medium rounded-full text-white"
+                          style={{ backgroundColor: categoryInfo.color }}
+                        >
+                          {categoryInfo.label}
+                        </span>
+                      </div>
+                    </div>
+
+                    {/* Content */}
+                    <div className="p-4 sm:p-6">
+                      <div className="flex items-center gap-2 sm:gap-4 text-xs sm:text-sm text-gray-500 mb-2 sm:mb-3">
+                        <span>{formatDate(article.published_at || article.created_at)}</span>
+                        <span>•</span>
+                        <span>{article.read_time_minutes} min</span>
+                      </div>
+                      <h2 className="text-base sm:text-xl font-bold text-gray-900 mb-2 sm:mb-3 group-hover:text-teal-600 transition-colors line-clamp-2">
+                        {article.title}
+                      </h2>
+                      <p className="text-sm sm:text-base text-gray-600 line-clamp-2 sm:line-clamp-3">
+                        {article.excerpt}
+                      </p>
+                      {/* Author */}
+                      {article.author && (
+                        <div className="mt-3 pt-3 border-t border-gray-100 flex items-center gap-2">
+                          <div className="w-6 h-6 rounded-full bg-teal-100 flex items-center justify-center text-xs font-medium text-teal-700">
+                            {article.author.first_name[0]}
+                          </div>
+                          <span className="text-xs text-gray-500">
+                            {article.author.first_name} {article.author.last_name}
+                          </span>
+                        </div>
+                      )}
+                      <div className="mt-3 sm:mt-4 flex items-center gap-2 text-sm sm:text-base font-medium" style={{ color: '#027e7e' }}>
+                        Lire l'article
+                        <svg className="w-4 h-4 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                        </svg>
+                      </div>
+                    </div>
+                  </Link>
+                );
+              })}
+            </div>
+          )}
         </div>
       </section>
 

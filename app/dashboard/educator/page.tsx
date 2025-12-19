@@ -366,11 +366,11 @@ export default function EducatorDashboard() {
         )}
 
         {/* Section Mes prochains rendez-vous */}
-        {upcomingAppointments.length > 0 && (
-          <div className="mt-6 px-4">
-            <h2 className="text-lg font-bold text-gray-900 mb-3">Mes prochains rendez-vous</h2>
+        <div className="mt-6 px-4">
+          <h2 className="text-lg font-bold text-gray-900 mb-3">Mes prochains rendez-vous</h2>
 
-            <div className="flex gap-4 overflow-x-auto pb-3 -mx-4 px-4 scrollbar-hide" style={{ scrollSnapType: 'x mandatory' }}>
+          {upcomingAppointments.length > 0 ? (
+            <div className="flex gap-4 overflow-x-auto pb-3 scrollbar-hide" style={{ scrollSnapType: 'x mandatory' }}>
               {upcomingAppointments.map((apt) => (
                 <div
                   key={apt.id}
@@ -426,8 +426,27 @@ export default function EducatorDashboard() {
                 </div>
               ))}
             </div>
-          </div>
-        )}
+          ) : (
+            <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 text-center">
+              <div className="w-16 h-16 mx-auto mb-4 rounded-full flex items-center justify-center" style={{ backgroundColor: 'rgba(65, 0, 92, 0.1)' }}>
+                <svg className="w-8 h-8" style={{ color: '#41005c' }} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                </svg>
+              </div>
+              <p className="text-gray-600 text-sm mb-4">Vous n'avez pas encore de rendez-vous prévu</p>
+              <Link
+                href="/dashboard/educator/appointments"
+                className="inline-flex items-center gap-2 px-5 py-2.5 text-white font-semibold rounded-xl transition-all hover:opacity-90"
+                style={{ backgroundColor: '#41005c' }}
+              >
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
+                </svg>
+                Voir mes demandes
+              </Link>
+            </div>
+          )}
+        </div>
 
         {/* Section Mon compte */}
         <div className="mt-6 mx-4 bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">

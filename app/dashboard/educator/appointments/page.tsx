@@ -59,11 +59,11 @@ function SessionCountdown({
 
   return (
     <div className="flex flex-col sm:flex-row items-center gap-3 w-full sm:w-auto">
-      <div className="flex items-center gap-2 px-3 py-2 sm:px-4 bg-indigo-50 border border-indigo-200 rounded-md w-full sm:w-auto justify-center" role="status" aria-live="polite">
-        <svg className="w-5 h-5 text-indigo-600 animate-pulse" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+      <div className="flex items-center gap-2 px-3 py-2 sm:px-4 bg-primary-50 border border-primary-200 rounded-md w-full sm:w-auto justify-center" role="status" aria-live="polite">
+        <svg className="w-5 h-5 text-primary-600 animate-pulse" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
         </svg>
-        <span className="font-mono font-bold text-sm sm:text-base text-indigo-900">
+        <span className="font-mono font-bold text-sm sm:text-base text-primary-900">
           {timeRemaining > 0 ? formatTime(timeRemaining) : 'Temps écoulé'}
         </span>
       </div>
@@ -507,7 +507,7 @@ export default function EducatorAppointmentsPage() {
       pending: 'bg-yellow-100 text-yellow-800 border-yellow-300',
       confirmed: 'bg-purple-100 text-purple-800 border-purple-300',
       accepted: 'bg-green-100 text-green-800 border-green-300',
-      in_progress: 'bg-indigo-100 text-indigo-800 border-indigo-300',
+      in_progress: 'bg-primary-100 text-primary-800 border-primary-300',
       rejected: 'bg-red-100 text-red-800 border-red-300',
       completed: 'bg-blue-100 text-blue-800 border-blue-300',
       cancelled: 'bg-gray-100 text-gray-800 border-gray-300'
@@ -1062,8 +1062,42 @@ export default function EducatorAppointmentsPage() {
         {/* Contenu de l'onglet Rendez-vous */}
         {activeTab === 'appointments' && (
           <>
-        {/* Boutons de filtre - 4 colonnes */}
-        <div className="grid grid-cols-4 gap-3 mb-8">
+        {/* Bandeau Séance en cours */}
+        {inProgressAppointments.length > 0 && (
+          <div
+            onClick={() => selectFilter('in_progress')}
+            className="mb-6 p-4 bg-gradient-to-r from-primary-800 via-primary-700 to-primary-800 rounded-2xl shadow-lg cursor-pointer hover:shadow-xl transition-all animate-pulse-slow border border-primary-600/30"
+          >
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-3">
+                <div className="w-12 h-12 bg-white/20 rounded-xl flex items-center justify-center">
+                  <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z" />
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                  </svg>
+                </div>
+                <div>
+                  <h3 className="font-bold text-white text-lg">
+                    {inProgressAppointments.length} séance{inProgressAppointments.length > 1 ? 's' : ''} en cours
+                  </h3>
+                  <p className="text-primary-200 text-sm">Cliquez pour voir le compte à rebours</p>
+                </div>
+              </div>
+              <div className="flex items-center gap-2">
+                <span className="relative flex h-3 w-3">
+                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary-300 opacity-75"></span>
+                  <span className="relative inline-flex rounded-full h-3 w-3 bg-primary-300"></span>
+                </span>
+                <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                </svg>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Boutons de filtre - 5 colonnes */}
+        <div className="grid grid-cols-5 gap-3 mb-8">
           {/* Tous */}
           <button
             onClick={() => appointments.length > 0 && selectFilter('all')}
@@ -1096,6 +1130,28 @@ export default function EducatorAppointmentsPage() {
             <p className="text-xs text-amber-700 mt-1">En attente</p>
           </button>
 
+          {/* En cours - Style accrocheur */}
+          <button
+            onClick={() => inProgressAppointments.length > 0 && selectFilter('in_progress')}
+            disabled={inProgressAppointments.length === 0}
+            className={`rounded-xl p-3 text-center transition-all relative ${
+              inProgressAppointments.length === 0
+                ? 'bg-primary-50 opacity-60 cursor-not-allowed'
+                : activeFilter === 'in_progress'
+                  ? 'bg-primary-200 ring-2 ring-primary-500'
+                  : 'bg-primary-50 hover:bg-primary-100 cursor-pointer'
+            }`}
+          >
+            {inProgressAppointments.length > 0 && (
+              <span className="absolute -top-1 -right-1 flex h-3 w-3">
+                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary-400 opacity-75"></span>
+                <span className="relative inline-flex rounded-full h-3 w-3 bg-primary-500"></span>
+              </span>
+            )}
+            <p className="text-2xl font-bold text-primary-600">{inProgressAppointments.length}</p>
+            <p className="text-xs text-primary-700 mt-1">En cours</p>
+          </button>
+
           {/* À venir */}
           <button
             onClick={() => upcomingAppointments.length > 0 && selectFilter('upcoming')}
@@ -1108,7 +1164,7 @@ export default function EducatorAppointmentsPage() {
                   : 'bg-emerald-50 hover:bg-emerald-100 cursor-pointer'
             }`}
           >
-            <p className="text-2xl font-bold text-emerald-600">{upcomingAppointments.length + inProgressAppointments.length}</p>
+            <p className="text-2xl font-bold text-emerald-600">{upcomingAppointments.length}</p>
             <p className="text-xs text-emerald-700 mt-1">À venir</p>
           </button>
 
@@ -1169,8 +1225,8 @@ export default function EducatorAppointmentsPage() {
                 <SectionHeader
                   title="Séances en cours"
                   count={inProgressAppointments.length}
-                  icon={<svg className="h-5 w-5 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z" /><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>}
-                  color="bg-indigo-100"
+                  icon={<svg className="h-5 w-5 text-primary-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z" /><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>}
+                  color="bg-primary-100"
                 />
                 <div className="space-y-3">
                   {inProgressAppointments.map(apt => (
@@ -1620,15 +1676,15 @@ export default function EducatorAppointmentsPage() {
                       <h4 className="font-semibold text-gray-900 mb-3">Objectifs éducatifs en cours</h4>
                       <div className="space-y-2">
                         {childDossier.goals.map((goal: any) => (
-                          <div key={goal.id} className="bg-indigo-50 rounded-lg p-3 border border-indigo-200">
+                          <div key={goal.id} className="bg-primary-50 rounded-lg p-3 border border-primary-200">
                             <div className="flex items-center justify-between mb-1">
-                              <h5 className="font-medium text-indigo-900 text-sm">{goal.title}</h5>
-                              <span className="text-xs bg-indigo-200 text-indigo-800 px-2 py-0.5 rounded-full">
+                              <h5 className="font-medium text-primary-900 text-sm">{goal.title}</h5>
+                              <span className="text-xs bg-primary-200 text-primary-800 px-2 py-0.5 rounded-full">
                                 {goal.progress}%
                               </span>
                             </div>
                             {goal.description && (
-                              <p className="text-indigo-700 text-xs">{goal.description}</p>
+                              <p className="text-primary-700 text-xs">{goal.description}</p>
                             )}
                           </div>
                         ))}

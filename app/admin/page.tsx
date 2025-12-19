@@ -12,6 +12,7 @@ export default function AdminDashboard() {
     pendingCertifications: 0,
     pendingAvatars: 0,
     pendingVerifications: 0,
+    pendingBlogPosts: 0,
     totalEducators: 0,
     totalFamilies: 0,
   });
@@ -63,10 +64,17 @@ export default function AdminDashboard() {
         .select('*', { count: 'exact', head: true })
         .in('verification_status', ['documents_submitted', 'documents_verified', 'interview_scheduled']);
 
+      // Compter les articles de blog en attente
+      const { count: blogCount } = await supabase
+        .from('blog_posts')
+        .select('*', { count: 'exact', head: true })
+        .eq('status', 'pending');
+
       setStats({
         pendingCertifications: certCount || 0,
         pendingAvatars: avatarCount || 0,
         pendingVerifications: verificationCount || 0,
+        pendingBlogPosts: blogCount || 0,
         totalEducators: educatorCount || 0,
         totalFamilies: familyCount || 0,
       });
@@ -244,6 +252,31 @@ export default function AdminDashboard() {
                   )}
                 </div>
                 <svg className="h-8 w-8 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                </svg>
+              </div>
+            </Link>
+
+            <Link
+              href="/admin/blog"
+              className="block p-6 bg-purple-50 rounded-lg hover:bg-purple-100 transition border border-purple-200"
+            >
+              <div className="flex items-center justify-between">
+                <div>
+                  <h3 className="text-lg font-medium text-gray-900 flex items-center gap-2">
+                    <svg className="w-6 h-6 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 8h6v4H7V8z" />
+                    </svg>
+                    Articles de blog
+                  </h3>
+                  <p className="text-sm text-gray-600 mt-1">Modérer les articles des professionnels</p>
+                  {stats.pendingBlogPosts > 0 && (
+                    <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-purple-600 text-white mt-2">
+                      {stats.pendingBlogPosts} en attente
+                    </span>
+                  )}
+                </div>
+                <svg className="h-8 w-8 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
                 </svg>
               </div>

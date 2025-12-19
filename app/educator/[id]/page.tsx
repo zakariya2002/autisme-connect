@@ -190,11 +190,25 @@ export default function EducatorPublicProfile({ params }: { params: { id: string
     };
   }, [params.id]);
 
-  const handleContact = () => {
+  const handleContact = async () => {
     if (isAuthenticated) {
-      // Si c'est une famille, ouvrir le modal questionnaire
+      // Si c'est une famille, vérifier si une conversation existe déjà
       if (userRole === 'family' && familyProfileId) {
-        setShowContactModal(true);
+        // Vérifier si une conversation existe déjà
+        const { data: existingConv } = await supabase
+          .from('conversations')
+          .select('id')
+          .eq('educator_id', params.id)
+          .eq('family_id', familyProfileId)
+          .single();
+
+        if (existingConv) {
+          // Si une conversation existe, rediriger directement vers la messagerie
+          router.push(`/messages?educator=${params.id}`);
+        } else {
+          // Sinon, ouvrir le modal questionnaire pour créer une nouvelle conversation
+          setShowContactModal(true);
+        }
       } else {
         // Si c'est un éducateur, rediriger vers la messagerie
         router.push(`/messages?educator=${params.id}`);

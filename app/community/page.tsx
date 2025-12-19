@@ -20,6 +20,7 @@ export default function CommunityPage() {
   const [loading, setLoading] = useState(true);
   const [posts, setPosts] = useState<CommunityPost[]>([]);
   const [totalPosts, setTotalPosts] = useState(0);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   useEffect(() => {
     const fetchUserAndPosts = async () => {
@@ -97,34 +98,118 @@ export default function CommunityPage() {
       ) : userRole === 'family' ? (
         <FamilyNavbar profile={profile} familyId={familyId} userId={userId} />
       ) : (
-        // Public navbar for non-logged users
-        <nav className="z-40 flex-shrink-0" style={{ backgroundColor: '#027e7e' }}>
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="flex justify-between h-16 sm:h-20 items-center">
-              <Link href="/">
-                <img
-                  src="/images/logo-neurocare.svg"
-                  alt="NeuroCare"
-                  className="h-16 sm:h-20"
-                />
-              </Link>
-              <div className="flex items-center gap-4">
+        // Public navbar (LP style)
+        <header className="sticky top-0 z-50" style={{ backgroundColor: '#027e7e' }}>
+          <div className="flex items-center justify-between px-4 py-4">
+            {/* Menu Hamburger */}
+            <button
+              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+              className="p-1 text-white"
+              aria-label="Ouvrir le menu de navigation"
+              aria-expanded={mobileMenuOpen}
+            >
+              <svg className="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M4 6h16M4 12h16M4 18h16" />
+              </svg>
+            </button>
+
+            {/* Logo centré */}
+            <Link href="/" className="absolute left-1/2 transform -translate-x-1/2" aria-label="Retour à l'accueil NeuroCare">
+              <img
+                src="/images/logo-neurocare.svg"
+                alt="NeuroCare"
+                className="h-20"
+              />
+            </Link>
+
+            {/* Espace vide pour équilibrer */}
+            <div className="w-8"></div>
+          </div>
+
+          {/* Menu mobile déroulant */}
+          {mobileMenuOpen && (
+            <div className="absolute top-full left-0 right-0 bg-white shadow-lg border-t border-gray-100 z-50">
+              <nav className="px-4 py-4 space-y-3" role="navigation" aria-label="Menu principal">
+                <Link
+                  href="/search"
+                  onClick={() => setMobileMenuOpen(false)}
+                  className="block py-2 font-medium"
+                  style={{ color: '#374151' }}
+                >
+                  Rechercher un professionnel
+                </Link>
+                <Link
+                  href="/about"
+                  onClick={() => setMobileMenuOpen(false)}
+                  className="block py-2 font-medium"
+                  style={{ color: '#374151' }}
+                >
+                  À propos
+                </Link>
+                <Link
+                  href="/blog"
+                  onClick={() => setMobileMenuOpen(false)}
+                  className="block py-2 font-medium"
+                  style={{ color: '#374151' }}
+                >
+                  Blog
+                </Link>
+                <Link
+                  href="/community"
+                  onClick={() => setMobileMenuOpen(false)}
+                  className="block py-2 font-medium"
+                  style={{ color: '#027e7e' }}
+                >
+                  Communauté
+                </Link>
+                <Link
+                  href="/familles/aides-financieres"
+                  onClick={() => setMobileMenuOpen(false)}
+                  className="block py-2 font-medium"
+                  style={{ color: '#374151' }}
+                >
+                  Aides financières
+                </Link>
+                <Link
+                  href="/contact"
+                  onClick={() => setMobileMenuOpen(false)}
+                  className="block py-2 font-medium"
+                  style={{ color: '#374151' }}
+                >
+                  Contact
+                </Link>
+                <Link
+                  href="/pro"
+                  onClick={() => setMobileMenuOpen(false)}
+                  className="block py-2 px-4 rounded-lg font-semibold text-center mt-2"
+                  style={{
+                    backgroundColor: '#f3e8ff',
+                    color: '#41005c'
+                  }}
+                >
+                  Vous êtes professionnel ?
+                </Link>
+                <hr className="my-2" />
                 <Link
                   href="/auth/login"
-                  className="text-white hover:text-teal-100 font-medium transition"
+                  onClick={() => setMobileMenuOpen(false)}
+                  className="block py-2 px-4 text-white rounded-lg text-center font-semibold"
+                  style={{ backgroundColor: '#f0879f' }}
                 >
                   Connexion
                 </Link>
                 <Link
-                  href="/auth/register"
-                  className="bg-white text-teal-700 px-4 py-2 rounded-lg font-medium hover:bg-teal-50 transition"
+                  href="/auth/signup"
+                  onClick={() => setMobileMenuOpen(false)}
+                  className="block py-2 px-4 text-white rounded-lg text-center font-semibold mt-2"
+                  style={{ backgroundColor: '#027e7e' }}
                 >
-                  S'inscrire
+                  Inscription
                 </Link>
-              </div>
+              </nav>
             </div>
-          </div>
-        </nav>
+          )}
+        </header>
       )}
 
       {/* Main content */}

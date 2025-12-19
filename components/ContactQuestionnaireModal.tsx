@@ -317,10 +317,10 @@ export default function ContactQuestionnaireModal({
     <div className="fixed inset-0 bg-black/50 flex items-end sm:items-center justify-center z-50 sm:p-4">
       <div className="bg-white rounded-t-2xl sm:rounded-2xl shadow-xl w-full sm:max-w-lg max-h-[90vh] overflow-hidden flex flex-col">
         {/* Header */}
-        <div className="px-4 sm:px-6 py-4 border-b border-gray-100 flex items-center justify-between bg-gradient-to-r from-primary-500 to-primary-600">
+        <div className="px-4 sm:px-6 py-4 border-b border-gray-100 flex items-center justify-between" style={{ background: 'linear-gradient(135deg, #027e7e 0%, #3a9e9e 100%)' }}>
           <div className="text-white">
             <h2 className="text-lg font-semibold">Contacter {educatorName}</h2>
-            <p className="text-sm text-primary-100">Étape {currentStep} sur {totalSteps}</p>
+            <p className="text-sm text-white/80">Étape {currentStep} sur {totalSteps}</p>
           </div>
           <button
             onClick={onClose}
@@ -338,9 +338,8 @@ export default function ContactQuestionnaireModal({
             {[1, 2, 3, 4, 5].map((step) => (
               <div
                 key={step}
-                className={`h-1.5 flex-1 rounded-full transition-all ${
-                  step <= currentStep ? 'bg-primary-500' : 'bg-gray-200'
-                }`}
+                className="h-1.5 flex-1 rounded-full transition-all"
+                style={{ backgroundColor: step <= currentStep ? '#027e7e' : '#e5e7eb' }}
               />
             ))}
           </div>
@@ -350,7 +349,7 @@ export default function ContactQuestionnaireModal({
         <div className="flex-1 overflow-y-auto p-4 sm:p-6">
           {loading ? (
             <div className="flex items-center justify-center py-12">
-              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary-600"></div>
+              <div className="animate-spin rounded-full h-8 w-8 border-b-2" style={{ borderColor: '#027e7e' }}></div>
             </div>
           ) : (
             <>
@@ -374,14 +373,18 @@ export default function ContactQuestionnaireModal({
                           onClick={() => handleChildSelect(child)}
                           className={`w-full p-4 rounded-xl border-2 text-left transition-all ${
                             formData.child_id === child.id
-                              ? 'border-primary-500 bg-primary-50'
-                              : 'border-gray-200 hover:border-primary-300 hover:bg-gray-50'
+                              ? 'border-[#027e7e] bg-[#e6f5f5]'
+                              : 'border-gray-200 hover:border-[#3a9e9e] hover:bg-gray-50'
                           }`}
                         >
                           <div className="flex items-center gap-3">
-                            <div className={`w-10 h-10 rounded-full flex items-center justify-center ${
-                              formData.child_id === child.id ? 'bg-primary-500 text-white' : 'bg-gray-100 text-gray-600'
-                            }`}>
+                            <div
+                              className="w-10 h-10 rounded-full flex items-center justify-center"
+                              style={{
+                                backgroundColor: formData.child_id === child.id ? '#027e7e' : '#f3f4f6',
+                                color: formData.child_id === child.id ? 'white' : '#4b5563'
+                              }}
+                            >
                               <span className="font-semibold">{child.first_name[0]}</span>
                             </div>
                             <div>
@@ -393,7 +396,7 @@ export default function ContactQuestionnaireModal({
                               )}
                             </div>
                             {formData.child_id === child.id && (
-                              <svg className="w-5 h-5 text-primary-500 ml-auto" fill="currentColor" viewBox="0 0 20 20">
+                              <svg className="w-5 h-5 ml-auto" style={{ color: '#027e7e' }} fill="currentColor" viewBox="0 0 20 20">
                                 <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
                               </svg>
                             )}
@@ -402,8 +405,8 @@ export default function ContactQuestionnaireModal({
                       ))}
                     </div>
                   ) : (
-                    <div className="bg-yellow-50 border border-yellow-200 rounded-xl p-4 text-center">
-                      <p className="text-yellow-800 text-sm mb-3">
+                    <div className="bg-[#e6f5f5] border border-[#027e7e]/30 rounded-xl p-4 text-center">
+                      <p className="text-[#027e7e] text-sm mb-3">
                         Vous n'avez pas encore créé d'accompagnement.
                       </p>
                       <p className="text-gray-600 text-sm">
@@ -413,7 +416,7 @@ export default function ContactQuestionnaireModal({
                         type="text"
                         value={formData.child_name}
                         onChange={(e) => setFormData({ ...formData, child_name: e.target.value })}
-                        className="mt-2 w-full border border-gray-300 rounded-lg py-2 px-3 focus:ring-primary-500 focus:border-primary-500"
+                        className="mt-2 w-full border border-gray-300 rounded-lg py-2 px-3 focus:ring-[#027e7e] focus:border-[#027e7e]"
                         placeholder="Prénom de l'accompagné"
                       />
                     </div>
@@ -441,8 +444,8 @@ export default function ContactQuestionnaireModal({
                       })}
                       className={`flex-1 p-4 rounded-xl border-2 transition-all ${
                         formData.existing_support.has_support
-                          ? 'border-primary-500 bg-primary-50'
-                          : 'border-gray-200 hover:border-primary-300'
+                          ? 'border-[#027e7e] bg-[#e6f5f5]'
+                          : 'border-gray-200 hover:border-[#3a9e9e]'
                       }`}
                     >
                       <span className="text-2xl mb-1 block">✅</span>
@@ -455,8 +458,8 @@ export default function ContactQuestionnaireModal({
                       })}
                       className={`flex-1 p-4 rounded-xl border-2 transition-all ${
                         !formData.existing_support.has_support
-                          ? 'border-primary-500 bg-primary-50'
-                          : 'border-gray-200 hover:border-primary-300'
+                          ? 'border-[#027e7e] bg-[#e6f5f5]'
+                          : 'border-gray-200 hover:border-[#3a9e9e]'
                       }`}
                     >
                       <span className="text-2xl mb-1 block">❌</span>
@@ -474,7 +477,7 @@ export default function ContactQuestionnaireModal({
                             onClick={() => handleSupportTypeToggle(type.value)}
                             className={`p-3 rounded-lg border text-left transition-all text-sm ${
                               formData.existing_support.types.includes(type.value)
-                                ? 'border-primary-500 bg-primary-50 text-primary-700'
+                                ? 'border-[#027e7e] bg-[#e6f5f5] text-[#027e7e]'
                                 : 'border-gray-200 hover:border-gray-300 text-gray-700'
                             }`}
                           >
@@ -508,8 +511,8 @@ export default function ContactQuestionnaireModal({
                           onClick={() => handleAccompanimentToggle(type.value)}
                           className={`p-3 rounded-xl border-2 text-left transition-all ${
                             formData.needs.accompaniment_types.includes(type.value)
-                              ? 'border-primary-500 bg-primary-50'
-                              : 'border-gray-200 hover:border-primary-300'
+                              ? 'border-[#027e7e] bg-[#e6f5f5]'
+                              : 'border-gray-200 hover:border-[#3a9e9e]'
                           }`}
                         >
                           <p className="font-medium text-gray-900">{type.label}</p>
@@ -528,7 +531,7 @@ export default function ContactQuestionnaireModal({
                           onClick={() => handleObjectiveToggle(obj.value)}
                           className={`p-3 rounded-lg border text-left transition-all flex items-center gap-2 ${
                             formData.needs.objectives.includes(obj.value)
-                              ? 'border-primary-500 bg-primary-50 text-primary-700'
+                              ? 'border-[#027e7e] bg-[#e6f5f5] text-[#027e7e]'
                               : 'border-gray-200 hover:border-gray-300 text-gray-700'
                           }`}
                         >
@@ -565,8 +568,8 @@ export default function ContactQuestionnaireModal({
                           })}
                           className={`p-3 rounded-xl border-2 text-center transition-all ${
                             formData.modalities.location === loc.value
-                              ? 'border-primary-500 bg-primary-50'
-                              : 'border-gray-200 hover:border-primary-300'
+                              ? 'border-[#027e7e] bg-[#e6f5f5]'
+                              : 'border-gray-200 hover:border-[#3a9e9e]'
                           }`}
                         >
                           <span className="text-2xl block mb-1">{loc.icon}</span>
@@ -588,7 +591,7 @@ export default function ContactQuestionnaireModal({
                           })}
                           className={`w-full p-3 rounded-lg border text-left transition-all ${
                             formData.modalities.frequency === freq.value
-                              ? 'border-primary-500 bg-primary-50 text-primary-700'
+                              ? 'border-[#027e7e] bg-[#e6f5f5] text-[#027e7e]'
                               : 'border-gray-200 hover:border-gray-300 text-gray-700'
                           }`}
                         >
@@ -607,7 +610,7 @@ export default function ContactQuestionnaireModal({
                           onClick={() => handleAvailabilityToggle(slot.value)}
                           className={`p-3 rounded-lg border text-center transition-all text-sm ${
                             formData.modalities.availability.includes(slot.value)
-                              ? 'border-primary-500 bg-primary-50 text-primary-700'
+                              ? 'border-[#027e7e] bg-[#e6f5f5] text-[#027e7e]'
                               : 'border-gray-200 hover:border-gray-300 text-gray-700'
                           }`}
                         >
@@ -635,7 +638,7 @@ export default function ContactQuestionnaireModal({
                     value={formData.message}
                     onChange={(e) => setFormData({ ...formData, message: e.target.value })}
                     rows={5}
-                    className="w-full border border-gray-300 rounded-xl py-3 px-4 focus:ring-primary-500 focus:border-primary-500"
+                    className="w-full border border-gray-300 rounded-xl py-3 px-4 focus:ring-[#027e7e] focus:border-[#027e7e]"
                     placeholder="Présentez-vous, expliquez votre situation, posez vos questions..."
                   />
 
@@ -678,11 +681,12 @@ export default function ContactQuestionnaireModal({
             <button
               onClick={handleNext}
               disabled={!canProceed()}
-              className={`flex-1 px-4 py-3 rounded-xl font-medium transition ${
-                canProceed()
-                  ? 'bg-primary-600 text-white hover:bg-primary-700'
-                  : 'bg-gray-200 text-gray-400 cursor-not-allowed'
-              }`}
+              className="flex-1 px-4 py-3 rounded-xl font-medium transition text-white"
+              style={{
+                backgroundColor: canProceed() ? '#027e7e' : '#e5e7eb',
+                color: canProceed() ? 'white' : '#9ca3af',
+                cursor: canProceed() ? 'pointer' : 'not-allowed'
+              }}
             >
               Suivant
             </button>
@@ -690,7 +694,8 @@ export default function ContactQuestionnaireModal({
             <button
               onClick={handleSubmit}
               disabled={submitting}
-              className="flex-1 px-4 py-3 bg-green-600 text-white rounded-xl hover:bg-green-700 font-medium transition disabled:opacity-50"
+              className="flex-1 px-4 py-3 text-white rounded-xl font-medium transition disabled:opacity-50"
+              style={{ backgroundColor: '#027e7e' }}
             >
               {submitting ? 'Envoi...' : 'Envoyer la demande'}
             </button>

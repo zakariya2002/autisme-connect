@@ -10,8 +10,7 @@ import { signOut } from '@/lib/auth';
 import { Conversation, Message } from '@/types';
 import { canEducatorCreateConversation } from '@/lib/subscription-utils';
 import EducatorNavbar from '@/components/EducatorNavbar';
-import FamilyMobileMenu from '@/components/FamilyMobileMenu';
-import Logo from '@/components/Logo';
+import FamilyNavbar from '@/components/FamilyNavbar';
 import { moderateMessage, generateWarningMessage } from '@/lib/moderation';
 
 export default function MessagesPage() {
@@ -506,31 +505,7 @@ export default function MessagesPage() {
         {userProfile?.role === 'educator' ? (
           <EducatorNavbar profile={userProfile} subscription={subscription} />
         ) : (
-          <nav className="bg-white shadow-sm">
-            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-              <div className="flex justify-between h-16 items-center">
-                <Logo href="/dashboard/family" />
-                <div className="md:hidden">
-                  <FamilyMobileMenu profile={userProfile} onLogout={handleLogout} />
-                </div>
-                <div className="hidden md:flex space-x-4 items-center">
-                  <Link
-                    href="/dashboard/family"
-                    className="inline-flex items-center gap-2 text-white px-6 py-2.5 rounded-xl font-semibold transition-all duration-200 shadow-md hover:shadow-lg hover:opacity-90"
-                    style={{ backgroundColor: '#027e7e' }}
-                  >
-                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
-                    </svg>
-                    Tableau de bord
-                  </Link>
-                  <button onClick={handleLogout} className="text-gray-700 hover:opacity-80 px-3 py-2 font-medium transition" style={{ color: '#027e7e' }}>
-                    Déconnexion
-                  </button>
-                </div>
-              </div>
-            </div>
-          </nav>
+          <FamilyNavbar profile={userProfile} familyId={userProfile?.id} userId={currentUser?.id} />
         )}
       </div>
 

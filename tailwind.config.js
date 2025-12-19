@@ -26,9 +26,19 @@ module.exports = {
           '0%': { transform: 'translateY(100%)', opacity: '0' },
           '100%': { transform: 'translateY(0)', opacity: '1' },
         },
+        'pulse-slow': {
+          '0%, 100%': { opacity: '1' },
+          '50%': { opacity: '0.85' },
+        },
+        'glow': {
+          '0%, 100%': { boxShadow: '0 0 20px rgba(139, 92, 246, 0.4)' },
+          '50%': { boxShadow: '0 0 30px rgba(139, 92, 246, 0.6)' },
+        },
       },
       animation: {
         'slide-up': 'slide-up 0.3s ease-out',
+        'pulse-slow': 'pulse-slow 2s ease-in-out infinite',
+        'glow': 'glow 2s ease-in-out infinite',
       },
     },
   },

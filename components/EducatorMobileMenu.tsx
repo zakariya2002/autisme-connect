@@ -287,7 +287,25 @@ export default function EducatorMobileMenu({ profile: propProfile, isPremium, on
                 Mon diplôme
               </Link>
 
-              {/* 7. Abonnement / Passer Pro */}
+              {/* 7. Mes articles */}
+              <Link
+                href="/dashboard/educator/blog"
+                onClick={closeMenu}
+                className={`py-3 px-4 rounded-lg font-medium transition-all duration-200 flex items-center gap-3 ${
+                  pathname?.startsWith('/dashboard/educator/blog')
+                    ? 'text-white'
+                    : 'text-gray-700 hover:text-[#41005c]'
+                }`}
+                style={pathname?.startsWith('/dashboard/educator/blog') ? { backgroundColor: '#5a1a75' } : {}}
+                aria-current={pathname?.startsWith('/dashboard/educator/blog') ? 'page' : undefined}
+              >
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                </svg>
+                Mes articles
+              </Link>
+
+              {/* 8. Abonnement / Passer Pro */}
               {isPremium ? (
                 <Link
                   href="/dashboard/educator/subscription"
@@ -350,6 +368,30 @@ export default function EducatorMobileMenu({ profile: propProfile, isPremium, on
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                 </svg>
                 Découvrir Neuro Care
+              </Link>
+
+              {/* Blog */}
+              <Link
+                href="/blog"
+                onClick={closeMenu}
+                className="py-3 px-4 rounded-lg font-medium transition-all duration-200 flex items-center gap-3 text-gray-700 hover:text-[#41005c]"
+              >
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 8h6v4H7V8z" />
+                </svg>
+                Blog
+              </Link>
+
+              {/* Communauté */}
+              <Link
+                href="/community"
+                onClick={closeMenu}
+                className="py-3 px-4 rounded-lg font-medium transition-all duration-200 flex items-center gap-3 text-gray-700 hover:text-[#41005c]"
+              >
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+                </svg>
+                Communauté
               </Link>
 
               <button
