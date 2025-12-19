@@ -34,13 +34,7 @@ function MiniPostCard({ post }: { post: CommunityPost }) {
     >
       {/* Category badge */}
       <div className="flex items-start justify-between gap-2 mb-3">
-        <span className={`px-2.5 py-1 rounded-full text-xs font-medium ${categoryInfo.color} flex items-center gap-1.5`}>
-          <img
-            src={`/images/icons/category-${post.category}.svg`}
-            alt=""
-            className="w-4 h-4"
-            aria-hidden="true"
-          />
+        <span className={`px-2.5 py-1 rounded-full text-xs font-medium ${categoryInfo.color}`}>
           {categoryInfo.label}
         </span>
         <span className="text-xs text-gray-400">{timeAgo}</span>
@@ -163,24 +157,6 @@ export default function CommunityPreview({ className = '' }: CommunityPreviewPro
           </p>
         </div>
 
-        {/* Category tags */}
-        <div className="flex flex-wrap justify-center gap-3 mb-10">
-          {Object.entries(CATEGORY_INFO).map(([key, info]) => (
-            <span
-              key={key}
-              className={`px-4 py-2 rounded-full text-sm font-medium ${info.color} flex items-center gap-2`}
-            >
-              <img
-                src={`/images/icons/category-${key}.svg`}
-                alt=""
-                className="w-6 h-6"
-                aria-hidden="true"
-              />
-              {info.label}
-            </span>
-          ))}
-        </div>
-
         {/* Posts grid */}
         {posts.length > 0 ? (
           <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6 mb-10">
@@ -208,7 +184,8 @@ export default function CommunityPreview({ className = '' }: CommunityPreviewPro
         <div className="text-center">
           <Link
             href="/community"
-            className="inline-flex items-center gap-2 px-8 py-4 bg-gradient-to-r from-teal-500 to-teal-600 text-white font-semibold rounded-xl hover:from-teal-600 hover:to-teal-700 transition-all shadow-lg hover:shadow-xl"
+            className="inline-flex items-center gap-2 px-8 py-4 text-white font-semibold rounded-xl transition-all shadow-lg hover:shadow-xl hover:opacity-90"
+            style={{ backgroundColor: '#027e7e' }}
           >
             Rejoindre la communauté
             <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
