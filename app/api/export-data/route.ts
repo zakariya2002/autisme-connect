@@ -120,7 +120,7 @@ export async function GET(request: NextRequest) {
       status: 200,
       headers: {
         'Content-Type': 'application/json',
-        'Content-Disposition': `attachment; filename="autisme-connect-export-${new Date().toISOString().split('T')[0]}.json"`,
+        'Content-Disposition': `attachment; filename="neuro-care-export-${new Date().toISOString().split('T')[0]}.json"`,
       },
     });
   } catch (error) {
