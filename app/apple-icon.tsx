@@ -19,7 +19,7 @@ export default function AppleIcon() {
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
-          background: 'linear-gradient(135deg, #3b82f6 0%, #2563eb 100%)',
+          background: 'linear-gradient(135deg, #027e7e 0%, #015f5f 100%)',
         }}
       >
         <div
@@ -31,13 +31,13 @@ export default function AppleIcon() {
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
-            color: '#3b82f6',
+            color: '#027e7e',
             borderRadius: '50%',
             fontWeight: 'bold',
             boxShadow: '0 8px 32px rgba(0, 0, 0, 0.1)',
           }}
         >
-          AC
+          NC
         </div>
       </div>
     ),
