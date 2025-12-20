@@ -15,6 +15,20 @@ interface TimeSlot {
   is_available: boolean;
 }
 
+interface WeeklySchedule {
+  [key: number]: { enabled: boolean; start: string; end: string };
+}
+
+const DAYS_OF_WEEK = [
+  { id: 1, name: 'Lundi', short: 'Lun' },
+  { id: 2, name: 'Mardi', short: 'Mar' },
+  { id: 3, name: 'Mercredi', short: 'Mer' },
+  { id: 4, name: 'Jeudi', short: 'Jeu' },
+  { id: 5, name: 'Vendredi', short: 'Ven' },
+  { id: 6, name: 'Samedi', short: 'Sam' },
+  { id: 0, name: 'Dimanche', short: 'Dim' },
+];
+
 export default function EducatorAvailability() {
   const router = useRouter();
   const [profile, setProfile] = useState<any>(null);
@@ -24,10 +38,27 @@ export default function EducatorAvailability() {
   const [saving, setSaving] = useState(false);
   const [message, setMessage] = useState<{ type: 'success' | 'error'; text: string } | null>(null);
 
-  // Form state
+  // Form state - ajout individuel
   const [selectedDate, setSelectedDate] = useState('');
   const [startTime, setStartTime] = useState('09:00');
   const [endTime, setEndTime] = useState('17:00');
+
+  // Form state - planning hebdomadaire
+  const [showWeeklyForm, setShowWeeklyForm] = useState(false);
+  const [weeklySchedule, setWeeklySchedule] = useState<WeeklySchedule>({
+    1: { enabled: true, start: '09:00', end: '17:00' },  // Lundi
+    2: { enabled: true, start: '09:00', end: '17:00' },  // Mardi
+    3: { enabled: true, start: '09:00', end: '17:00' },  // Mercredi
+    4: { enabled: true, start: '09:00', end: '17:00' },  // Jeudi
+    5: { enabled: true, start: '09:00', end: '17:00' },  // Vendredi
+    6: { enabled: false, start: '09:00', end: '17:00' }, // Samedi
+    0: { enabled: false, start: '09:00', end: '17:00' }, // Dimanche
+  });
+  const [selectedMonth, setSelectedMonth] = useState(() => {
+    const now = new Date();
+    return `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}`;
+  });
+  const [savingWeekly, setSavingWeekly] = useState(false);
 
   useEffect(() => {
     fetchData();
@@ -193,6 +224,93 @@ export default function EducatorAvailability() {
     }
   };
 
+  // Générer les dates d'un mois pour un jour de semaine donné
+  const getDatesForDayOfWeek = (year: number, month: number, dayOfWeek: number): string[] => {
+    const dates: string[] = [];
+    const date = new Date(year, month, 1);
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+
+    while (date.getMonth() === month) {
+      if (date.getDay() === dayOfWeek && date >= today) {
+        dates.push(date.toISOString().split('T')[0]);
+      }
+      date.setDate(date.getDate() + 1);
+    }
+    return dates;
+  };
+
+  // Appliquer le planning hebdomadaire au mois sélectionné
+  const handleApplyWeeklySchedule = async () => {
+    if (!profile) return;
+
+    const enabledDays = Object.entries(weeklySchedule).filter(([_, config]) => config.enabled);
+    if (enabledDays.length === 0) {
+      setMessage({ type: 'error', text: 'Veuillez sélectionner au moins un jour' });
+      return;
+    }
+
+    setSavingWeekly(true);
+    setMessage(null);
+
+    try {
+      const [yearStr, monthStr] = selectedMonth.split('-');
+      const year = parseInt(yearStr);
+      const month = parseInt(monthStr) - 1; // JavaScript months are 0-indexed
+
+      const newAvailabilities: {
+        educator_id: string;
+        availability_date: string;
+        start_time: string;
+        end_time: string;
+        is_available: boolean;
+      }[] = [];
+
+      // Pour chaque jour activé
+      for (const [dayId, config] of enabledDays) {
+        const dayOfWeek = parseInt(dayId);
+        const dates = getDatesForDayOfWeek(year, month, dayOfWeek);
+
+        for (const date of dates) {
+          // Vérifier si une disponibilité existe déjà pour cette date
+          const existingAvail = availabilities.find(a => a.availability_date === date);
+          if (!existingAvail) {
+            newAvailabilities.push({
+              educator_id: profile.id,
+              availability_date: date,
+              start_time: config.start,
+              end_time: config.end,
+              is_available: true,
+            });
+          }
+        }
+      }
+
+      if (newAvailabilities.length === 0) {
+        setMessage({ type: 'error', text: 'Toutes les dates sont déjà configurées pour ce mois' });
+        setSavingWeekly(false);
+        return;
+      }
+
+      const { data, error } = await supabase
+        .from('educator_availability')
+        .insert(newAvailabilities)
+        .select();
+
+      if (error) throw error;
+
+      // Rafraîchir les données
+      await fetchData();
+      setMessage({ type: 'success', text: `${newAvailabilities.length} créneaux ajoutés avec succès !` });
+      setShowWeeklyForm(false);
+    } catch (error: any) {
+      console.error('Erreur planning hebdomadaire:', error);
+      setMessage({ type: 'error', text: 'Erreur lors de l\'application du planning' });
+    } finally {
+      setSavingWeekly(false);
+    }
+  };
+
   const isPremium = subscription && ['active', 'trialing'].includes(subscription.status);
 
   const handleLogout = async () => {
@@ -342,7 +460,127 @@ export default function EducatorAvailability() {
           >
             {saving ? 'Ajout en cours...' : '+ Ajouter ce créneau'}
           </button>
+
+          {/* Séparateur */}
+          <div className="flex items-center gap-3 my-4">
+            <div className="flex-1 h-px bg-gray-200"></div>
+            <span className="text-xs text-gray-400">ou</span>
+            <div className="flex-1 h-px bg-gray-200"></div>
+          </div>
+
+          {/* Bouton planning hebdomadaire */}
+          <button
+            onClick={() => setShowWeeklyForm(!showWeeklyForm)}
+            className="w-full py-3 px-4 rounded-xl transition font-medium text-sm border-2 hover:opacity-90"
+            style={{
+              borderColor: '#41005c',
+              color: '#41005c',
+              backgroundColor: showWeeklyForm ? '#faf5ff' : 'transparent'
+            }}
+          >
+            {showWeeklyForm ? 'Masquer le planning hebdomadaire' : 'Configurer un planning hebdomadaire'}
+          </button>
         </div>
+
+        {/* Formulaire planning hebdomadaire */}
+        {showWeeklyForm && (
+          <div className="bg-white rounded-2xl shadow-sm p-3 sm:p-5 mb-4 sm:mb-6 border border-gray-100">
+            <h2 className="text-sm sm:text-lg font-semibold mb-3 sm:mb-4" style={{ color: '#41005c' }}>
+              Planning hebdomadaire
+            </h2>
+            <p className="text-xs text-gray-500 mb-4">
+              Configurez vos horaires par jour de la semaine et appliquez-les à tout un mois.
+            </p>
+
+            {/* Sélecteur de mois */}
+            <div className="mb-4">
+              <label htmlFor="month-selector" className="block text-xs font-medium text-gray-600 mb-1">
+                Mois à configurer
+              </label>
+              <input
+                id="month-selector"
+                type="month"
+                value={selectedMonth}
+                onChange={(e) => setSelectedMonth(e.target.value)}
+                min={`${new Date().getFullYear()}-${String(new Date().getMonth() + 1).padStart(2, '0')}`}
+                className="w-full px-3 py-3 sm:py-2.5 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 text-base"
+                style={{ '--tw-ring-color': '#41005c', fontSize: '16px' } as React.CSSProperties}
+              />
+            </div>
+
+            {/* Configuration par jour */}
+            <div className="space-y-3 mb-4">
+              {DAYS_OF_WEEK.map(day => (
+                <div
+                  key={day.id}
+                  className="p-3 rounded-xl border transition"
+                  style={{
+                    borderColor: weeklySchedule[day.id].enabled ? '#d8b4fe' : '#e5e7eb',
+                    backgroundColor: weeklySchedule[day.id].enabled ? '#faf5ff' : '#f9fafb'
+                  }}
+                >
+                  <div className="flex items-center gap-3">
+                    {/* Checkbox jour */}
+                    <label className="flex items-center gap-2 cursor-pointer flex-shrink-0">
+                      <input
+                        type="checkbox"
+                        checked={weeklySchedule[day.id].enabled}
+                        onChange={(e) => setWeeklySchedule(prev => ({
+                          ...prev,
+                          [day.id]: { ...prev[day.id], enabled: e.target.checked }
+                        }))}
+                        className="w-4 h-4 rounded border-gray-300 focus:ring-2"
+                        style={{ accentColor: '#41005c' }}
+                      />
+                      <span className={`text-xs sm:text-sm font-medium ${weeklySchedule[day.id].enabled ? 'text-gray-900' : 'text-gray-400'}`}>
+                        <span className="sm:hidden">{day.short}</span>
+                        <span className="hidden sm:inline">{day.name}</span>
+                      </span>
+                    </label>
+
+                    {/* Horaires */}
+                    {weeklySchedule[day.id].enabled && (
+                      <div className="flex items-center gap-2 flex-1 justify-end">
+                        <input
+                          type="time"
+                          value={weeklySchedule[day.id].start}
+                          onChange={(e) => setWeeklySchedule(prev => ({
+                            ...prev,
+                            [day.id]: { ...prev[day.id], start: e.target.value }
+                          }))}
+                          className="px-2 py-1.5 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 text-xs sm:text-sm text-center w-20 sm:w-24"
+                          style={{ '--tw-ring-color': '#41005c', fontSize: '16px' } as React.CSSProperties}
+                        />
+                        <span className="text-gray-400 text-xs">à</span>
+                        <input
+                          type="time"
+                          value={weeklySchedule[day.id].end}
+                          onChange={(e) => setWeeklySchedule(prev => ({
+                            ...prev,
+                            [day.id]: { ...prev[day.id], end: e.target.value }
+                          }))}
+                          className="px-2 py-1.5 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 text-xs sm:text-sm text-center w-20 sm:w-24"
+                          style={{ '--tw-ring-color': '#41005c', fontSize: '16px' } as React.CSSProperties}
+                        />
+                      </div>
+                    )}
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            {/* Bouton appliquer */}
+            <button
+              onClick={handleApplyWeeklySchedule}
+              disabled={savingWeekly}
+              className="w-full text-white py-3 px-4 rounded-xl transition disabled:opacity-50 disabled:cursor-not-allowed font-medium hover:opacity-90 text-sm"
+              style={{ backgroundColor: '#027e7e' }}
+              aria-busy={savingWeekly}
+            >
+              {savingWeekly ? 'Application en cours...' : 'Appliquer au mois sélectionné'}
+            </button>
+          </div>
+        )}
 
         {/* Statistiques rapides */}
         <div className="grid grid-cols-2 gap-2 sm:gap-3 mb-4 sm:mb-6">

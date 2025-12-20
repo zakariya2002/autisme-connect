@@ -32,9 +32,6 @@ const tndTypeOptions = [
   { value: 'dysorthographie', label: 'Dysorthographie', fullName: 'Trouble de l\'écriture' },
   { value: 'dysphasie', label: 'Dysphasie', fullName: 'Trouble du langage oral' },
   { value: 'tdi', label: 'TDI', fullName: 'Trouble du Développement Intellectuel' },
-  { value: 'tdc', label: 'TDC', fullName: 'Trouble Développemental de la Coordination' },
-  { value: 'hpi', label: 'HPI', fullName: 'Haut Potentiel Intellectuel' },
-  { value: 'trouble_anxieux', label: 'Trouble anxieux', fullName: 'Trouble anxieux' },
   { value: 'autre', label: 'Autre', fullName: 'Autre trouble' },
 ];
 
@@ -47,9 +44,6 @@ const tndTypeLabels: Record<string, string> = {
   dysorthographie: 'Dysorthographie',
   dysphasie: 'Dysphasie',
   tdi: 'TDI',
-  tdc: 'TDC',
-  hpi: 'HPI',
-  trouble_anxieux: 'Trouble anxieux',
   autre: 'Autre',
 };
 
@@ -546,8 +540,8 @@ export default function ChildrenPage() {
 
       {/* Modal Ajout/Edition */}
       {showAddModal && (
-        <div className="fixed inset-0 bg-black/50 flex items-end sm:items-center justify-center z-50 sm:p-4">
-          <div className="bg-white rounded-t-2xl sm:rounded-2xl shadow-xl w-full sm:max-w-2xl max-h-[90vh] overflow-y-auto" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+        <div className="fixed inset-0 bg-black/50 flex items-stretch sm:items-center justify-center z-50 sm:p-4">
+          <div className="bg-white sm:rounded-2xl shadow-xl w-full sm:max-w-2xl h-full sm:h-auto sm:max-h-[90vh] overflow-y-auto" role="dialog" aria-modal="true" aria-labelledby="modal-title">
             <div className="px-4 sm:px-6 py-4 border-b border-gray-100 flex items-center justify-between sticky top-0 bg-white z-10">
               <div className="flex items-center gap-3">
                 <div className="w-10 h-10 rounded-xl flex items-center justify-center" style={{ backgroundColor: '#027e7e' }}>
@@ -583,7 +577,7 @@ export default function ChildrenPage() {
                     value={formData.first_name}
                     onChange={(e) => setFormData({ ...formData, first_name: e.target.value })}
                     className="w-full border border-gray-300 rounded-lg py-3 px-4 focus:ring-2 focus:outline-none focus:border-transparent text-base"
-                    style={{ '--tw-ring-color': '#027e7e' } as any}
+                    style={{ '--tw-ring-color': '#027e7e', fontSize: '16px' } as any}
                     placeholder="Prénom du proche"
                   />
                 </div>
@@ -594,7 +588,7 @@ export default function ChildrenPage() {
                     value={formData.birth_date}
                     onChange={(e) => setFormData({ ...formData, birth_date: e.target.value })}
                     className="w-full border border-gray-300 rounded-lg py-3 px-4 focus:ring-2 focus:outline-none focus:border-transparent text-base"
-                    style={{ '--tw-ring-color': '#027e7e' } as any}
+                    style={{ '--tw-ring-color': '#027e7e', fontSize: '16px' } as any}
                   />
                 </div>
               </div>
@@ -607,7 +601,7 @@ export default function ChildrenPage() {
                   value={formData.description}
                   onChange={(e) => setFormData({ ...formData, description: e.target.value })}
                   className="w-full border border-gray-300 rounded-lg py-3 px-4 focus:ring-2 focus:outline-none focus:border-transparent text-base"
-                  style={{ '--tw-ring-color': '#027e7e' } as any}
+                  style={{ '--tw-ring-color': '#027e7e', fontSize: '16px' } as any}
                   placeholder="Personnalité, centres d'intérêt, forces..."
                 />
               </div>
@@ -660,7 +654,7 @@ export default function ChildrenPage() {
                       value={formData.tnd_other}
                       onChange={(e) => setFormData({ ...formData, tnd_other: e.target.value })}
                       className="w-full border rounded-lg py-3 px-4 focus:ring-2 focus:outline-none focus:border-transparent text-base"
-                      style={{ borderColor: '#f0879f', '--tw-ring-color': '#f0879f' } as any}
+                      style={{ borderColor: '#f0879f', '--tw-ring-color': '#f0879f', fontSize: '16px' } as any}
                       placeholder="Ex: Syndrome de Gilles de la Tourette..."
                     />
                   </div>
@@ -699,7 +693,8 @@ export default function ChildrenPage() {
                   rows={2}
                   value={formData.accompaniment_goals}
                   onChange={(e) => setFormData({ ...formData, accompaniment_goals: e.target.value })}
-                  className="w-full border border-gray-300 rounded-lg py-2.5 px-3 focus:ring-primary-500 focus:border-primary-500 text-base"
+                  className="w-full border border-gray-300 rounded-lg py-2.5 px-3 focus:ring-2 focus:outline-none text-base"
+                  style={{ '--tw-ring-color': '#027e7e', fontSize: '16px' } as any}
                   placeholder="Quels sont vos objectifs pour cet accompagnement ?"
                 />
               </div>
@@ -786,19 +781,20 @@ export default function ChildrenPage() {
               </div>
 
               {/* Boutons */}
-              <div className="flex flex-col-reverse sm:flex-row justify-end gap-2 sm:gap-3 pt-4 border-t border-gray-100 sticky bottom-0 bg-white pb-2 sm:pb-0">
+              <div className="flex flex-col-reverse sm:flex-row justify-end gap-2 sm:gap-3 pt-4 border-t border-gray-100 sticky bottom-0 bg-white pb-6 sm:pb-0" style={{ paddingBottom: 'max(1.5rem, env(safe-area-inset-bottom))' }}>
                 <button
                   type="button"
                   onClick={closeModal}
-                  className="w-full sm:w-auto px-6 py-3 text-gray-700 bg-gray-100 rounded-xl hover:bg-gray-200 transition font-semibold"
+                  className="w-full sm:w-auto px-6 py-3.5 text-gray-700 bg-gray-100 rounded-xl hover:bg-gray-200 transition font-semibold text-base"
+                  style={{ fontSize: '16px' }}
                 >
                   Annuler
                 </button>
                 <button
                   type="submit"
                   disabled={saving}
-                  className="w-full sm:w-auto px-6 py-3 text-white rounded-xl hover:opacity-90 disabled:opacity-50 transition font-semibold shadow-md"
-                  style={{ backgroundColor: '#027e7e' }}
+                  className="w-full sm:w-auto px-6 py-3.5 text-white rounded-xl hover:opacity-90 disabled:opacity-50 transition font-semibold shadow-md text-base"
+                  style={{ backgroundColor: '#027e7e', fontSize: '16px' }}
                 >
                   {saving ? 'Enregistrement...' : (editingChild ? 'Enregistrer' : 'Ajouter')}
                 </button>

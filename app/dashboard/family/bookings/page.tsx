@@ -124,22 +124,29 @@ export default function FamilyBookingsPage() {
     }
   };
 
-  const updateAppointmentStatus = async (appointmentId: string, status: AppointmentStatus) => {
+  const [cancelLoading, setCancelLoading] = useState(false);
+
+  const handleCancelAppointment = async (appointmentId: string, isLateCancel: boolean) => {
+    setCancelLoading(true);
     try {
-      const { error } = await supabase
-        .from('appointments')
-        .update({ status })
-        .eq('id', appointmentId);
+      const response = await fetch(`/api/appointments/${appointmentId}/cancel`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ cancelledBy: 'family' })
+      });
 
-      if (error) throw error;
+      const data = await response.json();
 
-      const messages: Record<string, string> = {
-        cancelled: 'Rendez-vous annulé.',
-      };
-      alert(messages[status] || 'Statut mis à jour.');
+      if (!response.ok) {
+        throw new Error(data.error || 'Erreur lors de l\'annulation');
+      }
+
+      alert(data.message);
       fetchAppointments();
     } catch (error: any) {
       alert('Erreur: ' + error.message);
+    } finally {
+      setCancelLoading(false);
     }
   };
 
@@ -440,8 +447,13 @@ export default function FamilyBookingsPage() {
         {appointment.status === 'pending' && (
           <div className="mt-4 pt-3 border-t border-gray-100 flex gap-2">
             <button
-              onClick={() => updateAppointmentStatus(appointment.id, 'cancelled')}
-              className="w-full px-3 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 text-sm font-medium transition"
+              onClick={() => {
+                if (confirm('Annuler cette demande de rendez-vous ?')) {
+                  handleCancelAppointment(appointment.id, false);
+                }
+              }}
+              disabled={cancelLoading}
+              className="w-full px-3 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 text-sm font-medium transition disabled:opacity-50"
             >
               Annuler la demande
             </button>
@@ -478,22 +490,34 @@ export default function FamilyBookingsPage() {
             {cancelInfo.canCancel ? (
               <button
                 onClick={() => {
-                  if (confirm('Êtes-vous sûr de vouloir annuler ce rendez-vous ?')) {
-                    updateAppointmentStatus(appointment.id, 'cancelled');
+                  if (confirm('Êtes-vous sûr de vouloir annuler ce rendez-vous ?\n\nAnnulation gratuite (plus de 48h avant le RDV).')) {
+                    handleCancelAppointment(appointment.id, false);
                   }
                 }}
-                className="w-full px-3 py-2 bg-red-50 text-red-700 rounded-lg hover:bg-red-100 text-sm font-medium transition"
+                disabled={cancelLoading}
+                className="w-full px-3 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 text-sm font-medium transition disabled:opacity-50"
               >
-                Annuler le rendez-vous
+                {cancelLoading ? 'Annulation...' : 'Annuler le rendez-vous'}
               </button>
             ) : (
-              <div className="text-center">
-                <p className="text-xs text-gray-500 bg-gray-50 rounded-lg p-2">
-                  Annulation impossible moins de 48h avant le rendez-vous
-                  <br />
-                  <span className="text-gray-400">({cancelInfo.hoursRemaining}h restantes)</span>
-                </p>
-              </div>
+              <button
+                onClick={() => {
+                  if (confirm(`⚠️ ATTENTION : Annulation tardive\n\nVous êtes à moins de 48h du rendez-vous.\n\n50% du montant sera prélevé (${((appointment as any).price / 100 * 0.5).toFixed(2)}€).\n\nConfirmer l'annulation ?`)) {
+                    handleCancelAppointment(appointment.id, true);
+                  }
+                }}
+                disabled={cancelLoading}
+                className="w-full px-3 py-2 bg-red-50 text-red-700 rounded-lg hover:bg-red-100 text-sm font-medium transition disabled:opacity-50"
+              >
+                {cancelLoading ? 'Annulation...' : (
+                  <>
+                    Annuler (50% de frais)
+                    <span className="block text-xs text-red-500 mt-0.5">
+                      Moins de 48h avant le RDV
+                    </span>
+                  </>
+                )}
+              </button>
             )}
           </div>
         )}

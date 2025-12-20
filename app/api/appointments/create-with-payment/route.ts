@@ -1,11 +1,36 @@
 import { NextResponse } from 'next/server';
 import Stripe from 'stripe';
 import { createClient } from '@supabase/supabase-js';
+import { Resend } from 'resend';
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY || '');
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
 const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY!;
 const supabase = createClient(supabaseUrl, supabaseServiceKey);
+const resend = new Resend(process.env.RESEND_API_KEY);
+
+// Fonction pour générer un code PIN sécurisé
+function generateSecurePIN(): string {
+  const forbidden = [
+    '0000', '1111', '2222', '3333', '4444',
+    '5555', '6666', '7777', '8888', '9999',
+    '1234', '4321', '0123', '9876'
+  ];
+
+  let pin: string;
+  do {
+    pin = Math.floor(1000 + Math.random() * 9000).toString();
+  } while (forbidden.includes(pin));
+
+  return pin;
+}
+
+// Fonction pour ajouter des heures à une date
+function addHours(date: Date, hours: number): Date {
+  const result = new Date(date);
+  result.setHours(result.getHours() + hours);
+  return result;
+}
 
 // CORS headers for mobile app
 const corsHeaders = {
@@ -175,8 +200,15 @@ export async function POST(request: Request) {
 
     console.log('✅ Session Stripe créée:', session.id);
 
-    // Créer le rendez-vous IMMÉDIATEMENT
+    // Créer le rendez-vous IMMÉDIATEMENT avec statut ACCEPTED
     try {
+      // Générer le code PIN
+      const pinCode = generateSecurePIN();
+      const scheduledDate = new Date(`${appointmentDate}T${startTime}`);
+      const pinExpiresAt = addHours(scheduledDate, 2);
+
+      console.log('🔐 Code PIN généré:', pinCode);
+
       const { data: appointment, error: appointmentError } = await supabase
         .from('appointments')
         .insert({
@@ -190,8 +222,12 @@ export async function POST(request: Request) {
           address: address || null,
           family_notes: familyNotes || null,
           price: priceInCents, // En centimes
-          status: 'pending', // En attente d'acceptation par l'éducateur
+          status: 'accepted', // Automatiquement accepté
           payment_status: 'authorized', // Paiement autorisé (à capturer après la séance)
+          pin_code: pinCode,
+          pin_code_expires_at: pinExpiresAt.toISOString(),
+          pin_code_attempts: 0,
+          pin_code_validated: false
         })
         .select()
         .single();
@@ -199,7 +235,144 @@ export async function POST(request: Request) {
       if (appointmentError) {
         console.error('❌ Erreur création RDV immédiate:', appointmentError);
       } else {
-        console.log('✅ Rendez-vous créé immédiatement:', appointment.id);
+        console.log('✅ Rendez-vous créé et accepté immédiatement:', appointment.id);
+
+        // Formater la date pour les emails
+        const formattedDate = new Intl.DateTimeFormat('fr-FR', {
+          weekday: 'long',
+          year: 'numeric',
+          month: 'long',
+          day: 'numeric',
+          hour: '2-digit',
+          minute: '2-digit'
+        }).format(scheduledDate);
+
+        // Envoyer email à la famille avec le code PIN
+        try {
+          await resend.emails.send({
+            from: process.env.RESEND_FROM_EMAIL!,
+            to: familyEmail,
+            subject: '✅ Rendez-vous confirmé - Votre code PIN',
+            html: `
+              <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
+                <h2 style="color: #027e7e;">✅ Votre rendez-vous est confirmé !</h2>
+
+                <div style="background: #f3f4f6; padding: 20px; border-radius: 8px; margin: 20px 0;">
+                  <p style="margin: 5px 0;"><strong>📅 Date :</strong> ${formattedDate}</p>
+                  <p style="margin: 5px 0;"><strong>👨‍🏫 Professionnel :</strong> ${educatorProfile.first_name} ${educatorProfile.last_name}</p>
+                  ${address ? `<p style="margin: 5px 0;"><strong>📍 Lieu :</strong> ${address}</p>` : ''}
+                  ${locationType === 'online' ? '<p style="margin: 5px 0;"><strong>💻 Mode :</strong> En ligne</p>' : ''}
+                </div>
+
+                <div style="background: #d1fae5; border-left: 4px solid #027e7e; padding: 20px; margin: 20px 0;">
+                  <h3 style="margin-top: 0; color: #027e7e;">🔐 Votre code PIN</h3>
+                  <div style="background: white; padding: 20px; border-radius: 8px; text-align: center; margin: 15px 0;">
+                    <div style="font-size: 48px; font-weight: bold; letter-spacing: 10px; color: #027e7e;">
+                      ${pinCode}
+                    </div>
+                  </div>
+
+                  <div style="margin-top: 15px;">
+                    <p style="margin: 10px 0;"><strong>⚠️ IMPORTANT :</strong></p>
+                    <ul style="margin: 5px 0; padding-left: 20px;">
+                      <li>Donnez ce code au professionnel au <strong>début du rendez-vous</strong></li>
+                      <li>Ce code permet de démarrer la séance et déclencher le paiement</li>
+                      <li>Ne partagez ce code avec personne d'autre</li>
+                      <li>Le code expire 2h après l'heure de début prévue</li>
+                    </ul>
+                  </div>
+                </div>
+
+                <div style="background: #fef3c7; border-left: 4px solid #f59e0b; padding: 15px; margin: 20px 0;">
+                  <p style="margin: 5px 0; color: #92400e;"><strong>💳 Conditions de paiement :</strong></p>
+                  <ul style="margin: 5px 0; padding-left: 20px; color: #92400e; font-size: 14px;">
+                    <li>Le paiement est prélevé <strong>uniquement après la réalisation</strong> du RDV</li>
+                    <li>Annulation gratuite jusqu'à <strong>48h avant</strong></li>
+                    <li>Annulation après 48h : 50% de la prestation sera débité</li>
+                  </ul>
+                </div>
+
+                <div style="text-align: center; margin: 30px 0;">
+                  <a href="${appUrl}/dashboard/family"
+                     style="background: #027e7e; color: white; padding: 12px 24px; text-decoration: none; border-radius: 6px; display: inline-block;">
+                    Voir mes rendez-vous
+                  </a>
+                </div>
+
+                <p style="font-size: 12px; color: #9ca3af; text-align: center; margin-top: 30px;">
+                  NeuroCare - Plateforme de mise en relation
+                </p>
+              </div>
+            `
+          });
+          console.log('✅ Email famille avec PIN envoyé');
+        } catch (emailError) {
+          console.error('⚠️ Erreur envoi email famille:', emailError);
+        }
+
+        // Envoyer email à l'éducateur (notification de nouveau RDV)
+        try {
+          const { data: educatorUserData } = await supabase.auth.admin.getUserById(
+            educatorProfile.user_id
+          );
+          const educatorEmail = educatorUserData?.user?.email;
+
+          if (educatorEmail) {
+            await resend.emails.send({
+              from: process.env.RESEND_FROM_EMAIL!,
+              to: educatorEmail,
+              subject: '🎉 Nouveau rendez-vous confirmé',
+              html: `
+                <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
+                  <h2 style="color: #027e7e;">🎉 Nouveau rendez-vous !</h2>
+
+                  <div style="background: #f3f4f6; padding: 20px; border-radius: 8px; margin: 20px 0;">
+                    <p style="margin: 5px 0;"><strong>📅 Date :</strong> ${formattedDate}</p>
+                    <p style="margin: 5px 0;"><strong>👨‍👩‍👦 Famille :</strong> ${familyProfile.first_name} ${familyProfile.last_name}</p>
+                    ${address ? `<p style="margin: 5px 0;"><strong>📍 Lieu :</strong> ${address}</p>` : ''}
+                    ${locationType === 'online' ? '<p style="margin: 5px 0;"><strong>💻 Mode :</strong> En ligne</p>' : ''}
+                  </div>
+
+                  <div style="background: #d1fae5; border-left: 4px solid #027e7e; padding: 20px; margin: 20px 0;">
+                    <h3 style="margin-top: 0; color: #027e7e;">🔐 Code PIN requis</h3>
+                    <p style="margin: 10px 0;">
+                      Au début du rendez-vous, demandez le <strong>code PIN à 4 chiffres</strong> à la famille.
+                    </p>
+                    <p style="margin: 10px 0;">
+                      Ce code permet de :
+                    </p>
+                    <ul style="margin: 5px 0; padding-left: 20px;">
+                      <li>Confirmer la présence de la famille</li>
+                      <li>Démarrer officiellement la séance</li>
+                      <li>Déclencher le paiement en fin de séance</li>
+                    </ul>
+                  </div>
+
+                  <div style="background: #f9fafb; padding: 15px; border-radius: 8px; margin: 20px 0;">
+                    <p style="margin: 5px 0;"><strong>💰 Rémunération :</strong> ${(price * 0.88).toFixed(2)}€ net</p>
+                    <p style="font-size: 14px; color: #6b7280; margin: 5px 0;">
+                      (${price.toFixed(2)}€ - 12% commission incluant frais bancaires)
+                    </p>
+                  </div>
+
+                  <div style="text-align: center; margin: 30px 0;">
+                    <a href="${appUrl}/dashboard/educator/appointments"
+                       style="background: #027e7e; color: white; padding: 12px 24px; text-decoration: none; border-radius: 6px; display: inline-block;">
+                      Voir mes rendez-vous
+                    </a>
+                  </div>
+
+                  <p style="font-size: 12px; color: #9ca3af; text-align: center; margin-top: 30px;">
+                    NeuroCare - Plateforme de mise en relation
+                  </p>
+                </div>
+              `
+            });
+            console.log('✅ Email éducateur envoyé');
+          }
+        } catch (emailError) {
+          console.error('⚠️ Erreur envoi email éducateur:', emailError);
+        }
       }
     } catch (err) {
       console.error('❌ Erreur création RDV:', err);

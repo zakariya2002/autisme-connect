@@ -180,26 +180,63 @@ export default function BookAppointmentPage({ params }: { params: { id: string }
     }
   };
 
-  // Obtenir les dates avec disponibilités
+  // Obtenir les dates avec disponibilités (vérifie s'il reste des créneaux libres)
   const getAvailableDatesSet = () => {
     const dates = new Set<string>();
-    availabilities.forEach(avail => {
-      if (!isSlotFullyBooked(avail.availability_date, avail.start_time, avail.end_time)) {
-        dates.add(avail.availability_date);
+    // Pour chaque date unique dans les disponibilités
+    const uniqueDates = [...new Set(availabilities.map(a => a.availability_date))];
+
+    uniqueDates.forEach(date => {
+      // Vérifier s'il reste au moins un créneau d'1h disponible pour cette date
+      const slotsForDate = getAvailableHourSlotsForDate(date);
+      if (slotsForDate.length > 0) {
+        dates.add(date);
       }
     });
     return dates;
   };
 
-  const isSlotFullyBooked = (date: string, startTime: string, endTime: string) => {
-    return appointments.some(appt => {
-      if (appt.appointment_date !== date) return false;
-      const slotStart = timeToMinutes(startTime);
-      const slotEnd = timeToMinutes(endTime);
-      const apptStart = timeToMinutes(appt.start_time);
-      const apptEnd = timeToMinutes(appt.end_time);
-      return (slotStart < apptEnd && slotEnd > apptStart);
+  // Calculer les créneaux d'1h disponibles pour une date (sans les rendez-vous)
+  const getAvailableHourSlotsForDate = (date: string): string[] => {
+    const dayAvail = availabilities.filter(a => a.availability_date === date);
+    const availableSlots: string[] = [];
+
+    dayAvail.forEach(avail => {
+      const [startHour, startMin] = avail.start_time.split(':').map(Number);
+      const [endHour, endMin] = avail.end_time.split(':').map(Number);
+
+      let currentHour = startHour;
+      let currentMin = startMin;
+
+      while (currentHour < endHour || (currentHour === endHour && currentMin < endMin)) {
+        const slotStart = `${String(currentHour).padStart(2, '0')}:${String(currentMin).padStart(2, '0')}`;
+        const nextHour = currentHour + 1;
+        const slotEnd = `${String(nextHour).padStart(2, '0')}:${String(currentMin).padStart(2, '0')}`;
+
+        // Vérifier que le créneau ne dépasse pas la fin de disponibilité
+        const slotEndMinutes = timeToMinutes(slotEnd);
+        const availEndMinutes = timeToMinutes(avail.end_time);
+        if (slotEndMinutes > availEndMinutes) break;
+
+        // Vérifier si ce créneau de 1h n'est pas réservé
+        const isBooked = appointments.some(appt => {
+          if (appt.appointment_date !== date) return false;
+          const apptStart = timeToMinutes(appt.start_time);
+          const apptEnd = timeToMinutes(appt.end_time);
+          const slStart = timeToMinutes(slotStart);
+          const slEnd = timeToMinutes(slotEnd);
+          return (slStart < apptEnd && slEnd > apptStart);
+        });
+
+        if (!isBooked) {
+          availableSlots.push(slotStart);
+        }
+
+        currentHour = nextHour;
+      }
     });
+
+    return availableSlots;
   };
 
   const timeToMinutes = (time: string): number => {
@@ -334,12 +371,6 @@ export default function BookAppointmentPage({ params }: { params: { id: string }
 
     if (!selectedDate || selectedSlots.length === 0) {
       setError('Veuillez sélectionner une date et au moins un créneau');
-      return;
-    }
-
-    const totalMinutes = calculateTotalDuration();
-    if (totalMinutes < 120) {
-      setError('La durée minimum est de 2 heures. Veuillez sélectionner plus de créneaux.');
       return;
     }
 
@@ -671,7 +702,7 @@ export default function BookAppointmentPage({ params }: { params: { id: string }
                       })}
                     </h4>
                     <p className="text-xs sm:text-sm text-gray-600 mt-1">
-                      Sélectionnez les créneaux souhaités (minimum 2 heures)
+                      Sélectionnez les créneaux souhaités
                     </p>
                   </div>
 
@@ -728,14 +759,6 @@ export default function BookAppointmentPage({ params }: { params: { id: string }
                               </p>
                             </div>
                           </div>
-                          {calculateTotalDuration() < 120 && (
-                            <p className="text-xs text-orange-600 mt-2 flex items-center gap-1" role="alert">
-                              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
-                              </svg>
-                              Sélectionnez plus de créneaux pour atteindre le minimum de 2h
-                            </p>
-                          )}
                         </div>
                       )}
                     </>
@@ -745,7 +768,7 @@ export default function BookAppointmentPage({ params }: { params: { id: string }
             </div>
 
             {/* Type de rendez-vous et reste du formulaire */}
-            {selectedSlots.length > 0 && calculateTotalDuration() >= 120 && (
+            {selectedSlots.length > 0 && (
               <div className="bg-white rounded-xl shadow-sm p-4 sm:p-6 space-y-6 border border-gray-100">
                 <div>
                   <label className="block text-sm font-semibold text-gray-900 mb-3">
@@ -830,6 +853,42 @@ export default function BookAppointmentPage({ params }: { params: { id: string }
                     className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:border-transparent"
                     style={{ outlineColor: '#027e7e' }}
                   />
+                </div>
+
+                {/* Conditions de paiement et annulation */}
+                <div className="rounded-lg p-4 border" style={{ backgroundColor: '#fffbeb', borderColor: '#fbbf24' }}>
+                  <div className="flex items-start gap-3">
+                    <div className="flex-shrink-0 mt-0.5">
+                      <svg className="w-5 h-5 text-amber-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                      </svg>
+                    </div>
+                    <div>
+                      <h3 className="text-sm font-semibold text-amber-800 mb-2">
+                        Conditions de paiement
+                      </h3>
+                      <ul className="text-xs text-amber-700 space-y-1.5">
+                        <li className="flex items-start gap-2">
+                          <svg className="w-4 h-4 flex-shrink-0 mt-0.5 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                          </svg>
+                          <span>La prestation est prélevée <strong>uniquement après la réalisation du rendez-vous</strong></span>
+                        </li>
+                        <li className="flex items-start gap-2">
+                          <svg className="w-4 h-4 flex-shrink-0 mt-0.5 text-amber-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                          </svg>
+                          <span>Annulation gratuite jusqu&apos;à <strong>48h avant</strong> le rendez-vous</span>
+                        </li>
+                        <li className="flex items-start gap-2">
+                          <svg className="w-4 h-4 flex-shrink-0 mt-0.5 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                          </svg>
+                          <span>Annulation après 48h : <strong>50% de la prestation</strong> sera débité</span>
+                        </li>
+                      </ul>
+                    </div>
+                  </div>
                 </div>
 
                 {/* Informations RGPD */}

@@ -99,7 +99,7 @@ interface Appointment {
   appointment_date: string;
   start_time: string;
   end_time: string;
-  status: 'pending' | 'accepted' | 'rejected' | 'completed' | 'cancelled';
+  status: 'pending' | 'accepted' | 'rejected' | 'completed' | 'cancelled' | 'no_show';
   location_type: 'home' | 'office' | 'online';
   address: string | null;
   notes: string | null;
@@ -108,6 +108,7 @@ interface Appointment {
   rejection_reason: string | null;
   created_at: string;
   started_at: string | null;
+  price: number | null;
   family_first_name: string;
   family_last_name: string;
   family_phone: string;
@@ -127,7 +128,7 @@ export default function EducatorAppointmentsPage() {
   const [profile, setProfile] = useState<any>(null);
   const [subscription, setSubscription] = useState<any>(null);
   const [appointments, setAppointments] = useState<Appointment[]>([]);
-  const [activeFilter, setActiveFilter] = useState<'all' | 'pending' | 'in_progress' | 'upcoming' | 'completed' | null>(null);
+  const [activeFilter, setActiveFilter] = useState<'all' | 'in_progress' | 'upcoming' | 'completed' | null>(null);
   const [activeTab, setActiveTab] = useState<'appointments' | 'families'>('appointments');
 
   // Lire le paramètre tab de l'URL
@@ -135,8 +136,6 @@ export default function EducatorAppointmentsPage() {
     const tab = searchParams.get('tab');
     if (tab === 'upcoming') {
       setActiveFilter('upcoming');
-    } else if (tab === 'pending') {
-      setActiveFilter('pending');
     } else if (tab === 'completed') {
       setActiveFilter('completed');
     }
@@ -144,14 +143,12 @@ export default function EducatorAppointmentsPage() {
 
   // Modal states
   const [selectedAppointment, setSelectedAppointment] = useState<Appointment | null>(null);
-  const [showRejectModal, setShowRejectModal] = useState(false);
   const [showNotesModal, setShowNotesModal] = useState(false);
   const [showPinModal, setShowPinModal] = useState(false);
   const [showDossierModal, setShowDossierModal] = useState(false);
   const [childDossier, setChildDossier] = useState<any>(null);
   const [dossierLoading, setDossierLoading] = useState(false);
   const [pinModalMode, setPinModalMode] = useState<'start' | 'complete'>('start');
-  const [rejectionReason, setRejectionReason] = useState('');
   const [educatorNotes, setEducatorNotes] = useState('');
   const [actionLoading, setActionLoading] = useState(false);
 
@@ -253,61 +250,6 @@ export default function EducatorAppointmentsPage() {
     }
   };
 
-  const handleAccept = async (appointmentId: string) => {
-    setActionLoading(true);
-    try {
-      const response = await fetch(`/api/appointments/${appointmentId}/accept`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      });
-
-      const data = await response.json();
-
-      if (!response.ok) {
-        throw new Error(data.error || 'Erreur lors de l\'acceptation');
-      }
-
-      alert('✅ Rendez-vous confirmé ! Un code PIN a été envoyé à la famille par email.');
-      fetchAppointments();
-    } catch (error: any) {
-      alert('Erreur: ' + error.message);
-    } finally {
-      setActionLoading(false);
-    }
-  };
-
-  const handleReject = async () => {
-    if (!selectedAppointment || !rejectionReason.trim()) {
-      alert('Veuillez indiquer une raison du refus');
-      return;
-    }
-
-    setActionLoading(true);
-    try {
-      const { error } = await supabase
-        .from('appointments')
-        .update({
-          status: 'rejected',
-          rejection_reason: rejectionReason.trim()
-        })
-        .eq('id', selectedAppointment.id);
-
-      if (error) throw error;
-
-      alert('Rendez-vous refusé');
-      setShowRejectModal(false);
-      setRejectionReason('');
-      setSelectedAppointment(null);
-      fetchAppointments();
-    } catch (error: any) {
-      alert('Erreur: ' + error.message);
-    } finally {
-      setActionLoading(false);
-    }
-  };
-
   const handleValidatePin = async (pin: string): Promise<{ success: boolean; error?: string; attemptsLeft?: number }> => {
     if (!selectedAppointment) {
       return { success: false, error: 'Aucun rendez-vous sélectionné' };
@@ -388,6 +330,16 @@ export default function EducatorAppointmentsPage() {
     };
   };
 
+  // Vérifier si on peut signaler une absence (1h après le début du RDV)
+  const canReportNoShow = (appointment: Appointment): { canReport: boolean; minutesRemaining: number } => {
+    const appointmentDateTime = new Date(appointment.appointment_date + 'T' + appointment.start_time);
+    const now = new Date();
+    const oneHourAfterStart = new Date(appointmentDateTime.getTime() + 60 * 60 * 1000);
+    const canReport = now >= oneHourAfterStart;
+    const minutesRemaining = Math.max(0, Math.ceil((oneHourAfterStart.getTime() - now.getTime()) / (1000 * 60)));
+    return { canReport, minutesRemaining };
+  };
+
   const handleCancel = async (appointmentId: string) => {
     const appointment = appointments.find(a => a.id === appointmentId);
     if (!appointment) return;
@@ -398,18 +350,68 @@ export default function EducatorAppointmentsPage() {
       return;
     }
 
-    if (!confirm('Annuler ce rendez-vous ?')) return;
+    if (!confirm('Annuler ce rendez-vous ?\n\nLa famille sera remboursée intégralement.')) return;
 
     setActionLoading(true);
     try {
-      const { error } = await supabase
-        .from('appointments')
-        .update({ status: 'cancelled' })
-        .eq('id', appointmentId);
+      const response = await fetch(`/api/appointments/${appointmentId}/cancel`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ cancelledBy: 'educator' })
+      });
 
-      if (error) throw error;
+      const data = await response.json();
 
-      alert('Rendez-vous annulé');
+      if (!response.ok) {
+        throw new Error(data.error || 'Erreur lors de l\'annulation');
+      }
+
+      alert('Rendez-vous annulé. La famille a été remboursée.');
+      fetchAppointments();
+    } catch (error: any) {
+      alert('Erreur: ' + error.message);
+    } finally {
+      setActionLoading(false);
+    }
+  };
+
+  const handleNoShow = async (appointmentId: string) => {
+    const appointment = appointments.find(a => a.id === appointmentId);
+    if (!appointment) return;
+
+    const noShowInfo = canReportNoShow(appointment);
+    if (!noShowInfo.canReport) {
+      alert(`Vous devez attendre encore ${noShowInfo.minutesRemaining} minutes avant de signaler une absence.`);
+      return;
+    }
+
+    const price = appointment.price || 0;
+    const priceInEuros = price / 100;
+    const compensation = (priceInEuros * 0.5 * 0.88).toFixed(2);
+
+    if (!confirm(
+      `Signaler l'absence de la famille ?\n\n` +
+      `Cette action va:\n` +
+      `• Marquer le rendez-vous comme "absence"\n` +
+      `• Prélever 50% de la prestation (${(priceInEuros * 0.5).toFixed(2)}€) à la famille\n` +
+      `• Vous recevoir une compensation de ${compensation}€\n\n` +
+      `Êtes-vous sûr de vouloir continuer ?`
+    )) return;
+
+    setActionLoading(true);
+    try {
+      const response = await fetch(`/api/appointments/${appointmentId}/no-show`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' }
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.error || 'Erreur lors du signalement');
+      }
+
+      alert(`Absence signalée avec succès.\n\nCompensation: ${data.educatorCompensation?.toFixed(2) || '0.00'}€`);
       fetchAppointments();
     } catch (error: any) {
       alert('Erreur: ' + error.message);
@@ -491,26 +493,26 @@ export default function EducatorAppointmentsPage() {
 
   const getStatusLabel = (status: string) => {
     const labels = {
-      pending: 'En attente',
       confirmed: 'Confirmé - En attente du code PIN',
-      accepted: 'Accepté',
+      accepted: 'Confirmé',
       in_progress: 'En cours',
       rejected: 'Refusé',
       completed: 'Terminé',
-      cancelled: 'Annulé'
+      cancelled: 'Annulé',
+      no_show: 'Absence signalée'
     };
     return labels[status as keyof typeof labels] || status;
   };
 
   const getStatusColor = (status: string) => {
     const colors = {
-      pending: 'bg-yellow-100 text-yellow-800 border-yellow-300',
       confirmed: 'bg-purple-100 text-purple-800 border-purple-300',
       accepted: 'bg-green-100 text-green-800 border-green-300',
       in_progress: 'bg-primary-100 text-primary-800 border-primary-300',
       rejected: 'bg-red-100 text-red-800 border-red-300',
       completed: 'bg-blue-100 text-blue-800 border-blue-300',
-      cancelled: 'bg-gray-100 text-gray-800 border-gray-300'
+      cancelled: 'bg-gray-100 text-gray-800 border-gray-300',
+      no_show: 'bg-orange-100 text-orange-800 border-orange-300'
     };
     return colors[status as keyof typeof colors] || 'bg-gray-100 text-gray-800';
   };
@@ -647,7 +649,6 @@ export default function EducatorAppointmentsPage() {
     return endDateTime < new Date();
   };
 
-  const pendingAppointments = appointments.filter(a => a.status === 'pending');
   const inProgressAppointments = appointments.filter(a => a.status === 'accepted' && a.started_at);
   const upcomingAppointments = appointments.filter(a => {
     // Un RDV est "à venir" si il est accepté, pas démarré, et pas encore passé (date+heure de fin)
@@ -658,7 +659,7 @@ export default function EducatorAppointmentsPage() {
     return a.status === 'accepted' && !a.started_at && isAppointmentPast(a);
   });
   const completedAppointments = appointments.filter(a => a.status === 'completed');
-  const cancelledAppointments = appointments.filter(a => a.status === 'cancelled' || a.status === 'rejected');
+  const cancelledAppointments = appointments.filter(a => a.status === 'cancelled' || a.status === 'rejected' || a.status === 'no_show');
 
   // Extraire les familles uniques rencontrées
   const getUniqueFamiliesWithStats = () => {
@@ -706,7 +707,7 @@ export default function EducatorAppointmentsPage() {
   };
 
   // Fonction pour sélectionner un filtre (un seul à la fois)
-  const selectFilter = (filter: 'all' | 'pending' | 'in_progress' | 'upcoming' | 'completed') => {
+  const selectFilter = (filter: 'all' | 'in_progress' | 'upcoming' | 'completed') => {
     setActiveFilter(prev => prev === filter ? null : filter);
   };
 
@@ -801,49 +802,6 @@ export default function EducatorAppointmentsPage() {
 
         {/* Actions */}
         <div className="p-3 border-t border-gray-100 flex flex-wrap gap-2">
-          {appointment.status === 'pending' && (
-            <>
-              {appointment.child_id && (
-                <button
-                  onClick={() => handleViewDossier(appointment.child_id!)}
-                  disabled={dossierLoading}
-                  className="flex-1 px-3 py-2 bg-purple-100 text-purple-700 rounded-lg hover:bg-purple-200 text-sm font-medium transition flex items-center justify-center gap-1"
-                  aria-label="Voir le dossier de l'enfant"
-                >
-                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-                  </svg>
-                  Dossier
-                </button>
-              )}
-              <button
-                onClick={() => handleAccept(appointment.id)}
-                disabled={actionLoading}
-                className="flex-1 px-3 py-2 bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 text-sm font-medium transition flex items-center justify-center gap-1"
-                aria-label="Accepter le rendez-vous"
-              >
-                <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                </svg>
-                Accepter
-              </button>
-              <button
-                onClick={() => {
-                  setSelectedAppointment(appointment);
-                  setShowRejectModal(true);
-                }}
-                disabled={actionLoading}
-                className="flex-1 px-3 py-2 bg-red-100 text-red-700 rounded-lg hover:bg-red-200 text-sm font-medium transition flex items-center justify-center gap-1"
-                aria-label="Refuser le rendez-vous"
-              >
-                <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                </svg>
-                Refuser
-              </button>
-            </>
-          )}
-
           {appointment.status === 'accepted' && (!isPast || appointment.started_at) && (
             <>
               {!appointment.started_at ? (
@@ -887,6 +845,21 @@ export default function EducatorAppointmentsPage() {
                     <span className="hidden sm:inline">Démarrer (PIN)</span>
                     <span className="sm:hidden">PIN</span>
                   </button>
+                  {/* Bouton Signaler absence - visible 1h après le début du RDV */}
+                  {canReportNoShow(appointment).canReport && (
+                    <button
+                      onClick={() => handleNoShow(appointment.id)}
+                      disabled={actionLoading}
+                      className="flex-1 min-w-0 px-2 sm:px-4 py-2 bg-orange-600 hover:bg-orange-700 text-white rounded-lg text-xs sm:text-sm font-medium transition flex items-center justify-center gap-1 sm:gap-2"
+                      aria-label="Signaler l'absence de la famille"
+                    >
+                      <svg className="w-4 h-4 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                      </svg>
+                      <span className="hidden sm:inline">Signaler absence</span>
+                      <span className="sm:hidden">Absence</span>
+                    </button>
+                  )}
                 </>
               ) : (
                 <>
@@ -970,7 +943,7 @@ export default function EducatorAppointmentsPage() {
             </button>
           )}
 
-          {appointment.child_id && appointment.status !== 'pending' && (
+          {appointment.child_id && (
             <button
               onClick={() => handleViewDossier(appointment.child_id!)}
               disabled={dossierLoading}
@@ -1114,22 +1087,6 @@ export default function EducatorAppointmentsPage() {
             <p className="text-xs text-gray-600 mt-1">Tous</p>
           </button>
 
-          {/* En attente */}
-          <button
-            onClick={() => pendingAppointments.length > 0 && selectFilter('pending')}
-            disabled={pendingAppointments.length === 0}
-            className={`rounded-xl p-3 text-center transition-all ${
-              pendingAppointments.length === 0
-                ? 'bg-amber-50 opacity-60 cursor-not-allowed'
-                : activeFilter === 'pending'
-                  ? 'bg-amber-200 ring-2 ring-amber-500'
-                  : 'bg-amber-50 hover:bg-amber-100 cursor-pointer'
-            }`}
-          >
-            <p className="text-2xl font-bold text-amber-600">{pendingAppointments.length}</p>
-            <p className="text-xs text-amber-700 mt-1">En attente</p>
-          </button>
-
           {/* En cours - Style accrocheur */}
           <button
             onClick={() => inProgressAppointments.length > 0 && selectFilter('in_progress')}
@@ -1202,23 +1159,6 @@ export default function EducatorAppointmentsPage() {
           </div>
         ) : (
           <div className="space-y-8">
-            {/* Section: En attente */}
-            {(activeFilter === 'all' || activeFilter === 'pending') && pendingAppointments.length > 0 && (
-              <section>
-                <SectionHeader
-                  title="Demandes en attente"
-                  count={pendingAppointments.length}
-                  icon={<svg className="h-5 w-5 text-amber-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>}
-                  color="bg-amber-100"
-                />
-                <div className="space-y-3">
-                  {pendingAppointments.map(apt => (
-                    <AppointmentCard key={apt.id} appointment={apt} />
-                  ))}
-                </div>
-              </section>
-            )}
-
             {/* Section: En cours */}
             {(activeFilter === 'all' || activeFilter === 'in_progress') && inProgressAppointments.length > 0 && (
               <section>
@@ -1408,46 +1348,6 @@ export default function EducatorAppointmentsPage() {
         {/* Espace pour le footer */}
         <div className="h-8"></div>
       </div>
-
-      {/* Modal Refus */}
-      {showRejectModal && selectedAppointment && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4" role="dialog" aria-modal="true" aria-labelledby="reject-modal-title">
-          <div className="bg-white rounded-2xl shadow-xl max-w-md w-full p-6">
-            <h3 id="reject-modal-title" className="text-xl font-bold text-gray-900 mb-4">Refuser le rendez-vous</h3>
-            <p className="text-gray-600 mb-4">
-              Veuillez indiquer la raison du refus. La famille recevra cette information.
-            </p>
-            <textarea
-              value={rejectionReason}
-              onChange={(e) => setRejectionReason(e.target.value)}
-              rows={4}
-              placeholder="Raison du refus..."
-              className="w-full border border-gray-300 rounded-xl shadow-sm py-2 px-3 focus:ring-2 focus:ring-[#41005c] focus:border-[#41005c] mb-4"
-              aria-label="Raison du refus du rendez-vous"
-            />
-            <div className="flex gap-2">
-              <button
-                onClick={handleReject}
-                disabled={actionLoading || !rejectionReason.trim()}
-                className="flex-1 px-4 py-2 bg-red-600 text-white rounded-xl hover:bg-red-700 disabled:opacity-50 font-semibold"
-              >
-                {actionLoading ? 'Envoi...' : 'Confirmer le refus'}
-              </button>
-              <button
-                onClick={() => {
-                  setShowRejectModal(false);
-                  setRejectionReason('');
-                  setSelectedAppointment(null);
-                }}
-                disabled={actionLoading}
-                className="px-4 py-2 bg-gray-200 text-gray-700 rounded-xl hover:bg-gray-300 disabled:opacity-50 font-medium"
-              >
-                Annuler
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
 
       {/* Modal Notes */}
       {showNotesModal && selectedAppointment && (
