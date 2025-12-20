@@ -228,14 +228,14 @@ export default function EducatorAvailability() {
         <EducatorNavbar profile={profile} subscription={subscription} />
       </div>
 
-      <div className="flex-1 max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8 w-full">
+      <div className="flex-1 max-w-3xl mx-auto px-3 sm:px-6 lg:px-8 py-4 sm:py-8 w-full">
         {/* En-tête centré avec icône */}
-        <div className="mb-6 sm:mb-8 text-center">
-          <div className="w-16 h-16 mx-auto mb-4 rounded-full flex items-center justify-center p-1" style={{ backgroundColor: '#41005c' }}>
+        <div className="mb-5 sm:mb-8 text-center">
+          <div className="w-14 h-14 sm:w-16 sm:h-16 mx-auto mb-3 sm:mb-4 rounded-full flex items-center justify-center p-1" style={{ backgroundColor: '#41005c' }}>
             <img src="/images/icons/clock.svg" alt="" className="w-full h-full" />
           </div>
-          <h1 className="text-xl sm:text-2xl font-bold text-gray-900">Mes disponibilités</h1>
-          <p className="text-gray-500 text-sm mt-1">Ajoutez vos créneaux pour que les familles puissent réserver</p>
+          <h1 className="text-lg sm:text-2xl font-bold text-gray-900">Mes disponibilités</h1>
+          <p className="text-gray-500 text-xs sm:text-sm mt-1 px-2">Ajoutez vos créneaux pour que les familles puissent réserver</p>
         </div>
 
         {/* Messages */}
@@ -254,12 +254,13 @@ export default function EducatorAvailability() {
         )}
 
         {/* Formulaire d'ajout */}
-        <div className="bg-white rounded-2xl shadow-sm p-4 sm:p-5 mb-6 border border-gray-100">
-          <h2 className="text-base sm:text-lg font-semibold mb-3 sm:mb-4" style={{ color: '#41005c' }}>
+        <div className="bg-white rounded-2xl shadow-sm p-3 sm:p-5 mb-4 sm:mb-6 border border-gray-100">
+          <h2 className="text-sm sm:text-lg font-semibold mb-3 sm:mb-4" style={{ color: '#41005c' }}>
             Ajouter une disponibilité
           </h2>
 
-          <div className="space-y-3 sm:space-y-0 sm:grid sm:grid-cols-3 sm:gap-3 mb-4">
+          <div className="space-y-3 mb-3 sm:mb-4">
+            {/* Date - pleine largeur sur mobile */}
             <div>
               <label htmlFor="availability-date" className="block text-xs font-medium text-gray-600 mb-1">
                 Date
@@ -270,8 +271,8 @@ export default function EducatorAvailability() {
                 value={selectedDate}
                 onChange={(e) => setSelectedDate(e.target.value)}
                 min={new Date().toISOString().split('T')[0]}
-                className="w-full px-3 py-2.5 sm:py-2.5 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 text-base sm:text-sm"
-                style={{ '--tw-ring-color': '#41005c' } as React.CSSProperties}
+                className="w-full px-3 py-3 sm:py-2.5 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 text-base"
+                style={{ '--tw-ring-color': '#41005c', fontSize: '16px' } as React.CSSProperties}
                 aria-required="true"
                 aria-describedby="date-description"
               />
@@ -280,7 +281,8 @@ export default function EducatorAvailability() {
               </span>
             </div>
 
-            <div className="grid grid-cols-2 gap-3 sm:contents">
+            {/* Heures côte à côte */}
+            <div className="grid grid-cols-2 gap-2 sm:gap-3">
               <div>
                 <label htmlFor="availability-start-time" className="block text-xs font-medium text-gray-600 mb-1">
                   Début
@@ -290,8 +292,8 @@ export default function EducatorAvailability() {
                   type="time"
                   value={startTime}
                   onChange={(e) => setStartTime(e.target.value)}
-                  className="w-full px-3 py-2.5 sm:py-2.5 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 text-base sm:text-sm"
-                  style={{ '--tw-ring-color': '#41005c' } as React.CSSProperties}
+                  className="w-full px-2 sm:px-3 py-3 sm:py-2.5 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 text-base text-center"
+                  style={{ '--tw-ring-color': '#41005c', fontSize: '16px' } as React.CSSProperties}
                   aria-required="true"
                 />
               </div>
@@ -305,8 +307,8 @@ export default function EducatorAvailability() {
                   type="time"
                   value={endTime}
                   onChange={(e) => setEndTime(e.target.value)}
-                  className="w-full px-3 py-2.5 sm:py-2.5 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 text-base sm:text-sm"
-                  style={{ '--tw-ring-color': '#41005c' } as React.CSSProperties}
+                  className="w-full px-2 sm:px-3 py-3 sm:py-2.5 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 text-base text-center"
+                  style={{ '--tw-ring-color': '#41005c', fontSize: '16px' } as React.CSSProperties}
                   aria-required="true"
                   aria-describedby="time-description"
                 />
@@ -320,7 +322,7 @@ export default function EducatorAvailability() {
           <button
             onClick={handleAddAvailability}
             disabled={saving}
-            className="w-full text-white py-3 px-4 rounded-xl transition disabled:opacity-50 disabled:cursor-not-allowed font-medium hover:opacity-90 text-sm sm:text-base"
+            className="w-full text-white py-3 px-4 rounded-xl transition disabled:opacity-50 disabled:cursor-not-allowed font-medium hover:opacity-90 text-sm"
             style={{ backgroundColor: '#41005c' }}
             aria-label="Ajouter une nouvelle disponibilité"
             aria-busy={saving}
@@ -330,40 +332,40 @@ export default function EducatorAvailability() {
         </div>
 
         {/* Statistiques rapides */}
-        <div className="grid grid-cols-2 gap-3 mb-6">
-          <div className="bg-white rounded-xl p-4 text-center border border-gray-100 shadow-sm">
-            <p className="text-2xl font-bold" style={{ color: '#41005c' }}>{availabilities.length}</p>
-            <p className="text-xs text-gray-500 mt-1">Créneaux à venir</p>
+        <div className="grid grid-cols-2 gap-2 sm:gap-3 mb-4 sm:mb-6">
+          <div className="bg-white rounded-xl p-3 sm:p-4 text-center border border-gray-100 shadow-sm">
+            <p className="text-xl sm:text-2xl font-bold" style={{ color: '#41005c' }}>{availabilities.length}</p>
+            <p className="text-[10px] sm:text-xs text-gray-500 mt-0.5 sm:mt-1">Créneaux à venir</p>
           </div>
-          <div className="bg-white rounded-xl p-4 text-center border border-gray-100 shadow-sm">
-            <p className="text-2xl font-bold" style={{ color: '#41005c' }}>{availabilities.filter(a => a.is_available).length}</p>
-            <p className="text-xs text-gray-500 mt-1">Disponibles</p>
+          <div className="bg-white rounded-xl p-3 sm:p-4 text-center border border-gray-100 shadow-sm">
+            <p className="text-xl sm:text-2xl font-bold" style={{ color: '#41005c' }}>{availabilities.filter(a => a.is_available).length}</p>
+            <p className="text-[10px] sm:text-xs text-gray-500 mt-0.5 sm:mt-1">Disponibles</p>
           </div>
         </div>
 
         {/* Liste des disponibilités */}
         <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
           {/* En-tête de section */}
-          <div className="px-5 py-4 border-b border-gray-100" style={{ backgroundColor: '#faf5ff' }}>
-            <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-xl flex items-center justify-center" style={{ backgroundColor: '#41005c' }}>
-                <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <div className="px-3 sm:px-5 py-3 sm:py-4 border-b border-gray-100" style={{ backgroundColor: '#faf5ff' }}>
+            <div className="flex items-center gap-2 sm:gap-3">
+              <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-xl flex items-center justify-center flex-shrink-0" style={{ backgroundColor: '#41005c' }}>
+                <svg className="w-4 h-4 sm:w-5 sm:h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
                 </svg>
               </div>
               <div>
-                <h2 className="text-base font-semibold text-gray-900">Vos créneaux à venir</h2>
-                <p className="text-xs text-gray-500">{availabilities.length} créneau{availabilities.length > 1 ? 'x' : ''} programmé{availabilities.length > 1 ? 's' : ''}</p>
+                <h2 className="text-sm sm:text-base font-semibold text-gray-900">Vos créneaux à venir</h2>
+                <p className="text-[10px] sm:text-xs text-gray-500">{availabilities.length} créneau{availabilities.length > 1 ? 'x' : ''} programmé{availabilities.length > 1 ? 's' : ''}</p>
               </div>
             </div>
           </div>
 
-          <div className="p-5">
+          <div className="p-3 sm:p-5">
             {availabilities.length === 0 ? (
-              <div className="text-center py-8">
-                <div className="mx-auto w-14 h-14 rounded-full flex items-center justify-center mb-3" style={{ backgroundColor: '#f3e8ff' }}>
+              <div className="text-center py-6 sm:py-8">
+                <div className="mx-auto w-12 h-12 sm:w-14 sm:h-14 rounded-full flex items-center justify-center mb-3" style={{ backgroundColor: '#f3e8ff' }}>
                   <svg
-                    className="h-7 w-7"
+                    className="h-6 w-6 sm:h-7 sm:w-7"
                     fill="none"
                     stroke="currentColor"
                     viewBox="0 0 24 24"
@@ -373,23 +375,23 @@ export default function EducatorAvailability() {
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
                   </svg>
                 </div>
-                <h3 className="text-sm font-medium text-gray-900">Aucune disponibilité</h3>
-                <p className="mt-1 text-xs text-gray-500">
+                <h3 className="text-xs sm:text-sm font-medium text-gray-900">Aucune disponibilité</h3>
+                <p className="mt-1 text-[10px] sm:text-xs text-gray-500">
                   Ajoutez vos premiers créneaux ci-dessus
                 </p>
               </div>
             ) : (
-              <div className="space-y-5" role="list" aria-label="Liste des créneaux de disponibilité">
+              <div className="space-y-4 sm:space-y-5" role="list" aria-label="Liste des créneaux de disponibilité">
                 {Object.keys(groupedAvailabilities).sort().map(date => (
                   <div key={date}>
-                    <h3 className="text-sm font-semibold mb-2 capitalize" style={{ color: '#41005c' }}>
+                    <h3 className="text-xs sm:text-sm font-semibold mb-2 capitalize" style={{ color: '#41005c' }}>
                       {formatDate(date)}
                     </h3>
                     <div className="space-y-2" role="list">
                       {groupedAvailabilities[date].map(slot => (
                         <div
                           key={slot.id}
-                          className="p-3 rounded-xl border transition"
+                          className="p-2.5 sm:p-3 rounded-xl border transition"
                           style={{
                             borderColor: slot.is_available ? '#d8b4fe' : '#e5e7eb',
                             backgroundColor: slot.is_available ? '#faf5ff' : '#f9fafb'
@@ -398,18 +400,18 @@ export default function EducatorAvailability() {
                           aria-label={`Créneau de ${slot.start_time} à ${slot.end_time}, ${slot.is_available ? 'disponible' : 'désactivé'}`}
                         >
                           <div className="flex items-center justify-between">
-                            <div className="flex items-center gap-3">
+                            <div className="flex items-center gap-2 sm:gap-3">
                               <div
-                                className="w-2.5 h-2.5 rounded-full flex-shrink-0"
+                                className="w-2 h-2 sm:w-2.5 sm:h-2.5 rounded-full flex-shrink-0"
                                 style={{ backgroundColor: slot.is_available ? '#41005c' : '#9ca3af' }}
                                 role="status"
                                 aria-label={slot.is_available ? 'Statut: Disponible' : 'Statut: Désactivé'}
                               ></div>
                               <div>
-                                <p className="font-medium text-gray-900 text-sm">
+                                <p className="font-medium text-gray-900 text-xs sm:text-sm">
                                   {slot.start_time} - {slot.end_time}
                                 </p>
-                                <p className="text-xs" style={{ color: slot.is_available ? '#7c3aed' : '#6b7280' }}>
+                                <p className="text-[10px] sm:text-xs" style={{ color: slot.is_available ? '#7c3aed' : '#6b7280' }}>
                                   {slot.is_available ? 'Disponible' : 'Désactivé'}
                                 </p>
                               </div>
@@ -446,7 +448,7 @@ export default function EducatorAvailability() {
                           <div className="sm:hidden flex items-center gap-2 mt-2 pt-2 border-t border-gray-100">
                             <button
                               onClick={() => handleToggleAvailability(slot.id, slot.is_available)}
-                              className="flex-1 px-3 py-2 rounded-lg text-xs font-medium transition hover:opacity-90"
+                              className="flex-1 px-2 py-1.5 rounded-lg text-[10px] font-medium transition hover:opacity-90"
                               style={{
                                 backgroundColor: slot.is_available ? '#fef3c7' : '#f3e8ff',
                                 color: slot.is_available ? '#92400e' : '#41005c'
@@ -458,7 +460,7 @@ export default function EducatorAvailability() {
                             </button>
                             <button
                               onClick={() => handleDeleteAvailability(slot.id)}
-                              className="px-3 py-2 rounded-lg transition text-xs font-medium"
+                              className="px-2 py-1.5 rounded-lg transition text-[10px] font-medium"
                               style={{ color: '#f0879f', backgroundColor: '#fdf2f4' }}
                               aria-label={`Supprimer le créneau de ${slot.start_time} à ${slot.end_time}`}
                             >
