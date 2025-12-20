@@ -141,6 +141,8 @@ export default function BookAppointmentPage({ params }: { params: { id: string }
       setEducator(educatorData);
 
       const today = new Date().toISOString().split('T')[0];
+      const currentTime = new Date().toTimeString().slice(0, 5); // Format "HH:MM"
+
       const { data: availData } = await supabase
         .from('educator_availability')
         .select('*')
@@ -150,7 +152,16 @@ export default function BookAppointmentPage({ params }: { params: { id: string }
         .order('availability_date', { ascending: true })
         .order('start_time', { ascending: true });
 
-      if (availData) setAvailabilities(availData);
+      if (availData) {
+        // Filtrer les créneaux d'aujourd'hui dont l'heure de fin est passée
+        const filteredData = availData.filter(slot => {
+          if (slot.availability_date === today) {
+            return slot.end_time > currentTime;
+          }
+          return true;
+        });
+        setAvailabilities(filteredData);
+      }
 
       const { data: appts } = await supabase
         .from('appointments')

@@ -353,6 +353,8 @@ export default function EducatorPublicProfile({ params }: { params: { id: string
 
       // Récupérer les disponibilités quotidiennes (nouveau système)
       const today = new Date().toISOString().split('T')[0];
+      const currentTime = new Date().toTimeString().slice(0, 5); // Format "HH:MM"
+
       const { data: dailySlots, error: dailySlotsError } = await supabase
         .from('educator_availability')
         .select('*')
@@ -364,7 +366,14 @@ export default function EducatorPublicProfile({ params }: { params: { id: string
         .limit(30);
 
       if (!dailySlotsError && dailySlots) {
-        setDailyAvailabilities(dailySlots);
+        // Filtrer les créneaux d'aujourd'hui dont l'heure de fin est passée
+        const filteredSlots = dailySlots.filter(slot => {
+          if (slot.availability_date === today) {
+            return slot.end_time > currentTime;
+          }
+          return true;
+        });
+        setDailyAvailabilities(filteredSlots);
       }
 
       // Récupérer les exceptions (uniquement futures)

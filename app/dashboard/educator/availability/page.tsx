@@ -66,16 +66,29 @@ export default function EducatorAvailability() {
       setSubscription(subscriptionData);
 
       // Récupérer les disponibilités (seulement futures)
+      const today = new Date().toISOString().split('T')[0];
       const { data: availData } = await supabase
         .from('educator_availability')
         .select('*')
         .eq('educator_id', profileData.id)
-        .gte('availability_date', new Date().toISOString().split('T')[0])
+        .gte('availability_date', today)
         .order('availability_date', { ascending: true })
         .order('start_time', { ascending: true });
 
       if (availData) {
-        setAvailabilities(availData);
+        // Filtrer les créneaux d'aujourd'hui dont l'heure de fin est passée
+        const now = new Date();
+        const currentTime = now.toTimeString().slice(0, 5); // Format "HH:MM"
+
+        const filteredData = availData.filter(slot => {
+          if (slot.availability_date === today) {
+            // Pour aujourd'hui, vérifier que l'heure de fin n'est pas passée
+            return slot.end_time > currentTime;
+          }
+          return true; // Les dates futures sont toujours gardées
+        });
+
+        setAvailabilities(filteredData);
       }
     }
 
