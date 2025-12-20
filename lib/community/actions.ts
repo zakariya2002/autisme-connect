@@ -2,7 +2,7 @@
 
 import { createClient } from '@supabase/supabase-js';
 import { cookies } from 'next/headers';
-import { createServerComponentClient } from '@supabase/auth-helpers-nextjs';
+import { createServerClient } from '@supabase/ssr';
 import {
   CommunityPost,
   CommunityComment,
@@ -15,6 +15,37 @@ import {
   PostsResponse,
   AuthorProfile,
 } from '@/types/community';
+
+// Create authenticated Supabase client for server actions
+function createSupabaseServerClient() {
+  const cookieStore = cookies();
+
+  return createServerClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+    {
+      cookies: {
+        get(name: string) {
+          return cookieStore.get(name)?.value;
+        },
+        set(name: string, value: string, options: any) {
+          try {
+            cookieStore.set({ name, value, ...options });
+          } catch (error) {
+            // Handle cookie setting in read-only context
+          }
+        },
+        remove(name: string, options: any) {
+          try {
+            cookieStore.set({ name, value: '', ...options });
+          } catch (error) {
+            // Handle cookie removal in read-only context
+          }
+        },
+      },
+    }
+  );
+}
 
 // Anonymous name generator
 const ANONYMOUS_ADJECTIVES = [
@@ -34,7 +65,7 @@ function generateAnonymousName(): string {
 }
 
 // Helper to get user's role
-async function getUserRole(supabase: ReturnType<typeof createServerComponentClient>, userId: string): Promise<AuthorRole> {
+async function getUserRole(supabase: ReturnType<typeof createSupabaseServerClient>, userId: string): Promise<AuthorRole> {
   // Check if user is an educator
   const { data: educator } = await supabase
     .from('educator_profiles')
@@ -63,7 +94,7 @@ interface FamilyProfileData {
 }
 
 async function getAuthorProfile(
-  supabase: ReturnType<typeof createServerComponentClient>,
+  supabase: ReturnType<typeof createSupabaseServerClient>,
   authorId: string,
   authorRole: AuthorRole
 ): Promise<AuthorProfile | null> {
@@ -112,8 +143,7 @@ async function getAuthorProfile(
 // ============================================
 
 export async function getPosts(params: PostsQueryParams = {}): Promise<PostsResponse> {
-  const cookieStore = cookies();
-  const supabase = createServerComponentClient({ cookies: () => cookieStore });
+  const supabase = createSupabaseServerClient();
 
   const { category, search, page = 1, limit = 10, sortBy = 'recent' } = params;
   const offset = (page - 1) * limit;
@@ -197,8 +227,7 @@ export async function getPosts(params: PostsQueryParams = {}): Promise<PostsResp
 }
 
 export async function getPostById(postId: string): Promise<CommunityPost | null> {
-  const cookieStore = cookies();
-  const supabase = createServerComponentClient({ cookies: () => cookieStore });
+  const supabase = createSupabaseServerClient();
 
   const { data: post, error } = await supabase
     .from('community_posts')
@@ -244,8 +273,7 @@ export async function getPostById(postId: string): Promise<CommunityPost | null>
 }
 
 export async function createPost(data: CreatePostData): Promise<{ success: boolean; postId?: string; error?: string }> {
-  const cookieStore = cookies();
-  const supabase = createServerComponentClient({ cookies: () => cookieStore });
+  const supabase = createSupabaseServerClient();
 
   const { data: { session } } = await supabase.auth.getSession();
   if (!session?.user) {
@@ -278,8 +306,7 @@ export async function createPost(data: CreatePostData): Promise<{ success: boole
 }
 
 export async function deletePost(postId: string): Promise<{ success: boolean; error?: string }> {
-  const cookieStore = cookies();
-  const supabase = createServerComponentClient({ cookies: () => cookieStore });
+  const supabase = createSupabaseServerClient();
 
   const { data: { session } } = await supabase.auth.getSession();
   if (!session?.user) {
@@ -305,8 +332,7 @@ export async function deletePost(postId: string): Promise<{ success: boolean; er
 // ============================================
 
 export async function getComments(postId: string): Promise<CommunityComment[]> {
-  const cookieStore = cookies();
-  const supabase = createServerComponentClient({ cookies: () => cookieStore });
+  const supabase = createSupabaseServerClient();
 
   const { data: comments, error } = await supabase
     .from('community_comments')
@@ -377,8 +403,7 @@ export async function getComments(postId: string): Promise<CommunityComment[]> {
 }
 
 export async function addComment(data: CreateCommentData): Promise<{ success: boolean; commentId?: string; error?: string }> {
-  const cookieStore = cookies();
-  const supabase = createServerComponentClient({ cookies: () => cookieStore });
+  const supabase = createSupabaseServerClient();
 
   const { data: { session } } = await supabase.auth.getSession();
   if (!session?.user) {
@@ -411,8 +436,7 @@ export async function addComment(data: CreateCommentData): Promise<{ success: bo
 }
 
 export async function deleteComment(commentId: string): Promise<{ success: boolean; error?: string }> {
-  const cookieStore = cookies();
-  const supabase = createServerComponentClient({ cookies: () => cookieStore });
+  const supabase = createSupabaseServerClient();
 
   const { data: { session } } = await supabase.auth.getSession();
   if (!session?.user) {
@@ -442,8 +466,7 @@ export async function toggleReaction(
   targetId: string,
   reactionType: ReactionType
 ): Promise<{ success: boolean; added: boolean; error?: string }> {
-  const cookieStore = cookies();
-  const supabase = createServerComponentClient({ cookies: () => cookieStore });
+  const supabase = createSupabaseServerClient();
 
   const { data: { session } } = await supabase.auth.getSession();
   if (!session?.user) {
@@ -502,8 +525,7 @@ export async function reportContent(
   targetId: string,
   reason: string
 ): Promise<{ success: boolean; error?: string }> {
-  const cookieStore = cookies();
-  const supabase = createServerComponentClient({ cookies: () => cookieStore });
+  const supabase = createSupabaseServerClient();
 
   const { data: { session } } = await supabase.auth.getSession();
   if (!session?.user) {
@@ -534,8 +556,7 @@ export async function reportContent(
 // ============================================
 
 export async function getRecentPosts(limit: number = 4): Promise<CommunityPost[]> {
-  const cookieStore = cookies();
-  const supabase = createServerComponentClient({ cookies: () => cookieStore });
+  const supabase = createSupabaseServerClient();
 
   const { data: posts, error } = await supabase
     .from('community_posts')
