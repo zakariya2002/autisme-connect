@@ -41,6 +41,7 @@ export default function FamilyDashboard() {
   const [profile, setProfile] = useState<any>(null);
   const [familyId, setFamilyId] = useState<string | null>(null);
   const [userId, setUserId] = useState<string | null>(null);
+  const [userEmail, setUserEmail] = useState<string | null>(null);
   const [upcomingAppointments, setUpcomingAppointments] = useState<UpcomingAppointment[]>([]);
   const [showSuccessMessage, setShowSuccessMessage] = useState(false);
 
@@ -71,6 +72,7 @@ export default function FamilyDashboard() {
     }
 
     setUserId(session.user.id);
+    setUserEmail(session.user.email || null);
 
     const { data } = await supabase
       .from('family_profiles')
@@ -210,7 +212,7 @@ export default function FamilyDashboard() {
       </div>
 
       {/* Tutoriel d'onboarding */}
-      {familyId && <FamilyOnboarding familyId={familyId} />}
+      {familyId && <FamilyOnboarding familyId={familyId} userEmail={userEmail || undefined} />}
 
       {/* Bandeau de bienvenue */}
       <div className="px-4 py-6 flex items-center gap-4" style={{ backgroundColor: '#05a5a5' }} data-tour="welcome-banner">

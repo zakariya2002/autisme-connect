@@ -309,7 +309,7 @@ export default function FamilyMobileMenu({ profile: propProfile, onLogout }: Fam
               <button
                 onClick={() => {
                   if (profile?.id) {
-                    localStorage.removeItem(`family_onboarding_${profile.id}`);
+                    localStorage.setItem(`restart_family_onboarding_${profile.id}`, 'true');
                     closeMenu();
                     window.location.href = '/dashboard/family';
                   }

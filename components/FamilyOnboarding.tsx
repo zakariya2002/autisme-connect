@@ -5,10 +5,11 @@ import Joyride, { CallBackProps, STATUS, Step, ACTIONS, EVENTS } from 'react-joy
 
 interface FamilyOnboardingProps {
   familyId: string;
+  userEmail?: string;
   onComplete?: () => void;
 }
 
-export default function FamilyOnboarding({ familyId, onComplete }: FamilyOnboardingProps) {
+export default function FamilyOnboarding({ familyId, userEmail, onComplete }: FamilyOnboardingProps) {
   const [run, setRun] = useState(false);
   const [stepIndex, setStepIndex] = useState(0);
   const [isMobile, setIsMobile] = useState(false);
@@ -21,15 +22,24 @@ export default function FamilyOnboarding({ familyId, onComplete }: FamilyOnboard
     return () => window.removeEventListener('resize', checkMobile);
   }, []);
 
-  // Vérifier si l'utilisateur a déjà vu le tutoriel
+  // Vérifier si le tutoriel doit être lancé (uniquement après inscription OU relance manuelle)
   useEffect(() => {
-    const hasSeenTutorial = localStorage.getItem(`family_onboarding_${familyId}`);
-    if (!hasSeenTutorial) {
+    const pendingEmail = localStorage.getItem('pending_family_onboarding');
+    const shouldRestart = localStorage.getItem(`restart_family_onboarding_${familyId}`);
+
+    // Lancer le tutoriel si :
+    // 1. C'est une nouvelle inscription (email correspond)
+    // 2. OU l'utilisateur a demandé à relancer le tutoriel
+    if ((pendingEmail && userEmail && pendingEmail === userEmail) || shouldRestart) {
+      // Nettoyer les flags
+      localStorage.removeItem('pending_family_onboarding');
+      localStorage.removeItem(`restart_family_onboarding_${familyId}`);
+
       // Délai pour laisser la page se charger
       const timer = setTimeout(() => setRun(true), 1000);
       return () => clearTimeout(timer);
     }
-  }, [familyId]);
+  }, [familyId, userEmail]);
 
   const steps: Step[] = [
     {
@@ -233,7 +243,6 @@ export default function FamilyOnboarding({ familyId, onComplete }: FamilyOnboard
 
     if ([STATUS.FINISHED, STATUS.SKIPPED].includes(status as any)) {
       setRun(false);
-      localStorage.setItem(`family_onboarding_${familyId}`, 'true');
       onComplete?.();
     }
   };
@@ -332,13 +341,10 @@ export default function FamilyOnboarding({ familyId, onComplete }: FamilyOnboard
 // Hook pour permettre de relancer le tutoriel depuis n'importe où
 export const useFamilyOnboarding = (familyId: string) => {
   const restartTutorial = () => {
-    localStorage.removeItem(`family_onboarding_${familyId}`);
+    // Utiliser le nouveau flag de relance
+    localStorage.setItem(`restart_family_onboarding_${familyId}`, 'true');
     window.location.reload();
   };
 
-  const hasCompletedTutorial = () => {
-    return localStorage.getItem(`family_onboarding_${familyId}`) === 'true';
-  };
-
-  return { restartTutorial, hasCompletedTutorial };
+  return { restartTutorial };
 };

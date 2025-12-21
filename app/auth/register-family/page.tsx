@@ -179,6 +179,9 @@ export default function RegisterFamilyPage() {
         throw new Error(result.error || 'Erreur lors de la création du compte');
       }
 
+      // Marquer pour lancer le tutoriel après la première connexion
+      localStorage.setItem('pending_family_onboarding', authData.email);
+
       // Afficher le message de succès avec instruction de vérifier l'email
       setRegistrationSuccess(true);
 
