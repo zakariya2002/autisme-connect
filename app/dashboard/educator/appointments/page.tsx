@@ -821,15 +821,14 @@ export default function EducatorAppointmentsPage() {
                   {canJoinVideoCall(appointment) && (
                     <button
                       onClick={() => window.open(`/video-call/${appointment.id}`, '_blank')}
-                      className="flex-1 min-w-0 px-2 sm:px-4 py-2 text-white rounded-lg text-xs sm:text-sm font-medium transition flex items-center justify-center gap-1 sm:gap-2 animate-pulse"
-                      style={{ background: 'linear-gradient(135deg, #7c3aed 0%, #8b5cf6 25%, #a855f7 50%, #c084fc 75%, #e879f9 100%)' }}
+                      className="flex-1 min-w-0 px-3 py-2 text-white rounded-lg text-xs sm:text-sm font-medium transition flex items-center justify-center gap-1 sm:gap-2 animate-pulse"
+                      style={{ backgroundColor: '#8b5cf6' }}
                       aria-label="Rejoindre la séance vidéo"
                     >
                       <svg className="w-4 h-4 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z" />
                       </svg>
-                      <span className="hidden sm:inline">Rejoindre vidéo</span>
-                      <span className="sm:hidden">Vidéo</span>
+                      <span>Rejoindre la séance vidéo</span>
                     </button>
                   )}
                   <button
@@ -867,15 +866,15 @@ export default function EducatorAppointmentsPage() {
                   {canJoinVideoCall(appointment) && (
                     <button
                       onClick={() => window.open(`/video-call/${appointment.id}`, '_blank')}
-                      className="p-2 sm:px-4 sm:py-2 text-white rounded-lg text-xs sm:text-sm font-medium transition flex items-center justify-center gap-1 sm:gap-2"
-                      style={{ background: 'linear-gradient(135deg, #7c3aed 0%, #8b5cf6 25%, #a855f7 50%, #c084fc 75%, #e879f9 100%)' }}
+                      className="px-3 py-2 text-white rounded-lg text-xs sm:text-sm font-medium transition flex items-center justify-center gap-1"
+                      style={{ backgroundColor: '#8b5cf6' }}
                       title="Rejoindre la vidéo"
                       aria-label="Rejoindre la séance vidéo"
                     >
-                      <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z" />
                       </svg>
-                      <span className="hidden sm:inline">Vidéo</span>
+                      <span>Rejoindre la séance vidéo</span>
                     </button>
                   )}
                   <SessionCountdown
@@ -911,14 +910,14 @@ export default function EducatorAppointmentsPage() {
                 <button
                   onClick={() => handleCancel(appointment.id)}
                   disabled={actionLoading}
-                  className="p-2 sm:px-3 sm:py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 text-xs sm:text-sm font-medium transition flex items-center justify-center"
+                  className="px-3 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 text-xs sm:text-sm font-medium transition flex items-center justify-center gap-1"
                   title="Annuler le rendez-vous"
                   aria-label="Annuler le rendez-vous"
                 >
-                  <svg className="w-4 h-4 sm:hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
                   </svg>
-                  <span className="hidden sm:inline">Annuler</span>
+                  <span>Annuler</span>
                 </button>
               )}
             </>
@@ -932,30 +931,46 @@ export default function EducatorAppointmentsPage() {
                 setShowNotesModal(true);
               }}
               disabled={actionLoading}
-              className="p-2 sm:px-3 sm:py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 text-xs sm:text-sm font-medium transition flex items-center justify-center gap-1"
+              className="px-3 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 text-xs sm:text-sm font-medium transition flex items-center justify-center gap-1"
               title="Notes"
               aria-label="Ajouter ou modifier les notes du rendez-vous"
             >
               <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
               </svg>
-              <span className="hidden sm:inline">Notes</span>
+              <span>Notes</span>
             </button>
           )}
 
           {appointment.child_id && (
-            <button
-              onClick={() => handleViewDossier(appointment.child_id!)}
-              disabled={dossierLoading}
-              className="p-2 sm:px-3 sm:py-2 bg-purple-100 text-purple-700 rounded-lg hover:bg-purple-200 text-xs sm:text-sm font-medium transition flex items-center justify-center gap-1"
-              title="Voir le dossier"
-              aria-label="Voir le dossier de l'enfant"
-            >
-              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-              </svg>
-              <span className="hidden sm:inline">Dossier</span>
-            </button>
+            appointment.started_at ? (
+              /* Lien vers la page de modification du dossier quand la séance est active */
+              <Link
+                href={`/dashboard/educator/session/${appointment.id}`}
+                className="px-3 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 text-xs sm:text-sm font-medium transition flex items-center justify-center gap-1"
+                title="Modifier le dossier"
+                aria-label="Accéder et modifier le dossier de l'enfant"
+              >
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                </svg>
+                <span>Dossier</span>
+              </Link>
+            ) : (
+              /* Bouton pour voir le dossier en lecture seule */
+              <button
+                onClick={() => handleViewDossier(appointment.child_id!)}
+                disabled={dossierLoading}
+                className="px-3 py-2 bg-purple-100 text-purple-700 rounded-lg hover:bg-purple-200 text-xs sm:text-sm font-medium transition flex items-center justify-center gap-1"
+                title="Voir le dossier"
+                aria-label="Voir le dossier de l'enfant"
+              >
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                </svg>
+                <span>Dossier</span>
+              </button>
+            )
           )}
         </div>
       </div>

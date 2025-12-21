@@ -185,10 +185,10 @@ export default function EducatorMobileMenu({ profile: propProfile, isPremium, on
                 onClick={closeMenu}
                 className={`py-3 px-4 rounded-lg font-medium transition-all duration-200 flex items-center gap-3 ${
                   pathname === '/dashboard/educator/profile'
-                    ? 'text-white'
+                    ? 'text-[#41005c] font-semibold'
                     : 'text-gray-700 hover:text-[#41005c]'
                 }`}
-                style={pathname === '/dashboard/educator/profile' ? { backgroundColor: '#5a1a75' } : {}}
+                style={pathname === '/dashboard/educator/profile' ? { backgroundColor: 'rgba(90, 26, 117, 0.15)' } : {}}
                 aria-current={pathname === '/dashboard/educator/profile' ? 'page' : undefined}
               >
                 <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
@@ -203,10 +203,10 @@ export default function EducatorMobileMenu({ profile: propProfile, isPremium, on
                 onClick={closeMenu}
                 className={`py-3 px-4 rounded-lg font-medium transition-all duration-200 flex items-center gap-3 ${
                   pathname === '/dashboard/educator/appointments'
-                    ? 'text-white'
+                    ? 'text-[#41005c] font-semibold'
                     : 'text-gray-700 hover:text-[#41005c]'
                 }`}
-                style={pathname === '/dashboard/educator/appointments' ? { backgroundColor: '#5a1a75' } : {}}
+                style={pathname === '/dashboard/educator/appointments' ? { backgroundColor: 'rgba(90, 26, 117, 0.15)' } : {}}
                 aria-current={pathname === '/dashboard/educator/appointments' ? 'page' : undefined}
               >
                 <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
@@ -221,10 +221,10 @@ export default function EducatorMobileMenu({ profile: propProfile, isPremium, on
                 onClick={closeMenu}
                 className={`py-3 px-4 rounded-lg font-medium transition-all duration-200 flex items-center gap-3 ${
                   pathname === '/dashboard/educator/availability'
-                    ? 'text-white'
+                    ? 'text-[#41005c] font-semibold'
                     : 'text-gray-700 hover:text-[#41005c]'
                 }`}
-                style={pathname === '/dashboard/educator/availability' ? { backgroundColor: '#5a1a75' } : {}}
+                style={pathname === '/dashboard/educator/availability' ? { backgroundColor: 'rgba(90, 26, 117, 0.15)' } : {}}
                 aria-current={pathname === '/dashboard/educator/availability' ? 'page' : undefined}
               >
                 <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
@@ -239,10 +239,10 @@ export default function EducatorMobileMenu({ profile: propProfile, isPremium, on
                 onClick={closeMenu}
                 className={`py-3 px-4 rounded-lg font-medium transition-all duration-200 flex items-center gap-3 ${
                   pathname === '/messages'
-                    ? 'text-white'
+                    ? 'text-[#41005c] font-semibold'
                     : 'text-gray-700 hover:text-[#41005c]'
                 }`}
-                style={pathname === '/messages' ? { backgroundColor: '#5a1a75' } : {}}
+                style={pathname === '/messages' ? { backgroundColor: 'rgba(90, 26, 117, 0.15)' } : {}}
                 aria-current={pathname === '/messages' ? 'page' : undefined}
               >
                 <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
@@ -257,10 +257,10 @@ export default function EducatorMobileMenu({ profile: propProfile, isPremium, on
                 onClick={closeMenu}
                 className={`py-3 px-4 rounded-lg font-medium transition-all duration-200 flex items-center gap-3 ${
                   pathname === '/dashboard/educator/invoices'
-                    ? 'text-white'
+                    ? 'text-[#41005c] font-semibold'
                     : 'text-gray-700 hover:text-[#41005c]'
                 }`}
-                style={pathname === '/dashboard/educator/invoices' ? { backgroundColor: '#5a1a75' } : {}}
+                style={pathname === '/dashboard/educator/invoices' ? { backgroundColor: 'rgba(90, 26, 117, 0.15)' } : {}}
                 aria-current={pathname === '/dashboard/educator/invoices' ? 'page' : undefined}
               >
                 <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
@@ -275,10 +275,10 @@ export default function EducatorMobileMenu({ profile: propProfile, isPremium, on
                 onClick={closeMenu}
                 className={`py-3 px-4 rounded-lg font-medium transition-all duration-200 flex items-center gap-3 ${
                   pathname === '/dashboard/educator/diploma'
-                    ? 'text-white'
+                    ? 'text-[#41005c] font-semibold'
                     : 'text-gray-700 hover:text-[#41005c]'
                 }`}
-                style={pathname === '/dashboard/educator/diploma' ? { backgroundColor: '#5a1a75' } : {}}
+                style={pathname === '/dashboard/educator/diploma' ? { backgroundColor: 'rgba(90, 26, 117, 0.15)' } : {}}
                 aria-current={pathname === '/dashboard/educator/diploma' ? 'page' : undefined}
               >
                 <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
@@ -293,10 +293,10 @@ export default function EducatorMobileMenu({ profile: propProfile, isPremium, on
                 onClick={closeMenu}
                 className={`py-3 px-4 rounded-lg font-medium transition-all duration-200 flex items-center gap-3 ${
                   pathname?.startsWith('/dashboard/educator/blog')
-                    ? 'text-white'
+                    ? 'text-[#41005c] font-semibold'
                     : 'text-gray-700 hover:text-[#41005c]'
                 }`}
-                style={pathname?.startsWith('/dashboard/educator/blog') ? { backgroundColor: '#5a1a75' } : {}}
+                style={pathname?.startsWith('/dashboard/educator/blog') ? { backgroundColor: 'rgba(90, 26, 117, 0.15)' } : {}}
                 aria-current={pathname?.startsWith('/dashboard/educator/blog') ? 'page' : undefined}
               >
                 <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
@@ -312,10 +312,10 @@ export default function EducatorMobileMenu({ profile: propProfile, isPremium, on
                   onClick={closeMenu}
                   className={`py-3 px-4 rounded-lg font-medium transition-all duration-200 flex items-center gap-3 ${
                     pathname === '/dashboard/educator/subscription'
-                      ? 'text-white'
+                      ? 'text-[#41005c] font-semibold'
                       : 'text-gray-700 hover:text-[#41005c]'
                   }`}
-                  style={pathname === '/dashboard/educator/subscription' ? { backgroundColor: '#5a1a75' } : {}}
+                  style={pathname === '/dashboard/educator/subscription' ? { backgroundColor: 'rgba(90, 26, 117, 0.15)' } : {}}
                   aria-current={pathname === '/dashboard/educator/subscription' ? 'page' : undefined}
                 >
                   <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
@@ -343,10 +343,10 @@ export default function EducatorMobileMenu({ profile: propProfile, isPremium, on
                 onClick={closeMenu}
                 className={`py-3 px-4 rounded-lg font-medium transition-all duration-200 flex items-center gap-3 ${
                   pathname === '/pro/sap-accreditation'
-                    ? 'text-white'
+                    ? 'text-[#41005c] font-semibold'
                     : 'text-gray-700 hover:text-[#41005c]'
                 }`}
-                style={pathname === '/pro/sap-accreditation' ? { backgroundColor: '#5a1a75' } : {}}
+                style={pathname === '/pro/sap-accreditation' ? { backgroundColor: 'rgba(90, 26, 117, 0.15)' } : {}}
                 aria-current={pathname === '/pro/sap-accreditation' ? 'page' : undefined}
               >
                 <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">

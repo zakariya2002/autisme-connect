@@ -173,7 +173,7 @@ export default function FamilyMobileMenu({ profile: propProfile, onLogout }: Fam
                 onClick={closeMenu}
                 className={`py-3 px-4 rounded-lg font-medium transition-all duration-200 flex items-center gap-3 ${
                   pathname === '/dashboard/family/profile'
-                    ? 'bg-[#05a5a5] text-white'
+                    ? 'bg-[#c9eaea] text-[#027e7e] font-semibold'
                     : 'text-gray-700 hover:bg-[#e6f4f4] hover:text-[#027e7e]'
                 }`}
                 aria-current={pathname === '/dashboard/family/profile' ? 'page' : undefined}
@@ -190,7 +190,7 @@ export default function FamilyMobileMenu({ profile: propProfile, onLogout }: Fam
                 onClick={closeMenu}
                 className={`py-3 px-4 rounded-lg font-medium transition-all duration-200 flex items-center gap-3 ${
                   pathname === '/dashboard/family/messages'
-                    ? 'bg-[#05a5a5] text-white'
+                    ? 'bg-[#c9eaea] text-[#027e7e] font-semibold'
                     : 'text-gray-700 hover:bg-[#e6f4f4] hover:text-[#027e7e]'
                 }`}
                 aria-current={pathname === '/dashboard/family/messages' ? 'page' : undefined}
@@ -206,11 +206,11 @@ export default function FamilyMobileMenu({ profile: propProfile, onLogout }: Fam
                 href="/dashboard/family/children"
                 onClick={closeMenu}
                 className={`py-3 px-4 rounded-lg font-medium transition-all duration-200 flex items-center gap-3 ${
-                  pathname === '/dashboard/family/children'
-                    ? 'bg-[#05a5a5] text-white'
+                  pathname === '/dashboard/family/children' || pathname?.startsWith('/dashboard/family/children/')
+                    ? 'bg-[#c9eaea] text-[#027e7e] font-semibold'
                     : 'text-gray-700 hover:bg-[#e6f4f4] hover:text-[#027e7e]'
                 }`}
-                aria-current={pathname === '/dashboard/family/children' ? 'page' : undefined}
+                aria-current={pathname === '/dashboard/family/children' || pathname?.startsWith('/dashboard/family/children/') ? 'page' : undefined}
               >
                 <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" />
@@ -224,7 +224,7 @@ export default function FamilyMobileMenu({ profile: propProfile, onLogout }: Fam
                 onClick={closeMenu}
                 className={`py-3 px-4 rounded-lg font-medium transition-all duration-200 flex items-center gap-3 ${
                   pathname === '/dashboard/family/search'
-                    ? 'bg-[#05a5a5] text-white'
+                    ? 'bg-[#c9eaea] text-[#027e7e] font-semibold'
                     : 'text-gray-700 hover:bg-[#e6f4f4] hover:text-[#027e7e]'
                 }`}
                 aria-current={pathname === '/dashboard/family/search' ? 'page' : undefined}
@@ -241,7 +241,7 @@ export default function FamilyMobileMenu({ profile: propProfile, onLogout }: Fam
                 onClick={closeMenu}
                 className={`py-3 px-4 rounded-lg font-medium transition-all duration-200 flex items-center gap-3 ${
                   pathname === '/dashboard/family/bookings'
-                    ? 'bg-[#05a5a5] text-white'
+                    ? 'bg-[#c9eaea] text-[#027e7e] font-semibold'
                     : 'text-gray-700 hover:bg-[#e6f4f4] hover:text-[#027e7e]'
                 }`}
                 aria-current={pathname === '/dashboard/family/bookings' ? 'page' : undefined}
@@ -258,12 +258,12 @@ export default function FamilyMobileMenu({ profile: propProfile, onLogout }: Fam
                 onClick={closeMenu}
                 className={`py-3 px-4 rounded-lg font-medium transition-all duration-200 flex items-center gap-3 ${
                   pathname === '/dashboard/family/receipts'
-                    ? 'bg-[#05a5a5] text-white'
+                    ? 'bg-[#c9eaea] text-[#027e7e] font-semibold'
                     : 'text-gray-700 hover:bg-[#e6f4f4] hover:text-[#027e7e]'
                 }`}
                 aria-current={pathname === '/dashboard/family/receipts' ? 'page' : undefined}
               >
-                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true" style={{ color: pathname === '/dashboard/family/receipts' ? 'white' : '#027e7e' }}>
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true" style={{ color: '#027e7e' }}>
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
                 </svg>
                 Mes reçus
@@ -275,12 +275,12 @@ export default function FamilyMobileMenu({ profile: propProfile, onLogout }: Fam
                 onClick={closeMenu}
                 className={`py-3 px-4 rounded-lg font-medium transition-all duration-200 flex items-center gap-3 ${
                   pathname === '/dashboard/family/favorites'
-                    ? 'bg-[#05a5a5] text-white'
+                    ? 'bg-[#c9eaea] text-[#027e7e] font-semibold'
                     : 'text-gray-700 hover:bg-[#e6f4f4] hover:text-[#027e7e]'
                 }`}
                 aria-current={pathname === '/dashboard/family/favorites' ? 'page' : undefined}
               >
-                <svg className={`w-5 h-5 ${pathname === '/dashboard/family/favorites' ? '' : ''}`} fill="currentColor" viewBox="0 0 24 24" aria-hidden="true" style={{ color: pathname === '/dashboard/family/favorites' ? 'white' : '#f0879f' }}>
+                <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true" style={{ color: '#f0879f' }}>
                   <path d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
                 </svg>
                 Mes favoris
@@ -292,7 +292,7 @@ export default function FamilyMobileMenu({ profile: propProfile, onLogout }: Fam
                 onClick={closeMenu}
                 className={`py-3 px-4 rounded-lg font-medium transition-all duration-200 flex items-center gap-3 ${
                   pathname === '/dashboard/family/aides'
-                    ? 'bg-[#05a5a5] text-white'
+                    ? 'bg-[#c9eaea] text-[#027e7e] font-semibold'
                     : 'text-gray-700 hover:bg-[#e6f4f4] hover:text-[#027e7e]'
                 }`}
                 aria-current={pathname === '/dashboard/family/aides' ? 'page' : undefined}

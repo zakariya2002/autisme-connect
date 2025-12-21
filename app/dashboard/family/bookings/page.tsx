@@ -466,14 +466,14 @@ export default function FamilyBookingsPage() {
             {canJoinVideoCall(appointment) && (
               <button
                 onClick={() => window.open(`/video-call/${appointment.id}`, '_blank')}
-                className="w-full px-3 py-2.5 text-white rounded-lg text-sm font-medium transition flex items-center justify-center gap-2 animate-pulse"
-                style={{ background: 'linear-gradient(135deg, #7c3aed 0%, #8b5cf6 25%, #a855f7 50%, #c084fc 75%, #e879f9 100%)' }}
-                aria-label="Rejoindre l'appel vidéo"
+                className="w-full px-3 py-2.5 text-white rounded-lg text-sm font-medium transition flex items-center justify-center gap-2 hover:opacity-90"
+                style={{ backgroundColor: '#05a5a5' }}
+                aria-label="Rejoindre la séance vidéo"
               >
                 <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z" />
                 </svg>
-                Rejoindre la vidéo
+                Rejoindre la séance vidéo
               </button>
             )}
             {/* Bouton Ajouter à l'agenda - visible sur mobile */}
