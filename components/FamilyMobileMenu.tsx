@@ -305,6 +305,23 @@ export default function FamilyMobileMenu({ profile: propProfile, onLogout }: Fam
 
               <div className="border-t border-gray-200 my-4"></div>
 
+              {/* Relancer le tutoriel */}
+              <button
+                onClick={() => {
+                  if (profile?.id) {
+                    localStorage.removeItem(`family_onboarding_${profile.id}`);
+                    closeMenu();
+                    window.location.href = '/dashboard/family';
+                  }
+                }}
+                className="w-full py-3 px-4 rounded-lg font-medium transition-all duration-200 flex items-center gap-3 text-gray-700 hover:bg-[#e6f4f4] hover:text-[#027e7e]"
+              >
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+                Relancer le tutoriel
+              </button>
+
               {/* Découvrir Neuro Care - retour à la landing page */}
               <Link
                 href="/"
@@ -365,6 +382,7 @@ export default function FamilyMobileMenu({ profile: propProfile, onLogout }: Fam
         onClick={openMenu}
         className="p-1 text-white transition-colors duration-200"
         aria-label="Ouvrir le menu"
+        data-tour="menu-button"
       >
         <svg className="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M4 6h16M4 12h16M4 18h16" />

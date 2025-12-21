@@ -5,6 +5,7 @@ import { useRouter, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import { supabase } from '@/lib/supabase';
 import FamilyNavbar from '@/components/FamilyNavbar';
+import FamilyOnboarding from '@/components/FamilyOnboarding';
 
 // Labels des professions
 const professionLabels: { [key: string]: string } = {
@@ -155,41 +156,49 @@ export default function FamilyDashboard() {
       href: '/dashboard/family/profile',
       label: 'Mon profil',
       icon: getProfileIcon(),
+      tourId: 'action-profile',
     },
     {
       href: '/dashboard/family/favorites',
       label: 'Mes favoris',
       icon: '/images/icons/favorite-heart.svg',
+      tourId: 'action-favorites',
     },
     {
       href: '/dashboard/family/children',
       label: 'Mes proches',
       icon: '/images/icons/3.svg',
+      tourId: 'action-children',
     },
     {
       href: '/dashboard/family/receipts',
       label: 'Mes reçus',
       icon: '/images/icons/7.svg',
+      tourId: 'action-receipts',
     },
     {
       href: '/dashboard/family/bookings',
       label: 'Mes rendez-vous',
       icon: '/images/icons/4.svg',
+      tourId: 'action-bookings',
     },
     {
       href: '/dashboard/family/search',
       label: 'Recherche',
       icon: '/images/icons/9.svg',
+      tourId: 'action-search',
     },
     {
       href: '/dashboard/family/messages',
       label: 'Mes messages',
       icon: '/images/icons/5.svg',
+      tourId: 'action-messages',
     },
     {
       href: '/dashboard/family/aides',
       label: 'Aide',
       icon: '/images/icons/8.svg',
+      tourId: 'action-help',
     },
   ];
 
@@ -200,8 +209,11 @@ export default function FamilyDashboard() {
         <FamilyNavbar profile={profile} familyId={familyId} userId={userId} />
       </div>
 
+      {/* Tutoriel d'onboarding */}
+      {familyId && <FamilyOnboarding familyId={familyId} />}
+
       {/* Bandeau de bienvenue */}
-      <div className="px-4 py-6 flex items-center gap-4" style={{ backgroundColor: '#05a5a5' }}>
+      <div className="px-4 py-6 flex items-center gap-4" style={{ backgroundColor: '#05a5a5' }} data-tour="welcome-banner">
         {/* Avatar */}
         <div className="w-14 h-14 rounded-full bg-white flex items-center justify-center overflow-hidden flex-shrink-0 shadow-md">
           {profile?.avatar_url ? (
@@ -292,7 +304,7 @@ export default function FamilyDashboard() {
         )}
 
         {/* Section Mes prochains rendez-vous */}
-        <div className="mt-6 px-4">
+        <div className="mt-6 px-4" data-tour="appointments-section">
           <h2 className="text-lg font-bold text-gray-900 mb-3">Mes prochains rendez-vous</h2>
 
           {upcomingAppointments.length > 0 ? (
@@ -375,7 +387,7 @@ export default function FamilyDashboard() {
         </div>
 
         {/* Section Mon compte */}
-        <div className="mt-6 mx-4 bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
+        <div className="mt-6 mx-4 bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden" data-tour="account-section">
           <div className="px-4 py-3 border-b border-gray-100">
             <h2 className="text-lg font-bold text-gray-900">Mon compte</h2>
           </div>
@@ -387,6 +399,7 @@ export default function FamilyDashboard() {
                   key={item.href}
                   href={item.href}
                   className="flex items-center gap-3 p-3 rounded-xl hover:bg-gray-50 transition-colors"
+                  data-tour={item.tourId}
                 >
                   <div className="w-10 h-10 rounded-full overflow-hidden flex-shrink-0">
                     <img

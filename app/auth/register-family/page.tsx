@@ -520,18 +520,6 @@ export default function RegisterFamilyPage() {
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Âge de la personne avec TND</label>
-              <input
-                type="number"
-                min="0"
-                max="150"
-                value={familyData.person_with_autism_age}
-                onChange={(e) => setFamilyData({ ...familyData, person_with_autism_age: e.target.value })}
-                className="block w-full border border-gray-300 rounded-xl shadow-sm py-3 px-4 focus:ring-2 focus:ring-[#027e7e] focus:border-[#027e7e] transition-all"
-              />
-            </div>
-
-            <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">Besoins spécifiques (séparés par des virgules)</label>
               <textarea
                 rows={2}
