@@ -3,8 +3,7 @@
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { supabase } from '@/lib/supabase';
-import FamilyNavbar from '@/components/FamilyNavbar';
-import EducatorNavbar from '@/components/EducatorNavbar';
+import PublicNavbar from '@/components/PublicNavbar';
 import CommunityFeed from '@/components/community/CommunityFeed';
 import { CommunityPost } from '@/types/community';
 import { getPosts } from '@/lib/community/actions';
@@ -20,7 +19,6 @@ export default function CommunityPage() {
   const [loading, setLoading] = useState(true);
   const [posts, setPosts] = useState<CommunityPost[]>([]);
   const [totalPosts, setTotalPosts] = useState(0);
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   useEffect(() => {
     const fetchUserAndPosts = async () => {
@@ -92,121 +90,8 @@ export default function CommunityPage() {
 
   return (
     <div className="min-h-screen bg-[#fdf9f4]">
-      {/* Navbar based on role */}
-      {userRole === 'educator' ? (
-        <EducatorNavbar profile={profile} />
-      ) : userRole === 'family' ? (
-        <FamilyNavbar profile={profile} familyId={familyId} userId={userId} />
-      ) : (
-        // Public navbar (LP style)
-        <header className="sticky top-0 z-50" style={{ backgroundColor: '#027e7e' }}>
-          <div className="flex items-center justify-between px-4 py-4">
-            {/* Menu Hamburger */}
-            <button
-              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className="p-1 text-white"
-              aria-label="Ouvrir le menu de navigation"
-              aria-expanded={mobileMenuOpen}
-            >
-              <svg className="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M4 6h16M4 12h16M4 18h16" />
-              </svg>
-            </button>
-
-            {/* Logo centré */}
-            <Link href="/" className="absolute left-1/2 transform -translate-x-1/2" aria-label="Retour à l'accueil NeuroCare">
-              <img
-                src="/images/logo-neurocare.svg"
-                alt="NeuroCare"
-                className="h-20"
-              />
-            </Link>
-
-            {/* Espace vide pour équilibrer */}
-            <div className="w-8"></div>
-          </div>
-
-          {/* Menu mobile déroulant */}
-          {mobileMenuOpen && (
-            <div className="absolute top-full left-0 right-0 bg-white shadow-lg border-t border-gray-100 z-50">
-              <nav className="px-4 py-4 space-y-1" role="navigation" aria-label="Menu principal">
-                <Link
-                  href="/search"
-                  className="block py-3 font-medium text-gray-800"
-                  onClick={() => setMobileMenuOpen(false)}
-                >
-                  Rechercher un professionnel
-                </Link>
-                <Link
-                  href="/about"
-                  className="block py-3 font-medium text-gray-800"
-                  onClick={() => setMobileMenuOpen(false)}
-                >
-                  À propos
-                </Link>
-                <Link
-                  href="/familles/aides-financieres"
-                  className="block py-3 font-medium text-gray-800"
-                  onClick={() => setMobileMenuOpen(false)}
-                >
-                  Aides financières
-                </Link>
-                <Link
-                  href="/contact"
-                  className="block py-3 font-medium text-gray-800"
-                  onClick={() => setMobileMenuOpen(false)}
-                >
-                  Contact
-                </Link>
-                <Link
-                  href="/pro"
-                  className="block py-3 px-4 rounded-xl font-semibold text-center my-3"
-                  style={{ backgroundColor: '#f3e8ff', color: '#41005c' }}
-                  onClick={() => setMobileMenuOpen(false)}
-                >
-                  Vous êtes professionnel ?
-                </Link>
-                <Link
-                  href="/blog"
-                  className="flex items-center gap-3 py-3 font-medium text-gray-800"
-                  onClick={() => setMobileMenuOpen(false)}
-                >
-                  <svg className="w-5 h-5 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 8h6v4H7V8z" />
-                  </svg>
-                  Blog
-                </Link>
-                <Link
-                  href="/community"
-                  className="flex items-center gap-3 py-3 font-medium text-gray-800"
-                  onClick={() => setMobileMenuOpen(false)}
-                >
-                  <svg className="w-5 h-5 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
-                  </svg>
-                  Communauté
-                </Link>
-                <Link
-                  href="/auth/login"
-                  className="block py-3 px-4 text-white rounded-xl text-center font-semibold mt-3"
-                  style={{ backgroundColor: '#f0879f' }}
-                  onClick={() => setMobileMenuOpen(false)}
-                >
-                  Connexion
-                </Link>
-                <Link
-                  href="/auth/signup"
-                  className="block py-3 px-4 text-white rounded-xl text-center font-semibold mt-2"
-                  style={{ backgroundColor: '#027e7e' }}
-                  onClick={() => setMobileMenuOpen(false)}
-                >
-                  Inscription
-                </Link>
-              </nav>
-            </div>
-          )}
-        </header>
-      )}
+      {/* Navbar */}
+      <PublicNavbar />
 
       {/* Main content */}
       <main className="max-w-4xl mx-auto px-3 sm:px-4 py-4 sm:py-8">
