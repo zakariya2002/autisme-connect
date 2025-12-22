@@ -43,7 +43,8 @@ export default function FamilyNavbar({ profile, familyId, userId }: FamilyNavbar
             {/* Bouton déconnexion desktop */}
             <button
               onClick={handleLogout}
-              className="hidden md:block text-white hover:text-teal-100 px-4 py-2 font-medium transition"
+              className="hidden md:block px-4 py-2 font-medium transition rounded-lg hover:opacity-90"
+              style={{ backgroundColor: '#fdf9f4', color: '#027e7e' }}
             >
               Déconnexion
             </button>

@@ -215,36 +215,38 @@ export default function FamilyDashboard() {
       {familyId && <FamilyOnboarding familyId={familyId} userEmail={userEmail || undefined} />}
 
       {/* Bandeau de bienvenue */}
-      <div className="px-4 py-6 flex items-center gap-4" style={{ backgroundColor: '#05a5a5' }} data-tour="welcome-banner">
-        {/* Avatar */}
-        <div className="w-14 h-14 rounded-full bg-white flex items-center justify-center overflow-hidden flex-shrink-0 shadow-md">
-          {profile?.avatar_url ? (
-            <img
-              src={profile.avatar_url}
-              alt=""
-              className="w-full h-full object-cover"
-            />
-          ) : (
-            <img
-              src={profile?.gender === 'male' ? '/images/icons/avatar-male.svg' : profile?.gender === 'female' ? '/images/icons/avatar-female.svg' : ((profile?.id?.charCodeAt(0) || 0) % 2 === 0 ? '/images/icons/avatar-male.svg' : '/images/icons/avatar-female.svg')}
-              alt=""
-              className="w-full h-full object-cover"
-            />
-          )}
-        </div>
+      <div className="px-4 py-6 flex items-center justify-center lg:justify-center gap-4" style={{ backgroundColor: '#05a5a5' }} data-tour="welcome-banner">
+        <div className="flex items-center gap-4 lg:flex-col lg:text-center">
+          {/* Avatar */}
+          <div className="w-14 h-14 lg:w-20 lg:h-20 rounded-full bg-white flex items-center justify-center overflow-hidden flex-shrink-0 shadow-md">
+            {profile?.avatar_url ? (
+              <img
+                src={profile.avatar_url}
+                alt=""
+                className="w-full h-full object-cover"
+              />
+            ) : (
+              <img
+                src={profile?.gender === 'male' ? '/images/icons/avatar-male.svg' : profile?.gender === 'female' ? '/images/icons/avatar-female.svg' : ((profile?.id?.charCodeAt(0) || 0) % 2 === 0 ? '/images/icons/avatar-male.svg' : '/images/icons/avatar-female.svg')}
+                alt=""
+                className="w-full h-full object-cover"
+              />
+            )}
+          </div>
 
-        {/* Texte de bienvenue */}
-        <div>
-          <h1 className="text-xl font-bold text-white">
-            Bonjour {profile?.first_name || 'Utilisateur'}
-          </h1>
+          {/* Texte de bienvenue */}
+          <div>
+            <h1 className="text-xl lg:text-2xl font-bold text-white">
+              Bonjour {profile?.first_name || 'Utilisateur'}
+            </h1>
+          </div>
         </div>
       </div>
 
-      <div className="flex-1 pb-8">
+      <div className="flex-1 pb-8 lg:max-w-5xl lg:mx-auto lg:w-full lg:px-8">
         {/* Message de succès après paiement */}
         {showSuccessMessage && (
-          <div className="mx-4 mt-4 bg-green-50 border border-green-200 rounded-xl p-4" role="status" aria-live="polite">
+          <div className="mx-4 lg:mx-0 mt-4 bg-green-50 border border-green-200 rounded-xl p-4" role="status" aria-live="polite">
             <div className="flex items-start gap-3">
               <div className="flex-shrink-0">
                 <svg className="h-6 w-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
@@ -306,7 +308,7 @@ export default function FamilyDashboard() {
         )}
 
         {/* Section Mes prochains rendez-vous */}
-        <div className="mt-6 px-4" data-tour="appointments-section">
+        <div className="mt-6 px-4 lg:px-0" data-tour="appointments-section">
           <h2 className="text-lg font-bold text-gray-900 mb-3">Mes prochains rendez-vous</h2>
 
           {upcomingAppointments.length > 0 ? (
@@ -389,7 +391,7 @@ export default function FamilyDashboard() {
         </div>
 
         {/* Section Mon compte */}
-        <div className="mt-6 mx-4 bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden" data-tour="account-section">
+        <div className="mt-6 mx-4 lg:mx-0 bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden" data-tour="account-section">
           <div className="px-4 py-3 border-b border-gray-100">
             <h2 className="text-lg font-bold text-gray-900">Mon compte</h2>
           </div>
