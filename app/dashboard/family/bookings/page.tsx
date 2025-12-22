@@ -45,6 +45,9 @@ export default function FamilyBookingsPage() {
   const [reportDescription, setReportDescription] = useState('');
   const [reportLoading, setReportLoading] = useState(false);
 
+  // États pour les avis
+  const [reviewedAppointments, setReviewedAppointments] = useState<Set<string>>(new Set());
+
   const selectFilter = (filter: 'all' | 'pending' | 'upcoming' | 'past') => {
     setActiveFilter(prev => prev === filter ? null : filter);
   };
@@ -56,8 +59,25 @@ export default function FamilyBookingsPage() {
   useEffect(() => {
     if (familyId) {
       fetchAppointments();
+      fetchReviews();
     }
   }, [familyId]);
+
+  const fetchReviews = async () => {
+    if (!familyId) return;
+    try {
+      const { data } = await supabase
+        .from('reviews')
+        .select('booking_id')
+        .eq('family_id', familyId);
+
+      if (data) {
+        setReviewedAppointments(new Set(data.map(r => r.booking_id)));
+      }
+    } catch (error) {
+      console.error('Erreur lors de la récupération des avis:', error);
+    }
+  };
 
   const fetchProfile = async () => {
     try {
@@ -538,6 +558,31 @@ export default function FamilyBookingsPage() {
               </svg>
               Le professionnel ne s'est pas présenté
             </button>
+          </div>
+        )}
+
+        {/* Bouton Laisser un avis (rendez-vous terminés ou passés acceptés) */}
+        {(appointment.status === 'completed' || (appointment.status === 'accepted' && isPast)) && (
+          <div className="mt-4 pt-3 border-t border-gray-100">
+            {reviewedAppointments.has(appointment.id) ? (
+              <div className="w-full px-3 py-2 bg-green-50 text-green-700 rounded-lg text-sm font-medium flex items-center justify-center gap-2">
+                <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                </svg>
+                Avis déjà laissé
+              </div>
+            ) : (
+              <Link
+                href={`/reviews/create?booking=${appointment.id}&educator=${appointment.educator?.id}`}
+                className="w-full px-3 py-2 text-white rounded-lg text-sm font-medium transition flex items-center justify-center gap-2 hover:opacity-90"
+                style={{ backgroundColor: '#f0879f' }}
+              >
+                <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z" />
+                </svg>
+                Laisser un avis
+              </Link>
+            )}
           </div>
         )}
       </div>

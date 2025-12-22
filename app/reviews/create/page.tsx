@@ -6,6 +6,7 @@ import { useState, useEffect } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import { supabase } from '@/lib/supabase';
+import FamilyNavbar from '@/components/FamilyNavbar';
 
 export default function CreateReviewPage() {
   const router = useRouter();
@@ -16,13 +17,18 @@ export default function CreateReviewPage() {
   const [rating, setRating] = useState(5);
   const [comment, setComment] = useState('');
   const [loading, setLoading] = useState(false);
+  const [pageLoading, setPageLoading] = useState(true);
   const [familyId, setFamilyId] = useState('');
+  const [familyProfile, setFamilyProfile] = useState<any>(null);
+  const [userId, setUserId] = useState<string | null>(null);
+  const [educator, setEducator] = useState<any>(null);
+  const [appointment, setAppointment] = useState<any>(null);
 
   useEffect(() => {
-    fetchUserProfile();
+    fetchData();
   }, []);
 
-  const fetchUserProfile = async () => {
+  const fetchData = async () => {
     try {
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) {
@@ -30,17 +36,48 @@ export default function CreateReviewPage() {
         return;
       }
 
+      setUserId(user.id);
+
       const { data: profile } = await supabase
         .from('family_profiles')
-        .select('id')
+        .select('*')
         .eq('user_id', user.id)
         .single();
 
       if (profile) {
         setFamilyId(profile.id);
+        setFamilyProfile(profile);
+      }
+
+      // Récupérer les infos de l'éducateur
+      if (educatorId) {
+        const { data: educatorData } = await supabase
+          .from('educator_profiles')
+          .select('id, first_name, last_name, avatar_url, profession_type')
+          .eq('id', educatorId)
+          .single();
+
+        if (educatorData) {
+          setEducator(educatorData);
+        }
+      }
+
+      // Récupérer les infos du rendez-vous
+      if (bookingId) {
+        const { data: appointmentData } = await supabase
+          .from('appointments')
+          .select('id, appointment_date, start_time')
+          .eq('id', bookingId)
+          .single();
+
+        if (appointmentData) {
+          setAppointment(appointmentData);
+        }
       }
     } catch (error) {
       console.error('Erreur:', error);
+    } finally {
+      setPageLoading(false);
     }
   };
 
@@ -49,6 +86,7 @@ export default function CreateReviewPage() {
     setLoading(true);
 
     try {
+      // Insérer l'avis
       const { error } = await supabase
         .from('reviews')
         .insert({
@@ -61,8 +99,26 @@ export default function CreateReviewPage() {
 
       if (error) throw error;
 
-      alert('Avis publié avec succès!');
-      router.push('/bookings');
+      // Mettre à jour le rating moyen de l'éducateur
+      const { data: reviews } = await supabase
+        .from('reviews')
+        .select('rating')
+        .eq('educator_id', educatorId);
+
+      if (reviews && reviews.length > 0) {
+        const avgRating = reviews.reduce((sum, r) => sum + r.rating, 0) / reviews.length;
+
+        await supabase
+          .from('educator_profiles')
+          .update({
+            rating: Math.round(avgRating * 10) / 10,
+            total_reviews: reviews.length
+          })
+          .eq('id', educatorId);
+      }
+
+      alert('Merci pour votre avis !');
+      router.push('/dashboard/family/bookings');
     } catch (error: any) {
       alert('Erreur: ' + error.message);
     } finally {
@@ -70,79 +126,170 @@ export default function CreateReviewPage() {
     }
   };
 
+  const formatDate = (dateString: string) => {
+    const date = new Date(dateString);
+    return date.toLocaleDateString('fr-FR', {
+      weekday: 'long',
+      day: 'numeric',
+      month: 'long',
+      year: 'numeric'
+    });
+  };
+
+  const getRatingLabel = (r: number) => {
+    switch (r) {
+      case 1: return 'Très insatisfait';
+      case 2: return 'Insatisfait';
+      case 3: return 'Moyen';
+      case 4: return 'Satisfait';
+      case 5: return 'Très satisfait';
+      default: return '';
+    }
+  };
+
+  if (pageLoading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center" style={{ backgroundColor: '#fdf9f4' }}>
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2" style={{ borderColor: '#027e7e' }}></div>
+      </div>
+    );
+  }
+
   return (
-    <div className="min-h-screen bg-gray-50">
-      {/* Navigation */}
-      <nav className="bg-white shadow-sm">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between h-16 items-center">
-            <div className="flex items-center">
-              <Link href="/search" className="text-2xl font-bold text-primary-600">
-                Autisme Connect
-              </Link>
+    <div className="min-h-screen min-h-[100dvh] flex flex-col" style={{ backgroundColor: '#fdf9f4' }}>
+      {/* Navbar */}
+      <div className="sticky top-0 z-40">
+        <FamilyNavbar profile={familyProfile} familyId={familyId} userId={userId} />
+      </div>
+
+      <div className="flex-1 max-w-2xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8 w-full">
+        {/* En-tête */}
+        <div className="mb-6 sm:mb-8 text-center">
+          <div className="w-16 h-16 mx-auto mb-4 rounded-full flex items-center justify-center" style={{ backgroundColor: '#f0879f' }}>
+            <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z" />
+            </svg>
+          </div>
+          <h1 className="text-xl sm:text-2xl font-bold text-gray-900">Laisser un avis</h1>
+          <p className="text-gray-500 text-sm mt-1">Partagez votre expérience</p>
+        </div>
+
+        {/* Carte professionnel */}
+        {educator && (
+          <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-4 mb-6">
+            <div className="flex items-center gap-4">
+              {educator.avatar_url ? (
+                <img
+                  src={educator.avatar_url}
+                  alt={`${educator.first_name} ${educator.last_name}`}
+                  className="w-14 h-14 rounded-full object-cover border-2"
+                  style={{ borderColor: '#e6f4f4' }}
+                />
+              ) : (
+                <div className="w-14 h-14 rounded-full flex items-center justify-center" style={{ backgroundColor: '#e6f4f4' }}>
+                  <svg className="w-7 h-7" style={{ color: '#027e7e' }} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                  </svg>
+                </div>
+              )}
+              <div>
+                <h3 className="font-semibold text-gray-900">
+                  {educator.first_name} {educator.last_name}
+                </h3>
+                {appointment && (
+                  <p className="text-sm text-gray-500">
+                    RDV du {formatDate(appointment.appointment_date)}
+                  </p>
+                )}
+              </div>
             </div>
           </div>
-        </div>
-      </nav>
+        )}
 
-      <div className="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        <h1 className="text-3xl font-bold text-gray-900 mb-8">Laisser un avis</h1>
-
-        <form onSubmit={handleSubmit} className="bg-white rounded-lg shadow p-6 space-y-6">
+        {/* Formulaire */}
+        <form onSubmit={handleSubmit} className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 space-y-6">
+          {/* Note */}
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
-              Note *
+            <label className="block text-sm font-semibold text-gray-700 mb-3">
+              Votre note
             </label>
-            <div className="flex gap-2">
+            <div className="flex justify-center gap-2 mb-2">
               {[1, 2, 3, 4, 5].map((star) => (
                 <button
                   key={star}
                   type="button"
                   onClick={() => setRating(star)}
-                  className="text-3xl focus:outline-none"
+                  className="p-1 transition-transform hover:scale-110 focus:outline-none"
                 >
-                  {star <= rating ? '⭐' : '☆'}
+                  <svg
+                    className={`w-10 h-10 sm:w-12 sm:h-12 transition-colors ${star <= rating ? '' : 'text-gray-300'}`}
+                    style={star <= rating ? { color: '#f0879f' } : {}}
+                    fill="currentColor"
+                    viewBox="0 0 20 20"
+                  >
+                    <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                  </svg>
                 </button>
               ))}
             </div>
-            <p className="mt-1 text-sm text-gray-500">
-              {rating === 1 && 'Très insatisfait'}
-              {rating === 2 && 'Insatisfait'}
-              {rating === 3 && 'Moyen'}
-              {rating === 4 && 'Satisfait'}
-              {rating === 5 && 'Très satisfait'}
+            <p className="text-center text-sm font-medium" style={{ color: '#f0879f' }}>
+              {getRatingLabel(rating)}
             </p>
           </div>
 
+          {/* Commentaire */}
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
-              Commentaire
+            <label className="block text-sm font-semibold text-gray-700 mb-2">
+              Votre commentaire <span className="text-gray-400 font-normal">(optionnel)</span>
             </label>
             <textarea
-              rows={6}
+              rows={5}
               value={comment}
               onChange={(e) => setComment(e.target.value)}
-              placeholder="Partagez votre expérience avec cet éducateur..."
-              className="w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:ring-primary-500 focus:border-primary-500"
+              placeholder="Décrivez votre expérience avec ce professionnel..."
+              className="w-full border border-gray-300 rounded-xl shadow-sm py-3 px-4 focus:ring-2 focus:border-transparent transition-all resize-none text-gray-900"
+              style={{ outlineColor: '#027e7e' }}
             />
+            <p className="text-xs text-gray-400 mt-1">
+              Votre avis aidera d'autres familles à faire leur choix
+            </p>
           </div>
 
-          <div className="flex gap-2">
-            <button
-              type="submit"
-              disabled={loading}
-              className="px-6 py-2 bg-primary-600 text-white rounded-md hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 disabled:opacity-50"
-            >
-              {loading ? 'Publication...' : 'Publier l\'avis'}
-            </button>
+          {/* Boutons */}
+          <div className="flex gap-3 pt-2">
             <Link
-              href="/bookings"
-              className="px-6 py-2 bg-gray-300 text-gray-700 rounded-md hover:bg-gray-400"
+              href="/dashboard/family/bookings"
+              className="flex-1 px-4 py-3 bg-gray-100 text-gray-700 rounded-xl hover:bg-gray-200 text-center font-medium transition"
             >
               Annuler
             </Link>
+            <button
+              type="submit"
+              disabled={loading}
+              className="flex-1 px-4 py-3 text-white rounded-xl font-medium transition hover:opacity-90 disabled:opacity-50 flex items-center justify-center gap-2"
+              style={{ backgroundColor: '#027e7e' }}
+            >
+              {loading ? (
+                <>
+                  <div className="animate-spin h-4 w-4 border-2 border-white border-t-transparent rounded-full"></div>
+                  Envoi...
+                </>
+              ) : (
+                <>
+                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                  </svg>
+                  Publier l'avis
+                </>
+              )}
+            </button>
           </div>
         </form>
+
+        {/* Note de confidentialité */}
+        <p className="text-xs text-gray-400 text-center mt-6">
+          Votre avis sera publié avec votre prénom. Vous pouvez le modifier ou le supprimer à tout moment.
+        </p>
       </div>
     </div>
   );

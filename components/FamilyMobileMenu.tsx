@@ -157,7 +157,7 @@ export default function FamilyMobileMenu({ profile: propProfile, onLogout }: Fam
                 href="/dashboard/family"
                 onClick={closeMenu}
                 className="text-white py-3 px-4 rounded-xl font-bold transition-all duration-200 flex items-center gap-3 shadow-lg"
-                style={{ background: 'linear-gradient(135deg, #027e7e 0%, #3a9e9e 100%)' }}
+                style={{ background: 'linear-gradient(135deg, #f0879f 0%, #e6a0b0 100%)' }}
               >
                 <div className="w-8 h-8 bg-white/20 rounded-lg flex items-center justify-center">
                   <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">

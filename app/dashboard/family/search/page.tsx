@@ -832,12 +832,8 @@ export default function FamilySearchPage() {
                 {paginatedEducators.map((educator) => (
                   <div
                     key={educator.id}
-                    className="bg-white rounded-2xl shadow-md hover:shadow-lg transition-all duration-300 border border-gray-100 overflow-hidden group hover:-translate-y-1 relative cursor-pointer sm:cursor-default"
-                    onClick={(e) => {
-                      if (window.innerWidth < 640) {
-                        router.push(`/educator/${educator.id}`);
-                      }
-                    }}
+                    className="bg-white rounded-2xl shadow-md hover:shadow-lg transition-all duration-300 border border-gray-100 overflow-hidden group hover:-translate-y-1 relative cursor-pointer"
+                    onClick={() => router.push(`/educator/${educator.id}`)}
                   >
                     <div className="absolute top-4 right-4 z-10 sm:hidden">
                       <FavoriteButton
@@ -961,25 +957,13 @@ export default function FamilySearchPage() {
                           </div>
                         </div>
 
-                        <div className="flex sm:flex-col gap-3 w-full sm:w-auto sm:ml-4 mt-4 sm:mt-0">
-                          <div className="hidden sm:flex justify-center mb-1">
-                            <FavoriteButton
-                              educatorId={educator.id}
-                              familyId={familyId}
-                              isFavorite={favorites.has(educator.id)}
-                              onToggle={handleFavoriteToggle}
-                            />
-                          </div>
-                          <Link
-                            href={`/educator/${educator.id}`}
-                            className="hidden sm:inline-flex flex-1 sm:flex-none items-center justify-center gap-2 px-5 py-3 text-white rounded-xl hover:opacity-90 text-center text-sm sm:text-base font-bold shadow-md hover:shadow-lg transition-all whitespace-nowrap group/btn"
-                            style={{ backgroundColor: '#027e7e' }}
-                          >
-                            <svg className="w-5 h-5 group-hover/btn:scale-110 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-                            </svg>
-                            Voir le profil
-                          </Link>
+                        <div className="hidden sm:flex sm:flex-col gap-3 sm:w-auto sm:ml-4">
+                          <FavoriteButton
+                            educatorId={educator.id}
+                            familyId={familyId}
+                            isFavorite={favorites.has(educator.id)}
+                            onToggle={handleFavoriteToggle}
+                          />
                         </div>
                       </div>
                     </div>

@@ -59,6 +59,16 @@ interface Exception {
   reason: string | null;
 }
 
+interface Review {
+  id: string;
+  rating: number;
+  comment: string | null;
+  created_at: string;
+  family: {
+    first_name: string;
+  };
+}
+
 // Fonction pour capitaliser correctement un prénom
 const capitalizeFirstName = (name: string): string => {
   if (!name || !name.trim()) return '';
@@ -112,7 +122,8 @@ export default function EducatorPublicProfile({ params }: { params: { id: string
   const [error, setError] = useState('');
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [userRole, setUserRole] = useState<'educator' | 'family' | null>(null);
-  const [activeTab, setActiveTab] = useState<'about' | 'certifications' | 'availability' | 'cv' | 'video'>('about');
+  const [activeTab, setActiveTab] = useState<'about' | 'certifications' | 'availability' | 'cv' | 'video' | 'reviews'>('about');
+  const [reviews, setReviews] = useState<Review[]>([]);
   const [familyProfileId, setFamilyProfileId] = useState<string | null>(null);
   const [familyProfile, setFamilyProfile] = useState<any>(null);
   const [userId, setUserId] = useState<string | null>(null);
@@ -371,6 +382,26 @@ export default function EducatorPublicProfile({ params }: { params: { id: string
 
       if (!excsError && excs) {
         setExceptions(excs);
+      }
+
+      // Récupérer les avis
+      const { data: reviewsData, error: reviewsError } = await supabase
+        .from('reviews')
+        .select(`
+          id,
+          rating,
+          comment,
+          created_at,
+          family:family_profiles(first_name)
+        `)
+        .eq('educator_id', params.id)
+        .order('created_at', { ascending: false });
+
+      if (!reviewsError && reviewsData) {
+        setReviews(reviewsData.map((r: any) => ({
+          ...r,
+          family: r.family || { first_name: 'Anonyme' }
+        })));
       }
 
       setLoading(false);
@@ -672,6 +703,23 @@ export default function EducatorPublicProfile({ params }: { params: { id: string
             >
               Disponibilités
             </button>
+            <button
+              onClick={() => setActiveTab('reviews')}
+              role="tab"
+              aria-selected={activeTab === 'reviews'}
+              aria-controls="reviews-panel"
+              className={`px-3 sm:px-6 py-2 sm:py-2.5 rounded-md font-medium transition-all duration-200 flex items-center gap-1.5 sm:gap-2 whitespace-nowrap text-sm sm:text-base flex-shrink-0 ${
+                activeTab === 'reviews'
+                  ? 'text-white shadow-md'
+                  : 'text-gray-700 hover:bg-gray-100'
+              }`}
+              style={activeTab === 'reviews' ? { backgroundColor: '#f0879f' } : {}}
+            >
+              <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
+                <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+              </svg>
+              Avis {reviews.length > 0 && `(${reviews.length})`}
+            </button>
           </div>
         </div>
 
@@ -693,33 +741,6 @@ export default function EducatorPublicProfile({ params }: { params: { id: string
                   <h2 className="text-2xl font-bold text-gray-900" style={{ fontFamily: 'Verdana, sans-serif' }}>À propos</h2>
                 </div>
                 <p className="text-gray-700 leading-relaxed whitespace-pre-line text-base">{educator.bio}</p>
-              </div>
-            )}
-
-            {/* CV */}
-            {educator.cv_url && (
-              <div className="bg-white rounded-xl shadow-lg p-8 border border-gray-100 hover:shadow-xl transition-shadow duration-300">
-                <div className="flex items-center mb-5">
-                  <div className="w-10 h-10 bg-green-100 rounded-lg flex items-center justify-center mr-3">
-                    <svg className="w-6 h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-                    </svg>
-                  </div>
-                  <h2 className="text-2xl font-bold text-gray-900">Curriculum Vitae</h2>
-                </div>
-                <a
-                  href={`/api/educator-cvs/${encodeURIComponent(educator.cv_url)}`}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-flex items-center gap-3 px-6 py-3 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors duration-200 font-medium shadow-md hover:shadow-lg"
-                  aria-label={`Voir le CV de ${educator.first_name} ${educator.last_name} en PDF`}
-                >
-                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
-                  </svg>
-                  Voir le CV (PDF)
-                </a>
               </div>
             )}
 
@@ -1060,6 +1081,104 @@ export default function EducatorPublicProfile({ params }: { params: { id: string
                   </div>
                 )}
               </>
+            )}
+
+            {/* Onglet Avis */}
+            {activeTab === 'reviews' && (
+              <div role="tabpanel" id="reviews-panel" aria-labelledby="reviews-tab" className="bg-white rounded-xl shadow-lg p-4 sm:p-8 border border-gray-100 hover:shadow-xl transition-shadow duration-300">
+                <div className="flex items-center justify-between mb-6">
+                  <div className="flex items-center">
+                    <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-lg flex items-center justify-center mr-2 sm:mr-3" style={{ backgroundColor: '#f0879f' }}>
+                      <svg className="w-5 h-5 sm:w-6 sm:h-6 text-white" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
+                        <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                      </svg>
+                    </div>
+                    <div>
+                      <h2 className="text-lg sm:text-2xl font-bold text-gray-900">Avis des familles</h2>
+                      <p className="text-xs sm:text-sm text-gray-500">{reviews.length} avis au total</p>
+                    </div>
+                  </div>
+                  {reviews.length > 0 && (
+                    <div className="text-center">
+                      <div className="flex items-center gap-1">
+                        {[1, 2, 3, 4, 5].map((star) => {
+                          const avgRating = reviews.reduce((sum, r) => sum + r.rating, 0) / reviews.length;
+                          return (
+                            <svg
+                              key={star}
+                              className={`w-5 h-5 sm:w-6 sm:h-6 ${star <= Math.round(avgRating) ? '' : 'text-gray-300'}`}
+                              style={star <= Math.round(avgRating) ? { color: '#f0879f' } : {}}
+                              fill="currentColor"
+                              viewBox="0 0 20 20"
+                            >
+                              <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                            </svg>
+                          );
+                        })}
+                      </div>
+                      <p className="text-sm font-semibold text-gray-700 mt-1">
+                        {(reviews.reduce((sum, r) => sum + r.rating, 0) / reviews.length).toFixed(1)}/5
+                      </p>
+                    </div>
+                  )}
+                </div>
+
+                {reviews.length > 0 ? (
+                  <div className="space-y-4">
+                    {reviews.map((review) => (
+                      <div key={review.id} className="p-4 bg-gray-50 rounded-xl border border-gray-100">
+                        <div className="flex items-start justify-between mb-2">
+                          <div className="flex items-center gap-3">
+                            <div className="w-10 h-10 rounded-full flex items-center justify-center" style={{ backgroundColor: 'rgba(240, 135, 159, 0.15)' }}>
+                              <span className="font-bold text-sm" style={{ color: '#f0879f' }}>
+                                {review.family?.first_name?.charAt(0)?.toUpperCase() || 'A'}
+                              </span>
+                            </div>
+                            <div>
+                              <p className="font-semibold text-gray-900">
+                                {capitalizeFirstName(review.family?.first_name || 'Anonyme')}
+                              </p>
+                              <p className="text-xs text-gray-500">
+                                {new Date(review.created_at).toLocaleDateString('fr-FR', {
+                                  day: 'numeric',
+                                  month: 'long',
+                                  year: 'numeric'
+                                })}
+                              </p>
+                            </div>
+                          </div>
+                          <div className="flex items-center gap-0.5">
+                            {[1, 2, 3, 4, 5].map((star) => (
+                              <svg
+                                key={star}
+                                className={`w-4 h-4 ${star <= review.rating ? '' : 'text-gray-300'}`}
+                                style={star <= review.rating ? { color: '#f0879f' } : {}}
+                                fill="currentColor"
+                                viewBox="0 0 20 20"
+                              >
+                                <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                              </svg>
+                            ))}
+                          </div>
+                        </div>
+                        {review.comment && (
+                          <p className="text-gray-700 text-sm leading-relaxed mt-3 pl-13">
+                            "{review.comment}"
+                          </p>
+                        )}
+                      </div>
+                    ))}
+                  </div>
+                ) : (
+                  <div className="text-center py-12 bg-gray-50 rounded-lg">
+                    <svg className="w-16 h-16 text-gray-400 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z" />
+                    </svg>
+                    <p className="text-gray-600 font-medium">Aucun avis pour le moment</p>
+                    <p className="text-sm text-gray-500 mt-2">Soyez le premier à laisser un avis après votre rendez-vous !</p>
+                  </div>
+                )}
+              </div>
             )}
           </div>
 
