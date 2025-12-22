@@ -5,7 +5,6 @@ import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { supabase } from '@/lib/supabase';
 import PublicNavbar from '@/components/PublicNavbar';
-import { canEducatorCreateBooking } from '@/lib/subscription-utils';
 
 interface Educator {
   id: string;
@@ -381,12 +380,6 @@ export default function BookAppointmentPage({ params }: { params: { id: string }
 
     if (children.length > 0 && !selectedChildId) {
       setError('Veuillez sélectionner l\'enfant concerné par ce rendez-vous');
-      return;
-    }
-
-    const canBook = await canEducatorCreateBooking(params.id);
-    if (!canBook.canCreate) {
-      setError(canBook.reason || 'Limite de réservations atteinte');
       return;
     }
 

@@ -2,13 +2,10 @@
 
 import Link from 'next/link';
 import { useState, useEffect } from 'react';
-import { useRouter } from 'next/navigation';
 import { supabase } from '@/lib/supabase';
 import ProNavbar from '@/components/ProNavbar';
 
 export default function ProPricingPage() {
-  const router = useRouter();
-  const [loading, setLoading] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   useEffect(() => {
@@ -20,92 +17,15 @@ export default function ProPricingPage() {
     setIsLoggedIn(!!session);
   };
 
-  const handleStartTrial = async () => {
-    setLoading(true);
-
-    const { data: { session } } = await supabase.auth.getSession();
-
-    if (!session) {
-      router.push(`/auth/register-educator?plan=monthly`);
-      return;
-    }
-
-    const { data: educatorProfile } = await supabase
-      .from('educator_profiles')
-      .select('id')
-      .eq('user_id', session.user.id)
-      .single();
-
-    if (!educatorProfile) {
-      router.push(`/auth/register-educator?plan=monthly`);
-      return;
-    }
-
-    try {
-      const response = await fetch('/api/create-checkout-session', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          educatorId: educatorProfile.id,
-          planType: 'monthly',
-        }),
-      });
-
-      const data = await response.json();
-
-      if (data.url) {
-        window.location.href = data.url;
-      } else {
-        alert('Erreur lors de la création de la session de paiement');
-        setLoading(false);
-      }
-    } catch (error) {
-      console.error('Erreur:', error);
-      alert('Une erreur est survenue');
-      setLoading(false);
-    }
-  };
-
-  const plans = {
-    free: {
-      name: 'OFFRE DÉCOUVERTE',
-      icon: '🆓',
-      price: 0,
-      features: [
-        'Création de profil vérifié',
-        '3 rendez-vous acceptés/mois',
-        '5 conversations actives',
-        'Messagerie de base'
-      ]
-    },
-    pro: {
-      name: 'OFFRE PREMIUM',
-      icon: '⭐',
-      price: 29,
-      launchPrice: 0,
-      features: [
-        'Rendez-vous illimités',
-        'Conversations illimitées',
-        'Mise en avant dans les recherches',
-        'Badge Premium sur le profil',
-        'Outils de gestion avancés',
-        'Support prioritaire'
-      ],
-      commission: '12% sur prestations réservées via la plateforme*'
-    }
-  };
-
   const features = [
     { icon: '🎯', title: 'Visibilité Maximum', description: 'Profil visible par toutes les familles de votre région' },
-    { icon: '📅', title: 'Gestion des RDV', description: 'Système automatisé de demandes et acceptation en 1 clic' },
-    { icon: '💬', title: 'Messagerie Privée', description: 'Communication directe et sécurisée avec les familles' },
+    { icon: '📅', title: 'Rendez-vous Illimités', description: 'Acceptez autant de rendez-vous que vous le souhaitez' },
+    { icon: '💬', title: 'Messagerie Illimitée', description: 'Communication directe et sécurisée avec toutes les familles' },
     { icon: '💳', title: 'Gestion Financière', description: 'Définissez votre tarif et suivez vos interventions' },
-    { icon: '⭐', title: 'Avis & Réputation', description: 'Système de notation pour renforcer votre crédibilité' },
+    { icon: '⭐', title: 'Badge Vérifié', description: 'Inspirez confiance avec un profil vérifié' },
     { icon: '🔒', title: 'Sécurité & RGPD', description: 'Données cryptées et conformité RGPD' },
     { icon: '📊', title: 'Dashboard Pro', description: 'Statistiques complètes et calendrier intégré' },
-    { icon: '🤝', title: 'Support Prioritaire', description: 'Assistance technique réactive' },
+    { icon: '🤝', title: 'Support Dédié', description: 'Assistance technique réactive' },
   ];
 
   return (
@@ -116,129 +36,127 @@ export default function ProPricingPage() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 lg:py-20">
         {/* Hero */}
         <div className="text-center mb-16">
+          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full mb-6 text-white font-bold" style={{ backgroundColor: '#f0879f' }}>
+            <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+              <path fillRule="evenodd" d="M6.267 3.455a3.066 3.066 0 001.745-.723 3.066 3.066 0 013.976 0 3.066 3.066 0 001.745.723 3.066 3.066 0 012.812 2.812c.051.643.304 1.254.723 1.745a3.066 3.066 0 010 3.976 3.066 3.066 0 00-.723 1.745 3.066 3.066 0 01-2.812 2.812 3.066 3.066 0 00-1.745.723 3.066 3.066 0 01-3.976 0 3.066 3.066 0 00-1.745-.723 3.066 3.066 0 01-2.812-2.812 3.066 3.066 0 00-.723-1.745 3.066 3.066 0 010-3.976 3.066 3.066 0 00.723-1.745 3.066 3.066 0 012.812-2.812zm7.44 5.252a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+            </svg>
+            100% Gratuit
+          </div>
           <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-gray-900 mb-6">
-            Des tarifs{' '}
+            Un modèle{' '}
             <span style={{ color: '#41005c' }}>
-              transparents
+              transparent
             </span>
           </h1>
           <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-            Commencez gratuitement et passez Premium quand vous êtes prêt à développer votre activité.
+            Inscription et utilisation gratuites. Vous ne payez que lorsque vous gagnez de l'argent.
           </p>
         </div>
 
-        {/* Pricing Cards */}
-        <div className="max-w-5xl mx-auto mb-20 grid md:grid-cols-2 gap-8">
-          {/* FREE PLAN */}
-          <div className="bg-white rounded-3xl shadow-xl border-2 border-gray-200 p-8 relative hover:shadow-2xl transition-all">
-            <div className="absolute -top-4 left-1/2 transform -translate-x-1/2">
-              <div className="bg-gradient-to-r from-gray-600 to-gray-700 text-white px-6 py-2 rounded-full font-bold text-sm shadow-lg">
-                Parfait pour débuter
+        {/* Main Card */}
+        <div className="max-w-3xl mx-auto mb-20">
+          <div className="rounded-3xl shadow-2xl border-2 overflow-hidden" style={{ borderColor: '#41005c' }}>
+            {/* Header */}
+            <div className="p-8 text-white text-center" style={{ background: 'linear-gradient(135deg, #41005c 0%, #5a1a75 100%)' }}>
+              <div className="w-20 h-20 bg-white/20 rounded-full flex items-center justify-center mx-auto mb-6">
+                <svg className="w-10 h-10 text-white" fill="currentColor" viewBox="0 0 20 20">
+                  <path fillRule="evenodd" d="M6.267 3.455a3.066 3.066 0 001.745-.723 3.066 3.066 0 013.976 0 3.066 3.066 0 001.745.723 3.066 3.066 0 012.812 2.812c.051.643.304 1.254.723 1.745a3.066 3.066 0 010 3.976 3.066 3.066 0 00-.723 1.745 3.066 3.066 0 01-2.812 2.812 3.066 3.066 0 00-1.745.723 3.066 3.066 0 01-3.976 0 3.066 3.066 0 00-1.745-.723 3.066 3.066 0 01-2.812-2.812 3.066 3.066 0 00-.723-1.745 3.066 3.066 0 010-3.976 3.066 3.066 0 00.723-1.745 3.066 3.066 0 012.812-2.812zm7.44 5.252a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                </svg>
               </div>
+              <h2 className="text-3xl font-bold mb-2">Accès Premium Gratuit</h2>
+              <p className="text-white/80">Toutes les fonctionnalités, sans abonnement</p>
             </div>
 
-            <div className="text-center mb-8 mt-4">
-              <div className="text-5xl mb-4">{plans.free.icon}</div>
-              <h3 className="text-2xl font-bold text-gray-900 mb-4">{plans.free.name}</h3>
-              <div className="text-5xl font-bold text-gray-900 mb-2">0€</div>
-              <p className="text-gray-500 font-medium">Pour toujours</p>
-            </div>
-
-            <ul className="space-y-4 mb-8">
-              {plans.free.features.map((feature, index) => (
-                <li key={index} className="flex items-center">
-                  <svg className="w-5 h-5 text-green-500 mr-3 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
-                    <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
-                  </svg>
-                  <span className="text-gray-700">{feature}</span>
-                </li>
-              ))}
-            </ul>
-
-            <Link
-              href="/auth/register-educator"
-              className="block w-full text-center px-6 py-4 bg-gray-100 text-gray-800 rounded-xl hover:bg-gray-200 font-bold text-lg transition-all"
-            >
-              Commencer gratuitement
-            </Link>
-          </div>
-
-          {/* PRO PLAN */}
-          <div className="rounded-3xl shadow-2xl border-2 p-8 relative hover:shadow-3xl transition-all transform hover:-translate-y-1" style={{ backgroundColor: 'rgba(65, 0, 92, 0.05)', borderColor: '#41005c' }}>
-            <div className="absolute -top-4 left-1/2 transform -translate-x-1/2">
-              <div className="text-white px-6 py-2 rounded-full font-bold text-sm shadow-lg animate-pulse" style={{ backgroundColor: '#f0879f' }}>
-                🎁 3 premiers mois offerts
+            {/* Content */}
+            <div className="p-8 bg-white">
+              {/* Price */}
+              <div className="text-center mb-8 pb-8 border-b border-gray-200">
+                <div className="flex items-center justify-center gap-4">
+                  <div>
+                    <div className="text-6xl font-bold" style={{ color: '#41005c' }}>0€</div>
+                    <p className="text-gray-500 font-medium">Inscription gratuite</p>
+                  </div>
+                  <div className="text-3xl text-gray-300">+</div>
+                  <div>
+                    <div className="text-6xl font-bold" style={{ color: '#41005c' }}>12%</div>
+                    <p className="text-gray-500 font-medium">Commission sur RDV*</p>
+                  </div>
+                </div>
               </div>
-            </div>
 
-            <div className="text-center mb-8 mt-4">
-              <div className="text-5xl mb-4">{plans.pro.icon}</div>
-              <h3 className="text-2xl font-bold text-gray-900 mb-4">{plans.pro.name}</h3>
-              <div className="flex items-center justify-center gap-2 mb-2">
-                <span className="text-3xl text-gray-400 line-through">29€/mois</span>
-                <span className="text-5xl font-bold" style={{ color: '#41005c' }}>GRATUIT</span>
+              {/* Features list */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-8">
+                {[
+                  'Rendez-vous illimités',
+                  'Conversations illimitées',
+                  'Profil mis en avant',
+                  'Badge vérifié',
+                  'Dashboard complet',
+                  'Support dédié',
+                  'Outils de gestion',
+                  'Statistiques avancées',
+                ].map((feature, index) => (
+                  <div key={index} className="flex items-center gap-3">
+                    <div className="w-6 h-6 rounded-full flex items-center justify-center flex-shrink-0" style={{ backgroundColor: '#f0879f' }}>
+                      <svg className="w-4 h-4 text-white" fill="currentColor" viewBox="0 0 20 20">
+                        <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                      </svg>
+                    </div>
+                    <span className="text-gray-700 font-medium">{feature}</span>
+                  </div>
+                ))}
               </div>
-              <p className="font-medium text-sm" style={{ color: '#f0879f' }}>puis 29€/mois</p>
-              <p className="font-medium text-sm mt-1" style={{ color: '#41005c' }}>+ {plans.pro.commission}</p>
+
+              {/* CTA */}
+              <Link
+                href={isLoggedIn ? "/dashboard/educator" : "/auth/register-educator"}
+                className="block w-full text-center px-8 py-4 text-white rounded-xl font-bold text-lg shadow-xl hover:shadow-2xl transition-all hover:opacity-90"
+                style={{ backgroundColor: '#41005c' }}
+              >
+                {isLoggedIn ? 'Accéder à mon compte' : 'Créer mon profil gratuitement'}
+              </Link>
+
+              <p className="text-sm text-gray-500 text-center mt-4">
+                * Commission uniquement sur les prestations réservées via NeuroCare
+              </p>
             </div>
-
-            <ul className="space-y-4 mb-8">
-              {plans.pro.features.map((feature, index) => (
-                <li key={index} className="flex items-center">
-                  <svg className="w-5 h-5 mr-3 flex-shrink-0" style={{ color: '#41005c' }} fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
-                    <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
-                  </svg>
-                  <span className="text-gray-700 font-medium">{feature}</span>
-                </li>
-              ))}
-            </ul>
-
-            <button
-              onClick={handleStartTrial}
-              disabled={loading}
-              className="w-full px-6 py-4 text-white rounded-xl font-bold text-lg shadow-xl hover:shadow-2xl transition-all disabled:opacity-50 hover:opacity-90"
-              style={{ backgroundColor: '#41005c' }}
-            >
-              {loading ? 'Chargement...' : 'Passer Premium'}
-            </button>
-            <p className="text-xs text-gray-500 text-center mt-3">Résiliable à tout moment</p>
           </div>
         </div>
 
         {/* Comment ça marche */}
         <div className="max-w-4xl mx-auto mb-20 bg-white rounded-3xl shadow-xl p-8 lg:p-12 border border-gray-100">
           <h2 className="text-3xl font-bold text-gray-900 mb-8 text-center">
-            💰 Comment fonctionne la commission ?
+            Comment fonctionne la commission ?
           </h2>
 
-          <div className="grid md:grid-cols-2 gap-8 mb-8">
-            <div className="bg-gray-50 rounded-2xl p-6">
-              <h3 className="font-bold text-gray-900 mb-4 flex items-center gap-2">
-                <span className="w-8 h-8 rounded-full flex items-center justify-center font-bold text-white" style={{ backgroundColor: '#41005c' }}>1</span>
-                Abonnement mensuel
-              </h3>
-              <p className="text-gray-600">
-                <span className="text-3xl font-bold text-gray-900">29€</span>/mois pour l'accès à la plateforme
-                <br />
-                <span className="text-sm font-medium" style={{ color: '#f0879f' }}>(3 premiers mois offerts !)</span>
-              </p>
+          <div className="grid md:grid-cols-3 gap-6 mb-8">
+            <div className="text-center">
+              <div className="w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4" style={{ backgroundColor: 'rgba(65, 0, 92, 0.1)' }}>
+                <span className="text-2xl font-bold" style={{ color: '#41005c' }}>1</span>
+              </div>
+              <h3 className="font-bold text-gray-900 mb-2">Créez votre profil</h3>
+              <p className="text-gray-600 text-sm">Inscription 100% gratuite, aucun frais caché</p>
             </div>
 
-            <div className="bg-gray-50 rounded-2xl p-6">
-              <h3 className="font-bold text-gray-900 mb-4 flex items-center gap-2">
-                <span className="w-8 h-8 rounded-full flex items-center justify-center font-bold text-white" style={{ backgroundColor: '#41005c' }}>2</span>
-                Commission de succès
-              </h3>
-              <p className="text-gray-600">
-                <span className="text-3xl font-bold text-gray-900">12%</span> uniquement sur les prestations
-                <br />
-                <span className="text-sm">trouvées via neurocare</span>
-              </p>
+            <div className="text-center">
+              <div className="w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4" style={{ backgroundColor: 'rgba(65, 0, 92, 0.1)' }}>
+                <span className="text-2xl font-bold" style={{ color: '#41005c' }}>2</span>
+              </div>
+              <h3 className="font-bold text-gray-900 mb-2">Recevez des demandes</h3>
+              <p className="text-gray-600 text-sm">Les familles vous contactent via la plateforme</p>
+            </div>
+
+            <div className="text-center">
+              <div className="w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4" style={{ backgroundColor: 'rgba(65, 0, 92, 0.1)' }}>
+                <span className="text-2xl font-bold" style={{ color: '#41005c' }}>3</span>
+              </div>
+              <h3 className="font-bold text-gray-900 mb-2">Soyez rémunéré</h3>
+              <p className="text-gray-600 text-sm">12% de commission sur les RDV conclus</p>
             </div>
           </div>
 
           <div className="rounded-2xl p-6 border" style={{ backgroundColor: 'rgba(65, 0, 92, 0.05)', borderColor: 'rgba(65, 0, 92, 0.2)' }}>
-            <h4 className="font-bold text-gray-900 mb-4 text-lg">📊 Exemple concret :</h4>
+            <h4 className="font-bold text-gray-900 mb-4 text-lg">Exemple concret :</h4>
             <p className="text-gray-700 mb-3">
               Une famille vous réserve pour <strong style={{ color: '#41005c' }}>400€/mois</strong> via la plateforme
             </p>
@@ -248,18 +166,16 @@ export default function ProPricingPage() {
                 <p className="text-2xl font-bold" style={{ color: '#41005c' }}>352€</p>
               </div>
               <div>
-                <span className="text-sm text-gray-500">Commission</span>
+                <span className="text-sm text-gray-500">Commission NeuroCare</span>
                 <p className="text-2xl font-bold text-gray-600">48€</p>
               </div>
             </div>
-            <p className="font-semibold mt-4" style={{ color: '#f0879f' }}>
-              💡 Sans notre plateforme, cette famille = 0€ pour vous !
-            </p>
+            <div className="mt-4 pt-4 border-t" style={{ borderColor: 'rgba(65, 0, 92, 0.2)' }}>
+              <p className="font-semibold" style={{ color: '#f0879f' }}>
+                Vos clients existants ou trouvés en dehors de la plateforme = 0% de commission !
+              </p>
+            </div>
           </div>
-
-          <p className="text-sm text-gray-500 text-center mt-6">
-            * Vos clients existants = <strong>0% de commission</strong>
-          </p>
         </div>
 
         {/* Features Grid */}
@@ -281,65 +197,61 @@ export default function ProPricingPage() {
           </div>
         </div>
 
-        {/* Comparison Table */}
-        <div className="max-w-4xl mx-auto mb-20">
-          <h2 className="text-2xl sm:text-3xl font-bold text-center text-gray-900 mb-8 sm:mb-12">
-            Comparaison des offres
+        {/* Pourquoi ce modèle */}
+        <div className="max-w-4xl mx-auto mb-20 bg-gradient-to-br from-white to-purple-50 rounded-3xl shadow-xl p-8 lg:p-12 border border-purple-100">
+          <h2 className="text-3xl font-bold text-gray-900 mb-8 text-center">
+            Pourquoi ce modèle ?
           </h2>
-          <div className="bg-white rounded-2xl shadow-xl overflow-hidden">
-            <div className="overflow-x-auto">
-              <table className="w-full min-w-[400px]">
-                <thead className="text-white" style={{ backgroundColor: '#41005c' }}>
-                  <tr>
-                    <th className="py-3 sm:py-4 px-3 sm:px-6 text-left text-xs sm:text-base">Fonctionnalité</th>
-                    <th className="py-3 sm:py-4 px-2 sm:px-6 text-center text-xs sm:text-base">Découverte</th>
-                    <th className="py-3 sm:py-4 px-2 sm:px-6 text-center bg-white/10 text-xs sm:text-base">Premium</th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-gray-200">
-                  {[
-                    { feature: 'Profil vérifié', free: true, premium: true },
-                    { feature: 'Rendez-vous', free: '3/mois', premium: 'Illimité' },
-                    { feature: 'Conversations', free: '5 actives', premium: 'Illimité' },
-                    { feature: 'Mise en avant', free: false, premium: true },
-                    { feature: 'Badge Premium', free: false, premium: true },
-                    { feature: 'Support prioritaire', free: false, premium: true },
-                    { feature: 'Abonnement', free: 'Gratuit', premium: '3 mois offerts puis 29€/mois' },
-                    { feature: 'Commission', free: '12%*', premium: '12%*' },
-                  ].map((row, index) => (
-                    <tr key={index} className="hover:bg-gray-50">
-                      <td className="py-3 sm:py-4 px-3 sm:px-6 font-medium text-gray-900 text-xs sm:text-base">{row.feature}</td>
-                      <td className="py-3 sm:py-4 px-2 sm:px-6 text-center">
-                        {typeof row.free === 'boolean' ? (
-                          row.free ? (
-                            <span className="text-green-600 text-lg sm:text-2xl">✓</span>
-                          ) : (
-                            <span className="text-gray-300 text-lg sm:text-2xl">✗</span>
-                          )
-                        ) : (
-                          <span className="text-gray-700 text-xs sm:text-base">{row.free}</span>
-                        )}
-                      </td>
-                      <td className="py-3 sm:py-4 px-2 sm:px-6 text-center" style={{ backgroundColor: 'rgba(65, 0, 92, 0.05)' }}>
-                        {typeof row.premium === 'boolean' ? (
-                          row.premium ? (
-                            <span className="text-lg sm:text-2xl font-bold" style={{ color: '#41005c' }}>✓</span>
-                          ) : (
-                            <span className="text-gray-300 text-lg sm:text-2xl">✗</span>
-                          )
-                        ) : (
-                          <span className="font-bold text-xs sm:text-base" style={{ color: '#41005c' }}>{row.premium}</span>
-                        )}
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
+
+          <div className="grid md:grid-cols-2 gap-8">
+            <div className="flex gap-4">
+              <div className="w-12 h-12 rounded-full flex items-center justify-center flex-shrink-0" style={{ backgroundColor: '#f0879f' }}>
+                <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+              </div>
+              <div>
+                <h3 className="font-bold text-gray-900 mb-2">Pas de frais fixes</h3>
+                <p className="text-gray-600 text-sm">Vous ne payez rien pour vous inscrire et utiliser la plateforme. Zéro risque financier.</p>
+              </div>
+            </div>
+
+            <div className="flex gap-4">
+              <div className="w-12 h-12 rounded-full flex items-center justify-center flex-shrink-0" style={{ backgroundColor: '#f0879f' }}>
+                <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+                </svg>
+              </div>
+              <div>
+                <h3 className="font-bold text-gray-900 mb-2">Alignement des intérêts</h3>
+                <p className="text-gray-600 text-sm">Nous gagnons uniquement quand vous gagnez. Notre succès dépend du vôtre.</p>
+              </div>
+            </div>
+
+            <div className="flex gap-4">
+              <div className="w-12 h-12 rounded-full flex items-center justify-center flex-shrink-0" style={{ backgroundColor: '#f0879f' }}>
+                <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+                </svg>
+              </div>
+              <div>
+                <h3 className="font-bold text-gray-900 mb-2">Transparence totale</h3>
+                <p className="text-gray-600 text-sm">Un seul tarif simple : 12%. Pas de frais cachés, pas de surprises.</p>
+              </div>
+            </div>
+
+            <div className="flex gap-4">
+              <div className="w-12 h-12 rounded-full flex items-center justify-center flex-shrink-0" style={{ backgroundColor: '#f0879f' }}>
+                <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
+                </svg>
+              </div>
+              <div>
+                <h3 className="font-bold text-gray-900 mb-2">Focus sur la qualité</h3>
+                <p className="text-gray-600 text-sm">Nous investissons dans la plateforme pour vous apporter toujours plus de familles.</p>
+              </div>
             </div>
           </div>
-          <p className="text-xs sm:text-sm text-gray-500 text-center mt-4 px-4">
-            * Commission uniquement sur les prestations trouvées via la plateforme
-          </p>
         </div>
 
         {/* FAQ */}
@@ -350,20 +262,24 @@ export default function ProPricingPage() {
           <div className="space-y-4">
             {[
               {
-                q: "Comment fonctionne l'offre de lancement ?",
-                a: "Les 3 premiers mois sont entièrement gratuits ! Vous bénéficiez d'un accès complet à toutes les fonctionnalités Premium dès votre inscription. L'abonnement à 29€/mois démarre ensuite automatiquement."
+                q: "L'inscription est-elle vraiment gratuite ?",
+                a: "Oui, 100% gratuite. Vous créez votre profil, accédez à toutes les fonctionnalités et commencez à recevoir des demandes sans rien payer."
               },
               {
                 q: "Comment fonctionne la commission de 12% ?",
-                a: "La commission s'applique uniquement sur les prestations réservées via neurocare. Vos clients existants ou trouvés en dehors de la plateforme ne sont pas concernés."
+                a: "La commission s'applique uniquement sur les prestations réservées et payées via NeuroCare. Vos clients existants ou trouvés en dehors de la plateforme ne sont pas concernés : 0% de commission."
               },
               {
-                q: "Puis-je annuler à tout moment ?",
-                a: "Oui, vous pouvez résilier votre abonnement Premium à tout moment depuis votre tableau de bord. Aucun frais de résiliation."
+                q: "Y a-t-il des limites sur le nombre de rendez-vous ?",
+                a: "Non, aucune limite ! Vous pouvez accepter autant de rendez-vous et de conversations que vous le souhaitez."
               },
               {
-                q: "Quels moyens de paiement acceptez-vous ?",
-                a: "Nous acceptons toutes les cartes bancaires (Visa, Mastercard, American Express) via Stripe, notre partenaire de paiement sécurisé."
+                q: "Quand suis-je payé ?",
+                a: "Après chaque prestation réalisée, le paiement vous est transféré directement sur votre compte bancaire, moins la commission de 12%."
+              },
+              {
+                q: "Puis-je quitter la plateforme à tout moment ?",
+                a: "Absolument. Pas d'engagement, pas de frais de résiliation. Vous êtes libre de partir quand vous le souhaitez."
               },
             ].map((faq, index) => (
               <details key={index} className="bg-white rounded-xl shadow-md overflow-hidden group">
@@ -387,25 +303,15 @@ export default function ProPricingPage() {
             Prêt à développer votre activité ?
           </h2>
           <p className="text-xl mb-8 opacity-90">
-            Rejoignez les professionnels qui font confiance à neurocare
+            Rejoignez les professionnels qui font confiance à NeuroCare
           </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Link
-              href="/auth/register-educator"
-              className="px-8 py-4 bg-white rounded-xl hover:bg-gray-100 font-bold text-lg shadow-xl transition-all"
-              style={{ color: '#41005c' }}
-            >
-              Commencer gratuitement
-            </Link>
-            <button
-              onClick={handleStartTrial}
-              disabled={loading}
-              className="px-8 py-4 text-white border-2 border-white/30 rounded-xl hover:bg-white/10 font-bold text-lg transition-all disabled:opacity-50"
-              style={{ backgroundColor: 'rgba(240, 135, 159, 0.5)' }}
-            >
-              {loading ? 'Chargement...' : 'Passer Premium'}
-            </button>
-          </div>
+          <Link
+            href={isLoggedIn ? "/dashboard/educator" : "/auth/register-educator"}
+            className="inline-block px-8 py-4 bg-white rounded-xl hover:bg-gray-100 font-bold text-lg shadow-xl transition-all"
+            style={{ color: '#41005c' }}
+          >
+            {isLoggedIn ? 'Accéder à mon compte' : 'Créer mon profil gratuitement'}
+          </Link>
         </div>
       </div>
 
@@ -436,7 +342,7 @@ export default function ProPricingPage() {
             <nav aria-labelledby="footer-nav-pros">
               <h3 id="footer-nav-pros" className="font-bold text-white mb-4">Pour les pros</h3>
               <ul className="space-y-2 text-sm" style={{ color: 'rgba(255, 255, 255, 0.7)' }}>
-                <li><Link href="/pro/pricing" className="hover:text-white transition-colors">Tarifs</Link></li>
+                <li><Link href="/pro/pricing" className="hover:text-white transition-colors">Notre modèle</Link></li>
                 <li><Link href="/pro/how-it-works" className="hover:text-white transition-colors">Comment ça marche</Link></li>
                 <li><Link href="/pro/sap-accreditation" className="hover:text-white transition-colors">Guide SAP</Link></li>
                 <li><Link href="/auth/register-educator" className="hover:text-white transition-colors">S'inscrire</Link></li>
@@ -478,7 +384,7 @@ export default function ProPricingPage() {
 
               {/* Copyright */}
               <p className="text-sm" style={{ color: 'rgba(255, 255, 255, 0.7)' }}>
-                © 2025 neurocare. Tous droits réservés.
+                © 2025 NeuroCare. Tous droits réservés.
               </p>
             </div>
           </div>

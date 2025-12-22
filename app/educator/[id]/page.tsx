@@ -7,7 +7,6 @@ import { supabase } from '@/lib/supabase';
 import PublicNavbar from '@/components/PublicNavbar';
 import FamilyNavbar from '@/components/FamilyNavbar';
 import ContactQuestionnaireModal from '@/components/ContactQuestionnaireModal';
-import { canEducatorCreateConversation } from '@/lib/subscription-utils';
 import TndToggle from '@/components/TndToggle';
 
 interface EducatorProfile {
@@ -223,13 +222,6 @@ export default function EducatorPublicProfile({ params }: { params: { id: string
     if (!familyProfileId) return;
 
     try {
-      // Vérifier si l'éducateur peut accepter une nouvelle conversation
-      const conversationCheck = await canEducatorCreateConversation(params.id);
-      if (!conversationCheck.canCreate) {
-        alert(`Cet éducateur a atteint sa limite de conversations actives (${conversationCheck.limit}). Il doit passer Premium pour accepter plus de conversations.`);
-        return;
-      }
-
       // Vérifier si une conversation existe déjà
       const { data: existingConv } = await supabase
         .from('conversations')
@@ -308,16 +300,8 @@ export default function EducatorPublicProfile({ params }: { params: { id: string
       console.log('📹 Video URL:', profile.video_presentation_url);
       console.log('📹 Video Duration:', profile.video_duration_seconds);
 
-      // Vérifier si l'éducateur est Premium
-      const { data: subscriptions } = await supabase
-        .from('subscriptions')
-        .select('status')
-        .eq('educator_id', params.id)
-        .in('status', ['active', 'trialing']);
-
-      if (subscriptions && subscriptions.length > 0) {
-        setIsPremium(true);
-      }
+      // Tous les éducateurs sont Premium (pas d'abonnement requis)
+      setIsPremium(true);
 
       // Tracker la vue du profil (en arrière-plan, ne pas bloquer l'affichage)
       fetch('/api/track-profile-view', {

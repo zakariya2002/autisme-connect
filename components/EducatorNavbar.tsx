@@ -95,14 +95,6 @@ export default function EducatorNavbar({ profile: propProfile, subscription: pro
             {profile?.id && userId && (
               <NotificationBell educatorId={profile.id} userId={userId} />
             )}
-            {isPremium && (
-              <Link href="/dashboard/educator/subscription" className="hidden md:flex text-white px-3 py-2 font-medium transition items-center gap-2 hover:opacity-80">
-                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z" />
-                </svg>
-                Mon abonnement
-              </Link>
-            )}
             <button onClick={handleLogout} className="hidden md:block text-white px-3 py-2 font-medium transition hover:opacity-80">
               Déconnexion
             </button>
