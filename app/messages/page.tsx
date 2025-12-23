@@ -902,8 +902,8 @@ export default function MessagesPage() {
                               value={newMessage}
                               onChange={(e) => setNewMessage(e.target.value)}
                               placeholder="Présentez-vous..."
-                              className="flex-1 border border-gray-200 rounded-xl shadow-sm py-2.5 px-4 focus:outline-none focus:ring-2 text-sm sm:text-base"
-                              style={{ '--tw-ring-color': primaryColor } as any}
+                              className="flex-1 border border-gray-200 rounded-xl shadow-sm py-2.5 px-4 focus:outline-none focus:ring-2 text-base"
+                              style={{ '--tw-ring-color': primaryColor, fontSize: '16px' } as any}
                             />
                             <button
                               type="submit"
@@ -984,10 +984,10 @@ export default function MessagesPage() {
                               if (moderationWarning) setModerationWarning(null);
                             }}
                             placeholder="Message..."
-                            className={`flex-1 border rounded-xl shadow-sm py-2.5 px-4 focus:outline-none focus:ring-2 text-sm sm:text-base min-w-0 ${
+                            className={`flex-1 border rounded-xl shadow-sm py-2.5 px-4 focus:outline-none focus:ring-2 text-base min-w-0 ${
                               moderationWarning ? 'border-red-300 bg-red-50' : 'border-gray-200'
                             }`}
-                            style={{ '--tw-ring-color': primaryColor } as any}
+                            style={{ '--tw-ring-color': primaryColor, fontSize: '16px' } as any}
                           />
                           <button
                             type="submit"

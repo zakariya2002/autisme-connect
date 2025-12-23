@@ -13,97 +13,78 @@ export async function GET() {
           flexDirection: 'row',
           alignItems: 'center',
           justifyContent: 'space-between',
-          background: 'linear-gradient(135deg, #1e1b4b 0%, #312e81 30%, #4c1d95 60%, #5b21b6 100%)',
+          background: 'linear-gradient(135deg, #025959 0%, #027e7e 50%, #039999 100%)',
           padding: '40px 80px',
         }}
       >
-        {/* Partie gauche - Logo et nom (aligné en haut) */}
+        {/* Partie gauche - Logo */}
         <div
           style={{
             display: 'flex',
-            flexDirection: 'row',
+            flexDirection: 'column',
             alignItems: 'flex-start',
             alignSelf: 'flex-start',
-            gap: '20px',
             marginTop: '10px',
           }}
         >
-          {/* Logo en haut */}
+          {/* Logo neurocare avec icône */}
           <div
             style={{
-              width: '100px',
-              height: '100px',
               display: 'flex',
+              flexDirection: 'row',
               alignItems: 'center',
-              justifyContent: 'center',
-              background: 'rgba(255,255,255,0.1)',
-              borderRadius: '20px',
-              border: '2px solid rgba(255,255,255,0.2)',
+              gap: '8px',
             }}
           >
+            <div
+              style={{
+                display: 'flex',
+                fontSize: 52,
+                letterSpacing: '-1px',
+              }}
+            >
+              <span style={{ color: 'white', fontWeight: '300' }}>neuro</span>
+              <span style={{ color: 'white', fontWeight: '500' }}>care</span>
+            </div>
+            {/* Icône cercles interconnectés */}
             <svg
-              viewBox="0 0 40 40"
-              width="65"
-              height="65"
+              viewBox="0 0 50 50"
+              width="40"
+              height="40"
               fill="none"
             >
-              <circle
-                cx="20"
-                cy="20"
-                r="16"
-                stroke="#a78bfa"
-                strokeWidth="3.5"
-                fill="none"
-              />
-              <path
-                d="M9 20 L12 20 Q14 20 15 12 Q16 8 17 12 L20 20 L23 28 Q24 32 25 28 Q26 20 28 20 L31 20"
-                stroke="#60a5fa"
-                strokeWidth="3"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                fill="none"
-              />
+              <circle cx="15" cy="15" r="6" stroke="white" strokeWidth="2" fill="none" />
+              <circle cx="35" cy="13" r="5" stroke="white" strokeWidth="2" fill="none" />
+              <circle cx="12" cy="35" r="5" stroke="white" strokeWidth="2" fill="none" />
+              <circle cx="38" cy="35" r="6" stroke="white" strokeWidth="2" fill="none" />
+              <circle cx="25" cy="26" r="4" stroke="white" strokeWidth="2" fill="none" />
+              <line x1="20" y1="17" x2="30" y2="13" stroke="white" strokeWidth="1.5" />
+              <line x1="14" y1="21" x2="22" y2="23" stroke="white" strokeWidth="1.5" />
+              <line x1="15" y1="30" x2="22" y2="27" stroke="white" strokeWidth="1.5" />
+              <line x1="29" y1="27" x2="34" y2="30" stroke="white" strokeWidth="1.5" />
+              <line x1="38" y1="20" x2="30" y2="24" stroke="white" strokeWidth="1.5" />
             </svg>
           </div>
-
-          {/* Texte neurocare */}
           <div
             style={{
-              display: 'flex',
-              flexDirection: 'column',
-              gap: '4px',
+              fontSize: 12,
+              color: '#b8e6e6',
+              fontWeight: '500',
+              letterSpacing: '3px',
+              marginTop: '4px',
             }}
           >
-            <div
-              style={{
-                fontSize: 56,
-                color: 'white',
-                fontWeight: 'bold',
-                letterSpacing: '-2px',
-              }}
-            >
-              neurocare
-            </div>
-            <div
-              style={{
-                fontSize: 16,
-                color: '#a78bfa',
-                fontWeight: '600',
-                letterSpacing: '3px',
-              }}
-            >
-              CONNECT • CARE • GROW
-            </div>
+            CONNECT • CARE • GROW
           </div>
         </div>
 
-        {/* Partie centrale - Message principal (centré) */}
+        {/* Partie centrale - Message principal */}
         <div
           style={{
             display: 'flex',
             flexDirection: 'column',
             alignItems: 'center',
-            gap: '20px',
+            gap: '24px',
           }}
         >
           <div
@@ -115,18 +96,18 @@ export async function GET() {
           >
             <div
               style={{
-                fontSize: 36,
+                fontSize: 30,
                 color: 'white',
-                fontWeight: '700',
+                fontWeight: '300',
               }}
             >
               Professionnels du
             </div>
             <div
               style={{
-                fontSize: 46,
-                color: '#a78bfa',
-                fontWeight: '800',
+                fontSize: 42,
+                color: 'white',
+                fontWeight: '600',
               }}
             >
               Neuro Développement
@@ -144,13 +125,12 @@ export async function GET() {
             <div
               style={{
                 display: 'flex',
-                background: 'rgba(139, 92, 246, 0.3)',
-                color: 'white',
-                padding: '10px 20px',
+                background: 'rgba(253, 249, 244, 0.95)',
+                color: '#027e7e',
+                padding: '10px 22px',
                 borderRadius: '50px',
-                fontSize: 18,
+                fontSize: 16,
                 fontWeight: '600',
-                border: '1px solid rgba(139, 92, 246, 0.5)',
               }}
             >
               Psychologues
@@ -158,13 +138,12 @@ export async function GET() {
             <div
               style={{
                 display: 'flex',
-                background: 'rgba(59, 130, 246, 0.3)',
-                color: 'white',
-                padding: '10px 20px',
+                background: 'rgba(253, 249, 244, 0.95)',
+                color: '#027e7e',
+                padding: '10px 22px',
                 borderRadius: '50px',
-                fontSize: 18,
+                fontSize: 16,
                 fontWeight: '600',
-                border: '1px solid rgba(59, 130, 246, 0.5)',
               }}
             >
               Orthophonistes
@@ -172,13 +151,12 @@ export async function GET() {
             <div
               style={{
                 display: 'flex',
-                background: 'rgba(6, 182, 212, 0.3)',
-                color: 'white',
-                padding: '10px 20px',
+                background: 'rgba(253, 249, 244, 0.95)',
+                color: '#027e7e',
+                padding: '10px 22px',
                 borderRadius: '50px',
-                fontSize: 18,
+                fontSize: 16,
                 fontWeight: '600',
-                border: '1px solid rgba(6, 182, 212, 0.5)',
               }}
             >
               Psychomotriciens
@@ -186,13 +164,12 @@ export async function GET() {
             <div
               style={{
                 display: 'flex',
-                background: 'rgba(16, 185, 129, 0.3)',
-                color: 'white',
-                padding: '10px 20px',
+                background: 'rgba(253, 249, 244, 0.95)',
+                color: '#027e7e',
+                padding: '10px 22px',
                 borderRadius: '50px',
-                fontSize: 18,
+                fontSize: 16,
                 fontWeight: '600',
-                border: '1px solid rgba(16, 185, 129, 0.5)',
               }}
             >
               Ergothérapeutes
@@ -200,7 +177,7 @@ export async function GET() {
           </div>
         </div>
 
-        {/* Partie droite - CTA (centré) */}
+        {/* Partie droite - CTA */}
         <div
           style={{
             display: 'flex',
@@ -212,11 +189,11 @@ export async function GET() {
           <div
             style={{
               display: 'flex',
-              background: 'linear-gradient(135deg, #8b5cf6, #3b82f6)',
-              color: 'white',
-              padding: '18px 36px',
-              borderRadius: '14px',
-              fontSize: 22,
+              background: '#fdf9f4',
+              color: '#027e7e',
+              padding: '16px 32px',
+              borderRadius: '12px',
+              fontSize: 20,
               fontWeight: '700',
             }}
           >
@@ -225,9 +202,9 @@ export async function GET() {
           <div
             style={{
               display: 'flex',
-              fontSize: 20,
-              color: 'rgba(255,255,255,0.7)',
-              fontWeight: '500',
+              fontSize: 17,
+              color: 'rgba(255, 255, 255, 0.9)',
+              fontWeight: '400',
             }}
           >
             neuro-care.fr
