@@ -54,7 +54,7 @@ export default function PublicNavbar({ showAuthButtons = true }: PublicNavbarPro
     <header className="sticky top-0 z-50" style={{ backgroundColor: '#027e7e' }}>
       <div className="max-w-7xl mx-auto px-4 lg:px-8">
         {/* Mobile Layout */}
-        <div className="flex lg:hidden items-center justify-between h-16">
+        <div className="flex lg:hidden items-center justify-between h-24">
           {/* Mobile: Menu Hamburger */}
           <button
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
@@ -62,7 +62,7 @@ export default function PublicNavbar({ showAuthButtons = true }: PublicNavbarPro
             aria-label="Ouvrir le menu de navigation"
             aria-expanded={mobileMenuOpen}
           >
-            <svg className="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+            <svg className="w-9 h-9" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M4 6h16M4 12h16M4 18h16" />
             </svg>
           </button>
@@ -72,7 +72,7 @@ export default function PublicNavbar({ showAuthButtons = true }: PublicNavbarPro
             <img
               src="/images/logo-neurocare.svg"
               alt="NeuroCare"
-              className="h-16"
+              className="h-32"
             />
           </Link>
 
