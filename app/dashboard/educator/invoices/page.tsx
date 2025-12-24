@@ -16,9 +16,9 @@ interface Invoice {
   amount_commission: number;
   amount_net: number;
   status: string;
-  pdf_url: string;
+  pdf_url: string | null;
   client_name: string;
-  appointment_id: string;
+  appointment_id: string | null;
 }
 
 export default function EducatorInvoices() {
@@ -209,7 +209,7 @@ export default function EducatorInvoices() {
                   </div>
 
                   <a
-                    href={invoice.pdf_url}
+                    href={invoice.pdf_url || '#'}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="w-full inline-flex items-center justify-center gap-2 px-4 py-2.5 text-white rounded-xl hover:opacity-90 font-medium transition text-sm"
@@ -226,26 +226,26 @@ export default function EducatorInvoices() {
             </div>
 
             {/* Vue desktop - Tableau */}
-            <div className="hidden md:block bg-white shadow-sm overflow-hidden rounded-2xl border border-gray-100">
-              <table className="min-w-full divide-y divide-gray-100">
+            <div className="hidden md:block bg-white shadow-sm rounded-2xl border border-gray-100 overflow-x-auto">
+              <table className="w-full divide-y divide-gray-100">
                 <thead style={{ backgroundColor: '#faf5ff' }}>
                   <tr>
-                    <th scope="col" className="px-5 py-3 text-left text-xs font-semibold uppercase tracking-wider" style={{ color: '#41005c' }}>
+                    <th scope="col" className="px-3 lg:px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider" style={{ color: '#41005c' }}>
                       Numéro
                     </th>
-                    <th scope="col" className="px-5 py-3 text-left text-xs font-semibold uppercase tracking-wider" style={{ color: '#41005c' }}>
+                    <th scope="col" className="px-3 lg:px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider" style={{ color: '#41005c' }}>
                       Date
                     </th>
-                    <th scope="col" className="px-5 py-3 text-left text-xs font-semibold uppercase tracking-wider" style={{ color: '#41005c' }}>
+                    <th scope="col" className="px-3 lg:px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider" style={{ color: '#41005c' }}>
                       Client
                     </th>
-                    <th scope="col" className="px-5 py-3 text-left text-xs font-semibold uppercase tracking-wider" style={{ color: '#41005c' }}>
+                    <th scope="col" className="px-3 lg:px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider" style={{ color: '#41005c' }}>
                       Net perçu
                     </th>
-                    <th scope="col" className="px-5 py-3 text-left text-xs font-semibold uppercase tracking-wider" style={{ color: '#41005c' }}>
+                    <th scope="col" className="px-3 lg:px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider" style={{ color: '#41005c' }}>
                       Statut
                     </th>
-                    <th scope="col" className="px-5 py-3 text-right text-xs font-semibold uppercase tracking-wider" style={{ color: '#41005c' }}>
+                    <th scope="col" className="px-3 lg:px-4 py-3 text-center text-xs font-semibold uppercase tracking-wider" style={{ color: '#41005c' }}>
                       Actions
                     </th>
                   </tr>
@@ -253,20 +253,20 @@ export default function EducatorInvoices() {
                 <tbody className="bg-white divide-y divide-gray-100">
                   {invoices.map((invoice) => (
                     <tr key={invoice.id} className="hover:bg-gray-50 transition-colors">
-                      <td className="px-5 py-4 whitespace-nowrap text-sm font-semibold" style={{ color: '#41005c' }}>
+                      <td className="px-3 lg:px-4 py-3 whitespace-nowrap text-sm font-semibold" style={{ color: '#41005c' }}>
                         {invoice.invoice_number}
                       </td>
-                      <td className="px-5 py-4 whitespace-nowrap text-sm text-gray-500">
+                      <td className="px-3 lg:px-4 py-3 whitespace-nowrap text-sm text-gray-500">
                         {formatDate(invoice.invoice_date)}
                       </td>
-                      <td className="px-5 py-4 whitespace-nowrap text-sm text-gray-900">
+                      <td className="px-3 lg:px-4 py-3 whitespace-nowrap text-sm text-gray-900">
                         {invoice.client_name}
                       </td>
-                      <td className="px-5 py-4 whitespace-nowrap text-sm font-bold text-green-600">
+                      <td className="px-3 lg:px-4 py-3 whitespace-nowrap text-sm font-bold text-green-600">
                         {formatAmount(invoice.amount_net)}
                       </td>
-                      <td className="px-5 py-4 whitespace-nowrap">
-                        <span className={`px-2.5 py-1 text-xs font-semibold rounded-full ${
+                      <td className="px-3 lg:px-4 py-3 whitespace-nowrap">
+                        <span className={`px-2 py-1 text-xs font-semibold rounded-full ${
                           invoice.status === 'generated' ? 'text-white' :
                           invoice.status === 'sent' ? 'bg-amber-100 text-amber-700' :
                           invoice.status === 'paid' ? 'bg-green-100 text-green-700' :
@@ -278,12 +278,12 @@ export default function EducatorInvoices() {
                            invoice.status}
                         </span>
                       </td>
-                      <td className="px-5 py-4 whitespace-nowrap text-right text-sm font-medium">
+                      <td className="px-3 lg:px-4 py-3 whitespace-nowrap text-center text-sm font-medium">
                         <a
-                          href={invoice.pdf_url}
+                          href={invoice.pdf_url || '#'}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-white text-xs font-medium hover:opacity-90 transition"
+                          className="inline-flex items-center gap-1 px-2.5 py-1.5 rounded-lg text-white text-xs font-medium hover:opacity-90 transition"
                           style={{ backgroundColor: '#41005c' }}
                           aria-label={`Télécharger la facture ${invoice.invoice_number}`}
                         >

@@ -262,12 +262,6 @@ export default function RegisterFamilyPage() {
               style={{ filter: 'brightness(0) saturate(100%) invert(27%) sepia(93%) saturate(1015%) hue-rotate(152deg) brightness(93%) contrast(98%)' }}
             />
           </Link>
-          <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-2">
-            Inscription Aidant
-          </h1>
-          <p className="text-gray-600">
-            Créez votre compte pour trouver des professionnels qualifiés
-          </p>
           <div className="mt-4 flex flex-col sm:flex-row items-center justify-center gap-2 sm:gap-4 text-sm">
             <Link href="/auth/login" className="font-medium hover:underline" style={{ color: '#027e7e' }}>
               Déjà un compte ? Connectez-vous
@@ -509,52 +503,26 @@ export default function RegisterFamilyPage() {
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Vous êtes *</label>
-              <select
-                value={familyData.relationship}
-                onChange={(e) => setFamilyData({ ...familyData, relationship: e.target.value })}
-                className="block w-full border border-gray-300 rounded-xl shadow-sm py-3 px-4 focus:ring-2 focus:ring-[#027e7e] focus:border-[#027e7e] transition-all"
-              >
-                <option value="parent">Parent</option>
-                <option value="guardian">Tuteur</option>
-                <option value="self">Personne avec TND</option>
-                <option value="other">Autre</option>
-              </select>
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Besoins spécifiques (séparés par des virgules)</label>
-              <textarea
-                rows={2}
-                placeholder="Ex: Communication non verbale, Gestion des comportements, Compétences sociales"
-                value={familyData.specific_needs}
-                onChange={(e) => setFamilyData({ ...familyData, specific_needs: e.target.value })}
-                className="block w-full border border-gray-300 rounded-xl shadow-sm py-3 px-4 focus:ring-2 focus:ring-[#027e7e] focus:border-[#027e7e] transition-all"
-              />
-            </div>
-
-            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Budget minimum (€/h)</label>
-                <input
-                  type="number"
-                  step="0.01"
-                  min="0"
-                  value={familyData.budget_min}
-                  onChange={(e) => setFamilyData({ ...familyData, budget_min: e.target.value })}
-                  className="block w-full border border-gray-300 rounded-xl shadow-sm py-3 px-4 focus:ring-2 focus:ring-[#027e7e] focus:border-[#027e7e] transition-all"
-                />
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Budget maximum (€/h)</label>
-                <input
-                  type="number"
-                  step="0.01"
-                  min="0"
-                  value={familyData.budget_max}
-                  onChange={(e) => setFamilyData({ ...familyData, budget_max: e.target.value })}
-                  className="block w-full border border-gray-300 rounded-xl shadow-sm py-3 px-4 focus:ring-2 focus:ring-[#027e7e] focus:border-[#027e7e] transition-all"
-                />
+              <label className="block text-sm font-medium text-gray-700 mb-2">Vous êtes *</label>
+              <div className="grid grid-cols-3 gap-2">
+                {[
+                  { value: 'parent', label: 'Parent' },
+                  { value: 'guardian', label: 'Tuteur' },
+                  { value: 'self', label: 'Personne avec TND' },
+                ].map((option) => (
+                  <button
+                    key={option.value}
+                    type="button"
+                    onClick={() => setFamilyData({ ...familyData, relationship: option.value })}
+                    className={`py-3 px-4 rounded-xl border-2 text-sm font-medium transition-all ${
+                      familyData.relationship === option.value
+                        ? 'border-[#027e7e] bg-[#027e7e] text-white'
+                        : 'border-gray-300 bg-white text-gray-700 hover:border-[#027e7e] hover:bg-[#f0fdfa]'
+                    }`}
+                  >
+                    {option.label}
+                  </button>
+                ))}
               </div>
             </div>
 

@@ -8,22 +8,20 @@
   --background-end-rgb: 255, 255, 255;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --foreground-rgb: 255, 255, 255;
-    --background-start-rgb: 0, 0, 0;
-    --background-end-rgb: 0, 0, 0;
-  }
+/* Désactiver le mode sombre automatique - l'app n'a pas de dark mode */
+body {
+  color: #1f2937;
+  background-color: #fdf9f4;
 }
 
-body {
-  color: rgb(var(--foreground-rgb));
-  background: linear-gradient(
-      to bottom,
-      transparent,
-      rgb(var(--background-end-rgb))
-    )
-    rgb(var(--background-start-rgb));
+/* Assurer que les inputs ont toujours un texte visible */
+input, textarea, select {
+  color: #1f2937 !important;
+  background-color: white;
+}
+
+input::placeholder, textarea::placeholder {
+  color: #9ca3af !important;
 }
 
 @layer utilities {

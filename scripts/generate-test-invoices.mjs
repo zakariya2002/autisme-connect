@@ -1,47 +1,16 @@
 import PDFDocument from 'pdfkit';
-import { createClient } from '@supabase/supabase-js';
+import fs from 'fs';
+import path from 'path';
 
-const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.SUPABASE_SERVICE_ROLE_KEY!
-);
-
-interface InvoiceData {
-  invoiceNumber: string;
-  invoiceDate: Date;
-  appointmentDate: Date;
-  duration: number; // en minutes
-  startTime?: string; // Format HH:MM
-  endTime?: string; // Format HH:MM
-
-  // Professionnel
-  educatorName: string;
-  educatorAddress: string;
-  educatorSiret?: string;
-  educatorSapNumber?: string;
-  educatorEmail: string;
-  educatorProfession?: string; // Code profession (educator, psychologist, etc.)
-  educatorProfessionLabel?: string; // Label affiché (Éducateur spécialisé, Psychologue, etc.)
-  educatorRppsNumber?: string; // Numéro RPPS pour professions de santé
-
-  // Famille (client)
-  familyName: string;
-  familyAddress: string;
-
-  // Montants (en centimes)
-  amountTotal: number;
-  amountHT: number;
-  amountTVA: number;
-  amountCommission: number;
-  amountNet: number;
-
-  // Type
-  type: 'educator_invoice' | 'family_receipt';
+// Créer le dossier de sortie
+const outputDir = '/home/zakariya/Bureau/factures_test';
+if (!fs.existsSync(outputDir)) {
+  fs.mkdirSync(outputDir, { recursive: true });
 }
 
 // Descriptions de service selon la profession
-function getServiceDescription(profession?: string): string {
-  const descriptions: { [key: string]: string } = {
+function getServiceDescription(profession) {
+  const descriptions = {
     'educator': 'Séance d\'accompagnement éducatif spécialisé',
     'moniteur_educateur': 'Séance d\'accompagnement éducatif',
     'psychologist': 'Consultation psychologique',
@@ -52,12 +21,12 @@ function getServiceDescription(profession?: string): string {
     'apa_teacher': 'Séance d\'activité physique adaptée',
     'music_therapist': 'Séance de musicothérapie',
   };
-  return descriptions[profession || ''] || 'Séance d\'accompagnement';
+  return descriptions[profession] || 'Séance d\'accompagnement';
 }
 
 // Description pour le reçu famille (PCH/MDPH)
-function getFamilyServiceDescription(profession?: string): string {
-  const descriptions: { [key: string]: string } = {
+function getFamilyServiceDescription(profession) {
+  const descriptions = {
     'educator': 'Accompagnement éducatif d\'une personne en situation de handicap',
     'moniteur_educateur': 'Accompagnement éducatif d\'une personne en situation de handicap',
     'psychologist': 'Accompagnement psychologique d\'une personne en situation de handicap',
@@ -68,32 +37,56 @@ function getFamilyServiceDescription(profession?: string): string {
     'apa_teacher': 'Activité physique adaptée pour personne en situation de handicap',
     'music_therapist': 'Musicothérapie pour personne en situation de handicap',
   };
-  return descriptions[profession || ''] || 'Accompagnement d\'une personne en situation de handicap';
+  return descriptions[profession] || 'Accompagnement d\'une personne en situation de handicap';
 }
 
-// Fonction pour formater la durée en heures
-function formatDuration(minutes: number): string {
+function formatDuration(minutes) {
   const hours = Math.floor(minutes / 60);
   const remainingMinutes = minutes % 60;
-
-  if (remainingMinutes === 0) {
-    return `${hours}h`;
-  }
+  if (remainingMinutes === 0) return `${hours}h`;
   return `${hours}h ${remainingMinutes}min`;
 }
 
-export async function generateEducatorInvoicePDF(data: InvoiceData): Promise<Buffer> {
+function formatDate(date) {
+  return new Intl.DateTimeFormat('fr-FR', {
+    day: '2-digit',
+    month: '2-digit',
+    year: 'numeric'
+  }).format(date);
+}
+
+function formatAmount(amountInCents) {
+  return new Intl.NumberFormat('fr-FR', {
+    style: 'currency',
+    currency: 'EUR'
+  }).format(amountInCents / 100);
+}
+
+// Professions à tester
+const professions = [
+  { code: 'educator', label: 'Éducateur spécialisé', name: 'Marie Dupont', hasRpps: false, hasSap: true },
+  { code: 'psychologist', label: 'Psychologue', name: 'Dr. Jean Martin', hasRpps: true, hasSap: false },
+  { code: 'apa_teacher', label: 'Enseignant APA', name: 'Lucas Bernard', hasRpps: false, hasSap: true },
+  { code: 'psychomotricist', label: 'Psychomotricien', name: 'Sophie Leroy', hasRpps: true, hasSap: false },
+  { code: 'speech_therapist', label: 'Orthophoniste', name: 'Dr. Claire Moreau', hasRpps: true, hasSap: false },
+  { code: 'occupational_therapist', label: 'Ergothérapeute', name: 'Thomas Petit', hasRpps: true, hasSap: false },
+  { code: 'physiotherapist', label: 'Kinésithérapeute', name: 'Dr. Pierre Durand', hasRpps: true, hasSap: false },
+  { code: 'music_therapist', label: 'Musicothérapeute', name: 'Emma Blanc', hasRpps: false, hasSap: true },
+  { code: 'moniteur_educateur', label: 'Moniteur éducateur', name: 'Nicolas Roux', hasRpps: false, hasSap: true },
+];
+
+async function generateEducatorInvoicePDF(data) {
   return new Promise((resolve, reject) => {
     try {
       const doc = new PDFDocument({ margin: 50, size: 'A4' });
-      const chunks: Buffer[] = [];
+      const chunks = [];
 
       doc.on('data', (chunk) => chunks.push(chunk));
       doc.on('end', () => resolve(Buffer.concat(chunks)));
       doc.on('error', reject);
 
       // Couleurs
-      const primaryColor = '#2563eb';
+      const primaryColor = '#027e7e'; // Teal NeuroCare
       const grayColor = '#6b7280';
       const darkColor = '#1f2937';
 
@@ -118,7 +111,7 @@ export async function generateEducatorInvoicePDF(data: InvoiceData): Promise<Buf
         .font('Helvetica')
         .text('Émise via', 400, 50, { width: 145, align: 'right' })
         .fontSize(16)
-        .fillColor('#027e7e') // teal NeuroCare
+        .fillColor('#027e7e')
         .font('Helvetica-Bold')
         .text('NeuroCare', 400, 65, { width: 145, align: 'right' })
         .fontSize(9)
@@ -134,7 +127,7 @@ export async function generateEducatorInvoicePDF(data: InvoiceData): Promise<Buf
         .lineTo(545, 130)
         .stroke();
 
-      // ----- INFORMATIONS PRESTATAIRE (Éducateur) -----
+      // ----- INFORMATIONS PRESTATAIRE -----
       let y = 160;
       doc
         .fontSize(10)
@@ -150,11 +143,15 @@ export async function generateEducatorInvoicePDF(data: InvoiceData): Promise<Buf
         .text(data.educatorName, 50, y);
 
       y += 16;
+      doc
+        .font('Helvetica')
+        .fontSize(10)
+        .fillColor(grayColor)
+        .text(data.educatorProfessionLabel, 50, y);
+
+      y += 14;
       if (data.educatorAddress) {
-        doc
-          .font('Helvetica')
-          .fontSize(10)
-          .text(data.educatorAddress, 50, y);
+        doc.fillColor(darkColor).text(data.educatorAddress, 50, y);
         y += 14;
       }
 
@@ -166,12 +163,19 @@ export async function generateEducatorInvoicePDF(data: InvoiceData): Promise<Buf
         y += 14;
       }
 
-      // RPPS pour professionnels de santé
       if (data.educatorRppsNumber) {
         doc
-          .fillColor('#7c3aed') // violet pour RPPS
+          .fillColor('#7c3aed')
           .font('Helvetica-Bold')
           .text(`N° RPPS : ${data.educatorRppsNumber}`, 50, y);
+        y += 14;
+      }
+
+      if (data.educatorSapNumber) {
+        doc
+          .fillColor('#2563eb')
+          .font('Helvetica-Bold')
+          .text(`N° SAP : ${data.educatorSapNumber}`, 50, y);
         y += 14;
       }
 
@@ -180,7 +184,7 @@ export async function generateEducatorInvoicePDF(data: InvoiceData): Promise<Buf
         .fillColor(grayColor)
         .text(`Email : ${data.educatorEmail}`, 50, y);
 
-      // ----- INFORMATIONS CLIENT (Famille) -----
+      // ----- INFORMATIONS CLIENT -----
       y = 160;
       doc
         .fontSize(10)
@@ -241,7 +245,6 @@ export async function generateEducatorInvoicePDF(data: InvoiceData): Promise<Buf
 
       y += 18;
 
-      // Ligne de prestation - description adaptée à la profession
       const serviceDescription = getServiceDescription(data.educatorProfession);
       doc
         .fontSize(10)
@@ -252,7 +255,7 @@ export async function generateEducatorInvoicePDF(data: InvoiceData): Promise<Buf
         .text(formatDuration(data.duration), 380, y)
         .text(formatAmount(data.amountTotal), 480, y, { align: 'right', width: 65 });
 
-      // ----- OPTION A : MONTANT BRUT PUIS COMMISSION -----
+      // ----- MONTANTS -----
       y += 60;
       doc
         .strokeColor('#d1d5db')
@@ -263,7 +266,6 @@ export async function generateEducatorInvoicePDF(data: InvoiceData): Promise<Buf
 
       y += 20;
 
-      // Total brut (avant commission)
       doc
         .fontSize(10)
         .fillColor(grayColor)
@@ -275,7 +277,6 @@ export async function generateEducatorInvoicePDF(data: InvoiceData): Promise<Buf
 
       y += 22;
 
-      // Mention TVA
       doc
         .fontSize(8)
         .fillColor(grayColor)
@@ -284,7 +285,6 @@ export async function generateEducatorInvoicePDF(data: InvoiceData): Promise<Buf
 
       y += 25;
 
-      // Commission plateforme
       doc
         .fontSize(10)
         .fillColor(grayColor)
@@ -303,9 +303,8 @@ export async function generateEducatorInvoicePDF(data: InvoiceData): Promise<Buf
 
       y += 20;
 
-      // Ligne de séparation avant Net
       doc
-        .strokeColor('#2563eb')
+        .strokeColor(primaryColor)
         .lineWidth(1.5)
         .moveTo(320, y)
         .lineTo(545, y)
@@ -313,7 +312,6 @@ export async function generateEducatorInvoicePDF(data: InvoiceData): Promise<Buf
 
       y += 18;
 
-      // Net à percevoir
       doc
         .fontSize(12)
         .fillColor(primaryColor)
@@ -329,7 +327,7 @@ export async function generateEducatorInvoicePDF(data: InvoiceData): Promise<Buf
         .font('Helvetica')
         .text('Virement sous 48h ouvrées', 320, y);
 
-      // ----- MENTIONS LÉGALES OBLIGATOIRES (URSSAF) -----
+      // ----- MENTIONS LÉGALES -----
       y = 640;
       doc
         .rect(50, y, 495, 120)
@@ -390,11 +388,11 @@ export async function generateEducatorInvoicePDF(data: InvoiceData): Promise<Buf
   });
 }
 
-export async function generateFamilyReceiptPDF(data: InvoiceData): Promise<Buffer> {
+async function generateFamilyReceiptPDF(data) {
   return new Promise((resolve, reject) => {
     try {
       const doc = new PDFDocument({ margin: 50, size: 'A4' });
-      const chunks: Buffer[] = [];
+      const chunks = [];
 
       doc.on('data', (chunk) => chunks.push(chunk));
       doc.on('end', () => resolve(Buffer.concat(chunks)));
@@ -404,6 +402,7 @@ export async function generateFamilyReceiptPDF(data: InvoiceData): Promise<Buffe
       const grayColor = '#6b7280';
       const darkColor = '#1f2937';
       const blueColor = '#3b82f6';
+      const tealColor = '#027e7e';
 
       // ----- HEADER -----
       doc
@@ -427,7 +426,7 @@ export async function generateFamilyReceiptPDF(data: InvoiceData): Promise<Buffe
       // Logo (aligné à droite)
       doc
         .fontSize(16)
-        .fillColor('#027e7e') // teal NeuroCare
+        .fillColor(tealColor)
         .font('Helvetica-Bold')
         .text('NeuroCare', 400, 50, { width: 150, align: 'right' })
         .fontSize(9)
@@ -443,7 +442,7 @@ export async function generateFamilyReceiptPDF(data: InvoiceData): Promise<Buffe
         .lineTo(550, 130)
         .stroke();
 
-      // ----- BÉNÉFICIAIRE (FAMILLE) -----
+      // ----- BÉNÉFICIAIRE -----
       let y = 155;
       doc
         .fontSize(11)
@@ -463,7 +462,7 @@ export async function generateFamilyReceiptPDF(data: InvoiceData): Promise<Buffe
         doc.text(data.familyAddress, 50, y);
       }
 
-      // ----- PRESTATAIRE (ÉDUCATEUR) -----
+      // ----- PRESTATAIRE -----
       y = 155;
       doc
         .fontSize(11)
@@ -479,24 +478,24 @@ export async function generateFamilyReceiptPDF(data: InvoiceData): Promise<Buffe
         .text(data.educatorName, 320, y);
 
       y += 15;
+      doc
+        .fontSize(9)
+        .fillColor(grayColor)
+        .text(data.educatorProfessionLabel, 320, y);
+
+      y += 15;
       if (data.educatorAddress) {
-        doc.text(data.educatorAddress, 320, y);
+        doc.fillColor(darkColor).text(data.educatorAddress, 320, y);
         y += 15;
       }
 
-      // SIRET (obligatoire pour CESU/PCH)
       if (data.educatorSiret) {
-        doc
-          .fontSize(9)
-          .fillColor(grayColor)
-          .text(`SIRET: ${data.educatorSiret}`, 320, y);
+        doc.text(`SIRET: ${data.educatorSiret}`, 320, y);
         y += 12;
       }
 
-      // SAP Number (si disponible - permet crédit d'impôt)
       if (data.educatorSapNumber) {
         doc
-          .fontSize(9)
           .fillColor(blueColor)
           .font('Helvetica-Bold')
           .text(`N° SAP: ${data.educatorSapNumber}`, 320, y);
@@ -509,11 +508,10 @@ export async function generateFamilyReceiptPDF(data: InvoiceData): Promise<Buffe
         y += 12;
       }
 
-      // RPPS Number (pour professionnels de santé)
       if (data.educatorRppsNumber) {
         doc
           .fontSize(9)
-          .fillColor('#7c3aed') // violet pour RPPS
+          .fillColor('#7c3aed')
           .font('Helvetica-Bold')
           .text(`N° RPPS: ${data.educatorRppsNumber}`, 320, y);
         y += 12;
@@ -542,7 +540,6 @@ export async function generateFamilyReceiptPDF(data: InvoiceData): Promise<Buffe
 
       y += 25;
 
-      // Encadré bleu pour la nature du service (important pour PCH/MDPH)
       doc
         .rect(50, y, 500, 45)
         .fillAndStroke('#eff6ff', '#3b82f6');
@@ -555,7 +552,6 @@ export async function generateFamilyReceiptPDF(data: InvoiceData): Promise<Buffe
         .text('Nature du service:', 60, y);
 
       y += 14;
-      // Description adaptée à la profession du professionnel
       const familyServiceDescription = getFamilyServiceDescription(data.educatorProfession);
       doc
         .fontSize(10)
@@ -563,14 +559,9 @@ export async function generateFamilyReceiptPDF(data: InvoiceData): Promise<Buffe
         .font('Helvetica')
         .text(familyServiceDescription, 60, y);
 
-      // ----- DÉTAILS HORAIRES (pour PCH) -----
+      // ----- DÉTAILS HORAIRES -----
       y += 40;
 
-      // Utiliser les heures réelles du rendez-vous (pour PCH on a besoin des heures précises)
-      const startTime = data.startTime || '00:00';
-      const endTime = data.endTime || '00:00';
-
-      // Tableau des détails
       doc
         .fontSize(9)
         .fillColor(grayColor)
@@ -596,8 +587,8 @@ export async function generateFamilyReceiptPDF(data: InvoiceData): Promise<Buffe
         .fillColor(darkColor)
         .font('Helvetica')
         .text(formatDate(data.appointmentDate), 50, y)
-        .text(startTime, 150, y)
-        .text(endTime, 250, y)
+        .text(data.startTime, 150, y)
+        .text(data.endTime, 250, y)
         .text(formatDuration(data.duration), 350, y)
         .text(formatAmount(data.amountTotal), 450, y, { align: 'right', width: 100 });
 
@@ -646,7 +637,7 @@ export async function generateFamilyReceiptPDF(data: InvoiceData): Promise<Buffe
         .fillColor(grayColor)
         .text('Transaction sécurisée via Stripe', 70, y);
 
-      // ----- ENCADRÉ FISCAL (Crédit d'impôt) -----
+      // ----- ENCADRÉ FISCAL -----
       y += 50;
 
       if (data.educatorSapNumber) {
@@ -676,25 +667,7 @@ export async function generateFamilyReceiptPDF(data: InvoiceData): Promise<Buffe
 
         y += 30;
       } else {
-        doc
-          .rect(50, y, 500, 50)
-          .fillAndStroke('#fef3c7', '#f59e0b');
-
-        y += 14;
-        doc
-          .fontSize(9)
-          .fillColor('#92400e')
-          .font('Helvetica-Bold')
-          .text('ℹ Information crédit d\'impôt', 70, y);
-
-        y += 14;
-        doc
-          .fontSize(8)
-          .fillColor(darkColor)
-          .font('Helvetica')
-          .text('Pour bénéficier du crédit d\'impôt de 50%, demandez à votre éducateur d\'obtenir un agrément SAP', 70, y, { width: 460 });
-
-        y += 26;
+        y += 10;
       }
 
       // ----- COMPATIBILITÉ AIDES -----
@@ -723,7 +696,7 @@ export async function generateFamilyReceiptPDF(data: InvoiceData): Promise<Buffe
       doc.text('• Justificatif pour mutuelle complémentaire santé', 70, y);
 
       // ----- FOOTER -----
-      y += 40; // Espacement après le rectangle bleu
+      y += 40;
       doc
         .fontSize(7)
         .fillColor(grayColor)
@@ -742,17 +715,56 @@ export async function generateFamilyReceiptPDF(data: InvoiceData): Promise<Buffe
   });
 }
 
-function formatDate(date: Date): string {
-  return new Intl.DateTimeFormat('fr-FR', {
-    day: '2-digit',
-    month: '2-digit',
-    year: 'numeric'
-  }).format(date);
+async function generateAllTestInvoices() {
+  console.log('Génération des factures test...\n');
+
+  for (const prof of professions) {
+    const baseData = {
+      invoiceNumber: `FACT-TEST-${prof.code.toUpperCase().slice(0, 4)}-001`,
+      invoiceDate: new Date(),
+      appointmentDate: new Date('2025-01-15'),
+      duration: 60,
+      startTime: '14:00',
+      endTime: '15:00',
+
+      educatorName: prof.name,
+      educatorAddress: '15 rue de la Santé, 75013 Paris',
+      educatorSiret: '123 456 789 00012',
+      educatorEmail: `${prof.name.toLowerCase().replace(/[^a-z]/g, '.')}@email.com`,
+      educatorProfession: prof.code,
+      educatorProfessionLabel: prof.label,
+      educatorSapNumber: prof.hasSap ? 'SAP123456789' : undefined,
+      educatorRppsNumber: prof.hasRpps ? '10123456789' : undefined,
+
+      familyName: 'Famille Martin',
+      familyAddress: '25 avenue des Fleurs, 75015 Paris',
+
+      amountTotal: 6000,
+      amountHT: 6000,
+      amountTVA: 0,
+      amountCommission: 720,
+      amountNet: 5280,
+
+      type: 'educator_invoice'
+    };
+
+    // Générer la facture éducateur
+    const educatorPDF = await generateEducatorInvoicePDF(baseData);
+    const educatorFilename = `Facture_${prof.label.replace(/\s/g, '_')}.pdf`;
+    fs.writeFileSync(path.join(outputDir, educatorFilename), educatorPDF);
+    console.log(`✓ ${educatorFilename}`);
+
+    // Générer le reçu famille
+    const familyPDF = await generateFamilyReceiptPDF({ ...baseData, invoiceNumber: `RECU-TEST-${prof.code.toUpperCase().slice(0, 4)}-001` });
+    const familyFilename = `Recu_Famille_${prof.label.replace(/\s/g, '_')}.pdf`;
+    fs.writeFileSync(path.join(outputDir, familyFilename), familyPDF);
+    console.log(`✓ ${familyFilename}`);
+
+    console.log('');
+  }
+
+  console.log(`\n✅ Toutes les factures ont été générées dans: ${outputDir}`);
+  console.log('\nOuvrez le dossier avec: xdg-open ' + outputDir);
 }
 
-function formatAmount(amountInCents: number): string {
-  return new Intl.NumberFormat('fr-FR', {
-    style: 'currency',
-    currency: 'EUR'
-  }).format(amountInCents / 100);
-}
+generateAllTestInvoices().catch(console.error);
