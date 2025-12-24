@@ -8,6 +8,7 @@ import Link from 'next/link';
 import { supabase } from '@/lib/supabase';
 import { getCurrentPosition, reverseGeocode } from '@/lib/geolocation';
 import ProNavbar from '@/components/ProNavbar';
+import ProTheme from '@/components/ProTheme';
 
 interface PasswordCriteria {
   minLength: boolean;
@@ -638,6 +639,8 @@ export default function RegisterEducatorPage() {
   // Si l'inscription a réussi, afficher le message de confirmation
   if (registrationSuccess) {
     return (
+      <>
+      <ProTheme />
       <div className="min-h-screen flex items-center justify-center px-4" style={{ backgroundColor: '#fdf9f4' }}>
         <div className="max-w-md w-full">
           <div className="bg-white rounded-2xl shadow-xl p-8 text-center">
@@ -688,10 +691,13 @@ export default function RegisterEducatorPage() {
           </div>
         </div>
       </div>
+      </>
     );
   }
 
   return (
+    <>
+    <ProTheme />
     <div className="min-h-screen" style={{ backgroundColor: '#fdf9f4' }}>
       {/* Header */}
       <ProNavbar />
@@ -1576,5 +1582,6 @@ export default function RegisterEducatorPage() {
         </div>
       )}
     </div>
+    </>
   );
 }

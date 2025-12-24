@@ -8,6 +8,16 @@
   --background-end-rgb: 255, 255, 255;
 }
 
+/* Couleur overscroll mobile - teal par défaut (pages famille/public) */
+html {
+  background-color: #027e7e;
+}
+
+/* Pages pro - overscroll violet */
+html.pro-theme {
+  background-color: #41005c;
+}
+
 /* Désactiver le mode sombre automatique - l'app n'a pas de dark mode */
 body {
   color: #1f2937;
