@@ -31,7 +31,7 @@ export default function FamilyNavbar({ profile, familyId, userId }: FamilyNavbar
             <img
               src="/images/logo-neurocare.svg"
               alt="NeuroCare - Retour au tableau de bord"
-              className="h-20"
+              className="h-16 sm:h-20"
             />
           </Link>
 

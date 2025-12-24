@@ -233,7 +233,7 @@ export default function Home() {
       <header className="sticky top-0 z-50" style={{ backgroundColor: '#027e7e' }}>
         <div className="max-w-7xl mx-auto px-4 lg:px-8">
           {/* Mobile Layout */}
-          <div className="flex lg:hidden items-center justify-between h-16">
+          <div className="flex lg:hidden items-center justify-between h-20">
             {/* Mobile: Menu Hamburger */}
             <button
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
@@ -251,7 +251,7 @@ export default function Home() {
               <img
                 src="/images/logo-neurocare.svg"
                 alt="NeuroCare"
-                className="h-16"
+                className="h-24"
               />
             </Link>
 

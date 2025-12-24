@@ -45,7 +45,7 @@ export default function ProNavbar() {
     <header className="sticky top-0 z-50" style={{ backgroundColor: '#41005c' }}>
       <div className="max-w-7xl mx-auto px-4 lg:px-8">
         {/* Mobile Layout */}
-        <div className="flex lg:hidden items-center justify-between h-24">
+        <div className="flex lg:hidden items-center justify-between h-20">
           {/* Mobile: Menu Hamburger */}
           <button
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
@@ -64,7 +64,7 @@ export default function ProNavbar() {
               <img
                 src="/images/logo-neurocare.svg"
                 alt="NeuroCare Pro"
-                className="h-32"
+                className="h-24"
               />
               <span className="px-1.5 py-0.5 text-xs font-bold rounded-full text-white" style={{ backgroundColor: '#f0879f' }}>
                 PRO
