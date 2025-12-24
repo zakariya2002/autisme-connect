@@ -24,6 +24,27 @@ body {
   background-color: #fdf9f4;
 }
 
+/* Overscroll bas - même couleur que le haut */
+html {
+  overflow-y: scroll;
+}
+
+html::after {
+  content: '';
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 100vh;
+  background-color: #027e7e;
+  z-index: -1;
+  pointer-events: none;
+}
+
+html.pro-theme::after {
+  background-color: #41005c;
+}
+
 /* Assurer que les inputs ont toujours un texte visible */
 input, textarea, select {
   color: #1f2937 !important;
