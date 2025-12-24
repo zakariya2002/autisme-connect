@@ -411,7 +411,7 @@ export default function EducatorMobileMenu({ profile: propProfile, isPremium, on
         className="p-1 text-white transition-colors duration-200"
         aria-label="Ouvrir le menu"
       >
-        <svg className="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+        <svg className="w-9 h-9" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M4 6h16M4 12h16M4 18h16" />
         </svg>
       </button>

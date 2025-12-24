@@ -215,7 +215,7 @@ export default function FamilyDashboard() {
       {familyId && <FamilyOnboarding familyId={familyId} userEmail={userEmail || undefined} />}
 
       {/* Bandeau de bienvenue */}
-      <div className="px-4 py-6 flex items-center justify-center lg:justify-center gap-4" style={{ backgroundColor: '#05a5a5' }} data-tour="welcome-banner">
+      <div className="px-4 py-6 flex items-center justify-start lg:justify-center gap-4" style={{ backgroundColor: '#05a5a5' }} data-tour="welcome-banner">
         <div className="flex items-center gap-4 lg:flex-col lg:text-center">
           {/* Avatar */}
           <div className="w-14 h-14 lg:w-20 lg:h-20 rounded-full bg-white flex items-center justify-center overflow-hidden flex-shrink-0 shadow-md">
