@@ -7,9 +7,85 @@ import { BlogPost, getCategoryInfo } from '@/types/blog';
 import { getPublishedPosts } from '@/lib/blog/actions';
 import PublicNavbar from '@/components/PublicNavbar';
 
+// Articles éditoriaux NeuroCare (statiques)
+const editorialArticles = [
+  {
+    id: 'editorial-1',
+    slug: 'preparer-consultation',
+    title: 'Préparer son enfant à une première consultation',
+    excerpt: 'Une première consultation avec un professionnel peut être source de stress, tant pour l\'enfant que pour les parents. Voici nos conseils pour bien la préparer.',
+    category: 'daily_life',
+    image_url: '/images/articles/consultation.jpg',
+    read_time_minutes: 7,
+    published_at: '2024-12-25T10:00:00Z',
+    created_at: '2024-12-25T10:00:00Z',
+    author: { first_name: 'Équipe', last_name: 'NeuroCare' },
+  },
+  {
+    id: 'editorial-2',
+    slug: 'crises-sensorielles',
+    title: 'Gérer les crises sensorielles : techniques et outils pratiques',
+    excerpt: 'Les crises sensorielles sont fréquentes chez les enfants TND. Comprendre leurs mécanismes permet de mieux les accompagner.',
+    category: 'daily_life',
+    image_url: '/images/articles/crises-sensorielles.jpg',
+    read_time_minutes: 8,
+    published_at: '2024-12-25T10:00:00Z',
+    created_at: '2024-12-25T10:00:00Z',
+    author: { first_name: 'Équipe', last_name: 'NeuroCare' },
+  },
+  {
+    id: 'editorial-3',
+    slug: 'mdph-dossier',
+    title: 'MDPH : constituer son dossier efficacement',
+    excerpt: 'La MDPH est un passage incontournable pour obtenir la reconnaissance du handicap. Ce guide vous accompagne pour constituer un dossier complet.',
+    category: 'rights',
+    image_url: '/images/articles/mdph.jpg',
+    read_time_minutes: 10,
+    published_at: '2024-12-25T10:00:00Z',
+    created_at: '2024-12-25T10:00:00Z',
+    author: { first_name: 'Équipe', last_name: 'NeuroCare' },
+  },
+  {
+    id: 'editorial-4',
+    slug: 'psychomotricien',
+    title: 'Que fait un psychomotricien ? Zoom sur cette profession méconnue',
+    excerpt: 'Le psychomotricien est souvent un professionnel clé dans l\'accompagnement des enfants TND. Découvrons ensemble ce métier passionnant.',
+    category: 'professionals',
+    image_url: '/images/articles/psychomotricien.jpg',
+    read_time_minutes: 6,
+    published_at: '2024-12-25T10:00:00Z',
+    created_at: '2024-12-25T10:00:00Z',
+    author: { first_name: 'Équipe', last_name: 'NeuroCare' },
+  },
+  {
+    id: 'editorial-5',
+    slug: 'bien-etre-aidants',
+    title: 'Prendre soin de soi quand on est parent aidant',
+    excerpt: 'Accompagner un enfant avec un TND est un marathon. Prendre soin de vous n\'est pas un luxe, c\'est une nécessité.',
+    category: 'testimonials',
+    image_url: '/images/articles/bien-etre-aidants.jpg',
+    read_time_minutes: 8,
+    published_at: '2024-12-25T10:00:00Z',
+    created_at: '2024-12-25T10:00:00Z',
+    author: { first_name: 'Équipe', last_name: 'NeuroCare' },
+  },
+  {
+    id: 'editorial-6',
+    slug: 'temoignage-famille',
+    title: 'Portrait de famille : "NeuroCare a changé notre quotidien"',
+    excerpt: 'Émilie et Thomas sont les parents de Théo, 7 ans, diagnostiqué TSA et TDAH. Ils nous racontent leur parcours.',
+    category: 'testimonials',
+    image_url: '/images/articles/temoignage-famille.jpg',
+    read_time_minutes: 6,
+    published_at: '2024-12-25T10:00:00Z',
+    created_at: '2024-12-25T10:00:00Z',
+    author: { first_name: 'Équipe', last_name: 'NeuroCare' },
+  },
+];
+
 export default function BlogPage() {
   const [userType, setUserType] = useState<'educator' | 'family' | null>(null);
-  const [articles, setArticles] = useState<BlogPost[]>([]);
+  const [articles, setArticles] = useState<any[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
@@ -20,7 +96,11 @@ export default function BlogPage() {
   const fetchArticles = async () => {
     setIsLoading(true);
     const result = await getPublishedPosts({ limit: 20 });
-    setArticles(result.posts);
+    // Fusionner les articles de la DB avec les articles éditoriaux
+    const allArticles = [...editorialArticles, ...result.posts];
+    // Trier par date de publication (plus récent en premier)
+    allArticles.sort((a, b) => new Date(b.published_at || b.created_at).getTime() - new Date(a.published_at || a.created_at).getTime());
+    setArticles(allArticles);
     setIsLoading(false);
   };
 
@@ -118,8 +198,11 @@ export default function BlogPage() {
                     <div className="relative h-40 sm:h-48 bg-gray-200 overflow-hidden">
                       {article.image_url ? (
                         <div
-                          className="absolute inset-0 bg-cover bg-center group-hover:scale-105 transition-transform duration-300"
-                          style={{ backgroundImage: `url('${article.image_url}')` }}
+                          className="absolute inset-0 bg-cover group-hover:scale-105 transition-transform duration-300"
+                          style={{
+                            backgroundImage: `url('${article.image_url}')`,
+                            backgroundPosition: article.slug === 'crises-sensorielles' ? 'center 30%' : 'center'
+                          }}
                         />
                       ) : (
                         <div className="absolute inset-0 flex items-center justify-center bg-gradient-to-br from-teal-100 to-teal-200">
