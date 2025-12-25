@@ -209,21 +209,34 @@ export default function Home() {
   const articles = [
     {
       id: 1,
-      title: "Le harcèlement scolaire pour les enfants souffrant d'un handicap",
-      image: "/images/articles/harcelement.png",
-      link: "/blog/harcelement-scolaire"
+      title: "Préparer son enfant à une première consultation",
+      image: "/images/articles/consultation.jpg",
+      link: "/blog/preparer-consultation"
     },
     {
       id: 2,
-      title: "La nutrition un allié pour le développement",
-      image: "/images/articles/nutrition.png",
-      link: "/blog/nutrition"
+      title: "Gérer les crises sensorielles : techniques pratiques",
+      image: "/images/articles/crises-sensorielles.jpg",
+      imagePosition: "center 30%",
+      link: "/blog/crises-sensorielles"
     },
     {
       id: 3,
-      title: "Les bienfaits de l'activité physique adaptée",
-      image: "/images/articles/sport.png",
-      link: "/blog/activite-physique"
+      title: "MDPH : constituer son dossier efficacement",
+      image: "/images/articles/mdph.jpg",
+      link: "/blog/mdph-dossier"
+    },
+    {
+      id: 4,
+      title: "Que fait un psychomotricien ?",
+      image: "/images/articles/psychomotricien.jpg",
+      link: "/blog/psychomotricien"
+    },
+    {
+      id: 5,
+      title: "Prendre soin de soi quand on est parent aidant",
+      image: "/images/articles/bien-etre-aidants.jpg",
+      link: "/blog/bien-etre-aidants"
     }
   ];
 
@@ -610,7 +623,7 @@ export default function Home() {
             role="region"
             aria-label="Carrousel d'articles"
           >
-            {articles.map((article) => (
+            {articles.map((article: any) => (
               <Link
                 key={article.id}
                 href={article.link}
@@ -620,8 +633,11 @@ export default function Home() {
                 <div className="relative h-36 sm:h-44 rounded-2xl overflow-hidden shadow-lg">
                   <div className="absolute inset-0 bg-gradient-to-br from-gray-300 to-gray-400">
                     <div
-                      className="absolute inset-0 bg-cover bg-center"
-                      style={{ backgroundImage: `url('${article.image}')` }}
+                      className="absolute inset-0 bg-cover"
+                      style={{
+                        backgroundImage: `url('${article.image}')`,
+                        backgroundPosition: article.imagePosition || 'center'
+                      }}
                     ></div>
                   </div>
                   <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent"></div>
@@ -635,9 +651,9 @@ export default function Home() {
             ))}
           </div>
 
-          {/* Desktop: Grid */}
+          {/* Desktop: Grid - Affiche les 3 premiers articles */}
           <div className="hidden lg:grid lg:grid-cols-3 gap-8 px-8">
-            {articles.map((article) => (
+            {articles.slice(0, 3).map((article: any) => (
               <Link
                 key={article.id}
                 href={article.link}
@@ -647,8 +663,11 @@ export default function Home() {
                 <div className="relative h-64 rounded-2xl overflow-hidden shadow-lg group-hover:shadow-xl transition-shadow">
                   <div className="absolute inset-0 bg-gradient-to-br from-gray-300 to-gray-400">
                     <div
-                      className="absolute inset-0 bg-cover bg-center group-hover:scale-105 transition-transform duration-300"
-                      style={{ backgroundImage: `url('${article.image}')` }}
+                      className="absolute inset-0 bg-cover group-hover:scale-105 transition-transform duration-300"
+                      style={{
+                        backgroundImage: `url('${article.image}')`,
+                        backgroundPosition: article.imagePosition || 'center'
+                      }}
                     ></div>
                   </div>
                   <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent"></div>
