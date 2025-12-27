@@ -194,29 +194,33 @@ export default function ProNavbar() {
             >
               Guide SAP
             </Link>
-            <hr className="my-2" />
+            {/* Lien vers espace aidant avec style */}
             <Link
               href="/"
-              className="block py-2 font-medium text-gray-500 text-sm"
+              className="block py-3 px-4 rounded-xl text-center font-semibold transition-all hover:opacity-90"
+              style={{ backgroundColor: '#e6fffa', color: '#027e7e' }}
               onClick={() => setMobileMenuOpen(false)}
             >
               Vous êtes un aidant ?
             </Link>
-            <hr className="my-2" />
+            <hr className="my-3" />
             {user ? (
               <Link
                 href={getDashboardLink()}
-                className="block py-2 font-semibold"
-                style={{ color: '#41005c' }}
+                className="flex items-center justify-center gap-2 py-3 px-4 text-white rounded-xl text-center font-semibold transition-all hover:opacity-90"
+                style={{ backgroundColor: '#f0879f' }}
                 onClick={() => setMobileMenuOpen(false)}
               >
-                Mon tableau de bord
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
+                </svg>
+                Mon compte
               </Link>
             ) : (
               <>
                 <Link
                   href="/pro/login"
-                  className="block py-2 px-4 text-white rounded-lg text-center font-semibold"
+                  className="block py-3 px-4 text-white rounded-xl text-center font-semibold transition-all hover:opacity-90"
                   style={{ backgroundColor: '#f0879f' }}
                   onClick={() => setMobileMenuOpen(false)}
                 >
@@ -224,7 +228,7 @@ export default function ProNavbar() {
                 </Link>
                 <Link
                   href="/auth/register-educator"
-                  className="block py-2 px-4 text-white rounded-lg text-center font-semibold mt-2"
+                  className="block py-3 px-4 text-white rounded-xl text-center font-semibold mt-2 transition-all hover:opacity-90"
                   style={{ backgroundColor: '#41005c' }}
                   onClick={() => setMobileMenuOpen(false)}
                 >

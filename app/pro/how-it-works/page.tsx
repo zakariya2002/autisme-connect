@@ -15,6 +15,32 @@ export default function ProHowItWorksPage() {
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
         </svg>
       ),
+      illustration: (
+        <svg viewBox="0 0 300 300" className="w-full h-full">
+          {/* Background card */}
+          <rect x="50" y="40" width="200" height="220" rx="16" fill="white" filter="url(#shadow1)"/>
+          {/* Profile photo placeholder */}
+          <circle cx="150" cy="100" r="45" fill="#f3e8ff"/>
+          <circle cx="150" cy="90" r="18" fill="#41005c"/>
+          <ellipse cx="150" cy="125" rx="25" ry="15" fill="#41005c"/>
+          {/* Camera icon */}
+          <circle cx="180" cy="130" r="14" fill="#f0879f"/>
+          <rect x="173" y="125" width="14" height="10" rx="2" fill="white"/>
+          <circle cx="180" cy="130" r="3" fill="#f0879f"/>
+          {/* Form fields */}
+          <rect x="75" y="165" width="150" height="12" rx="6" fill="#f3e8ff"/>
+          <rect x="75" y="185" width="120" height="12" rx="6" fill="#f3e8ff"/>
+          <rect x="75" y="205" width="100" height="12" rx="6" fill="#f3e8ff"/>
+          {/* Progress indicator */}
+          <rect x="75" y="235" width="150" height="8" rx="4" fill="#e5e7eb"/>
+          <rect x="75" y="235" width="100" height="8" rx="4" fill="#41005c"/>
+          <defs>
+            <filter id="shadow1" x="0" y="0" width="300" height="300">
+              <feDropShadow dx="0" dy="4" stdDeviation="8" floodOpacity="0.15"/>
+            </filter>
+          </defs>
+        </svg>
+      ),
       tips: ['Photo professionnelle', 'Biographie complète', 'Diplômes et certifications'],
     },
     {
@@ -24,6 +50,28 @@ export default function ProHowItWorksPage() {
       icon: (
         <svg className="w-6 h-6 sm:w-8 sm:h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+        </svg>
+      ),
+      illustration: (
+        <svg viewBox="0 0 300 300" className="w-full h-full">
+          {/* Shield background */}
+          <path d="M150 30 L250 70 L250 150 C250 210 150 270 150 270 C150 270 50 210 50 150 L50 70 Z" fill="white" filter="url(#shadow2)"/>
+          <path d="M150 50 L230 82 L230 145 C230 195 150 245 150 245 C150 245 70 195 70 145 L70 82 Z" fill="#f3e8ff"/>
+          {/* Checkmark */}
+          <circle cx="150" cy="140" r="50" fill="#41005c"/>
+          <path d="M125 140 L142 157 L178 121" stroke="white" strokeWidth="8" strokeLinecap="round" strokeLinejoin="round" fill="none"/>
+          {/* Badge */}
+          <circle cx="210" cy="80" r="25" fill="#f0879f"/>
+          <text x="210" y="87" textAnchor="middle" fill="white" fontSize="20" fontWeight="bold">✓</text>
+          {/* Stars */}
+          <text x="80" y="230" fill="#f0879f" fontSize="16">★</text>
+          <text x="150" y="220" fill="#41005c" fontSize="20">★</text>
+          <text x="220" y="230" fill="#f0879f" fontSize="16">★</text>
+          <defs>
+            <filter id="shadow2" x="0" y="0" width="300" height="300">
+              <feDropShadow dx="0" dy="4" stdDeviation="8" floodOpacity="0.15"/>
+            </filter>
+          </defs>
         </svg>
       ),
       tips: ['Vérification sous 48h', 'Badge de confiance', 'Visibilité accrue'],
@@ -37,6 +85,38 @@ export default function ProHowItWorksPage() {
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
         </svg>
       ),
+      illustration: (
+        <svg viewBox="0 0 300 300" className="w-full h-full">
+          {/* Phone frame */}
+          <rect x="85" y="30" width="130" height="240" rx="20" fill="#1f2937" filter="url(#shadow3)"/>
+          <rect x="92" y="45" width="116" height="210" rx="12" fill="white"/>
+          {/* Notification 1 */}
+          <rect x="102" y="60" width="96" height="50" rx="8" fill="#f3e8ff"/>
+          <circle cx="122" cy="85" r="12" fill="#41005c"/>
+          <rect x="140" y="75" width="50" height="8" rx="4" fill="#41005c"/>
+          <rect x="140" y="88" width="35" height="6" rx="3" fill="#9ca3af"/>
+          {/* Notification 2 */}
+          <rect x="102" y="120" width="96" height="50" rx="8" fill="#fce7f3"/>
+          <circle cx="122" cy="145" r="12" fill="#f0879f"/>
+          <rect x="140" y="135" width="50" height="8" rx="4" fill="#f0879f"/>
+          <rect x="140" y="148" width="35" height="6" rx="3" fill="#9ca3af"/>
+          {/* Notification 3 */}
+          <rect x="102" y="180" width="96" height="50" rx="8" fill="#f3e8ff"/>
+          <circle cx="122" cy="205" r="12" fill="#41005c"/>
+          <rect x="140" y="195" width="50" height="8" rx="4" fill="#41005c"/>
+          <rect x="140" y="208" width="35" height="6" rx="3" fill="#9ca3af"/>
+          {/* Bell notification */}
+          <circle cx="220" cy="55" r="22" fill="#f0879f"/>
+          <text x="220" y="62" textAnchor="middle" fill="white" fontSize="18">🔔</text>
+          <circle cx="232" cy="43" r="10" fill="#41005c"/>
+          <text x="232" y="48" textAnchor="middle" fill="white" fontSize="12" fontWeight="bold">3</text>
+          <defs>
+            <filter id="shadow3" x="0" y="0" width="300" height="300">
+              <feDropShadow dx="0" dy="4" stdDeviation="8" floodOpacity="0.15"/>
+            </filter>
+          </defs>
+        </svg>
+      ),
       tips: ['Notifications instantanées', 'Messagerie sécurisée', 'Demandes de RDV'],
     },
     {
@@ -48,6 +128,61 @@ export default function ProHowItWorksPage() {
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
         </svg>
       ),
+      illustration: (
+        <svg viewBox="0 0 300 300" className="w-full h-full">
+          {/* Calendar */}
+          <rect x="40" y="50" width="220" height="200" rx="16" fill="white" filter="url(#shadow4)"/>
+          {/* Header */}
+          <rect x="40" y="50" width="220" height="50" rx="16" fill="#41005c"/>
+          <rect x="40" y="80" width="220" height="20" fill="#41005c"/>
+          <text x="150" y="82" textAnchor="middle" fill="white" fontSize="18" fontWeight="bold">Décembre 2025</text>
+          {/* Days header */}
+          <text x="65" y="125" fill="#9ca3af" fontSize="10">LUN</text>
+          <text x="97" y="125" fill="#9ca3af" fontSize="10">MAR</text>
+          <text x="130" y="125" fill="#9ca3af" fontSize="10">MER</text>
+          <text x="163" y="125" fill="#9ca3af" fontSize="10">JEU</text>
+          <text x="197" y="125" fill="#9ca3af" fontSize="10">VEN</text>
+          <text x="230" y="125" fill="#9ca3af" fontSize="10">SAM</text>
+          {/* Calendar grid */}
+          {[1,2,3,4,5,6].map((row, i) => (
+            <g key={i}>
+              {[0,1,2,3,4,5].map((col, j) => {
+                const day = i * 6 + j + 1;
+                if (day > 31) return null;
+                const isBooked = [5, 12, 15, 19, 22, 26].includes(day);
+                const isToday = day === 15;
+                return (
+                  <g key={j}>
+                    <circle
+                      cx={65 + col * 33}
+                      cy={145 + i * 25}
+                      r="12"
+                      fill={isToday ? '#41005c' : isBooked ? '#fce7f3' : 'transparent'}
+                    />
+                    <text
+                      x={65 + col * 33}
+                      y={149 + i * 25}
+                      textAnchor="middle"
+                      fill={isToday ? 'white' : isBooked ? '#f0879f' : '#374151'}
+                      fontSize="11"
+                    >
+                      {day <= 31 ? day : ''}
+                    </text>
+                  </g>
+                );
+              })}
+            </g>
+          ))}
+          {/* Checkmark badge */}
+          <circle cx="250" cy="60" r="20" fill="#10b981"/>
+          <path d="M240 60 L247 67 L262 52" stroke="white" strokeWidth="3" strokeLinecap="round" fill="none"/>
+          <defs>
+            <filter id="shadow4" x="0" y="0" width="300" height="300">
+              <feDropShadow dx="0" dy="4" stdDeviation="8" floodOpacity="0.15"/>
+            </filter>
+          </defs>
+        </svg>
+      ),
       tips: ['Calendrier intégré', 'Rappels automatiques', 'Gestion simplifiée'],
     },
     {
@@ -57,6 +192,37 @@ export default function ProHowItWorksPage() {
       icon: (
         <svg className="w-6 h-6 sm:w-8 sm:h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z" />
+        </svg>
+      ),
+      illustration: (
+        <svg viewBox="0 0 300 300" className="w-full h-full">
+          {/* Review card */}
+          <rect x="40" y="60" width="220" height="180" rx="16" fill="white" filter="url(#shadow5)"/>
+          {/* Profile */}
+          <circle cx="85" cy="110" r="25" fill="#f3e8ff"/>
+          <circle cx="85" cy="105" r="10" fill="#41005c"/>
+          <ellipse cx="85" cy="120" rx="12" ry="8" fill="#41005c"/>
+          {/* Stars */}
+          <text x="120" y="100" fill="#f59e0b" fontSize="22">★★★★★</text>
+          {/* Name */}
+          <rect x="120" y="110" width="80" height="10" rx="5" fill="#41005c"/>
+          {/* Review text */}
+          <rect x="60" y="150" width="180" height="8" rx="4" fill="#e5e7eb"/>
+          <rect x="60" y="165" width="160" height="8" rx="4" fill="#e5e7eb"/>
+          <rect x="60" y="180" width="120" height="8" rx="4" fill="#e5e7eb"/>
+          {/* Rating badge */}
+          <circle cx="220" cy="205" r="25" fill="#41005c"/>
+          <text x="220" y="202" textAnchor="middle" fill="white" fontSize="16" fontWeight="bold">4.9</text>
+          <text x="220" y="218" textAnchor="middle" fill="#f0879f" fontSize="10">★★★★★</text>
+          {/* Floating stars */}
+          <text x="50" y="50" fill="#f59e0b" fontSize="24">★</text>
+          <text x="240" y="45" fill="#f0879f" fontSize="20">★</text>
+          <text x="270" y="150" fill="#f59e0b" fontSize="16">★</text>
+          <defs>
+            <filter id="shadow5" x="0" y="0" width="300" height="300">
+              <feDropShadow dx="0" dy="4" stdDeviation="8" floodOpacity="0.15"/>
+            </filter>
+          </defs>
         </svg>
       ),
       tips: ['Avis vérifiés', 'Note moyenne visible', 'Confiance des familles'],
@@ -133,12 +299,23 @@ export default function ProHowItWorksPage() {
               >
                 {/* Content */}
                 <div className="flex-1 w-full">
-                  <div className="flex items-center gap-3 sm:gap-4 mb-3 sm:mb-4">
-                    <span className="text-4xl sm:text-5xl lg:text-6xl font-bold" style={{ color: 'rgba(65, 0, 92, 0.2)' }}>
-                      {step.number}
-                    </span>
-                    <div className="w-10 h-10 sm:w-12 sm:h-12 lg:w-14 lg:h-14 rounded-xl sm:rounded-2xl flex items-center justify-center" style={{ backgroundColor: index % 2 === 0 ? 'rgba(65, 0, 92, 0.1)' : 'rgba(240, 135, 159, 0.2)', color: index % 2 === 0 ? '#41005c' : '#f0879f' }}>
-                      {step.icon}
+                  <div className="mb-4 sm:mb-5">
+                    <div
+                      className="relative inline-flex w-16 h-16 sm:w-20 sm:h-20 lg:w-24 lg:h-24 rounded-2xl sm:rounded-3xl items-center justify-center shadow-lg"
+                      style={{
+                        background: index % 2 === 0
+                          ? 'linear-gradient(135deg, #41005c 0%, #6b21a8 100%)'
+                          : 'linear-gradient(135deg, #f0879f 0%, #ec4899 100%)',
+                      }}
+                    >
+                      <span className="text-2xl sm:text-3xl lg:text-4xl font-black text-white">
+                        {step.number}
+                      </span>
+                      {/* Decorative ring */}
+                      <div
+                        className="absolute inset-0 rounded-2xl sm:rounded-3xl border-2 opacity-30"
+                        style={{ borderColor: 'white' }}
+                      />
                     </div>
                   </div>
                   <h2 className="text-xl sm:text-2xl lg:text-3xl font-bold text-gray-900 mb-2 sm:mb-4">{step.title}</h2>
@@ -159,12 +336,10 @@ export default function ProHowItWorksPage() {
                   </div>
                 </div>
 
-                {/* Illustration placeholder */}
+                {/* Illustration */}
                 <div className="flex-1 w-full max-w-xs sm:max-w-sm lg:max-w-md">
-                  <div className="rounded-2xl sm:rounded-3xl p-8 sm:p-10 lg:p-12 aspect-square flex items-center justify-center" style={{ backgroundColor: index % 2 === 0 ? 'rgba(65, 0, 92, 0.1)' : 'rgba(240, 135, 159, 0.15)' }}>
-                    <div className="transform scale-[2] sm:scale-[2.5] lg:scale-[3]" style={{ color: index % 2 === 0 ? '#41005c' : '#f0879f' }}>
-                      {step.icon}
-                    </div>
+                  <div className="rounded-2xl sm:rounded-3xl p-4 sm:p-6 lg:p-8 aspect-square flex items-center justify-center" style={{ backgroundColor: index % 2 === 0 ? 'rgba(65, 0, 92, 0.08)' : 'rgba(240, 135, 159, 0.12)' }}>
+                    {step.illustration}
                   </div>
                 </div>
               </div>

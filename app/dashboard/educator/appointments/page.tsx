@@ -1084,13 +1084,13 @@ export default function EducatorAppointmentsPage() {
           </div>
         )}
 
-        {/* Boutons de filtre - 5 colonnes */}
-        <div className="grid grid-cols-5 gap-3 mb-8">
+        {/* Boutons de filtre - Responsive */}
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 sm:gap-3 mb-6 sm:mb-8">
           {/* Tous */}
           <button
             onClick={() => appointments.length > 0 && selectFilter('all')}
             disabled={appointments.length === 0}
-            className={`rounded-xl p-3 text-center transition-all ${
+            className={`rounded-xl p-2 sm:p-3 text-center transition-all ${
               appointments.length === 0
                 ? 'bg-gray-100 opacity-60 cursor-not-allowed'
                 : activeFilter === 'all'
@@ -1098,15 +1098,15 @@ export default function EducatorAppointmentsPage() {
                   : 'bg-gray-100 hover:bg-gray-200 cursor-pointer'
             }`}
           >
-            <p className="text-2xl font-bold text-gray-700">{appointments.length}</p>
-            <p className="text-xs text-gray-600 mt-1">Tous</p>
+            <p className="text-xl sm:text-2xl font-bold text-gray-700">{appointments.length}</p>
+            <p className="text-[10px] sm:text-xs text-gray-600 mt-0.5 sm:mt-1">Tous</p>
           </button>
 
           {/* En cours - Style accrocheur */}
           <button
             onClick={() => inProgressAppointments.length > 0 && selectFilter('in_progress')}
             disabled={inProgressAppointments.length === 0}
-            className={`rounded-xl p-3 text-center transition-all relative ${
+            className={`rounded-xl p-2 sm:p-3 text-center transition-all relative ${
               inProgressAppointments.length === 0
                 ? 'bg-primary-50 opacity-60 cursor-not-allowed'
                 : activeFilter === 'in_progress'
@@ -1115,20 +1115,20 @@ export default function EducatorAppointmentsPage() {
             }`}
           >
             {inProgressAppointments.length > 0 && (
-              <span className="absolute -top-1 -right-1 flex h-3 w-3">
+              <span className="absolute -top-1 -right-1 flex h-2.5 w-2.5 sm:h-3 sm:w-3">
                 <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary-400 opacity-75"></span>
-                <span className="relative inline-flex rounded-full h-3 w-3 bg-primary-500"></span>
+                <span className="relative inline-flex rounded-full h-2.5 w-2.5 sm:h-3 sm:w-3 bg-primary-500"></span>
               </span>
             )}
-            <p className="text-2xl font-bold text-primary-600">{inProgressAppointments.length}</p>
-            <p className="text-xs text-primary-700 mt-1">En cours</p>
+            <p className="text-xl sm:text-2xl font-bold text-primary-600">{inProgressAppointments.length}</p>
+            <p className="text-[10px] sm:text-xs text-primary-700 mt-0.5 sm:mt-1">En cours</p>
           </button>
 
           {/* À venir */}
           <button
             onClick={() => upcomingAppointments.length > 0 && selectFilter('upcoming')}
             disabled={upcomingAppointments.length === 0}
-            className={`rounded-xl p-3 text-center transition-all ${
+            className={`rounded-xl p-2 sm:p-3 text-center transition-all ${
               upcomingAppointments.length === 0
                 ? 'bg-emerald-50 opacity-60 cursor-not-allowed'
                 : activeFilter === 'upcoming'
@@ -1136,15 +1136,15 @@ export default function EducatorAppointmentsPage() {
                   : 'bg-emerald-50 hover:bg-emerald-100 cursor-pointer'
             }`}
           >
-            <p className="text-2xl font-bold text-emerald-600">{upcomingAppointments.length}</p>
-            <p className="text-xs text-emerald-700 mt-1">À venir</p>
+            <p className="text-xl sm:text-2xl font-bold text-emerald-600">{upcomingAppointments.length}</p>
+            <p className="text-[10px] sm:text-xs text-emerald-700 mt-0.5 sm:mt-1">À venir</p>
           </button>
 
           {/* Passés */}
           <button
             onClick={() => completedAppointments.length > 0 && selectFilter('completed')}
             disabled={completedAppointments.length === 0}
-            className={`rounded-xl p-3 text-center transition-all ${
+            className={`rounded-xl p-2 sm:p-3 text-center transition-all ${
               completedAppointments.length === 0
                 ? 'bg-gray-100 opacity-60 cursor-not-allowed'
                 : activeFilter === 'completed'
@@ -1152,8 +1152,8 @@ export default function EducatorAppointmentsPage() {
                   : 'bg-gray-100 hover:bg-gray-200 cursor-pointer'
             }`}
           >
-            <p className="text-2xl font-bold text-gray-600">{completedAppointments.length}</p>
-            <p className="text-xs text-gray-600 mt-1">Passés</p>
+            <p className="text-xl sm:text-2xl font-bold text-gray-600">{completedAppointments.length}</p>
+            <p className="text-[10px] sm:text-xs text-gray-600 mt-0.5 sm:mt-1">Passés</p>
           </button>
         </div>
 

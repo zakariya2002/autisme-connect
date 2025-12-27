@@ -505,11 +505,27 @@ export default function MessagesPage() {
       <div className="flex-1 overflow-hidden flex flex-col">
         {/* En-tête avec icône - visible uniquement sur mobile quand on voit la liste */}
         {showConversationList && (
-          <div className="lg:hidden text-center py-4 px-4">
-            <div className="w-14 h-14 mx-auto mb-2 rounded-full flex items-center justify-center p-1" style={{ backgroundColor: primaryColor }}>
-              <img src="/images/icons/5.svg" alt="" className="w-full h-full" />
+          <div className="lg:hidden py-4 px-4">
+            <div className="flex items-center justify-center relative">
+              <div className="text-center">
+                <div className="w-14 h-14 mx-auto mb-2 rounded-full flex items-center justify-center p-1" style={{ backgroundColor: primaryColor }}>
+                  <img src="/images/icons/5.svg" alt="" className="w-full h-full" />
+                </div>
+                <h1 className="text-lg font-bold text-gray-900">Mes messages</h1>
+              </div>
+              {/* Lien vers familles bloquées - uniquement pour éducateurs */}
+              {userProfile?.role === 'educator' && (
+                <Link
+                  href="/dashboard/educator/blocked-families"
+                  className="absolute right-0 top-1/2 -translate-y-1/2 flex items-center gap-1.5 px-2.5 py-1.5 rounded-xl bg-red-50 text-red-600 hover:bg-red-100 transition-colors text-xs font-medium"
+                >
+                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728A9 9 0 015.636 5.636m12.728 12.728L5.636 5.636" />
+                  </svg>
+                  <span>Bloqués</span>
+                </Link>
+              )}
             </div>
-            <h1 className="text-lg font-bold text-gray-900">Mes messages</h1>
           </div>
         )}
 
@@ -518,11 +534,25 @@ export default function MessagesPage() {
             {/* Liste des conversations */}
             <div className={`w-full lg:w-1/3 border-r border-gray-100 flex flex-col ${selectedConversation && !showConversationList ? 'hidden lg:flex' : 'flex'}`}>
               <div className="p-4 border-b border-gray-100 hidden lg:block">
-                <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 rounded-full flex items-center justify-center p-0.5" style={{ backgroundColor: primaryColor }}>
-                    <img src="/images/icons/5.svg" alt="" className="w-full h-full" />
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-3">
+                    <div className="w-10 h-10 rounded-full flex items-center justify-center p-0.5" style={{ backgroundColor: primaryColor }}>
+                      <img src="/images/icons/5.svg" alt="" className="w-full h-full" />
+                    </div>
+                    <h2 className="text-lg font-semibold text-gray-900">Messages</h2>
                   </div>
-                  <h2 className="text-lg font-semibold text-gray-900">Messages</h2>
+                  {/* Lien vers familles bloquées - uniquement pour éducateurs */}
+                  {userProfile?.role === 'educator' && (
+                    <Link
+                      href="/dashboard/educator/blocked-families"
+                      className="flex items-center gap-2 px-3 py-2 rounded-xl bg-red-50 text-red-600 hover:bg-red-100 hover:text-red-700 transition-colors text-sm font-medium"
+                    >
+                      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728A9 9 0 015.636 5.636m12.728 12.728L5.636 5.636" />
+                      </svg>
+                      <span>Bloqués</span>
+                    </Link>
+                  )}
                 </div>
               </div>
               <div className="flex-1 overflow-y-auto">

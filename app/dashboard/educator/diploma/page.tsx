@@ -418,16 +418,16 @@ export default function DiplomePage() {
       </div>
 
       {/* Contenu principal */}
-      <div className="flex-1 max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8 w-full">
+      <div className="flex-1 max-w-3xl mx-auto px-3 sm:px-6 lg:px-8 py-4 sm:py-8 pb-24 sm:pb-8 w-full">
         {/* En-tête centré avec icône */}
-        <div className="mb-6 sm:mb-8 text-center">
-          <div className="w-16 h-16 mx-auto mb-4 rounded-full flex items-center justify-center p-1" style={{ backgroundColor: '#41005c' }}>
+        <div className="mb-5 sm:mb-8 text-center">
+          <div className="w-14 h-14 sm:w-16 sm:h-16 mx-auto mb-3 sm:mb-4 rounded-full flex items-center justify-center p-1" style={{ backgroundColor: '#41005c' }}>
             <img src="/images/icons/diploma.svg" alt="" className="w-full h-full" />
           </div>
-          <h1 className="text-xl sm:text-2xl font-bold text-gray-900">
+          <h1 className="text-lg sm:text-2xl font-bold text-gray-900">
             Mon Diplôme {professionConfig ? `- ${professionConfig.label}` : ''}
           </h1>
-          <p className="text-gray-500 text-sm mt-1">
+          <p className="text-gray-500 text-xs sm:text-sm mt-1 px-2">
             {professionConfig?.verificationMethod === 'dreets'
               ? 'Vérification automatique par la DREETS'
               : professionConfig?.verificationMethod === 'rpps'
@@ -435,7 +435,7 @@ export default function DiplomePage() {
               : 'Vérification manuelle (24-48h)'}
           </p>
           {professionConfig && (
-            <p className="text-xs mt-2" style={{ color: '#5a1a75' }}>
+            <p className="text-[10px] sm:text-xs mt-2 px-2" style={{ color: '#5a1a75' }}>
               Diplôme attendu : {professionConfig.diplomaDescription}
             </p>
           )}
@@ -443,21 +443,21 @@ export default function DiplomePage() {
 
         {/* Message d'information pour les nouveaux comptes */}
         {!profile.diploma_url && (
-          <div className="mb-6 rounded-xl p-5 shadow-sm" style={{ backgroundColor: '#f3e8ff', border: '1px solid #d8b4fe' }}>
-            <div className="flex items-start gap-4">
-              <div className="w-10 h-10 rounded-lg flex items-center justify-center flex-shrink-0" style={{ backgroundColor: '#41005c' }}>
-                <svg className="h-5 w-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+          <div className="mb-4 sm:mb-6 rounded-xl p-3 sm:p-5 shadow-sm" style={{ backgroundColor: '#f3e8ff', border: '1px solid #d8b4fe' }}>
+            <div className="flex items-start gap-3 sm:gap-4">
+              <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-lg flex items-center justify-center flex-shrink-0" style={{ backgroundColor: '#41005c' }}>
+                <svg className="h-4 w-4 sm:h-5 sm:w-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
                 </svg>
               </div>
               <div className="flex-1">
-                <h3 className="text-base font-semibold mb-2" style={{ color: '#41005c' }}>
+                <h3 className="text-sm sm:text-base font-semibold mb-1.5 sm:mb-2" style={{ color: '#41005c' }}>
                   Bienvenue sur NeuroCare !
                 </h3>
-                <p className="text-sm mb-3" style={{ color: '#5a1a75' }}>
+                <p className="text-xs sm:text-sm mb-2 sm:mb-3" style={{ color: '#5a1a75' }}>
                   <strong>Important :</strong> Vous serez visible des familles uniquement après validation de votre diplôme.
                 </p>
-                <div className="space-y-1.5 text-sm" style={{ color: '#5a1a75' }}>
+                <div className="space-y-1 sm:space-y-1.5 text-xs sm:text-sm" style={{ color: '#5a1a75' }}>
                   <div className="flex items-start gap-2">
                     <span className="font-bold" style={{ color: '#41005c' }}>1.</span>
                     <span>Uploadez votre diplôme (PDF, JPG ou PNG)</span>
@@ -492,7 +492,7 @@ export default function DiplomePage() {
 
         {/* Statut actuel */}
         {profile.diploma_verification_status && (
-          <div className="mb-6">
+          <div className="mb-4 sm:mb-6">
             {getStatusBadge(profile.diploma_verification_status)}
 
             {profile.dreets_verified && profile.dreets_response_date && (
@@ -520,12 +520,12 @@ export default function DiplomePage() {
 
         {/* Alerte si pas de diplôme */}
         {!profile.diploma_url && (
-          <div className="mb-6 p-4 rounded-xl bg-amber-50 border border-amber-200" role="alert">
-            <div className="flex items-start gap-3">
-              <svg className="h-5 w-5 text-amber-500 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
+          <div className="mb-4 sm:mb-6 p-3 sm:p-4 rounded-xl bg-amber-50 border border-amber-200" role="alert">
+            <div className="flex items-start gap-2 sm:gap-3">
+              <svg className="h-4 w-4 sm:h-5 sm:w-5 text-amber-500 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
                 <path fillRule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
               </svg>
-              <p className="text-sm text-amber-800">
+              <p className="text-xs sm:text-sm text-amber-800">
                 <strong>Attention :</strong> Votre profil n'est pas visible tant que votre diplôme n'est pas vérifié.
               </p>
             </div>
@@ -533,8 +533,8 @@ export default function DiplomePage() {
         )}
 
         {/* Formulaire d'upload */}
-        <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-5">
-          <h2 className="text-lg font-semibold mb-4" style={{ color: '#41005c' }}>
+        <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-3 sm:p-5">
+          <h2 className="text-base sm:text-lg font-semibold mb-3 sm:mb-4" style={{ color: '#41005c' }}>
             {profile.diploma_url ? 'Remplacer mon diplôme' : 'Uploader mon diplôme'}
           </h2>
 
@@ -575,8 +575,8 @@ export default function DiplomePage() {
           )}
 
           {/* Zone d'upload */}
-          <div className="mb-4">
-            <label htmlFor="diploma-upload" className="block text-sm font-medium text-gray-700 mb-2">
+          <div className="mb-3 sm:mb-4">
+            <label htmlFor="diploma-upload" className="block text-xs sm:text-sm font-medium text-gray-700 mb-1.5 sm:mb-2">
               Sélectionner un fichier (JPG, PNG ou PDF - max 5MB)
             </label>
             <input
@@ -586,8 +586,8 @@ export default function DiplomePage() {
               onChange={handleFileChange}
               disabled={analyzing || uploading}
               aria-label="Sélectionner un fichier de diplôme à uploader (formats acceptés : JPG, PNG ou PDF, taille maximale : 5 MB)"
-              className="block w-full text-sm text-gray-500 file:mr-4 file:py-2.5 file:px-4 file:rounded-xl file:border-0 file:text-sm file:font-semibold file:text-white hover:file:opacity-90 disabled:opacity-50"
-              style={{ '--file-bg': '#41005c' } as any}
+              className="block w-full text-xs sm:text-sm text-gray-500 file:mr-2 sm:file:mr-4 file:py-2 sm:file:py-2.5 file:px-3 sm:file:px-4 file:rounded-xl file:border-0 file:text-xs sm:file:text-sm file:font-semibold file:text-white hover:file:opacity-90 disabled:opacity-50"
+              style={{ '--file-bg': '#41005c', fontSize: '16px' } as any}
             />
             <style jsx>{`
               input[type="file"]::file-selector-button {
@@ -597,53 +597,53 @@ export default function DiplomePage() {
           </div>
 
           {/* Champs supplémentaires */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4 mb-3 sm:mb-4">
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1.5">
-                Numéro de diplôme {ocrResult && diplomaNumber && <span className="text-xs" style={{ color: '#5a1a75' }}>(extrait)</span>}
+              <label className="block text-xs sm:text-sm font-medium text-gray-700 mb-1 sm:mb-1.5">
+                Numéro de diplôme {ocrResult && diplomaNumber && <span className="text-[10px] sm:text-xs" style={{ color: '#5a1a75' }}>(extrait)</span>}
               </label>
               <input
                 type="text"
                 value={diplomaNumber}
                 onChange={(e) => setDiplomaNumber(e.target.value)}
                 placeholder="Ex: 123456"
-                className="w-full px-3 py-2.5 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 text-sm"
-                style={{ '--tw-ring-color': '#41005c' } as any}
+                className="w-full px-3 py-2.5 sm:py-2.5 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 text-sm"
+                style={{ '--tw-ring-color': '#41005c', fontSize: '16px' } as any}
               />
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1.5">
-                Date de délivrance {ocrResult && deliveryDate && <span className="text-xs" style={{ color: '#5a1a75' }}>(extraite)</span>}
+              <label className="block text-xs sm:text-sm font-medium text-gray-700 mb-1 sm:mb-1.5">
+                Date de délivrance {ocrResult && deliveryDate && <span className="text-[10px] sm:text-xs" style={{ color: '#5a1a75' }}>(extraite)</span>}
               </label>
               <input
                 type="text"
                 value={deliveryDate}
                 onChange={(e) => setDeliveryDate(e.target.value)}
                 placeholder="Ex: 15/06/2020"
-                className="w-full px-3 py-2.5 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 text-sm"
-                style={{ '--tw-ring-color': '#41005c' } as any}
+                className="w-full px-3 py-2.5 sm:py-2.5 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 text-sm"
+                style={{ '--tw-ring-color': '#41005c', fontSize: '16px' } as any}
               />
             </div>
 
             {/* Région - uniquement pour vérification DREETS */}
             {professionConfig?.verificationMethod === 'dreets' && (
-              <div className="md:col-span-2">
-                <label className="block text-sm font-medium text-gray-700 mb-1.5">
+              <div className="sm:col-span-2">
+                <label className="block text-xs sm:text-sm font-medium text-gray-700 mb-1 sm:mb-1.5">
                   Région de délivrance <span style={{ color: '#f0879f' }}>*</span>
                 </label>
                 <select
                   value={region}
                   onChange={(e) => setRegion(e.target.value)}
-                  className="w-full px-3 py-2.5 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 text-sm"
-                  style={{ '--tw-ring-color': '#41005c' } as any}
+                  className="w-full px-3 py-2.5 sm:py-2.5 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 text-sm"
+                  style={{ '--tw-ring-color': '#41005c', fontSize: '16px' } as any}
                 >
                   <option value="">Sélectionnez une région</option>
                   {FRENCH_REGIONS.map(r => (
                     <option key={r} value={r}>{r}</option>
                   ))}
                 </select>
-                <p className="text-xs text-gray-500 mt-1">
+                <p className="text-[10px] sm:text-xs text-gray-500 mt-1">
                   Permet de contacter la bonne DREETS pour la vérification
                 </p>
               </div>
@@ -752,16 +752,16 @@ export default function DiplomePage() {
         </div>
 
         {/* Informations */}
-        <div className="mt-6 rounded-xl p-5" style={{ backgroundColor: '#f3e8ff', border: '1px solid #d8b4fe' }}>
-          <div className="flex items-start gap-3 mb-4">
-            <div className="w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0" style={{ backgroundColor: '#41005c' }}>
-              <svg className="h-4 w-4 text-white" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
+        <div className="mt-4 sm:mt-6 rounded-xl p-3 sm:p-5" style={{ backgroundColor: '#f3e8ff', border: '1px solid #d8b4fe' }}>
+          <div className="flex items-start gap-2 sm:gap-3 mb-3 sm:mb-4">
+            <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-lg flex items-center justify-center flex-shrink-0" style={{ backgroundColor: '#41005c' }}>
+              <svg className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-white" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
                 <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd" />
               </svg>
             </div>
-            <h3 className="text-sm font-semibold pt-1" style={{ color: '#41005c' }}>Comment fonctionne la vérification ?</h3>
+            <h3 className="text-xs sm:text-sm font-semibold pt-1" style={{ color: '#41005c' }}>Comment fonctionne la vérification ?</h3>
           </div>
-          <ul className="text-sm space-y-2.5" style={{ color: '#5a1a75' }}>
+          <ul className="text-xs sm:text-sm space-y-2 sm:space-y-2.5" style={{ color: '#5a1a75' }}>
             <li className="flex items-start">
               <span className="mr-2 font-bold" style={{ color: '#41005c' }}>1.</span>
               <span><strong>Analyse automatique :</strong> Le diplôme est analysé par OCR pour détecter les informations clés</span>

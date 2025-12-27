@@ -370,31 +370,39 @@ export default function EducatorDashboard() {
           <h2 className="text-lg font-bold text-gray-900 mb-3">Mes prochains rendez-vous</h2>
 
           {upcomingAppointments.length > 0 ? (
-            <div className="flex gap-4 overflow-x-auto pb-3 scrollbar-hide" style={{ scrollSnapType: 'x mandatory' }}>
+            <div
+              className={`flex gap-3 sm:gap-4 overflow-x-auto pb-3 scrollbar-hide ${upcomingAppointments.length === 1 ? 'justify-center sm:justify-start' : ''}`}
+              style={{ scrollSnapType: 'x mandatory' }}
+            >
               {upcomingAppointments.map((apt) => (
                 <div
                   key={apt.id}
                   className="flex-shrink-0 bg-white rounded-2xl shadow-md border border-gray-100 overflow-hidden"
-                  style={{ width: 'calc(50% - 8px)', minWidth: '170px', scrollSnapAlign: 'start' }}
+                  style={{
+                    width: upcomingAppointments.length === 1 ? 'calc(80% - 8px)' : 'calc(55% - 6px)',
+                    minWidth: upcomingAppointments.length === 1 ? '280px' : '200px',
+                    maxWidth: upcomingAppointments.length === 1 ? '350px' : '260px',
+                    scrollSnapAlign: 'start'
+                  }}
                 >
                   {/* Date badge */}
                   <div
-                    className="px-3 py-3 flex items-center gap-2"
+                    className="px-3 sm:px-4 py-2.5 sm:py-3 flex items-center gap-2"
                     style={{ backgroundColor: '#41005c' }}
                   >
-                    <svg className="w-5 h-5 text-white flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <svg className="w-4 h-4 sm:w-5 sm:h-5 text-white flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
                     </svg>
-                    <span className="text-xs font-semibold text-white">
+                    <span className="text-xs sm:text-sm font-semibold text-white">
                       {formatAppointmentDate(apt.appointment_date, apt.start_time)}
                     </span>
                   </div>
 
                   {/* Family info */}
-                  <div className="p-4">
+                  <div className="p-3 sm:p-4">
                     <div className="flex items-center gap-3">
                       {/* Avatar famille */}
-                      <div className="w-12 h-12 rounded-full overflow-hidden flex-shrink-0 border-2 border-gray-200" style={{ background: apt.family?.avatar_url ? 'transparent' : 'linear-gradient(135deg, #41005c 0%, #5a1a75 100%)' }}>
+                      <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-full overflow-hidden flex-shrink-0 border-2 border-gray-200" style={{ background: apt.family?.avatar_url ? 'transparent' : 'linear-gradient(135deg, #41005c 0%, #5a1a75 100%)' }}>
                         {apt.family?.avatar_url ? (
                           <img
                             src={apt.family.avatar_url}
@@ -417,7 +425,7 @@ export default function EducatorDashboard() {
                         <p className="font-bold text-gray-900 text-sm">
                           {apt.family?.last_name?.toUpperCase()}
                         </p>
-                        <p className="text-xs mt-1 px-2 py-0.5 rounded-full inline-block" style={{ backgroundColor: 'rgba(65, 0, 92, 0.1)', color: '#41005c' }}>
+                        <p className="text-[10px] sm:text-xs mt-1 px-2 py-0.5 rounded-full inline-block" style={{ backgroundColor: 'rgba(65, 0, 92, 0.1)', color: '#41005c' }}>
                           Famille
                         </p>
                       </div>

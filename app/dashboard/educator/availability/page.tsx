@@ -359,7 +359,7 @@ export default function EducatorAvailability() {
         <EducatorNavbar profile={profile} subscription={subscription} />
       </div>
 
-      <div className="flex-1 max-w-3xl mx-auto px-3 sm:px-6 lg:px-8 py-4 sm:py-8 w-full">
+      <div className="flex-1 max-w-3xl mx-auto px-3 sm:px-6 lg:px-8 py-4 sm:py-8 pb-24 sm:pb-8 w-full">
         {/* En-tête centré avec icône */}
         <div className="mb-5 sm:mb-8 text-center">
           <div className="w-14 h-14 sm:w-16 sm:h-16 mx-auto mb-3 sm:mb-4 rounded-full flex items-center justify-center p-1" style={{ backgroundColor: '#41005c' }}>
@@ -583,14 +583,14 @@ export default function EducatorAvailability() {
         )}
 
         {/* Statistiques rapides */}
-        <div className="grid grid-cols-2 gap-2 sm:gap-3 mb-4 sm:mb-6">
-          <div className="bg-white rounded-xl p-3 sm:p-4 text-center border border-gray-100 shadow-sm">
-            <p className="text-xl sm:text-2xl font-bold" style={{ color: '#41005c' }}>{availabilities.length}</p>
-            <p className="text-[10px] sm:text-xs text-gray-500 mt-0.5 sm:mt-1">Créneaux à venir</p>
+        <div className="grid grid-cols-2 gap-3 sm:gap-4 mb-5 sm:mb-6">
+          <div className="bg-white rounded-2xl p-4 sm:p-5 text-center border border-gray-100 shadow-sm">
+            <p className="text-2xl sm:text-3xl font-bold" style={{ color: '#41005c' }}>{availabilities.length}</p>
+            <p className="text-xs sm:text-sm text-gray-500 mt-1">Créneaux à venir</p>
           </div>
-          <div className="bg-white rounded-xl p-3 sm:p-4 text-center border border-gray-100 shadow-sm">
-            <p className="text-xl sm:text-2xl font-bold" style={{ color: '#41005c' }}>{availabilities.filter(a => a.is_available).length}</p>
-            <p className="text-[10px] sm:text-xs text-gray-500 mt-0.5 sm:mt-1">Disponibles</p>
+          <div className="bg-white rounded-2xl p-4 sm:p-5 text-center border border-gray-100 shadow-sm">
+            <p className="text-2xl sm:text-3xl font-bold" style={{ color: '#41005c' }}>{availabilities.filter(a => a.is_available).length}</p>
+            <p className="text-xs sm:text-sm text-gray-500 mt-1">Disponibles</p>
           </div>
         </div>
 
