@@ -2,6 +2,7 @@ import { Resend } from 'resend';
 import { getEducatorWelcomeEmail } from './email-templates/educator-welcome';
 import { getFamilyWelcomeEmail } from './email-templates/family-welcome';
 import { getPremiumWelcomeEmail } from './email-templates/premium-welcome';
+import { getPasswordResetEmail } from './email-templates/password-reset';
 
 const resend = new Resend(process.env.RESEND_API_KEY);
 
@@ -71,6 +72,28 @@ export async function sendPremiumWelcomeEmail(email: string, firstName: string) 
     return { success: true, data };
   } catch (error) {
     console.error('❌ Erreur envoi email Premium:', error);
+    return { success: false, error };
+  }
+}
+
+export async function sendPasswordResetEmail(email: string, firstName: string, resetUrl: string) {
+  try {
+    const { data, error } = await resend.emails.send({
+      from: 'neurocare <admin@neuro-care.fr>',
+      to: [email],
+      subject: `🔐 Réinitialisation de votre mot de passe neurocare`,
+      html: getPasswordResetEmail(firstName, resetUrl),
+    });
+
+    if (error) {
+      console.error('❌ Erreur envoi email réinitialisation:', error);
+      return { success: false, error };
+    }
+
+    console.log('✅ Email de réinitialisation envoyé à:', email);
+    return { success: true, data };
+  } catch (error) {
+    console.error('❌ Erreur envoi email réinitialisation:', error);
     return { success: false, error };
   }
 }

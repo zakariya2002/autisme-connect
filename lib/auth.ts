@@ -68,11 +68,22 @@ export async function getUserRole(): Promise<UserRole | null> {
 }
 
 export async function resetPassword(email: string) {
-  const { data, error } = await supabase.auth.resetPasswordForEmail(email, {
-    redirectTo: `${window.location.origin}/auth/reset-password`,
+  const baseUrl = typeof window !== 'undefined' ? window.location.origin : 'https://www.neuro-care.fr';
+
+  const response = await fetch(`${baseUrl}/api/auth/reset-password`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({ email }),
   });
 
-  if (error) throw error;
+  const data = await response.json();
+
+  if (!response.ok) {
+    throw new Error(data.error || 'Erreur lors de la réinitialisation');
+  }
+
   return data;
 }
 
