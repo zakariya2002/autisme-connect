@@ -54,16 +54,30 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Créer le nom du fichier
-    const fileName = `${user.id}/cv-${Date.now()}.pdf`;
+    // Récupérer le profil éducateur pour avoir l'ID
+    const { data: educatorProfile, error: profileFetchError } = await supabaseAdmin
+      .from('educator_profiles')
+      .select('id')
+      .eq('user_id', user.id)
+      .single();
+
+    if (profileFetchError || !educatorProfile) {
+      return NextResponse.json(
+        { error: 'Profil éducateur non trouvé' },
+        { status: 404 }
+      );
+    }
+
+    // Créer le nom du fichier dans le format attendu: educator-cvs/{educator_id}/cv-{timestamp}.pdf
+    const fileName = `educator-cvs/${educatorProfile.id}/cv-${Date.now()}.pdf`;
 
     // Convertir le fichier en ArrayBuffer
     const arrayBuffer = await file.arrayBuffer();
     const buffer = Buffer.from(arrayBuffer);
 
-    // Upload vers Supabase Storage (bucket cv)
+    // Upload vers Supabase Storage (bucket documents)
     const { data, error: uploadError } = await supabaseAdmin.storage
-      .from('cv')
+      .from('documents')
       .upload(fileName, buffer, {
         contentType: 'application/pdf',
         upsert: true
