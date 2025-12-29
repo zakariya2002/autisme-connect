@@ -80,6 +80,10 @@ export async function POST(request: Request) {
           specializations: profileData.specializations || [],
           languages: profileData.languages || [],
           profession_type: profileData.profession_type || 'educator',
+          siret: profileData.siret || null,
+          sap_number: profileData.sap_number || null,
+          diploma_type: profileData.diploma_type || null,
+          rpps_number: profileData.rpps_number || null,
         });
 
       if (profileError) {
