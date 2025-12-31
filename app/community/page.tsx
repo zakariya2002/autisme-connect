@@ -94,7 +94,7 @@ export default function CommunityPage() {
       <PublicNavbar />
 
       {/* Main content */}
-      <main className="max-w-4xl mx-auto px-3 sm:px-4 py-4 sm:py-8">
+      <main className="max-w-4xl mx-auto px-3 sm:px-4 pt-20 xl:pt-24 pb-4 sm:pb-8">
         {/* Page header */}
         <div className="mb-6 sm:mb-8">
           <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-1 sm:mb-2">

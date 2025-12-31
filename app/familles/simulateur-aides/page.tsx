@@ -746,11 +746,9 @@ export default function SimulateurAidesPage() {
   return (
     <div className="min-h-screen min-h-[100dvh] flex flex-col" style={{ backgroundColor: '#fdf9f4' }}>
       {/* Navigation */}
-      <div className="sticky top-0 z-40">
-        <PublicNavbar />
-      </div>
+      <PublicNavbar />
 
-      <div className="flex-1 max-w-2xl mx-auto px-4 py-6 sm:py-8 w-full">
+      <div className="flex-1 max-w-2xl mx-auto px-4 pt-20 xl:pt-24 pb-6 sm:pb-8 w-full">
         {/* Header avec icône */}
         <div className="text-center mb-6 sm:mb-8">
           <div className="w-16 h-16 mx-auto mb-4 rounded-full flex items-center justify-center p-1" style={{ backgroundColor: '#027e7e' }}>

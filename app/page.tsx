@@ -243,10 +243,10 @@ export default function Home() {
   return (
     <div className="min-h-screen overflow-x-hidden" style={{ backgroundColor: '#fdf9f4' }}>
       {/* Header */}
-      <header className="sticky top-0 z-50" style={{ backgroundColor: '#027e7e' }}>
+      <header className="fixed top-0 left-0 right-0 z-50" style={{ backgroundColor: '#027e7e' }}>
         <div className="max-w-7xl mx-auto px-4 lg:px-8">
           {/* Mobile Layout */}
-          <div className="flex lg:hidden items-center justify-between h-20">
+          <div className="flex lg:hidden items-center justify-between h-14">
             {/* Mobile: Menu Hamburger */}
             <button
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
@@ -254,8 +254,8 @@ export default function Home() {
               aria-label="Ouvrir le menu de navigation"
               aria-expanded={mobileMenuOpen}
             >
-              <svg className="w-9 h-9" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M4 6h16M4 12h16M4 18h16" />
+              <svg className="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
               </svg>
             </button>
 
@@ -264,7 +264,7 @@ export default function Home() {
               <img
                 src="/images/logo-neurocare.svg"
                 alt="NeuroCare"
-                className="h-24"
+                className="h-16"
               />
             </Link>
 
@@ -273,30 +273,30 @@ export default function Home() {
           </div>
 
           {/* Desktop Layout - Logo centré */}
-          <div className="hidden lg:flex items-center h-20 xl:h-24">
+          <div className="hidden lg:flex items-center h-14 xl:h-16">
             {/* Gauche: Rechercher, À propos, Contact */}
-            <nav className="flex-1 flex items-center justify-end gap-1 xl:gap-2" role="navigation" aria-label="Navigation principale gauche">
-              <Link href="/search" className="group flex items-center gap-1.5 xl:gap-2 px-2.5 xl:px-4 py-2 xl:py-2.5 text-sm xl:text-base text-white/90 hover:text-white hover:bg-white/15 rounded-lg font-medium transition-all whitespace-nowrap">
-                <svg className="w-4 h-4 xl:w-5 xl:h-5 opacity-70 group-hover:opacity-100 transition-opacity" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <nav className="flex-1 flex items-center justify-end gap-0.5 xl:gap-1" role="navigation" aria-label="Navigation principale gauche">
+              <Link href="/search" className="group flex items-center gap-1 xl:gap-1.5 px-2 xl:px-3 py-1.5 xl:py-2 text-xs xl:text-sm text-white/90 hover:text-white hover:bg-white/15 rounded-md font-medium transition-all whitespace-nowrap">
+                <svg className="w-3.5 h-3.5 xl:w-4 xl:h-4 opacity-70 group-hover:opacity-100 transition-opacity" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
                 </svg>
                 Rechercher
               </Link>
-              <Link href="/about" className="group flex items-center gap-1.5 xl:gap-2 px-2.5 xl:px-4 py-2 xl:py-2.5 text-sm xl:text-base text-white/90 hover:text-white hover:bg-white/15 rounded-lg font-medium transition-all whitespace-nowrap">
-                <svg className="w-4 h-4 xl:w-5 xl:h-5 opacity-70 group-hover:opacity-100 transition-opacity" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <Link href="/about" className="group flex items-center gap-1 xl:gap-1.5 px-2 xl:px-3 py-1.5 xl:py-2 text-xs xl:text-sm text-white/90 hover:text-white hover:bg-white/15 rounded-md font-medium transition-all whitespace-nowrap">
+                <svg className="w-3.5 h-3.5 xl:w-4 xl:h-4 opacity-70 group-hover:opacity-100 transition-opacity" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                 </svg>
                 À propos
               </Link>
-              <Link href="/contact" className="group flex items-center gap-1.5 xl:gap-2 px-2.5 xl:px-4 py-2 xl:py-2.5 text-sm xl:text-base text-white/90 hover:text-white hover:bg-white/15 rounded-lg font-medium transition-all whitespace-nowrap">
-                <svg className="w-4 h-4 xl:w-5 xl:h-5 opacity-70 group-hover:opacity-100 transition-opacity" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <Link href="/contact" className="group flex items-center gap-1 xl:gap-1.5 px-2 xl:px-3 py-1.5 xl:py-2 text-xs xl:text-sm text-white/90 hover:text-white hover:bg-white/15 rounded-md font-medium transition-all whitespace-nowrap">
+                <svg className="w-3.5 h-3.5 xl:w-4 xl:h-4 opacity-70 group-hover:opacity-100 transition-opacity" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
                 </svg>
                 Contact
               </Link>
               {!user && (
-                <Link href="/blog" className="group flex items-center gap-1.5 xl:gap-2 px-2.5 xl:px-4 py-2 xl:py-2.5 text-sm xl:text-base text-white/90 hover:text-white hover:bg-white/15 rounded-lg font-medium transition-all whitespace-nowrap">
-                  <svg className="w-4 h-4 xl:w-5 xl:h-5 opacity-70 group-hover:opacity-100 transition-opacity" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <Link href="/blog" className="group flex items-center gap-1 xl:gap-1.5 px-2 xl:px-3 py-1.5 xl:py-2 text-xs xl:text-sm text-white/90 hover:text-white hover:bg-white/15 rounded-md font-medium transition-all whitespace-nowrap">
+                  <svg className="w-3.5 h-3.5 xl:w-4 xl:h-4 opacity-70 group-hover:opacity-100 transition-opacity" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 8h6v4H7V8z" />
                   </svg>
                   Blog
@@ -309,22 +309,22 @@ export default function Home() {
               <img
                 src="/images/logo-neurocare.svg"
                 alt="NeuroCare - Plateforme de mise en relation avec des professionnels du neurodéveloppement"
-                className="h-16 xl:h-24"
+                className="h-12 xl:h-14"
               />
             </Link>
 
             {/* Droite: Blog (si connecté), Communauté, Espace Pro / Mon compte, Connexion, Inscription */}
-            <nav className="flex-1 flex items-center justify-start gap-1 xl:gap-2" role="navigation" aria-label="Navigation principale droite">
+            <nav className="flex-1 flex items-center justify-start gap-0.5 xl:gap-1" role="navigation" aria-label="Navigation principale droite">
               {user && (
-                <Link href="/blog" className="group flex items-center gap-1.5 xl:gap-2 px-2.5 xl:px-4 py-2 xl:py-2.5 text-sm xl:text-base text-white/90 hover:text-white hover:bg-white/15 rounded-lg font-medium transition-all whitespace-nowrap">
-                  <svg className="w-4 h-4 xl:w-5 xl:h-5 opacity-70 group-hover:opacity-100 transition-opacity" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <Link href="/blog" className="group flex items-center gap-1 xl:gap-1.5 px-2 xl:px-3 py-1.5 xl:py-2 text-xs xl:text-sm text-white/90 hover:text-white hover:bg-white/15 rounded-md font-medium transition-all whitespace-nowrap">
+                  <svg className="w-3.5 h-3.5 xl:w-4 xl:h-4 opacity-70 group-hover:opacity-100 transition-opacity" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 8h6v4H7V8z" />
                   </svg>
                   Blog
                 </Link>
               )}
-              <Link href="/community" className="group flex items-center gap-1.5 xl:gap-2 px-2.5 xl:px-4 py-2 xl:py-2.5 text-sm xl:text-base text-white/90 hover:text-white hover:bg-white/15 rounded-lg font-medium transition-all whitespace-nowrap">
-                <svg className="w-4 h-4 xl:w-5 xl:h-5 opacity-70 group-hover:opacity-100 transition-opacity" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <Link href="/community" className="group flex items-center gap-1 xl:gap-1.5 px-2 xl:px-3 py-1.5 xl:py-2 text-xs xl:text-sm text-white/90 hover:text-white hover:bg-white/15 rounded-md font-medium transition-all whitespace-nowrap">
+                <svg className="w-3.5 h-3.5 xl:w-4 xl:h-4 opacity-70 group-hover:opacity-100 transition-opacity" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
                 </svg>
                 Communauté
@@ -332,10 +332,10 @@ export default function Home() {
               {user ? (
                 <Link
                   href={getDashboardLink()}
-                  className="group ml-2 xl:ml-3 flex items-center gap-1.5 xl:gap-2 px-3 xl:px-5 py-2 xl:py-2.5 text-sm xl:text-base text-white font-semibold rounded-lg transition-all hover:opacity-90 whitespace-nowrap"
+                  className="group ml-1 xl:ml-2 flex items-center gap-1 xl:gap-1.5 px-2.5 xl:px-3.5 py-1.5 xl:py-2 text-xs xl:text-sm text-white font-semibold rounded-md transition-all hover:opacity-90 whitespace-nowrap"
                   style={{ backgroundColor: '#f0879f' }}
                 >
-                  <svg className="w-4 h-4 xl:w-5 xl:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <svg className="w-3.5 h-3.5 xl:w-4 xl:h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
                   </svg>
                   Mon compte
@@ -344,23 +344,23 @@ export default function Home() {
                 <>
                   <Link
                     href="/pro"
-                    className="group ml-2 xl:ml-3 flex items-center gap-1.5 xl:gap-2 px-3 xl:px-5 py-2 xl:py-2.5 text-sm xl:text-base rounded-lg font-semibold transition-all hover:opacity-90 whitespace-nowrap"
+                    className="group ml-1 flex items-center gap-0.5 px-2 xl:px-2.5 py-1 xl:py-1.5 text-[10px] xl:text-xs rounded font-semibold transition-all hover:opacity-90 whitespace-nowrap"
                     style={{ backgroundColor: '#f3e8ff', color: '#41005c' }}
                   >
-                    <svg className="w-4 h-4 xl:w-5 xl:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <svg className="w-3 h-3 xl:w-3.5 xl:h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
                     </svg>
                     Espace Pro
                   </Link>
                   <Link
                     href="/auth/login"
-                    className="px-3 xl:px-4 py-2 xl:py-2.5 text-sm xl:text-base text-white/90 hover:text-white font-medium transition-all whitespace-nowrap"
+                    className="ml-4 xl:ml-6 px-2 xl:px-3 py-1.5 xl:py-2 text-xs xl:text-sm text-white/90 hover:text-white font-medium transition-all whitespace-nowrap"
                   >
                     Connexion
                   </Link>
                   <Link
                     href="/auth/signup"
-                    className="px-3 xl:px-5 py-2 xl:py-2.5 text-sm xl:text-base text-white font-semibold rounded-lg transition-all hover:opacity-90 whitespace-nowrap"
+                    className="ml-1 xl:ml-2 px-2.5 xl:px-3.5 py-1.5 xl:py-2 text-xs xl:text-sm text-white font-semibold rounded-md transition-all hover:opacity-90 whitespace-nowrap"
                     style={{ backgroundColor: '#f0879f' }}
                   >
                     Inscription
@@ -374,38 +374,38 @@ export default function Home() {
         {/* Menu mobile déroulant */}
         {mobileMenuOpen && (
           <div className="lg:hidden absolute top-full left-0 right-0 bg-white shadow-lg border-t border-gray-100 z-50">
-            <nav className="px-4 py-4 space-y-1" role="navigation" aria-label="Menu principal">
+            <nav className="px-3 py-3 space-y-0.5" role="navigation" aria-label="Menu principal">
               <Link
                 href="/search"
-                className="block py-3 font-medium text-gray-800"
+                className="block py-2 text-sm font-medium text-gray-800"
                 onClick={() => setMobileMenuOpen(false)}
               >
                 Rechercher un professionnel
               </Link>
               <Link
                 href="/about"
-                className="block py-3 font-medium text-gray-800"
+                className="block py-2 text-sm font-medium text-gray-800"
                 onClick={() => setMobileMenuOpen(false)}
               >
                 À propos
               </Link>
               <Link
                 href="/familles/aides-financieres"
-                className="block py-3 font-medium text-gray-800"
+                className="block py-2 text-sm font-medium text-gray-800"
                 onClick={() => setMobileMenuOpen(false)}
               >
                 Aides financières
               </Link>
               <Link
                 href="/contact"
-                className="block py-3 font-medium text-gray-800"
+                className="block py-2 text-sm font-medium text-gray-800"
                 onClick={() => setMobileMenuOpen(false)}
               >
                 Contact
               </Link>
               <Link
                 href="/pro"
-                className="block py-3 px-4 rounded-xl font-semibold text-center my-3"
+                className="block py-2 px-3 rounded-lg text-xs font-semibold text-center my-2"
                 style={{ backgroundColor: '#f3e8ff', color: '#41005c' }}
                 onClick={() => setMobileMenuOpen(false)}
               >
@@ -413,20 +413,20 @@ export default function Home() {
               </Link>
               <Link
                 href="/blog"
-                className="flex items-center gap-3 py-3 font-medium text-gray-800"
+                className="flex items-center gap-2 py-2 text-sm font-medium text-gray-800"
                 onClick={() => setMobileMenuOpen(false)}
               >
-                <svg className="w-5 h-5 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg className="w-4 h-4 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 8h6v4H7V8z" />
                 </svg>
                 Blog
               </Link>
               <Link
                 href="/community"
-                className="flex items-center gap-3 py-3 font-medium text-gray-800"
+                className="flex items-center gap-2 py-2 text-sm font-medium text-gray-800"
                 onClick={() => setMobileMenuOpen(false)}
               >
-                <svg className="w-5 h-5 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg className="w-4 h-4 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
                 </svg>
                 Communauté
@@ -434,11 +434,11 @@ export default function Home() {
               {user ? (
                 <Link
                   href={getDashboardLink()}
-                  className="flex items-center gap-3 py-3 px-4 rounded-xl font-semibold text-white mt-3"
+                  className="flex items-center justify-center gap-2 py-2 px-3 rounded-lg text-sm font-semibold text-white mt-2"
                   style={{ backgroundColor: '#f0879f' }}
                   onClick={() => setMobileMenuOpen(false)}
                 >
-                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
                   </svg>
                   Mon compte
@@ -447,7 +447,7 @@ export default function Home() {
                 <>
                   <Link
                     href="/auth/login"
-                    className="block py-3 px-4 text-white rounded-xl text-center font-semibold mt-3"
+                    className="block py-2 px-3 text-sm text-white rounded-lg text-center font-semibold mt-2"
                     style={{ backgroundColor: '#f0879f' }}
                     onClick={() => setMobileMenuOpen(false)}
                   >
@@ -455,7 +455,7 @@ export default function Home() {
                   </Link>
                   <Link
                     href="/auth/signup"
-                    className="block py-3 px-4 text-white rounded-xl text-center font-semibold mt-2"
+                    className="block py-2 px-3 text-sm text-white rounded-lg text-center font-semibold mt-1.5"
                     style={{ backgroundColor: '#027e7e' }}
                     onClick={() => setMobileMenuOpen(false)}
                   >
@@ -469,7 +469,7 @@ export default function Home() {
       </header>
 
       {/* Hero Section */}
-      <section className="relative h-[280px] sm:h-[350px] lg:h-[420px]">
+      <section className="relative h-[280px] sm:h-[350px] lg:h-[420px] mt-14 xl:mt-16">
         {/* Image de fond avec fallback gradient pour desktop */}
         <div className="absolute inset-0">
           {/* Gradient de fond (fallback pour grands écrans) */}
@@ -581,7 +581,7 @@ export default function Home() {
           {/* Logos des organismes centrés */}
           <div className="flex justify-center items-center gap-6 lg:gap-12 flex-wrap" role="list" aria-label="Organismes de vérification">
             {/* RPPS / Annuaire Santé */}
-            <div className="w-24 h-24 lg:w-36 lg:h-36 rounded-full bg-white shadow-md flex items-center justify-center overflow-hidden border border-gray-100" role="listitem">
+            <div className="w-24 h-24 lg:w-36 lg:h-36 rounded-full shadow-md flex items-center justify-center overflow-hidden" role="listitem">
               <img
                 src="/images/logos/rpps-logo.svg"
                 alt="RPPS - Répertoire Partagé des Professionnels de Santé"
@@ -589,7 +589,7 @@ export default function Home() {
               />
             </div>
             {/* ARS */}
-            <div className="w-24 h-24 lg:w-36 lg:h-36 rounded-full bg-white shadow-md flex items-center justify-center overflow-hidden border border-gray-100" role="listitem">
+            <div className="w-24 h-24 lg:w-36 lg:h-36 rounded-full shadow-md flex items-center justify-center overflow-hidden" role="listitem">
               <img
                 src="/images/logos/ars-logo.svg"
                 alt="ARS - Agence Régionale de Santé"
@@ -597,7 +597,7 @@ export default function Home() {
               />
             </div>
             {/* France Compétences / RNCP */}
-            <div className="w-24 h-24 lg:w-36 lg:h-36 rounded-full bg-white shadow-md flex items-center justify-center overflow-hidden border border-gray-100" role="listitem">
+            <div className="w-24 h-24 lg:w-36 lg:h-36 rounded-full shadow-md flex items-center justify-center overflow-hidden" role="listitem">
               <img
                 src="/images/logos/france-competences-logo.svg"
                 alt="France Compétences - Certification professionnelle"

@@ -126,7 +126,7 @@ export default function BlogPage() {
       <PublicNavbar />
 
       {/* Hero - Plus clair que la navbar */}
-      <section className="py-10 sm:py-16 px-4" style={{ backgroundColor: '#0a9a9a' }}>
+      <section className="pt-20 xl:pt-24 pb-10 sm:pb-16 px-4" style={{ backgroundColor: '#0a9a9a' }}>
         <div className="max-w-4xl mx-auto text-center text-white">
           <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold mb-3 sm:mb-4">
             Blog NeuroCare

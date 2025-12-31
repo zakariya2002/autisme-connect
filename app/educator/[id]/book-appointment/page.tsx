@@ -452,7 +452,7 @@ export default function BookAppointmentPage({ params }: { params: { id: string }
     <div className="min-h-screen" style={{ backgroundColor: '#fdf9f4' }}>
       <PublicNavbar />
 
-      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8">
+      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 pt-20 xl:pt-24 pb-6 sm:pb-8">
         <div className="mb-6 sm:mb-8">
           <Link
             href={`/educator/${params.id}`}

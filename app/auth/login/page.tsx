@@ -68,7 +68,7 @@ export default function LoginPage() {
     <div className="min-h-screen flex flex-col" style={{ backgroundColor: '#fdf9f4' }}>
       <PublicNavbar showAuthButtons={true} />
 
-      <div className="flex-1 flex flex-col justify-center py-12 sm:px-6 lg:px-8 relative z-0">
+      <div className="flex-1 flex flex-col justify-center pt-20 xl:pt-24 pb-12 sm:px-6 lg:px-8 relative z-0">
         {/* Logo et Titre */}
         <div className="sm:mx-auto sm:w-full sm:max-w-md">
           {/* Logo */}

@@ -492,7 +492,7 @@ export default function EducatorPublicProfile({ params }: { params: { id: string
         <PublicNavbar />
       )}
 
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8 lg:py-12">
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 pt-20 xl:pt-24 pb-8 lg:pb-12">
         {/* En-tête du profil */}
         <div className="bg-white rounded-2xl shadow-xl overflow-hidden mb-8 border border-gray-100">
           <div className="px-6 sm:px-8 py-8">

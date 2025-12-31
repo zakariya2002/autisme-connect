@@ -11,7 +11,7 @@ export default function ProLandingPage() {
       <ProNavbar />
 
       {/* Hero Section */}
-      <main role="main">
+      <main role="main" className="mt-14 xl:mt-16">
       <section className="relative overflow-hidden" style={{ backgroundColor: '#fdf9f4' }}>
         {/* Background decorations */}
         <div className="absolute top-0 right-0 w-96 h-96 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2" style={{ backgroundColor: 'rgba(65, 0, 92, 0.08)' }} aria-hidden="true"></div>

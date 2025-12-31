@@ -70,7 +70,7 @@ export default function EducatorNavbar({ profile: propProfile, subscription: pro
   return (
     <nav className="sticky top-0 z-40" style={{ backgroundColor: '#41005c' }}>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-between h-20 xl:h-24 items-center relative">
+        <div className="flex justify-between h-14 xl:h-16 items-center relative">
           {/* Menu mobile (hamburger) à gauche */}
           <div className="flex items-center gap-2">
             <EducatorMobileMenu profile={profile} isPremium={isPremium} onLogout={handleLogout} />
@@ -82,7 +82,7 @@ export default function EducatorNavbar({ profile: propProfile, subscription: pro
               <img
                 src="/images/logo-neurocare.svg"
                 alt="NeuroCare - Retour au tableau de bord"
-                className="h-24 lg:h-16 xl:h-24"
+                className="h-16 lg:h-12 xl:h-14"
               />
               <span className="px-2 py-0.5 text-xs font-bold rounded-full text-white" style={{ backgroundColor: '#f0879f' }}>
                 PRO

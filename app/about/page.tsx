@@ -24,7 +24,7 @@ export default function AboutPage() {
       <PublicNavbar />
 
       {/* Section Titre */}
-      <section className="py-12 sm:py-16 px-4">
+      <section className="pt-20 xl:pt-24 pb-12 sm:pb-16 px-4">
         <div className="max-w-4xl mx-auto text-center">
           {/* Pictogramme */}
           <div className="w-16 h-16 mx-auto mb-6 rounded-full flex items-center justify-center" style={{ backgroundColor: '#027e7e' }}>

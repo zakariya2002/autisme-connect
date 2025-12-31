@@ -109,7 +109,7 @@ export default function ResetPasswordPage() {
     return (
       <div className="min-h-screen flex flex-col" style={{ backgroundColor: '#fdf9f4' }}>
         <PublicNavbar showAuthButtons={true} />
-        <div className="flex-1 flex items-center justify-center">
+        <div className="flex-1 flex items-center justify-center pt-20 xl:pt-24">
           <div className="text-center">
             <div className="animate-spin rounded-full h-12 w-12 border-b-2 mx-auto mb-4" style={{ borderColor: '#027e7e' }}></div>
             <p className="text-gray-600" style={{ fontFamily: 'Open Sans, sans-serif' }}>Vérification du lien...</p>
@@ -123,7 +123,7 @@ export default function ResetPasswordPage() {
     return (
       <div className="min-h-screen flex flex-col" style={{ backgroundColor: '#fdf9f4' }}>
         <PublicNavbar showAuthButtons={true} />
-        <div className="flex-1 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
+        <div className="flex-1 flex flex-col justify-center pt-20 xl:pt-24 pb-12 sm:px-6 lg:px-8">
           <div className="sm:mx-auto sm:w-full sm:max-w-md">
             {/* Logo */}
             <div className="flex justify-center mb-6">
@@ -168,7 +168,7 @@ export default function ResetPasswordPage() {
     <div className="min-h-screen flex flex-col" style={{ backgroundColor: '#fdf9f4' }}>
       <PublicNavbar showAuthButtons={true} />
 
-      <div className="flex-1 flex flex-col justify-center py-12 sm:px-6 lg:px-8 relative z-0">
+      <div className="flex-1 flex flex-col justify-center pt-20 xl:pt-24 pb-12 sm:px-6 lg:px-8 relative z-0">
         {/* Logo et Titre */}
         <div className="sm:mx-auto sm:w-full sm:max-w-md">
           <div className="flex justify-center mb-6">

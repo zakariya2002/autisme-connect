@@ -20,7 +20,7 @@ export default function SignupChoicePage() {
     <div className="min-h-screen flex flex-col" style={{ backgroundColor: '#fdf9f4' }}>
       <PublicNavbar showAuthButtons={true} />
 
-      <div className="flex-1 flex flex-col justify-center py-12 px-4 sm:px-6 lg:px-8 relative z-0">
+      <div className="flex-1 flex flex-col justify-center pt-20 xl:pt-24 pb-12 px-4 sm:px-6 lg:px-8 relative z-0">
         <div className="sm:mx-auto sm:w-full sm:max-w-4xl">
           {/* En-tête */}
           <div className="text-center mb-10">
