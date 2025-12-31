@@ -37,14 +37,14 @@ export const metadata: Metadata = {
     address: false,
     telephone: false,
   },
-  metadataBase: new URL('https://www.neuro-care.fr'),
+  metadataBase: new URL('https://neuro-care.fr'),
   alternates: {
     canonical: '/',
   },
   openGraph: {
     title: 'neurocare - Professionnels du Neuro Développement',
     description: 'Trouvez des professionnels diplômés et vérifiés près de chez vous : psychologues, psychomotriciens, orthophonistes, éducateurs spécialisés. Accompagnement TND et troubles du neurodéveloppement.',
-    url: 'https://www.neuro-care.fr',
+    url: 'https://neuro-care.fr',
     siteName: 'neurocare',
     locale: 'fr_FR',
     type: 'website',
@@ -98,22 +98,22 @@ export default function RootLayout({
     '@type': 'WebSite',
     name: 'neurocare',
     description: 'Plateforme de mise en relation entre professionnels du neuro développement (psychologues, psychomotriciens, orthophonistes, éducateurs spécialisés) et familles',
-    url: 'https://www.neuro-care.fr',
+    url: 'https://neuro-care.fr',
     potentialAction: {
       '@type': 'SearchAction',
       target: {
         '@type': 'EntryPoint',
-        urlTemplate: 'https://www.neuro-care.fr/search?q={search_term_string}'
+        urlTemplate: 'https://neuro-care.fr/search?q={search_term_string}'
       },
       'query-input': 'required name=search_term_string'
     },
     publisher: {
       '@type': 'Organization',
       name: 'neurocare',
-      url: 'https://www.neuro-care.fr',
+      url: 'https://neuro-care.fr',
       logo: {
         '@type': 'ImageObject',
-        url: 'https://www.neuro-care.fr/icon-512.png'
+        url: 'https://neuro-care.fr/icon-512.png'
       }
     }
   }
@@ -127,25 +127,25 @@ export default function RootLayout({
         '@type': 'SiteNavigationElement',
         name: 'Qui sommes-nous ?',
         description: 'Découvrez l\'équipe et la mission de neurocare',
-        url: 'https://www.neuro-care.fr/about'
+        url: 'https://neuro-care.fr/about'
       },
       {
         '@type': 'SiteNavigationElement',
         name: 'Trouver un professionnel',
         description: 'Recherchez un professionnel du neuro développement près de chez vous : psychologue, psychomotricien, orthophoniste, éducateur spécialisé',
-        url: 'https://www.neuro-care.fr/search'
+        url: 'https://neuro-care.fr/search'
       },
       {
         '@type': 'SiteNavigationElement',
         name: 'Connexion',
         description: 'Connectez-vous à votre espace famille ou professionnel',
-        url: 'https://www.neuro-care.fr/auth/login'
+        url: 'https://neuro-care.fr/auth/login'
       },
       {
         '@type': 'SiteNavigationElement',
         name: 'Tarifs',
         description: 'Découvrez nos offres pour les professionnels du neuro développement',
-        url: 'https://www.neuro-care.fr/pricing'
+        url: 'https://neuro-care.fr/pricing'
       }
     ]
   }
