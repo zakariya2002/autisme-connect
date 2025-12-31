@@ -26,6 +26,18 @@ export async function signIn(email: string, password: string) {
   return data;
 }
 
+export async function signInWithGoogle() {
+  const { data, error } = await supabase.auth.signInWithOAuth({
+    provider: 'google',
+    options: {
+      redirectTo: `${typeof window !== 'undefined' ? window.location.origin : 'https://neuro-care.fr'}/auth/callback`,
+    },
+  });
+
+  if (error) throw error;
+  return data;
+}
+
 export async function signOut() {
   try {
     // Déconnexion globale (supprime la session côté serveur et local)

@@ -99,7 +99,7 @@ interface Appointment {
   appointment_date: string;
   start_time: string;
   end_time: string;
-  status: 'pending' | 'accepted' | 'rejected' | 'completed' | 'cancelled' | 'no_show';
+  status: 'accepted' | 'completed' | 'cancelled' | 'no_show';
   location_type: 'home' | 'office' | 'online';
   address: string | null;
   notes: string | null;
@@ -659,7 +659,7 @@ export default function EducatorAppointmentsPage() {
     return a.status === 'accepted' && !a.started_at && isAppointmentPast(a);
   });
   const completedAppointments = appointments.filter(a => a.status === 'completed');
-  const cancelledAppointments = appointments.filter(a => a.status === 'cancelled' || a.status === 'rejected' || a.status === 'no_show');
+  const cancelledAppointments = appointments.filter(a => a.status === 'cancelled' || a.status === 'no_show');
 
   // Extraire les familles uniques rencontrées
   const getUniqueFamiliesWithStats = () => {
