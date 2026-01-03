@@ -2,14 +2,24 @@
 
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import Link from 'next/link';
 import { supabase } from '@/lib/supabase';
 import { signOut } from '@/lib/auth';
 import EducatorNavbar from '@/components/EducatorNavbar';
 import { ocrService, OCRResult } from '@/lib/ocr-service';
-import { getProfessionByValue, getDiplomaLabel, ProfessionConfig } from '@/lib/professions-config';
+import { getProfessionByValue, ProfessionConfig } from '@/lib/professions-config';
 
 type DiplomaStatus = 'pending' | 'verified' | 'rejected';
+type DocumentType = 'criminal_record' | 'id_card' | 'insurance';
+
+interface VerificationDocument {
+  id: string;
+  document_type: DocumentType;
+  file_url: string | null;
+  status: 'pending' | 'approved' | 'rejected';
+  uploaded_at: string;
+  verified_at: string | null;
+  rejection_reason: string | null;
+}
 
 // Liste des régions françaises
 const FRENCH_REGIONS = [
@@ -31,6 +41,7 @@ export default function DiplomePage() {
   const router = useRouter();
   const [loading, setLoading] = useState(true);
   const [uploading, setUploading] = useState(false);
+  const [uploadingDoc, setUploadingDoc] = useState<DocumentType | null>(null);
   const [analyzing, setAnalyzing] = useState(false);
   const [sendingToDREETS, setSendingToDREETS] = useState(false);
 
@@ -40,6 +51,7 @@ export default function DiplomePage() {
   const [diplomaFile, setDiplomaFile] = useState<File | null>(null);
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
   const [message, setMessage] = useState<{ type: 'success' | 'error' | 'info'; text: string } | null>(null);
+  const [documents, setDocuments] = useState<VerificationDocument[]>([]);
 
   // Données OCR et DREETS
   const [ocrResult, setOcrResult] = useState<OCRResult | null>(null);
@@ -96,12 +108,21 @@ export default function DiplomePage() {
       if (educatorProfile.diploma_url) {
         const { data: signedUrlData } = await supabase.storage
           .from('diplomas')
-          .createSignedUrl(educatorProfile.diploma_url, 3600); // 1 heure
+          .createSignedUrl(educatorProfile.diploma_url, 3600);
 
         if (signedUrlData?.signedUrl) {
           setPreviewUrl(signedUrlData.signedUrl);
         }
       }
+
+      // Récupérer les documents de vérification
+      const { data: docs } = await supabase
+        .from('verification_documents')
+        .select('*')
+        .eq('educator_id', educatorProfile.id)
+        .order('uploaded_at', { ascending: false });
+
+      setDocuments(docs || []);
 
       setLoading(false);
     } catch (error) {
@@ -114,60 +135,40 @@ export default function DiplomePage() {
     const file = e.target.files?.[0];
     if (!file) return;
 
-    // Vérifier le type de fichier
     const allowedTypes = ['image/jpeg', 'image/jpg', 'image/png', 'application/pdf'];
     if (!allowedTypes.includes(file.type)) {
-      setMessage({
-        type: 'error',
-        text: 'Format non supporté. Utilisez JPG, PNG ou PDF.'
-      });
+      setMessage({ type: 'error', text: 'Format non supporté. Utilisez JPG, PNG ou PDF.' });
       return;
     }
 
-    // Vérifier la taille (5MB max)
     if (file.size > 5 * 1024 * 1024) {
-      setMessage({
-        type: 'error',
-        text: 'Le fichier est trop volumineux. Maximum 5MB.'
-      });
+      setMessage({ type: 'error', text: 'Le fichier est trop volumineux. Maximum 5MB.' });
       return;
     }
 
     setDiplomaFile(file);
     setMessage(null);
 
-    // Créer un aperçu pour les images
     if (file.type.startsWith('image/')) {
       const reader = new FileReader();
-      reader.onloadend = () => {
-        setPreviewUrl(reader.result as string);
-      };
+      reader.onloadend = () => setPreviewUrl(reader.result as string);
       reader.readAsDataURL(file);
-
-      // Lancer l'analyse OCR automatiquement pour les images
       await runOCRAnalysis(file);
     } else {
       setPreviewUrl(null);
-      setMessage({
-        type: 'info',
-        text: 'PDF sélectionné. L\'analyse OCR sera effectuée après l\'upload.'
-      });
+      setMessage({ type: 'info', text: 'PDF sélectionné. L\'analyse OCR sera effectuée après l\'upload.' });
     }
   };
 
   const runOCRAnalysis = async (file: File) => {
     setAnalyzing(true);
-    setMessage({
-      type: 'info',
-      text: 'Analyse OCR en cours... Cela peut prendre quelques secondes.'
-    });
+    setMessage({ type: 'info', text: 'Analyse OCR en cours...' });
 
     try {
       const result = await ocrService.analyzeDiploma(file);
       setOcrResult(result);
 
       if (result.success) {
-        // Extraire automatiquement le numéro et la date si trouvés
         const extractedNumber = ocrService.extractDiplomaNumber(result.text);
         const extractedDate = ocrService.extractDeliveryDate(result.text);
 
@@ -175,28 +176,15 @@ export default function DiplomePage() {
         if (extractedDate && !deliveryDate) setDeliveryDate(extractedDate);
 
         if (result.validation.isValid) {
-          setMessage({
-            type: 'success',
-            text: `✅ Document analysé avec succès (confiance: ${result.confidence.toFixed(0)}%). Diplôme ME/ES détecté.`
-          });
+          setMessage({ type: 'success', text: `Document analysé (confiance: ${result.confidence.toFixed(0)}%)` });
         } else {
-          setMessage({
-            type: 'info',
-            text: `⚠️ Document analysé. Vérification manuelle recommandée. Confiance: ${result.confidence.toFixed(0)}%`
-          });
+          setMessage({ type: 'info', text: `Document analysé. Vérification manuelle recommandée.` });
         }
       } else {
-        setMessage({
-          type: 'error',
-          text: 'Erreur lors de l\'analyse OCR. Le document sera vérifié manuellement.'
-        });
+        setMessage({ type: 'error', text: 'Erreur lors de l\'analyse OCR.' });
       }
     } catch (error) {
-      console.error('Erreur OCR:', error);
-      setMessage({
-        type: 'error',
-        text: 'Erreur lors de l\'analyse. Le diplôme sera vérifié manuellement.'
-      });
+      setMessage({ type: 'error', text: 'Erreur lors de l\'analyse.' });
     } finally {
       setAnalyzing(false);
     }
@@ -205,11 +193,8 @@ export default function DiplomePage() {
   const uploadDiploma = async () => {
     if (!diplomaFile || !profile) return;
 
-    if (!region) {
-      setMessage({
-        type: 'error',
-        text: 'Veuillez sélectionner la région de délivrance du diplôme.'
-      });
+    if (professionConfig?.verificationMethod === 'dreets' && !region) {
+      setMessage({ type: 'error', text: 'Veuillez sélectionner la région de délivrance.' });
       return;
     }
 
@@ -220,38 +205,21 @@ export default function DiplomePage() {
       const { data: { session } } = await supabase.auth.getSession();
       if (!session?.user) throw new Error('Non authentifié');
 
-      // Créer un nom de fichier unique
       const fileExt = diplomaFile.name.split('.').pop();
       const fileName = `${session.user.id}/${Date.now()}.${fileExt}`;
 
-      // Supprimer l'ancien diplôme s'il existe
       if (profile.diploma_url) {
-        const oldPath = profile.diploma_url.split('/diplomas/')[1];
-        if (oldPath) {
-          await supabase.storage
-            .from('diplomas')
-            .remove([oldPath]);
-        }
+        await supabase.storage.from('diplomas').remove([profile.diploma_url]);
       }
 
-      // Uploader le nouveau fichier
-      const { data: uploadData, error: uploadError } = await supabase.storage
+      const { error: uploadError } = await supabase.storage
         .from('diplomas')
-        .upload(fileName, diplomaFile, {
-          cacheControl: '3600',
-          upsert: false
-        });
+        .upload(fileName, diplomaFile, { cacheControl: '3600', upsert: false });
 
       if (uploadError) throw uploadError;
 
-      // Obtenir l'URL publique (fonctionne même avec bucket privé grâce aux RLS)
-      const { data: { publicUrl } } = supabase.storage
-        .from('diplomas')
-        .getPublicUrl(fileName);
-
-      // Mettre à jour le profil éducateur
       const updateData: any = {
-        diploma_url: fileName,  // Stocker le path au lieu de l'URL complète
+        diploma_url: fileName,
         diploma_verification_status: 'pending',
         diploma_submitted_at: new Date().toISOString(),
         diploma_rejected_reason: null,
@@ -260,7 +228,6 @@ export default function DiplomePage() {
         region: region,
       };
 
-      // Ajouter les données OCR si disponibles
       if (ocrResult && ocrResult.success) {
         updateData.diploma_ocr_text = ocrResult.text;
         updateData.diploma_ocr_confidence = ocrResult.confidence;
@@ -274,32 +241,22 @@ export default function DiplomePage() {
 
       if (updateError) throw updateError;
 
-      setMessage({
-        type: 'success',
-        text: '✅ Diplôme envoyé ! Vérification DREETS en cours...'
-      });
+      setMessage({ type: 'success', text: 'Diplôme envoyé ! Vérification en cours...' });
 
-      // Générer une signed URL pour la DREETS (valide 7 jours)
-      const { data: signedUrlData } = await supabase.storage
-        .from('diplomas')
-        .createSignedUrl(fileName, 604800); // 7 jours
+      if (professionConfig?.verificationMethod === 'dreets') {
+        const { data: signedUrlData } = await supabase.storage
+          .from('diplomas')
+          .createSignedUrl(fileName, 604800);
+        if (signedUrlData?.signedUrl) {
+          await sendToDREETS(signedUrlData.signedUrl);
+        }
+      }
 
-      const diplomaUrl = signedUrlData?.signedUrl || publicUrl;
-
-      // Envoyer automatiquement à la DREETS
-      await sendToDREETS(diplomaUrl);
-
-      // Recharger le profil
       await checkAuth();
       setDiplomaFile(null);
       setOcrResult(null);
-
     } catch (error: any) {
-      console.error('Erreur upload:', error);
-      setMessage({
-        type: 'error',
-        text: error.message || 'Erreur lors de l\'upload. Réessayez.'
-      });
+      setMessage({ type: 'error', text: error.message || 'Erreur lors de l\'upload.' });
     } finally {
       setUploading(false);
     }
@@ -307,96 +264,266 @@ export default function DiplomePage() {
 
   const sendToDREETS = async (diplomaUrl: string) => {
     setSendingToDREETS(true);
-
     try {
       const { data: { session } } = await supabase.auth.getSession();
       if (!session?.user) return;
 
-      // Préparer les données pour la DREETS
-      const dreetsRequest = {
-        educatorId: profile.id,
-        educatorFirstName: profile.first_name,
-        educatorLastName: profile.last_name,
-        educatorEmail: session.user.email || profile.email || '',
-        educatorPhone: profile.phone || '',
-        diplomaUrl: diplomaUrl,
-        diplomaNumber: diplomaNumber,
-        deliveryDate: deliveryDate,
-        region: region,
-        ocrAnalysis: ocrResult ? ocrService.generateAnalysisReport(ocrResult) : undefined
-      };
-
-      // Appeler l'API route côté serveur pour envoyer l'email DREETS
       const response = await fetch('/api/send-dreets-verification', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(dreetsRequest)
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          educatorId: profile.id,
+          educatorFirstName: profile.first_name,
+          educatorLastName: profile.last_name,
+          educatorEmail: session.user.email || profile.email || '',
+          educatorPhone: profile.phone || '',
+          diplomaUrl,
+          diplomaNumber,
+          deliveryDate,
+          region,
+          ocrAnalysis: ocrResult ? ocrService.generateAnalysisReport(ocrResult) : undefined
+        })
       });
 
       const result = await response.json();
-
       if (result.success) {
-        setMessage({
-          type: 'success',
-          text: '🎉 Diplôme uploadé et demande envoyée à la DREETS ! Réponse sous 5-10 jours ouvrés.'
-        });
-      } else {
-        setMessage({
-          type: 'info',
-          text: 'Diplôme uploadé. Vérification DREETS en attente.'
-        });
+        setMessage({ type: 'success', text: 'Diplôme uploadé et demande envoyée à la DREETS !' });
       }
-
     } catch (error) {
       console.error('Erreur DREETS:', error);
-      // Ne pas faire échouer l'upload si l'envoi DREETS échoue
-      setMessage({
-        type: 'info',
-        text: 'Diplôme uploadé. L\'envoi à la DREETS sera réessayé.'
-      });
     } finally {
       setSendingToDREETS(false);
     }
   };
 
-  const handleLogout = async () => {
-    await signOut();
-    window.location.href = '/';
+  // Gestion des documents de vérification (casier, ID, assurance)
+  const handleDocumentUpload = async (documentType: DocumentType, file: File) => {
+    if (!profile) return;
+
+    setUploadingDoc(documentType);
+    setMessage(null);
+
+    try {
+      const { data: { session } } = await supabase.auth.getSession();
+      if (!session) throw new Error('Non authentifié');
+
+      const fileExt = file.name.split('.').pop();
+      const fileName = `${session.user.id}/${documentType}-${Date.now()}.${fileExt}`;
+
+      const { error: uploadError } = await supabase.storage
+        .from('verification-documents')
+        .upload(fileName, file);
+
+      if (uploadError) throw uploadError;
+
+      const existingDoc = documents.find(d => d.document_type === documentType);
+
+      if (existingDoc) {
+        await supabase
+          .from('verification_documents')
+          .update({
+            file_url: fileName,
+            status: 'pending',
+            uploaded_at: new Date().toISOString(),
+            verified_at: null,
+            rejection_reason: null
+          })
+          .eq('id', existingDoc.id);
+      } else {
+        await supabase
+          .from('verification_documents')
+          .insert({
+            educator_id: profile.id,
+            document_type: documentType,
+            file_url: fileName,
+            status: 'pending'
+          });
+      }
+
+      await checkAuth();
+      const docInfo = getDocumentInfo(documentType);
+      setMessage({ type: 'success', text: `${docInfo.label} uploadé avec succès !` });
+      setTimeout(() => setMessage(null), 5000);
+    } catch (err: any) {
+      setMessage({ type: 'error', text: err.message || 'Erreur lors de l\'upload' });
+    } finally {
+      setUploadingDoc(null);
+    }
   };
 
-  const isPremium = !!(subscription && ['active', 'trialing'].includes(subscription.status));
+  const handleDeleteDocument = async (documentId: string, documentType: DocumentType) => {
+    const docInfo = getDocumentInfo(documentType);
+    if (!confirm(`Êtes-vous sûr de vouloir supprimer "${docInfo.label}" ?`)) return;
 
-  const getStatusBadge = (status: DiplomaStatus) => {
+    try {
+      await supabase.from('verification_documents').delete().eq('id', documentId);
+      await checkAuth();
+      setMessage({ type: 'success', text: `${docInfo.label} supprimé` });
+      setTimeout(() => setMessage(null), 5000);
+    } catch (err: any) {
+      setMessage({ type: 'error', text: err.message });
+    }
+  };
+
+  const handleViewDocument = async (filePath: string) => {
+    const url = `/api/verification-documents/${encodeURIComponent(filePath)}`;
+    window.open(url, '_blank');
+  };
+
+  const getDocumentInfo = (type: DocumentType) => {
+    const infos = {
+      criminal_record: {
+        label: 'Casier judiciaire B3',
+        description: 'Datant de moins de 3 mois',
+        icon: '📄',
+        help: 'Demandez-le sur www.cjn.justice.gouv.fr (gratuit)'
+      },
+      id_card: {
+        label: 'Pièce d\'identité',
+        description: 'CNI ou passeport en cours de validité',
+        icon: '🪪',
+        help: 'Carte Nationale d\'Identité ou Passeport'
+      },
+      insurance: {
+        label: 'Assurance RC Pro',
+        description: 'Attestation en cours de validité',
+        icon: '🛡️',
+        help: 'Obligatoire pour exercer en libéral'
+      }
+    };
+    return infos[type];
+  };
+
+  const getDocumentByType = (type: DocumentType) => documents.find(doc => doc.document_type === type);
+
+  const getStatusBadge = (status: string) => {
+    const badges: Record<string, { label: string; color: string }> = {
+      pending: { label: 'En attente', color: 'bg-amber-100 text-amber-800' },
+      approved: { label: 'Validé', color: 'bg-green-100 text-green-800' },
+      rejected: { label: 'Refusé', color: 'bg-red-100 text-red-800' }
+    };
+    return badges[status] || badges.pending;
+  };
+
+  const renderDocumentCard = (type: DocumentType) => {
+    const info = getDocumentInfo(type);
+    const doc = getDocumentByType(type);
+    const status = doc ? getStatusBadge(doc.status) : null;
+
+    return (
+      <div key={type} className={`bg-white rounded-xl lg:rounded-2xl border p-3 sm:p-4 lg:p-5 transition-all hover:shadow-md ${
+        doc?.status === 'approved' ? 'border-green-300' :
+        doc?.status === 'rejected' ? 'border-red-300' :
+        doc ? 'border-amber-300' : 'border-gray-200'
+      }`}>
+        <div className="flex items-start justify-between gap-2 mb-3 lg:mb-4">
+          <div className="flex items-center gap-2 sm:gap-3 min-w-0">
+            <div className={`w-9 h-9 sm:w-10 sm:h-10 lg:w-12 lg:h-12 rounded-lg lg:rounded-xl flex items-center justify-center text-lg sm:text-xl lg:text-2xl flex-shrink-0 ${
+              doc?.status === 'approved' ? 'bg-green-100' :
+              doc?.status === 'rejected' ? 'bg-red-100' :
+              doc ? 'bg-amber-100' : 'bg-gray-100'
+            }`}>
+              {info.icon}
+            </div>
+            <div className="min-w-0">
+              <h4 className="font-semibold text-gray-900 text-xs sm:text-sm lg:text-base truncate">{info.label}</h4>
+              <p className="text-[10px] sm:text-xs lg:text-sm text-gray-500 truncate">{info.description}</p>
+            </div>
+          </div>
+          {status && (
+            <span className={`px-2 py-1 lg:px-3 lg:py-1.5 rounded-lg text-[10px] sm:text-xs lg:text-sm font-medium whitespace-nowrap flex-shrink-0 ${status.color}`}>
+              {status.label}
+            </span>
+          )}
+        </div>
+
+        {doc?.rejection_reason && (
+          <div className="mb-3 p-2 bg-red-50 border border-red-200 rounded-lg">
+            <p className="text-xs text-red-800"><strong>Raison :</strong> {doc.rejection_reason}</p>
+          </div>
+        )}
+
+        {!doc ? (
+          <div>
+            <p className="text-[10px] sm:text-xs lg:text-sm text-gray-500 mb-2 lg:mb-3">{info.help}</p>
+            <label className="block">
+              <input
+                type="file"
+                accept=".pdf,.jpg,.jpeg,.png"
+                onChange={(e) => {
+                  const file = e.target.files?.[0];
+                  if (file) handleDocumentUpload(type, file);
+                }}
+                disabled={uploadingDoc !== null}
+                className="hidden"
+              />
+              <div className={`w-full px-3 sm:px-4 lg:px-5 py-2.5 sm:py-3 lg:py-4 border-2 border-dashed rounded-xl text-center cursor-pointer transition-all ${
+                uploadingDoc === type ? 'border-[#41005c] bg-purple-50' : 'border-gray-300 hover:border-[#41005c] hover:bg-purple-50/50'
+              }`}>
+                {uploadingDoc === type ? (
+                  <div className="flex items-center justify-center gap-2">
+                    <div className="animate-spin rounded-full h-4 w-4 lg:h-5 lg:w-5 border-b-2 border-[#41005c]"></div>
+                    <span className="text-xs sm:text-sm lg:text-base text-[#41005c]">Upload...</span>
+                  </div>
+                ) : (
+                  <span className="text-xs sm:text-sm lg:text-base text-gray-600">Télécharger</span>
+                )}
+              </div>
+            </label>
+          </div>
+        ) : (
+          <div className="space-y-2 lg:space-y-3">
+            <div className="flex items-center justify-between text-[10px] sm:text-xs lg:text-sm text-gray-500">
+              <span>Uploadé le {new Date(doc.uploaded_at).toLocaleDateString('fr-FR')}</span>
+              {doc.file_url && (
+                <button
+                  onClick={() => doc.file_url && handleViewDocument(doc.file_url)}
+                  className="text-[#41005c] font-medium hover:underline"
+                >
+                  Voir →
+                </button>
+              )}
+            </div>
+
+            {(doc.status === 'pending' || doc.status === 'rejected') && (
+              <div className="flex gap-2 lg:gap-3">
+                <label className="flex-1">
+                  <input
+                    type="file"
+                    accept=".pdf,.jpg,.jpeg,.png"
+                    onChange={(e) => {
+                      const file = e.target.files?.[0];
+                      if (file) handleDocumentUpload(type, file);
+                    }}
+                    disabled={uploadingDoc !== null}
+                    className="hidden"
+                  />
+                  <div className="w-full px-2 sm:px-3 lg:px-4 py-2 lg:py-2.5 bg-blue-50 border border-blue-200 rounded-lg text-center cursor-pointer hover:bg-blue-100 text-[10px] sm:text-xs lg:text-sm text-blue-700 font-medium transition-colors">
+                    Remplacer
+                  </div>
+                </label>
+                <button
+                  onClick={() => handleDeleteDocument(doc.id, type)}
+                  className="px-2 sm:px-3 lg:px-4 py-2 lg:py-2.5 bg-red-50 border border-red-200 rounded-lg text-[10px] sm:text-xs lg:text-sm text-red-700 font-medium hover:bg-red-100 transition-colors"
+                >
+                  Supprimer
+                </button>
+              </div>
+            )}
+          </div>
+        )}
+      </div>
+    );
+  };
+
+  const getDiplomaStatusBadge = (status: DiplomaStatus) => {
     switch (status) {
       case 'pending':
-        return (
-          <span className="inline-flex items-center px-3 py-1.5 rounded-full text-sm font-medium bg-amber-100 text-amber-800">
-            <svg className="w-4 h-4 mr-1.5" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
-              <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z" clipRule="evenodd" />
-            </svg>
-            Vérification en cours
-          </span>
-        );
+        return <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-amber-100 text-amber-800">⏳ Vérification en cours</span>;
       case 'verified':
-        return (
-          <span className="inline-flex items-center px-3 py-1.5 rounded-full text-sm font-medium bg-green-100 text-green-800">
-            <svg className="w-4 h-4 mr-1.5" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
-              <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
-            </svg>
-            Diplôme vérifié ✓
-          </span>
-        );
+        return <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-green-100 text-green-800">✓ Diplôme vérifié</span>;
       case 'rejected':
-        return (
-          <span className="inline-flex items-center px-3 py-1.5 rounded-full text-sm font-medium text-white" style={{ backgroundColor: '#f0879f' }}>
-            <svg className="w-4 h-4 mr-1.5" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
-              <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd" />
-            </svg>
-            Diplôme non reconnu
-          </span>
-        );
+        return <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-red-100 text-red-800">✗ Non reconnu</span>;
       default:
         return null;
     }
@@ -412,402 +539,181 @@ export default function DiplomePage() {
 
   return (
     <div className="min-h-screen min-h-[100dvh] flex flex-col" style={{ backgroundColor: '#fdf9f4' }}>
-      {/* Navigation */}
-      <div className="sticky top-0 z-40">
-        <EducatorNavbar profile={profile} subscription={subscription} />
-      </div>
+      <EducatorNavbar profile={profile} subscription={subscription} />
 
-      {/* Contenu principal */}
-      <div className="flex-1 max-w-3xl mx-auto px-3 sm:px-6 lg:px-8 py-4 sm:py-8 pb-24 sm:pb-8 w-full">
-        {/* En-tête centré avec icône */}
-        <div className="mb-5 sm:mb-8 text-center">
-          <div className="w-14 h-14 sm:w-16 sm:h-16 mx-auto mb-3 sm:mb-4 rounded-full flex items-center justify-center p-1" style={{ backgroundColor: '#41005c' }}>
-            <img src="/images/icons/diploma.svg" alt="" className="w-full h-full" />
+      <div className="flex-1 max-w-3xl lg:max-w-4xl xl:max-w-5xl mx-auto px-3 sm:px-6 lg:px-8 xl:px-12 py-4 sm:py-8 lg:py-10 pb-20 sm:pb-8 w-full">
+        {/* En-tête avec flèche retour */}
+        <div className="mb-5 sm:mb-8 lg:mb-10">
+          {/* Flèche retour - desktop uniquement */}
+          <button
+            onClick={() => router.back()}
+            className="flex items-center gap-2 text-gray-600 hover:text-gray-900 mb-4 transition-colors"
+            aria-label="Retour à la page précédente"
+          >
+            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+            </svg>
+            <span className="text-sm font-medium">Retour</span>
+          </button>
+
+          <div className="text-center">
+            <div className="w-14 h-14 sm:w-16 sm:h-16 lg:w-20 lg:h-20 mx-auto mb-3 sm:mb-4 rounded-full flex items-center justify-center p-1" style={{ backgroundColor: '#41005c' }}>
+              <img src="/images/icons/diploma.svg" alt="" className="w-full h-full" />
+            </div>
+            <h1 className="text-lg sm:text-2xl lg:text-3xl font-bold text-gray-900">Vérification</h1>
+            <p className="text-gray-500 text-xs sm:text-sm lg:text-base mt-1 lg:mt-2">Diplôme et documents obligatoires</p>
           </div>
-          <h1 className="text-lg sm:text-2xl font-bold text-gray-900">
-            Mon Diplôme {professionConfig ? `- ${professionConfig.label}` : ''}
-          </h1>
-          <p className="text-gray-500 text-xs sm:text-sm mt-1 px-2">
-            {professionConfig?.verificationMethod === 'dreets'
-              ? 'Vérification automatique par la DREETS'
-              : professionConfig?.verificationMethod === 'rpps'
-              ? 'Vérification via votre numéro RPPS'
-              : 'Vérification manuelle (24-48h)'}
-          </p>
-          {professionConfig && (
-            <p className="text-[10px] sm:text-xs mt-2 px-2" style={{ color: '#5a1a75' }}>
-              Diplôme attendu : {professionConfig.diplomaDescription}
-            </p>
-          )}
         </div>
 
-        {/* Message d'information pour les nouveaux comptes */}
-        {!profile.diploma_url && (
-          <div className="mb-4 sm:mb-6 rounded-xl p-3 sm:p-5 shadow-sm" style={{ backgroundColor: '#f3e8ff', border: '1px solid #d8b4fe' }}>
-            <div className="flex items-start gap-3 sm:gap-4">
-              <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-lg flex items-center justify-center flex-shrink-0" style={{ backgroundColor: '#41005c' }}>
-                <svg className="h-4 w-4 sm:h-5 sm:w-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-                </svg>
-              </div>
-              <div className="flex-1">
-                <h3 className="text-sm sm:text-base font-semibold mb-1.5 sm:mb-2" style={{ color: '#41005c' }}>
-                  Bienvenue sur NeuroCare !
-                </h3>
-                <p className="text-xs sm:text-sm mb-2 sm:mb-3" style={{ color: '#5a1a75' }}>
-                  <strong>Important :</strong> Vous serez visible des familles uniquement après validation de votre diplôme.
-                </p>
-                <div className="space-y-1 sm:space-y-1.5 text-xs sm:text-sm" style={{ color: '#5a1a75' }}>
-                  <div className="flex items-start gap-2">
-                    <span className="font-bold" style={{ color: '#41005c' }}>1.</span>
-                    <span>Uploadez votre diplôme (PDF, JPG ou PNG)</span>
-                  </div>
-                  <div className="flex items-start gap-2">
-                    <span className="font-bold" style={{ color: '#41005c' }}>2.</span>
-                    <span>Analyse automatique par OCR</span>
-                  </div>
-                  <div className="flex items-start gap-2">
-                    <span className="font-bold" style={{ color: '#41005c' }}>3.</span>
-                    <span>
-                      {professionConfig?.verificationMethod === 'dreets'
-                        ? 'Vérification officielle par la DREETS'
-                        : professionConfig?.verificationMethod === 'rpps'
-                        ? 'Vérification via votre numéro RPPS'
-                        : 'Vérification manuelle par notre équipe'}
-                    </span>
-                  </div>
-                  <div className="flex items-start gap-2">
-                    <span className="font-bold" style={{ color: '#41005c' }}>4.</span>
-                    <span>Validation (délai: 24-48h)</span>
-                  </div>
-                  <div className="flex items-start gap-2 mt-2 pt-2 border-t" style={{ borderColor: '#d8b4fe' }}>
-                    <span className="font-bold text-green-600">✓</span>
-                    <span className="font-medium text-green-700">Vous apparaissez dans les recherches !</span>
-                  </div>
-                </div>
-              </div>
-            </div>
+        {/* Message global */}
+        {message && (
+          <div className={`mb-4 p-3 rounded-xl text-sm ${
+            message.type === 'success' ? 'bg-green-50 border border-green-200 text-green-800' :
+            message.type === 'error' ? 'bg-red-50 border border-red-200 text-red-800' :
+            'bg-purple-50 border border-purple-200 text-purple-800'
+          }`}>
+            {message.text}
           </div>
         )}
 
-        {/* Statut actuel */}
-        {profile.diploma_verification_status && (
-          <div className="mb-4 sm:mb-6">
-            {getStatusBadge(profile.diploma_verification_status)}
-
-            {profile.dreets_verified && profile.dreets_response_date && (
-              <p className="text-sm text-gray-600 mt-2">
-                ✅ Vérifié par la DREETS le {new Date(profile.dreets_response_date).toLocaleDateString('fr-FR')}
-              </p>
-            )}
-
-            {profile.dreets_verification_sent_at && !profile.dreets_verified && (
-              <p className="text-sm text-gray-600 mt-2">
-                📤 Demande envoyée à la DREETS le {new Date(profile.dreets_verification_sent_at).toLocaleDateString('fr-FR')}
-                <br />
-                Réponse attendue sous 5-10 jours ouvrés
-              </p>
-            )}
-
-            {profile.diploma_verification_status === 'rejected' && profile.diploma_rejected_reason && (
-              <div className="mt-4 p-4 rounded-xl" role="alert" style={{ backgroundColor: '#fff1f2', border: '1px solid #f0879f' }}>
-                <p className="text-sm font-medium mb-1" style={{ color: '#9f1239' }}>Raison du refus :</p>
-                <p className="text-sm" style={{ color: '#be123c' }}>{profile.diploma_rejected_reason}</p>
-              </div>
-            )}
+        {/* Section Diplôme */}
+        <div className="bg-white rounded-2xl shadow-sm lg:shadow-md border border-gray-100 p-4 sm:p-5 lg:p-8 mb-4 sm:mb-6 lg:mb-8">
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 sm:gap-0 mb-4 lg:mb-6">
+            <h2 className="text-base sm:text-lg lg:text-xl font-semibold" style={{ color: '#41005c' }}>
+              🎓 Mon Diplôme {professionConfig ? `- ${professionConfig.label}` : ''}
+            </h2>
+            {profile.diploma_verification_status && getDiplomaStatusBadge(profile.diploma_verification_status)}
           </div>
-        )}
 
-        {/* Alerte si pas de diplôme */}
-        {!profile.diploma_url && (
-          <div className="mb-4 sm:mb-6 p-3 sm:p-4 rounded-xl bg-amber-50 border border-amber-200" role="alert">
-            <div className="flex items-start gap-2 sm:gap-3">
-              <svg className="h-4 w-4 sm:h-5 sm:w-5 text-amber-500 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
-                <path fillRule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
-              </svg>
-              <p className="text-xs sm:text-sm text-amber-800">
-                <strong>Attention :</strong> Votre profil n'est pas visible tant que votre diplôme n'est pas vérifié.
-              </p>
-            </div>
-          </div>
-        )}
-
-        {/* Formulaire d'upload */}
-        <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-3 sm:p-5">
-          <h2 className="text-base sm:text-lg font-semibold mb-3 sm:mb-4" style={{ color: '#41005c' }}>
-            {profile.diploma_url ? 'Remplacer mon diplôme' : 'Uploader mon diplôme'}
-          </h2>
-
-          {/* Aperçu du diplôme actuel */}
-          {profile.diploma_url && !diplomaFile && previewUrl && (
-            <div className="mb-6">
-              <p className="text-sm text-gray-600 mb-2">Diplôme actuel :</p>
-              {profile.diploma_url.endsWith('.pdf') ? (
-                <div className="rounded-xl p-4" style={{ backgroundColor: '#faf5ff', border: '1px solid #e9d5ff' }}>
-                  <div className="flex items-center">
-                    <div className="w-12 h-12 rounded-lg flex items-center justify-center" style={{ backgroundColor: '#41005c' }}>
-                      <svg className="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
-                        <path fillRule="evenodd" d="M4 4a2 2 0 012-2h4.586A2 2 0 0112 2.586L15.414 6A2 2 0 0116 7.414V16a2 2 0 01-2 2H6a2 2 0 01-2-2V4z" clipRule="evenodd" />
-                      </svg>
-                    </div>
-                    <div className="ml-3">
-                      <p className="text-sm font-medium text-gray-900">Document PDF</p>
-                      <a
-                        href={previewUrl}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="text-sm font-medium hover:underline"
-                        style={{ color: '#41005c' }}
-                      >
-                        Voir le document →
-                      </a>
-                    </div>
-                  </div>
-                </div>
-              ) : (
-                <img
-                  src={previewUrl}
-                  alt="Diplôme"
-                  className="max-w-full h-auto rounded-xl border border-gray-200"
-                />
-              )}
+          {profile.diploma_verification_status === 'rejected' && profile.diploma_rejected_reason && (
+            <div className="mb-4 p-3 rounded-xl bg-red-50 border border-red-200">
+              <p className="text-sm text-red-800"><strong>Raison :</strong> {profile.diploma_rejected_reason}</p>
             </div>
           )}
 
-          {/* Zone d'upload */}
-          <div className="mb-3 sm:mb-4">
-            <label htmlFor="diploma-upload" className="block text-xs sm:text-sm font-medium text-gray-700 mb-1.5 sm:mb-2">
-              Sélectionner un fichier (JPG, PNG ou PDF - max 5MB)
-            </label>
-            <input
-              id="diploma-upload"
-              type="file"
-              accept=".jpg,.jpeg,.png,.pdf"
-              onChange={handleFileChange}
-              disabled={analyzing || uploading}
-              aria-label="Sélectionner un fichier de diplôme à uploader (formats acceptés : JPG, PNG ou PDF, taille maximale : 5 MB)"
-              className="block w-full text-xs sm:text-sm text-gray-500 file:mr-2 sm:file:mr-4 file:py-2 sm:file:py-2.5 file:px-3 sm:file:px-4 file:rounded-xl file:border-0 file:text-xs sm:file:text-sm file:font-semibold file:text-white hover:file:opacity-90 disabled:opacity-50"
-              style={{ '--file-bg': '#41005c', fontSize: '16px' } as any}
-            />
-            <style jsx>{`
-              input[type="file"]::file-selector-button {
-                background-color: #41005c;
-              }
-            `}</style>
-          </div>
+          {/* Aperçu diplôme existant */}
+          {profile.diploma_url && !diplomaFile && previewUrl && (
+            <div className="mb-4 p-3 rounded-xl bg-gray-50 border border-gray-200">
+              <div className="flex items-center justify-between">
+                <span className="text-sm text-gray-600">Diplôme actuel</span>
+                <a href={previewUrl} target="_blank" rel="noopener noreferrer" className="text-sm font-medium hover:underline" style={{ color: '#41005c' }}>
+                  Voir →
+                </a>
+              </div>
+            </div>
+          )}
 
-          {/* Champs supplémentaires */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4 mb-3 sm:mb-4">
+          {/* Upload diplôme */}
+          <div className="space-y-4 lg:space-y-5">
             <div>
-              <label className="block text-xs sm:text-sm font-medium text-gray-700 mb-1 sm:mb-1.5">
-                Numéro de diplôme {ocrResult && diplomaNumber && <span className="text-[10px] sm:text-xs" style={{ color: '#5a1a75' }}>(extrait)</span>}
+              <label className="block text-sm lg:text-base font-medium text-gray-700 mb-2">
+                {profile.diploma_url ? 'Remplacer mon diplôme' : 'Uploader mon diplôme'}
               </label>
               <input
-                type="text"
-                value={diplomaNumber}
-                onChange={(e) => setDiplomaNumber(e.target.value)}
-                placeholder="Ex: 123456"
-                className="w-full px-3 py-2.5 sm:py-2.5 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 text-sm"
-                style={{ '--tw-ring-color': '#41005c', fontSize: '16px' } as any}
+                type="file"
+                accept=".jpg,.jpeg,.png,.pdf"
+                onChange={handleFileChange}
+                disabled={analyzing || uploading}
+                className="block w-full text-sm lg:text-base text-gray-500 file:mr-4 file:py-2 lg:file:py-2.5 file:px-4 lg:file:px-6 file:rounded-xl file:border-0 file:text-sm lg:file:text-base file:font-semibold file:text-white file:bg-[#41005c] hover:file:opacity-90 file:cursor-pointer"
+                style={{ fontSize: '16px' }}
               />
             </div>
 
-            <div>
-              <label className="block text-xs sm:text-sm font-medium text-gray-700 mb-1 sm:mb-1.5">
-                Date de délivrance {ocrResult && deliveryDate && <span className="text-[10px] sm:text-xs" style={{ color: '#5a1a75' }}>(extraite)</span>}
-              </label>
-              <input
-                type="text"
-                value={deliveryDate}
-                onChange={(e) => setDeliveryDate(e.target.value)}
-                placeholder="Ex: 15/06/2020"
-                className="w-full px-3 py-2.5 sm:py-2.5 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 text-sm"
-                style={{ '--tw-ring-color': '#41005c', fontSize: '16px' } as any}
-              />
+            {analyzing && (
+              <div className="p-3 lg:p-4 rounded-xl bg-purple-50 border border-purple-200">
+                <div className="flex items-center gap-2">
+                  <div className="animate-spin rounded-full h-4 w-4 lg:h-5 lg:w-5 border-b-2 border-[#41005c]"></div>
+                  <span className="text-sm lg:text-base text-[#41005c]">Analyse OCR...</span>
+                </div>
+              </div>
+            )}
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 lg:gap-4">
+              <div>
+                <label className="block text-xs lg:text-sm font-medium text-gray-700 mb-1 lg:mb-2">N° de diplôme</label>
+                <input
+                  type="text"
+                  value={diplomaNumber}
+                  onChange={(e) => setDiplomaNumber(e.target.value)}
+                  placeholder="Ex: 123456"
+                  className="w-full px-3 lg:px-4 py-2.5 lg:py-3 border border-gray-200 rounded-xl text-sm lg:text-base focus:ring-2 focus:ring-[#41005c] focus:border-[#41005c]"
+                  style={{ fontSize: '16px' }}
+                />
+              </div>
+              <div>
+                <label className="block text-xs lg:text-sm font-medium text-gray-700 mb-1 lg:mb-2">Date de délivrance</label>
+                <input
+                  type="text"
+                  value={deliveryDate}
+                  onChange={(e) => setDeliveryDate(e.target.value)}
+                  placeholder="Ex: 15/06/2020"
+                  className="w-full px-3 lg:px-4 py-2.5 lg:py-3 border border-gray-200 rounded-xl text-sm lg:text-base focus:ring-2 focus:ring-[#41005c] focus:border-[#41005c]"
+                  style={{ fontSize: '16px' }}
+                />
+              </div>
             </div>
 
-            {/* Région - uniquement pour vérification DREETS */}
             {professionConfig?.verificationMethod === 'dreets' && (
-              <div className="sm:col-span-2">
-                <label className="block text-xs sm:text-sm font-medium text-gray-700 mb-1 sm:mb-1.5">
-                  Région de délivrance <span style={{ color: '#f0879f' }}>*</span>
+              <div className="lg:max-w-md">
+                <label className="block text-xs lg:text-sm font-medium text-gray-700 mb-1 lg:mb-2">
+                  Région de délivrance <span className="text-red-500">*</span>
                 </label>
                 <select
                   value={region}
                   onChange={(e) => setRegion(e.target.value)}
-                  className="w-full px-3 py-2.5 sm:py-2.5 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 text-sm"
-                  style={{ '--tw-ring-color': '#41005c', fontSize: '16px' } as any}
+                  className="w-full px-3 lg:px-4 py-2.5 lg:py-3 border border-gray-200 rounded-xl text-sm lg:text-base focus:ring-2 focus:ring-[#41005c] focus:border-[#41005c]"
+                  style={{ fontSize: '16px' }}
                 >
-                  <option value="">Sélectionnez une région</option>
-                  {FRENCH_REGIONS.map(r => (
-                    <option key={r} value={r}>{r}</option>
-                  ))}
+                  <option value="">Sélectionnez</option>
+                  {FRENCH_REGIONS.map(r => <option key={r} value={r}>{r}</option>)}
                 </select>
-                <p className="text-[10px] sm:text-xs text-gray-500 mt-1">
-                  Permet de contacter la bonne DREETS pour la vérification
-                </p>
               </div>
             )}
-          </div>
 
-          {/* Analyse OCR */}
-          {analyzing && (
-            <div className="mb-4 p-4 rounded-xl" role="status" aria-live="polite" style={{ backgroundColor: '#f3e8ff', border: '1px solid #d8b4fe' }}>
-              <div className="flex items-center">
-                <svg className="animate-spin h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" aria-hidden="true" style={{ color: '#41005c' }}>
-                  <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
-                  <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
-                </svg>
-                <span className="text-sm" style={{ color: '#41005c' }}>Analyse OCR en cours...</span>
-              </div>
-            </div>
-          )}
-
-          {/* Résultat OCR */}
-          {ocrResult && ocrResult.success && (
-            <div className="mb-4">
-              <details className="rounded-xl p-4" style={{ backgroundColor: '#faf5ff', border: '1px solid #e9d5ff' }}>
-                <summary className="cursor-pointer font-medium text-sm" style={{ color: '#41005c' }}>
-                  Analyse automatique (Confiance: {ocrResult.confidence.toFixed(0)}%)
-                </summary>
-                <div className="mt-3 text-sm text-gray-700 whitespace-pre-wrap">
-                  {ocrService.generateAnalysisReport(ocrResult)}
-                </div>
-              </details>
-            </div>
-          )}
-
-          {/* Aperçu du nouveau fichier */}
-          {diplomaFile && previewUrl && (
-            <div className="mb-4">
-              <p className="text-sm text-gray-600 mb-2">Aperçu :</p>
-              <img
-                src={previewUrl}
-                alt="Aperçu"
-                className="max-w-full h-auto rounded-xl border border-gray-200"
-              />
-            </div>
-          )}
-
-          {/* Messages */}
-          {message && (
-            <div
-              role="alert"
-              aria-live="polite"
-              className={`mb-4 p-4 rounded-xl ${
-                message.type === 'success'
-                  ? 'bg-green-50 border border-green-200 text-green-800'
-                  : message.type === 'info'
-                  ? 'border text-sm'
-                  : 'border text-sm'
+            <button
+              onClick={uploadDiploma}
+              disabled={!diplomaFile || uploading || analyzing || (professionConfig?.verificationMethod === 'dreets' && !region)}
+              className={`w-full lg:w-auto lg:min-w-[300px] py-3 lg:py-3.5 px-4 lg:px-8 rounded-xl font-medium text-base lg:text-lg transition ${
+                !diplomaFile || uploading || analyzing ? 'bg-gray-300 text-gray-500 cursor-not-allowed' : 'text-white hover:opacity-90 hover:shadow-lg'
               }`}
-              style={
-                message.type === 'info'
-                  ? { backgroundColor: '#f3e8ff', borderColor: '#d8b4fe', color: '#5a1a75' }
-                  : message.type === 'error'
-                  ? { backgroundColor: '#fff1f2', borderColor: '#f0879f', color: '#9f1239' }
-                  : {}
-              }
+              style={!diplomaFile || uploading || analyzing ? {} : { backgroundColor: '#41005c' }}
             >
-              {message.text}
-            </div>
-          )}
-
-          {/* Bouton d'upload */}
-          <button
-            onClick={uploadDiploma}
-            disabled={!diplomaFile || uploading || analyzing || (professionConfig?.verificationMethod === 'dreets' && !region)}
-            aria-label={
-              uploading || sendingToDREETS
-                ? sendingToDREETS ? 'Envoi du diplôme à la DREETS en cours' : 'Upload du diplôme en cours'
-                : professionConfig?.verificationMethod === 'dreets'
-                ? 'Envoyer le diplôme et demander la vérification DREETS'
-                : 'Envoyer le diplôme pour vérification'
-            }
-            className={`w-full py-3 px-4 rounded-xl font-medium transition ${
-              !diplomaFile || uploading || analyzing || (professionConfig?.verificationMethod === 'dreets' && !region)
-                ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
-                : 'text-white hover:opacity-90 shadow-sm hover:shadow'
-            }`}
-            style={
-              !diplomaFile || uploading || analyzing || (professionConfig?.verificationMethod === 'dreets' && !region)
-                ? {}
-                : { backgroundColor: '#41005c' }
-            }
-          >
-            {uploading || sendingToDREETS ? (
-              <span className="flex items-center justify-center">
-                <svg className="animate-spin -ml-1 mr-3 h-5 w-5 text-white" fill="none" viewBox="0 0 24 24" aria-hidden="true">
-                  <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
-                  <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
-                </svg>
-                {sendingToDREETS ? 'Envoi à la DREETS...' : 'Upload en cours...'}
-              </span>
-            ) : professionConfig?.verificationMethod === 'dreets' ? (
-              '📤 Envoyer le diplôme et demander la vérification DREETS'
-            ) : (
-              '📤 Envoyer le diplôme pour vérification'
-            )}
-          </button>
+              {uploading || sendingToDREETS ? (
+                <span className="flex items-center justify-center gap-2">
+                  <div className="animate-spin rounded-full h-4 w-4 lg:h-5 lg:w-5 border-b-2 border-white"></div>
+                  {sendingToDREETS ? 'Envoi DREETS...' : 'Upload...'}
+                </span>
+              ) : (
+                '📤 Envoyer le diplôme'
+              )}
+            </button>
+          </div>
         </div>
 
-        {/* Informations */}
-        <div className="mt-4 sm:mt-6 rounded-xl p-3 sm:p-5" style={{ backgroundColor: '#f3e8ff', border: '1px solid #d8b4fe' }}>
-          <div className="flex items-start gap-2 sm:gap-3 mb-3 sm:mb-4">
-            <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-lg flex items-center justify-center flex-shrink-0" style={{ backgroundColor: '#41005c' }}>
-              <svg className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-white" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
-                <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd" />
-              </svg>
-            </div>
-            <h3 className="text-xs sm:text-sm font-semibold pt-1" style={{ color: '#41005c' }}>Comment fonctionne la vérification ?</h3>
+        {/* Section Documents de vérification */}
+        <div className="bg-white rounded-2xl shadow-sm lg:shadow-md border border-gray-100 p-4 sm:p-5 lg:p-8">
+          <h2 className="text-base sm:text-lg lg:text-xl font-semibold mb-2 sm:mb-4 lg:mb-6" style={{ color: '#41005c' }}>
+            📋 Documents complémentaires
+          </h2>
+          <p className="text-xs sm:text-sm lg:text-base text-gray-500 mb-4 lg:mb-6">
+            Ces documents sont requis pour compléter votre vérification et obtenir le badge "Vérifié".
+          </p>
+
+          <div className="space-y-3 sm:space-y-0 sm:grid sm:grid-cols-3 sm:gap-4 lg:gap-6">
+            {renderDocumentCard('criminal_record')}
+            {renderDocumentCard('id_card')}
+            {renderDocumentCard('insurance')}
           </div>
-          <ul className="text-xs sm:text-sm space-y-2 sm:space-y-2.5" style={{ color: '#5a1a75' }}>
-            <li className="flex items-start">
-              <span className="mr-2 font-bold" style={{ color: '#41005c' }}>1.</span>
-              <span><strong>Analyse automatique :</strong> Le diplôme est analysé par OCR pour détecter les informations clés</span>
-            </li>
-            {professionConfig?.verificationMethod === 'dreets' ? (
-              <>
-                <li className="flex items-start">
-                  <span className="mr-2 font-bold" style={{ color: '#41005c' }}>2.</span>
-                  <span><strong>Envoi à la DREETS :</strong> Une demande officielle est envoyée automatiquement à la DREETS de votre région</span>
-                </li>
-                <li className="flex items-start">
-                  <span className="mr-2 font-bold" style={{ color: '#41005c' }}>3.</span>
-                  <span><strong>Vérification officielle :</strong> La DREETS vérifie l'authenticité du diplôme (délai: 5-10 jours ouvrés)</span>
-                </li>
-              </>
-            ) : professionConfig?.verificationMethod === 'rpps' ? (
-              <>
-                <li className="flex items-start">
-                  <span className="mr-2 font-bold" style={{ color: '#41005c' }}>2.</span>
-                  <span><strong>Vérification RPPS :</strong> Nous vérifions la cohérence entre votre diplôme et votre numéro RPPS</span>
-                </li>
-                <li className="flex items-start">
-                  <span className="mr-2 font-bold" style={{ color: '#41005c' }}>3.</span>
-                  <span><strong>Validation manuelle :</strong> Notre équipe valide votre profil (délai: 24-48h)</span>
-                </li>
-              </>
-            ) : (
-              <>
-                <li className="flex items-start">
-                  <span className="mr-2 font-bold" style={{ color: '#41005c' }}>2.</span>
-                  <span><strong>Vérification manuelle :</strong> Notre équipe examine votre diplôme et vos certifications</span>
-                </li>
-                <li className="flex items-start">
-                  <span className="mr-2 font-bold" style={{ color: '#41005c' }}>3.</span>
-                  <span><strong>Validation :</strong> Délai de traitement : 24-48h ouvrés</span>
-                </li>
-              </>
-            )}
-            <li className="flex items-start">
-              <span className="mr-2 font-bold" style={{ color: '#41005c' }}>4.</span>
-              <span><strong>Notification :</strong> Vous recevez un email dès que la vérification est terminée</span>
-            </li>
-            <li className="flex items-start">
-              <span className="mr-2 font-bold" style={{ color: '#41005c' }}>5.</span>
-              <span><strong>Activation :</strong> Votre profil devient visible dans les recherches une fois le diplôme vérifié</span>
-            </li>
+        </div>
+
+        {/* Info box */}
+        <div className="mt-4 sm:mt-6 lg:mt-8 rounded-xl lg:rounded-2xl p-3 sm:p-4 lg:p-6" style={{ backgroundColor: '#f3e8ff', border: '1px solid #d8b4fe' }}>
+          <h3 className="text-xs sm:text-sm lg:text-base font-semibold mb-2 lg:mb-3" style={{ color: '#41005c' }}>💡 Pourquoi ces documents ?</h3>
+          <ul className="text-[10px] sm:text-xs lg:text-sm space-y-1 lg:space-y-2" style={{ color: '#5a1a75' }}>
+            <li>✓ Sécurité et protection des enfants</li>
+            <li>✓ Confiance des familles</li>
+            <li>✓ Badge "Vérifié" sur votre profil</li>
+            <li>✓ Meilleure visibilité dans les recherches</li>
           </ul>
         </div>
       </div>

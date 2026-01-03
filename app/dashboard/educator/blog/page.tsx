@@ -94,11 +94,30 @@ export default function EducatorBlogPage() {
         <div className="flex items-center justify-between px-4 py-4 relative">
           <EducatorMobileMenu profile={profile} isPremium={false} onLogout={() => {}} />
           <Link href="/dashboard/educator" className="absolute left-1/2 transform -translate-x-1/2">
-            <img src="/images/logo-neurocare.svg" alt="NeuroCare" className="h-20" />
+            <div className="flex items-center gap-2">
+              <img src="/images/logo-neurocare.svg" alt="NeuroCare" className="h-20" />
+              <span className="px-2 py-0.5 text-xs font-bold rounded-full text-white" style={{ backgroundColor: '#f0879f' }}>
+                PRO
+              </span>
+            </div>
           </Link>
           <div className="w-10" />
         </div>
       </nav>
+
+      {/* Flèche retour - desktop uniquement */}
+      <div className="max-w-3xl mx-auto px-4 pt-4">
+        <button
+          onClick={() => router.back()}
+          className="flex items-center gap-2 text-gray-600 hover:text-gray-900 mb-4 transition-colors"
+          aria-label="Retour à la page précédente"
+        >
+          <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+          </svg>
+          <span className="text-sm font-medium">Retour</span>
+        </button>
+      </div>
 
       {/* Header */}
       <div className="px-4 py-6" style={{ backgroundColor: '#5a1a75' }}>

@@ -503,6 +503,20 @@ export default function MessagesPage() {
 
       {/* Zone de messagerie */}
       <div className="flex-1 overflow-hidden flex flex-col">
+        {/* Flèche retour - desktop uniquement */}
+        <div className="max-w-7xl mx-auto w-full px-4 sm:px-6 lg:px-8 pt-4">
+          <button
+            onClick={() => router.back()}
+            className="flex items-center gap-2 text-gray-600 hover:text-gray-900 transition-colors"
+            aria-label="Retour à la page précédente"
+          >
+            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+            </svg>
+            <span className="text-sm font-medium">Retour</span>
+          </button>
+        </div>
+
         {/* En-tête avec icône - visible uniquement sur mobile quand on voit la liste */}
         {showConversationList && (
           <div className="lg:hidden py-4 px-4">

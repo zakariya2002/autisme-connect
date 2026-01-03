@@ -406,9 +406,10 @@ export default function EducatorMobileMenu({ profile: propProfile, isPremium, on
 
   return (
     <>
+      {/* Bouton hamburger visible uniquement sur mobile */}
       <button
         onClick={openMenu}
-        className="p-1 text-white transition-colors duration-200"
+        className="p-1 text-white transition-colors duration-200 lg:hidden"
         aria-label="Ouvrir le menu"
       >
         <svg className="w-9 h-9" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">

@@ -17,9 +17,10 @@ interface Notification {
 interface NotificationBellProps {
   educatorId: string;
   userId: string;
+  position?: 'left' | 'right';
 }
 
-export default function NotificationBell({ educatorId, userId }: NotificationBellProps) {
+export default function NotificationBell({ educatorId, userId, position = 'right' }: NotificationBellProps) {
   const [notifications, setNotifications] = useState<Notification[]>([]);
   const [unreadCount, setUnreadCount] = useState(0);
   const [isOpen, setIsOpen] = useState(false);
@@ -331,7 +332,9 @@ export default function NotificationBell({ educatorId, userId }: NotificationBel
       {/* Dropdown */}
       {isOpen && (
         <div
-          className="absolute right-0 mt-2 w-80 sm:w-96 bg-white rounded-2xl shadow-xl border border-gray-100 overflow-hidden z-50"
+          className={`absolute mt-2 w-80 sm:w-96 bg-white rounded-2xl shadow-xl border border-gray-100 overflow-hidden z-50 ${
+            position === 'left' ? 'left-0' : 'right-0'
+          }`}
           role="region"
           aria-label="Panneau de notifications"
         >

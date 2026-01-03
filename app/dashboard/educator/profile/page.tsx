@@ -52,6 +52,7 @@ export default function EducatorProfilePage() {
     siret: '',
     sap_number: '',
     linkedin_url: '',
+    gender: '' as 'male' | 'female' | '',
   });
 
   const [certifications, setCertifications] = useState<Array<{
@@ -126,6 +127,7 @@ export default function EducatorProfilePage() {
           siret: profile.siret || '',
           sap_number: profile.sap_number || '',
           linkedin_url: profile.linkedin_url || '',
+          gender: profile.gender || '',
         });
 
         // Charger les données d'avatar
@@ -244,6 +246,7 @@ export default function EducatorProfilePage() {
           siret: profileData.siret || null,
           sap_number: profileData.sap_number || null,
           linkedin_url: profileData.linkedin_url || null,
+          gender: profileData.gender || null,
         })
         .eq('user_id', session.user.id);
 
@@ -553,26 +556,29 @@ export default function EducatorProfilePage() {
     <div className="min-h-screen" style={{ backgroundColor: '#fdf9f4' }}>
       <EducatorNavbar profile={profile} subscription={subscription} />
 
-      {/* Header violet clair */}
-      <div className="px-4 py-6" style={{ backgroundColor: '#5a1a75' }}>
-        <div className="max-w-4xl mx-auto">
-          <div className="flex items-center gap-4">
-            <div className="w-14 h-14 rounded-full bg-white shadow-md overflow-hidden flex-shrink-0">
-              <img
-                src={profile?.gender === 'female' ? '/images/icons/avatar-female.svg' : '/images/icons/avatar-male.svg'}
-                alt=""
-                className="w-full h-full object-cover"
-              />
+      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8">
+        {/* En-tête avec flèche retour */}
+        <div className="mb-6 sm:mb-8">
+          {/* Flèche retour - desktop uniquement */}
+          <button
+            onClick={() => router.back()}
+            className="flex items-center gap-2 text-gray-600 hover:text-gray-900 mb-4 transition-colors"
+            aria-label="Retour à la page précédente"
+          >
+            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+            </svg>
+            <span className="text-sm font-medium">Retour</span>
+          </button>
+
+          <div className="text-center">
+            <div className="w-16 h-16 mx-auto mb-4 rounded-full flex items-center justify-center p-1" style={{ backgroundColor: profileData.gender === 'female' ? '#f0879f' : '#41005c' }}>
+              <img src={profileData.gender === 'female' ? '/images/icons/profile-female.svg' : '/images/icons/profile-male.svg'} alt="" className="w-full h-full" />
             </div>
-            <div>
-              <h1 className="text-2xl font-bold text-white">Mon profil</h1>
-              <p className="text-white/70 text-sm">Gérez vos informations professionnelles</p>
-            </div>
+            <h1 className="text-xl sm:text-2xl font-bold text-gray-900">Mon profil</h1>
+            <p className="text-gray-500 text-sm mt-1">Gérez vos informations professionnelles</p>
           </div>
         </div>
-      </div>
-
-      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Informations personnelles */}
         <div className="bg-white rounded-2xl shadow-sm border border-gray-100 mb-6 overflow-hidden">
           <div className="px-6 py-4" style={{ backgroundColor: '#41005c' }}>
@@ -590,6 +596,49 @@ export default function EducatorProfilePage() {
                 moderationReason={avatarModerationReason}
                 onAvatarChange={(newUrl) => setAvatarUrl(newUrl)}
               />
+            </div>
+
+            {/* Sélection du genre */}
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-3">Genre</label>
+              <div className="flex gap-3">
+                <button
+                  type="button"
+                  onClick={() => setProfileData({ ...profileData, gender: 'male' })}
+                  className={`flex-1 flex items-center justify-center gap-3 px-4 py-3 rounded-xl border-2 transition-all ${
+                    profileData.gender === 'male'
+                      ? 'border-[#41005c] bg-[#41005c]/10'
+                      : 'border-gray-200 hover:border-[#41005c]/50'
+                  }`}
+                >
+                  <div className={`w-10 h-10 rounded-full flex items-center justify-center ${
+                    profileData.gender === 'male' ? 'bg-[#41005c]' : 'bg-gray-100'
+                  }`}>
+                    <img src="/images/icons/profile-male.svg" alt="" className="w-8 h-8" />
+                  </div>
+                  <span className={`font-medium ${
+                    profileData.gender === 'male' ? 'text-[#41005c]' : 'text-gray-700'
+                  }`}>Homme</span>
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setProfileData({ ...profileData, gender: 'female' })}
+                  className={`flex-1 flex items-center justify-center gap-3 px-4 py-3 rounded-xl border-2 transition-all ${
+                    profileData.gender === 'female'
+                      ? 'border-[#f0879f] bg-[#f0879f]/10'
+                      : 'border-gray-200 hover:border-[#f0879f]/50'
+                  }`}
+                >
+                  <div className={`w-10 h-10 rounded-full flex items-center justify-center ${
+                    profileData.gender === 'female' ? 'bg-[#f0879f]' : 'bg-gray-100'
+                  }`}>
+                    <img src="/images/icons/profile-female.svg" alt="" className="w-8 h-8" />
+                  </div>
+                  <span className={`font-medium ${
+                    profileData.gender === 'female' ? 'text-[#f0879f]' : 'text-gray-700'
+                  }`}>Femme</span>
+                </button>
+              </div>
             </div>
 
             {/* CV Upload */}

@@ -53,15 +53,27 @@ export default function SubscriptionPage() {
       </div>
 
       <div className="flex-1 max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8 w-full">
-        {/* En-tête centré avec icône */}
-        <div className="mb-6 sm:mb-8 text-center">
-          <div className="w-16 h-16 mx-auto mb-4 rounded-full flex items-center justify-center" style={{ backgroundColor: '#41005c' }}>
-            <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+        {/* En-tête avec flèche retour */}
+        <div className="mb-5 sm:mb-8 lg:mb-10">
+          {/* Flèche retour - desktop uniquement */}
+          <button
+            onClick={() => router.back()}
+            className="flex items-center gap-2 text-gray-600 hover:text-gray-900 mb-4 transition-colors"
+            aria-label="Retour à la page précédente"
+          >
+            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
             </svg>
+            <span className="text-sm font-medium">Retour</span>
+          </button>
+
+          <div className="text-center">
+            <div className="w-14 h-14 sm:w-16 sm:h-16 lg:w-20 lg:h-20 mx-auto mb-3 sm:mb-4 rounded-full flex items-center justify-center p-1" style={{ backgroundColor: '#41005c' }}>
+              <img src="/images/icons/subscription.svg" alt="" className="w-full h-full" />
+            </div>
+            <h1 className="text-lg sm:text-2xl lg:text-3xl font-bold text-gray-900">Votre accès Premium</h1>
+            <p className="text-gray-500 text-xs sm:text-sm lg:text-base mt-1 lg:mt-2">Profitez de toutes les fonctionnalités sans abonnement</p>
           </div>
-          <h1 className="text-xl sm:text-2xl font-bold text-gray-900">Votre accès Premium</h1>
-          <p className="text-gray-500 text-sm mt-1">Profitez de toutes les fonctionnalités sans abonnement</p>
         </div>
 
         {/* Carte principale */}

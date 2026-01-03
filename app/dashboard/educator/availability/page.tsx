@@ -360,13 +360,27 @@ export default function EducatorAvailability() {
       </div>
 
       <div className="flex-1 max-w-3xl mx-auto px-3 sm:px-6 lg:px-8 py-4 sm:py-8 pb-24 sm:pb-8 w-full">
-        {/* En-tête centré avec icône */}
-        <div className="mb-5 sm:mb-8 text-center">
-          <div className="w-14 h-14 sm:w-16 sm:h-16 mx-auto mb-3 sm:mb-4 rounded-full flex items-center justify-center p-1" style={{ backgroundColor: '#41005c' }}>
-            <img src="/images/icons/clock.svg" alt="" className="w-full h-full" />
+        {/* En-tête avec flèche retour */}
+        <div className="mb-5 sm:mb-8">
+          {/* Flèche retour - desktop uniquement */}
+          <button
+            onClick={() => router.back()}
+            className="flex items-center gap-2 text-gray-600 hover:text-gray-900 mb-4 transition-colors"
+            aria-label="Retour à la page précédente"
+          >
+            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+            </svg>
+            <span className="text-sm font-medium">Retour</span>
+          </button>
+
+          <div className="text-center">
+            <div className="w-14 h-14 sm:w-16 sm:h-16 mx-auto mb-3 sm:mb-4 rounded-full flex items-center justify-center p-1" style={{ backgroundColor: '#41005c' }}>
+              <img src="/images/icons/clock.svg" alt="" className="w-full h-full" />
+            </div>
+            <h1 className="text-lg sm:text-2xl font-bold text-gray-900">Mes disponibilités</h1>
+            <p className="text-gray-500 text-xs sm:text-sm mt-1 px-2">Ajoutez vos créneaux pour que les familles puissent réserver</p>
           </div>
-          <h1 className="text-lg sm:text-2xl font-bold text-gray-900">Mes disponibilités</h1>
-          <p className="text-gray-500 text-xs sm:text-sm mt-1 px-2">Ajoutez vos créneaux pour que les familles puissent réserver</p>
         </div>
 
         {/* Messages */}
