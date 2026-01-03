@@ -8,7 +8,7 @@ import Link from 'next/link';
 import { supabase } from '@/lib/supabase';
 import FamilyNavbar from '@/components/FamilyNavbar';
 
-type AppointmentStatus = 'pending' | 'accepted' | 'rejected' | 'completed' | 'cancelled' | 'no_show';
+type AppointmentStatus = 'accepted' | 'completed' | 'cancelled' | 'no_show';
 
 interface Appointment {
   id: string;
@@ -36,7 +36,7 @@ export default function FamilyBookingsPage() {
   const [profile, setProfile] = useState<any>(null);
   const [familyId, setFamilyId] = useState<string | null>(null);
   const [userId, setUserId] = useState<string | null>(null);
-  const [activeFilter, setActiveFilter] = useState<'all' | 'pending' | 'upcoming' | 'past' | null>(null);
+  const [activeFilter, setActiveFilter] = useState<'all' | 'upcoming' | 'past' | null>(null);
   const [activeTab, setActiveTab] = useState<'appointments' | 'caregivers'>('appointments');
 
   // États pour le signalement no-show
@@ -48,7 +48,7 @@ export default function FamilyBookingsPage() {
   // États pour les avis
   const [reviewedAppointments, setReviewedAppointments] = useState<Set<string>>(new Set());
 
-  const selectFilter = (filter: 'all' | 'pending' | 'upcoming' | 'past') => {
+  const selectFilter = (filter: 'all' | 'upcoming' | 'past') => {
     setActiveFilter(prev => prev === filter ? null : filter);
   };
 
@@ -174,14 +174,13 @@ export default function FamilyBookingsPage() {
   const today = new Date();
   today.setHours(0, 0, 0, 0);
 
-  const pendingAppointments = appointments.filter(a => a.status === 'pending');
   const upcomingAppointments = appointments.filter(a => {
     const date = new Date(a.appointment_date);
     return a.status === 'accepted' && date >= today;
   });
   const pastAppointments = appointments.filter(a => {
     const date = new Date(a.appointment_date);
-    return a.status === 'completed' || (a.status === 'accepted' && date < today) || a.status === 'rejected' || a.status === 'cancelled';
+    return a.status === 'completed' || (a.status === 'accepted' && date < today) || a.status === 'cancelled';
   });
 
   // Extraire les professionnels uniques rencontrés (rendez-vous complétés ou passés acceptés)
@@ -236,14 +235,12 @@ export default function FamilyBookingsPage() {
 
   const getStatusConfig = (status: AppointmentStatus) => {
     const configs = {
-      pending: { bg: 'bg-amber-100', text: 'text-amber-800', label: 'En attente', icon: '⏳' },
       accepted: { bg: 'bg-emerald-100', text: 'text-emerald-800', label: 'Confirmé', icon: '✓' },
-      rejected: { bg: 'bg-red-100', text: 'text-red-800', label: 'Refusé', icon: '✗' },
       cancelled: { bg: 'bg-gray-100', text: 'text-gray-800', label: 'Annulé', icon: '−' },
       completed: { bg: 'bg-blue-100', text: 'text-blue-800', label: 'Terminé', icon: '✓' },
       no_show: { bg: 'bg-red-100', text: 'text-red-800', label: 'Non présenté', icon: '⚠' }
     };
-    return configs[status] || configs.pending;
+    return configs[status] || configs.accepted;
   };
 
   // Fonction pour signaler un no-show
@@ -464,22 +461,6 @@ export default function FamilyBookingsPage() {
         </div>
 
         {/* Actions */}
-        {appointment.status === 'pending' && (
-          <div className="mt-4 pt-3 border-t border-gray-100 flex gap-2">
-            <button
-              onClick={() => {
-                if (confirm('Annuler cette demande de rendez-vous ?')) {
-                  handleCancelAppointment(appointment.id, false);
-                }
-              }}
-              disabled={cancelLoading}
-              className="w-full px-3 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 text-sm font-medium transition disabled:opacity-50"
-            >
-              Annuler la demande
-            </button>
-          </div>
-        )}
-
         {appointment.status === 'accepted' && !isPast && (
           <div className="mt-4 pt-3 border-t border-gray-100 space-y-2">
             {/* Bouton Rejoindre vidéo - visible uniquement le jour du RDV, 15 min avant */}
@@ -617,6 +598,18 @@ export default function FamilyBookingsPage() {
       </div>
 
       <div className="flex-1 max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8 w-full">
+        {/* Flèche retour */}
+        <button
+          onClick={() => router.back()}
+          className="flex items-center gap-2 text-gray-600 hover:text-gray-900 mb-4 transition-colors"
+          aria-label="Retour à la page précédente"
+        >
+          <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+          </svg>
+          <span className="text-sm font-medium">Retour</span>
+        </button>
+
         {/* En-tête avec icône */}
         <div className="mb-6 sm:mb-8 text-center">
           <div className="w-16 h-16 mx-auto mb-4 rounded-full flex items-center justify-center p-1" style={{ backgroundColor: '#027e7e' }}>
@@ -671,7 +664,7 @@ export default function FamilyBookingsPage() {
         {activeTab === 'appointments' && (
           <>
         {/* Boutons de filtre */}
-        <div className="grid grid-cols-4 gap-3 mb-8">
+        <div className="grid grid-cols-3 gap-3 mb-8">
           {/* Tous */}
           <button
             onClick={() => appointments.length > 0 && selectFilter('all')}
@@ -686,22 +679,6 @@ export default function FamilyBookingsPage() {
           >
             <p className="text-2xl font-bold text-gray-700">{appointments.length}</p>
             <p className="text-xs text-gray-600 mt-1">Tous</p>
-          </button>
-
-          {/* En attente */}
-          <button
-            onClick={() => pendingAppointments.length > 0 && selectFilter('pending')}
-            disabled={pendingAppointments.length === 0}
-            className={`rounded-xl p-3 text-center transition-all ${
-              pendingAppointments.length === 0
-                ? 'bg-amber-50 opacity-60 cursor-not-allowed'
-                : activeFilter === 'pending'
-                  ? 'bg-amber-200 ring-2 ring-amber-500'
-                  : 'bg-amber-50 hover:bg-amber-100 cursor-pointer'
-            }`}
-          >
-            <p className="text-2xl font-bold text-amber-600">{pendingAppointments.length}</p>
-            <p className="text-xs text-amber-700 mt-1">En attente</p>
           </button>
 
           {/* À venir */}
@@ -775,23 +752,6 @@ export default function FamilyBookingsPage() {
           </div>
         ) : (
           <div className="space-y-8">
-            {/* Section: En attente */}
-            {(activeFilter === 'all' || activeFilter === 'pending') && pendingAppointments.length > 0 && (
-              <section>
-                <SectionHeader
-                  title="En attente de réponse"
-                  count={pendingAppointments.length}
-                  icon={<svg className="h-5 w-5 text-amber-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>}
-                  color="bg-amber-100"
-                />
-                <div className="space-y-3">
-                  {pendingAppointments.map(apt => (
-                    <AppointmentCard key={apt.id} appointment={apt} />
-                  ))}
-                </div>
-              </section>
-            )}
-
             {/* Section: À venir */}
             {(activeFilter === 'all' || activeFilter === 'upcoming') && upcomingAppointments.length > 0 && (
               <section>

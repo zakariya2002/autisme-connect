@@ -166,7 +166,7 @@ export default function BookAppointmentPage({ params }: { params: { id: string }
         .from('appointments')
         .select('appointment_date, start_time, end_time, status')
         .eq('educator_id', params.id)
-        .in('status', ['accepted', 'pending', 'in_progress'])
+        .in('status', ['accepted', 'in_progress'])
         .gte('appointment_date', today);
 
       if (appts) setAppointments(appts);

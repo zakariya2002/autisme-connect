@@ -106,7 +106,7 @@ export default function EducatorDashboard() {
       `)
       .eq('educator_id', educatorId)
       .gte('appointment_date', today)
-      .in('status', ['pending', 'accepted', 'confirmed'])
+      .in('status', ['accepted', 'confirmed'])
       .order('appointment_date', { ascending: true })
       .order('start_time', { ascending: true })
       .limit(5);
@@ -208,7 +208,7 @@ export default function EducatorDashboard() {
     },
     {
       href: '/dashboard/educator/diploma',
-      label: 'Mon diplôme',
+      label: 'Vérification',
       icon: '/images/icons/diploma.svg',
     },
     {
@@ -255,49 +255,51 @@ export default function EducatorDashboard() {
       </nav>
 
       {/* Bandeau de bienvenue */}
-      <div className="px-4 py-6 flex items-center gap-4" style={{ backgroundColor: '#5a1a75' }}>
-        {/* Avatar */}
-        <div className="w-14 h-14 rounded-full bg-white flex items-center justify-center overflow-hidden flex-shrink-0 shadow-md">
-          {profile?.avatar_url ? (
-            <img
-              src={profile.avatar_url}
-              alt=""
-              className="w-full h-full object-cover"
-            />
-          ) : (
-            <img
-              src={getProfileIcon()}
-              alt=""
-              className="w-full h-full object-cover"
-            />
-          )}
-        </div>
-
-        {/* Texte de bienvenue */}
-        <div className="flex-1">
-          <div className="flex items-center gap-2 flex-wrap">
-            <h1 className="text-xl font-bold text-white">
-              Bonjour {profile?.first_name || 'Professionnel'}
-            </h1>
-            {isPremium && (
-              <span className="inline-flex items-center gap-1 px-2 py-0.5 text-white text-xs font-bold rounded-full" style={{ backgroundColor: '#f0879f' }}>
-                <svg className="w-3 h-3" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
-                  <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-                </svg>
-                Premium
-              </span>
+      <div className="px-4 py-6 flex items-center justify-start lg:justify-center gap-4" style={{ backgroundColor: '#5a1a75' }}>
+        <div className="flex items-center gap-4 lg:flex-col lg:text-center">
+          {/* Avatar */}
+          <div className="w-14 h-14 lg:w-20 lg:h-20 rounded-full bg-white flex items-center justify-center overflow-hidden flex-shrink-0 shadow-md">
+            {profile?.avatar_url ? (
+              <img
+                src={profile.avatar_url}
+                alt=""
+                className="w-full h-full object-cover"
+              />
+            ) : (
+              <img
+                src={getProfileIcon()}
+                alt=""
+                className="w-full h-full object-cover"
+              />
             )}
           </div>
-          <p className="text-white/80 text-sm mt-0.5">
-            {getProfessionByValue(profile?.profession_type)?.label || 'Professionnel'}
-          </p>
+
+          {/* Texte de bienvenue */}
+          <div>
+            <div className="flex items-center gap-2 flex-wrap lg:justify-center">
+              <h1 className="text-xl lg:text-2xl font-bold text-white">
+                Bonjour {profile?.first_name || 'Professionnel'}
+              </h1>
+              {isPremium && (
+                <span className="inline-flex items-center gap-1 px-2 py-0.5 text-white text-xs font-bold rounded-full" style={{ backgroundColor: '#f0879f' }}>
+                  <svg className="w-3 h-3" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
+                    <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                  </svg>
+                  Premium
+                </span>
+              )}
+            </div>
+            <p className="text-white/80 text-sm mt-0.5">
+              {getProfessionByValue(profile?.profession_type)?.label || 'Professionnel'}
+            </p>
+          </div>
         </div>
       </div>
 
-      <div className="flex-1 pb-8">
+      <div className="flex-1 pb-8 lg:max-w-5xl lg:mx-auto lg:w-full lg:px-8">
         {/* Message de succès après paiement */}
         {showSuccessMessage && (
-          <div className="mx-4 mt-4 bg-green-50 border border-green-200 rounded-xl p-4" role="status" aria-live="polite">
+          <div className="mx-4 lg:mx-0 mt-4 bg-green-50 border border-green-200 rounded-xl p-4" role="status" aria-live="polite">
             <div className="flex items-start gap-3">
               <div className="flex-shrink-0">
                 <svg className="h-6 w-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
@@ -327,7 +329,7 @@ export default function EducatorDashboard() {
 
         {/* Message de synchronisation */}
         {syncingSubscription && (
-          <div className="mx-4 mt-4 bg-blue-50 border border-blue-200 rounded-xl p-4 flex items-center gap-3" role="status" aria-live="polite">
+          <div className="mx-4 lg:mx-0 mt-4 bg-blue-50 border border-blue-200 rounded-xl p-4 flex items-center gap-3" role="status" aria-live="polite">
             <div className="animate-spin h-5 w-5 border-2 border-blue-600 border-t-transparent rounded-full" aria-hidden="true"></div>
             <p className="text-blue-800 font-medium">
               Synchronisation de votre abonnement en cours...
@@ -337,7 +339,7 @@ export default function EducatorDashboard() {
 
         {/* Alerte si profil non vérifié */}
         {profile && !profile.verification_badge && (
-          <div className="mx-4 mt-4 bg-gradient-to-r from-amber-50 to-yellow-50 border-2 border-amber-200 rounded-xl p-4" role="alert">
+          <div className="mx-4 lg:mx-0 mt-4 bg-gradient-to-r from-amber-50 to-yellow-50 border-2 border-amber-200 rounded-xl p-4" role="alert">
             <div className="flex items-start gap-3">
               <div className="w-10 h-10 bg-amber-400 rounded-lg flex items-center justify-center flex-shrink-0" aria-hidden="true">
                 <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -352,7 +354,7 @@ export default function EducatorDashboard() {
                   Complétez la vérification pour être visible des familles.
                 </p>
                 <Link
-                  href="/dashboard/educator/verification"
+                  href="/dashboard/educator/diploma"
                   className="inline-flex items-center gap-1 px-3 py-1.5 bg-amber-500 text-white rounded-lg hover:bg-amber-600 font-semibold text-xs transition"
                 >
                   <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
@@ -366,7 +368,7 @@ export default function EducatorDashboard() {
         )}
 
         {/* Section Mes prochains rendez-vous */}
-        <div className="mt-6 px-4">
+        <div className="mt-6 lg:mt-8 px-4 lg:px-0">
           <h2 className="text-lg font-bold text-gray-900 mb-3">Mes prochains rendez-vous</h2>
 
           {upcomingAppointments.length > 0 ? (
@@ -457,7 +459,7 @@ export default function EducatorDashboard() {
         </div>
 
         {/* Section Mon compte */}
-        <div className="mt-6 mx-4 bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
+        <div className="mt-6 lg:mt-8 mx-4 lg:mx-0 bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
           <div className="px-4 py-3 border-b border-gray-100">
             <h2 className="text-lg font-bold text-gray-900">Mon compte</h2>
           </div>

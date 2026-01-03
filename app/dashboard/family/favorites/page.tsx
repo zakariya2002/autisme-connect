@@ -140,8 +140,22 @@ export default function FavoritesPage() {
         <FamilyNavbar profile={profile} familyId={familyId} userId={userId} />
       </div>
 
+      {/* Flèche retour */}
+      <div className="max-w-4xl mx-auto px-4 pt-6">
+        <button
+          onClick={() => router.back()}
+          className="flex items-center gap-2 text-gray-600 hover:text-gray-900 transition-colors"
+          aria-label="Retour à la page précédente"
+        >
+          <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+          </svg>
+          <span className="text-sm font-medium">Retour</span>
+        </button>
+      </div>
+
       {/* Section Titre */}
-      <section className="py-8 sm:py-12 px-4">
+      <section className="py-6 sm:py-10 px-4">
         <div className="max-w-4xl mx-auto text-center">
           <div className="w-16 h-16 mx-auto mb-6 rounded-full flex items-center justify-center" style={{ backgroundColor: '#f0879f' }}>
             <svg className="w-8 h-8 text-white" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">

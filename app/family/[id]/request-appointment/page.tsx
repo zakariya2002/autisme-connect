@@ -119,7 +119,7 @@ export default function RequestAppointmentPage({ params }: { params: { id: strin
         .from('appointments')
         .select('appointment_date, start_time, end_time, status')
         .eq('educator_id', educatorId)
-        .in('status', ['pending', 'confirmed']);
+        .in('status', ['accepted', 'confirmed']);
 
       setAppointments(existingAppointments || []);
     } catch (err) {

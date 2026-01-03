@@ -107,7 +107,7 @@ export default function FamilyDashboard() {
       `)
       .eq('family_id', fId)
       .gte('appointment_date', today)
-      .in('status', ['pending', 'accepted', 'confirmed'])
+      .in('status', ['accepted', 'confirmed'])
       .order('appointment_date', { ascending: true })
       .order('start_time', { ascending: true })
       .limit(5);

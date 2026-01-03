@@ -341,13 +341,25 @@ export default function FamilyMessagesPage() {
       </div>
 
       <div className="flex-1 overflow-hidden flex flex-col">
-        {/* En-tête avec icône - visible uniquement sur mobile quand on voit la liste */}
+        {/* Flèche retour et en-tête avec icône - visible uniquement sur mobile quand on voit la liste */}
         {showConversationList && (
-          <div className="lg:hidden text-center py-4 px-4">
-            <div className="w-14 h-14 mx-auto mb-2 rounded-full flex items-center justify-center p-1" style={{ backgroundColor: '#027e7e' }}>
-              <img src="/images/icons/5.svg" alt="" className="w-full h-full" />
+          <div className="lg:hidden py-4 px-4">
+            <button
+              onClick={() => router.back()}
+              className="flex items-center gap-2 text-gray-600 hover:text-gray-900 mb-3 transition-colors"
+              aria-label="Retour à la page précédente"
+            >
+              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+              </svg>
+              <span className="text-sm font-medium">Retour</span>
+            </button>
+            <div className="text-center">
+              <div className="w-14 h-14 mx-auto mb-2 rounded-full flex items-center justify-center p-1" style={{ backgroundColor: '#027e7e' }}>
+                <img src="/images/icons/5.svg" alt="" className="w-full h-full" />
+              </div>
+              <h1 className="text-lg font-bold text-gray-900">Mes messages</h1>
             </div>
-            <h1 className="text-lg font-bold text-gray-900">Mes messages</h1>
           </div>
         )}
 

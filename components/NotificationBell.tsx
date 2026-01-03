@@ -145,43 +145,7 @@ export default function NotificationBell({ educatorId, userId, position = 'right
         });
       }
 
-      // 3. Rendez-vous en attente (nouvelles demandes)
-      const { data: pendingAppointments, error: aptError } = await supabase
-        .from('appointments')
-        .select(`
-          id,
-          appointment_date,
-          start_time,
-          created_at,
-          family:family_profiles(first_name, last_name)
-        `)
-        .eq('educator_id', educatorId)
-        .eq('status', 'pending')
-        .order('created_at', { ascending: false })
-        .limit(5);
-
-      if (!aptError && pendingAppointments) {
-        pendingAppointments.forEach((apt: any) => {
-          const familyName = apt.family ?
-            `${apt.family.first_name || ''} ${apt.family.last_name || ''}`.trim() :
-            'Une famille';
-          const date = new Date(apt.appointment_date).toLocaleDateString('fr-FR', {
-            day: 'numeric',
-            month: 'short'
-          });
-          notifs.push({
-            id: `apt-${apt.id}`,
-            type: 'appointment',
-            title: 'Demande de rendez-vous',
-            description: `${familyName} - ${date} à ${apt.start_time?.substring(0, 5)}`,
-            link: '/dashboard/educator/appointments?tab=pending',
-            time: formatTime(apt.created_at),
-            read: false,
-          });
-        });
-      }
-
-      // 4. Nouvelles factures (dernières 24h)
+      // 3. Nouvelles factures (dernières 24h)
       const yesterday = new Date();
       yesterday.setDate(yesterday.getDate() - 1);
 

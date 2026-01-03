@@ -233,26 +233,29 @@ export default function FamilyProfilePage() {
         <FamilyNavbar profile={profile} familyId={familyId} userId={userId} />
       </div>
 
-      {/* Bandeau de bienvenue */}
-      <div className="px-4 py-6 flex items-center gap-4" style={{ backgroundColor: '#05a5a5' }}>
-        <div className="w-14 h-14 rounded-full bg-white flex items-center justify-center overflow-hidden flex-shrink-0 shadow-md">
-          {profile?.avatar_url ? (
-            <img src={profile.avatar_url} alt="" className="w-full h-full object-cover" />
-          ) : (
-            <img
-              src={profile?.gender === 'male' ? '/images/icons/avatar-male.svg' : profile?.gender === 'female' ? '/images/icons/avatar-female.svg' : ((profile?.id?.charCodeAt(0) || 0) % 2 === 0 ? '/images/icons/avatar-male.svg' : '/images/icons/avatar-female.svg')}
-              alt=""
-              className="w-full h-full object-cover"
-            />
-          )}
-        </div>
-        <div>
-          <h1 className="text-xl font-bold text-white">Mon profil</h1>
-          <p className="text-white/80 text-sm">Gérez vos informations et préférences</p>
-        </div>
-      </div>
+      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8">
+        {/* En-tête avec flèche retour */}
+        <div className="mb-6 sm:mb-8">
+          {/* Flèche retour */}
+          <button
+            onClick={() => router.back()}
+            className="flex items-center gap-2 text-gray-600 hover:text-gray-900 mb-4 transition-colors"
+            aria-label="Retour à la page précédente"
+          >
+            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+            </svg>
+            <span className="text-sm font-medium">Retour</span>
+          </button>
 
-      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+          <div className="text-center">
+            <div className="w-16 h-16 mx-auto mb-4 rounded-full flex items-center justify-center p-1" style={{ backgroundColor: profileData.gender === 'female' ? '#f0879f' : '#027e7e' }}>
+              <img src={profileData.gender === 'female' ? '/images/icons/profile-female.svg' : '/images/icons/profile-male.svg'} alt="" className="w-full h-full" />
+            </div>
+            <h1 className="text-xl sm:text-2xl font-bold text-gray-900">Mon profil</h1>
+            <p className="text-gray-500 text-sm mt-1">Gérez vos informations et préférences</p>
+          </div>
+        </div>
 
         {error && (
           <div
@@ -325,30 +328,58 @@ export default function FamilyProfilePage() {
               </div>
             </div>
 
-            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">Sexe</label>
-                <select
-                  value={profileData.gender}
-                  onChange={(e) => setProfileData({ ...profileData, gender: e.target.value })}
-                  className="w-full border border-gray-300 rounded-lg shadow-sm py-3 px-4 focus:ring-2 focus:outline-none focus:border-transparent"
-                  style={{ '--tw-ring-color': '#027e7e' } as any}
+            {/* Sélection du genre */}
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-3">Genre</label>
+              <div className="flex gap-3">
+                <button
+                  type="button"
+                  onClick={() => setProfileData({ ...profileData, gender: 'male' })}
+                  className={`flex-1 flex items-center justify-center gap-3 px-4 py-3 rounded-xl border-2 transition-all ${
+                    profileData.gender === 'male'
+                      ? 'border-[#027e7e] bg-[#027e7e]/10'
+                      : 'border-gray-200 hover:border-[#027e7e]/50'
+                  }`}
                 >
-                  <option value="">Non spécifié</option>
-                  <option value="male">Homme</option>
-                  <option value="female">Femme</option>
-                </select>
+                  <div className={`w-10 h-10 rounded-full flex items-center justify-center ${
+                    profileData.gender === 'male' ? 'bg-[#027e7e]' : 'bg-gray-100'
+                  }`}>
+                    <img src="/images/icons/profile-male.svg" alt="" className="w-8 h-8" />
+                  </div>
+                  <span className={`font-medium ${
+                    profileData.gender === 'male' ? 'text-[#027e7e]' : 'text-gray-700'
+                  }`}>Homme</span>
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setProfileData({ ...profileData, gender: 'female' })}
+                  className={`flex-1 flex items-center justify-center gap-3 px-4 py-3 rounded-xl border-2 transition-all ${
+                    profileData.gender === 'female'
+                      ? 'border-[#f0879f] bg-[#f0879f]/10'
+                      : 'border-gray-200 hover:border-[#f0879f]/50'
+                  }`}
+                >
+                  <div className={`w-10 h-10 rounded-full flex items-center justify-center ${
+                    profileData.gender === 'female' ? 'bg-[#f0879f]' : 'bg-gray-100'
+                  }`}>
+                    <img src="/images/icons/profile-female.svg" alt="" className="w-8 h-8" />
+                  </div>
+                  <span className={`font-medium ${
+                    profileData.gender === 'female' ? 'text-[#f0879f]' : 'text-gray-700'
+                  }`}>Femme</span>
+                </button>
               </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">Téléphone</label>
-                <input
-                  type="tel"
-                  value={profileData.phone}
-                  onChange={(e) => setProfileData({ ...profileData, phone: e.target.value })}
-                  className="w-full border border-gray-300 rounded-lg shadow-sm py-3 px-4 focus:ring-2 focus:outline-none focus:border-transparent"
-                  style={{ '--tw-ring-color': '#027e7e' } as any}
-                />
-              </div>
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">Téléphone</label>
+              <input
+                type="tel"
+                value={profileData.phone}
+                onChange={(e) => setProfileData({ ...profileData, phone: e.target.value })}
+                className="w-full border border-gray-300 rounded-lg shadow-sm py-3 px-4 focus:ring-2 focus:outline-none focus:border-transparent"
+                style={{ '--tw-ring-color': '#027e7e' } as any}
+              />
             </div>
 
             {/* Paramètres de confidentialité */}

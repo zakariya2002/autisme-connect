@@ -11,7 +11,7 @@ import EducatorMobileMenu from '@/components/EducatorMobileMenu';
 import FamilyMobileMenu from '@/components/FamilyMobileMenu';
 import Logo from '@/components/Logo';
 
-type AppointmentStatus = 'pending' | 'accepted' | 'rejected' | 'completed' | 'cancelled' | 'no_show';
+type AppointmentStatus = 'accepted' | 'rejected' | 'completed' | 'cancelled' | 'no_show';
 
 interface Appointment {
   id: string;
@@ -43,7 +43,7 @@ export default function AppointmentsPage() {
   const [loading, setLoading] = useState(true);
   const [userProfile, setUserProfile] = useState<any>(null);
   const [subscription, setSubscription] = useState<any>(null);
-  const [activeFilter, setActiveFilter] = useState<'all' | 'pending' | 'upcoming' | 'past' | null>(null);
+  const [activeFilter, setActiveFilter] = useState<'all' | 'upcoming' | 'past' | null>(null);
 
   // États pour le signalement no-show
   const [showReportModal, setShowReportModal] = useState(false);
@@ -51,7 +51,7 @@ export default function AppointmentsPage() {
   const [reportDescription, setReportDescription] = useState('');
   const [reportLoading, setReportLoading] = useState(false);
 
-  const selectFilter = (filter: 'all' | 'pending' | 'upcoming' | 'past') => {
+  const selectFilter = (filter: 'all' | 'upcoming' | 'past') => {
     setActiveFilter(prev => prev === filter ? null : filter);
   };
 
@@ -170,7 +170,6 @@ export default function AppointmentsPage() {
   const today = new Date();
   today.setHours(0, 0, 0, 0);
 
-  const pendingAppointments = appointments.filter(a => a.status === 'pending');
   const upcomingAppointments = appointments.filter(a => {
     const date = new Date(a.appointment_date);
     return a.status === 'accepted' && date >= today;
@@ -182,14 +181,13 @@ export default function AppointmentsPage() {
 
   const getStatusConfig = (status: AppointmentStatus) => {
     const configs = {
-      pending: { bg: 'bg-amber-100', text: 'text-amber-800', label: 'En attente', icon: '⏳' },
       accepted: { bg: 'bg-emerald-100', text: 'text-emerald-800', label: 'Confirmé', icon: '✓' },
       rejected: { bg: 'bg-red-100', text: 'text-red-800', label: 'Refusé', icon: '✗' },
       cancelled: { bg: 'bg-gray-100', text: 'text-gray-800', label: 'Annulé', icon: '−' },
       completed: { bg: 'bg-blue-100', text: 'text-blue-800', label: 'Terminé', icon: '✓' },
       no_show: { bg: 'bg-red-100', text: 'text-red-800', label: 'Non présenté', icon: '⚠' }
     };
-    return configs[status] || configs.pending;
+    return configs[status] || configs.accepted;
   };
 
   // Fonction pour signaler un no-show
@@ -337,40 +335,6 @@ export default function AppointmentsPage() {
         </div>
 
         {/* Actions */}
-        {appointment.status === 'pending' && (
-          <div className="mt-4 pt-3 border-t border-gray-100 flex gap-2">
-            {isEducator ? (
-              <>
-                <button
-                  onClick={() => updateAppointmentStatus(appointment.id, 'accepted')}
-                  className="flex-1 px-3 py-2 bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 text-sm font-medium transition flex items-center justify-center gap-1"
-                >
-                  <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                  </svg>
-                  Accepter
-                </button>
-                <button
-                  onClick={() => updateAppointmentStatus(appointment.id, 'rejected')}
-                  className="flex-1 px-3 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 text-sm font-medium transition flex items-center justify-center gap-1"
-                >
-                  <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                  </svg>
-                  Refuser
-                </button>
-              </>
-            ) : (
-              <button
-                onClick={() => updateAppointmentStatus(appointment.id, 'cancelled')}
-                className="w-full px-3 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 text-sm font-medium transition"
-              >
-                Annuler la demande
-              </button>
-            )}
-          </div>
-        )}
-
         {appointment.status === 'accepted' && !isPast && (
           <div className="mt-4 pt-3 border-t border-gray-100 space-y-2">
             {isEducator && (
@@ -498,7 +462,7 @@ export default function AppointmentsPage() {
         </div>
 
         {/* Boutons de filtre */}
-        <div className="grid grid-cols-4 gap-3 mb-8">
+        <div className="grid grid-cols-3 gap-3 mb-8">
           {/* Tous */}
           <button
             onClick={() => appointments.length > 0 && selectFilter('all')}
@@ -513,22 +477,6 @@ export default function AppointmentsPage() {
           >
             <p className="text-2xl font-bold text-gray-700">{appointments.length}</p>
             <p className="text-xs text-gray-600 mt-1">Tous</p>
-          </button>
-
-          {/* En attente */}
-          <button
-            onClick={() => pendingAppointments.length > 0 && selectFilter('pending')}
-            disabled={pendingAppointments.length === 0}
-            className={`rounded-xl p-3 text-center transition-all ${
-              pendingAppointments.length === 0
-                ? 'bg-amber-50 opacity-60 cursor-not-allowed'
-                : activeFilter === 'pending'
-                  ? 'bg-amber-200 ring-2 ring-amber-500'
-                  : 'bg-amber-50 hover:bg-amber-100 cursor-pointer'
-            }`}
-          >
-            <p className="text-2xl font-bold text-amber-600">{pendingAppointments.length}</p>
-            <p className="text-xs text-amber-700 mt-1">En attente</p>
           </button>
 
           {/* À venir */}
@@ -602,23 +550,6 @@ export default function AppointmentsPage() {
           </div>
         ) : (
           <div className="space-y-8">
-            {/* Section: En attente */}
-            {(activeFilter === 'all' || activeFilter === 'pending') && pendingAppointments.length > 0 && (
-              <section>
-                <SectionHeader
-                  title="En attente de réponse"
-                  count={pendingAppointments.length}
-                  icon={<svg className="h-5 w-5 text-amber-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>}
-                  color="bg-amber-100"
-                />
-                <div className="space-y-3">
-                  {pendingAppointments.map(apt => (
-                    <AppointmentCard key={apt.id} appointment={apt} />
-                  ))}
-                </div>
-              </section>
-            )}
-
             {/* Section: À venir */}
             {(activeFilter === 'all' || activeFilter === 'upcoming') && upcomingAppointments.length > 0 && (
               <section>

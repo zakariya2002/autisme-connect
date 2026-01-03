@@ -38,7 +38,7 @@ export async function POST(
     }
 
     // Vérifier que le RDV peut être annulé
-    if (!['pending', 'accepted'].includes(appointment.status)) {
+    if (appointment.status !== 'accepted') {
       return NextResponse.json(
         { error: 'Ce rendez-vous ne peut plus être annulé' },
         { status: 400 }
