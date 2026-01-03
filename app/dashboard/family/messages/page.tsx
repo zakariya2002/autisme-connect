@@ -368,6 +368,17 @@ export default function FamilyMessagesPage() {
             {/* Liste des conversations */}
             <div className={`w-full lg:w-1/3 border-r border-gray-100 flex flex-col ${selectedConversation && !showConversationList ? 'hidden lg:flex' : 'flex'}`}>
               <div className="p-4 border-b border-gray-100 hidden lg:block">
+                {/* Flèche retour desktop */}
+                <button
+                  onClick={() => router.back()}
+                  className="flex items-center gap-2 text-gray-600 hover:text-gray-900 mb-3 transition-colors"
+                  aria-label="Retour à la page précédente"
+                >
+                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+                  </svg>
+                  <span className="text-sm font-medium">Retour</span>
+                </button>
                 <div className="flex items-center gap-3">
                   <div className="w-10 h-10 rounded-full flex items-center justify-center p-0.5" style={{ backgroundColor: '#027e7e' }}>
                     <img src="/images/icons/5.svg" alt="" className="w-full h-full" />
