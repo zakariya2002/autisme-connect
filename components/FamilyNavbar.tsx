@@ -21,12 +21,17 @@ export default function FamilyNavbar({ profile, familyId, userId }: FamilyNavbar
     <nav className="z-40 flex-shrink-0" style={{ backgroundColor: '#027e7e' }}>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between h-14 xl:h-16 items-center relative">
-          {/* Menu mobile - hamburger à gauche (caché sur desktop) */}
-          <div className="flex items-center gap-2 md:hidden">
+          {/* Mobile: Hamburger à gauche */}
+          <div className="flex items-center md:hidden">
             <FamilyMobileMenu profile={profile} onLogout={handleLogout} />
           </div>
-          {/* Espace vide pour équilibrer sur desktop */}
-          <div className="hidden md:block w-24"></div>
+
+          {/* Desktop: Notifications à gauche */}
+          <div className="hidden md:flex items-center">
+            {familyId && userId && (
+              <FamilyNotificationBell familyId={familyId} userId={userId} />
+            )}
+          </div>
 
           {/* Logo centré */}
           <Link href="/dashboard/family" className="absolute left-1/2 transform -translate-x-1/2">
@@ -37,11 +42,14 @@ export default function FamilyNavbar({ profile, familyId, userId }: FamilyNavbar
             />
           </Link>
 
-          {/* Notifications à droite */}
+          {/* Droite: Notifications mobile + Déconnexion desktop */}
           <div className="flex items-center gap-2">
-            {familyId && userId && (
-              <FamilyNotificationBell familyId={familyId} userId={userId} />
-            )}
+            {/* Mobile: Notifications à droite */}
+            <div className="md:hidden">
+              {familyId && userId && (
+                <FamilyNotificationBell familyId={familyId} userId={userId} />
+              )}
+            </div>
             {/* Bouton déconnexion desktop */}
             <button
               onClick={handleLogout}
