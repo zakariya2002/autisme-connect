@@ -215,12 +215,8 @@ export default function FavoritesPage() {
             {favorites.map((favorite) => (
               <div
                 key={favorite.id}
-                className="bg-white rounded-2xl shadow-md hover:shadow-lg transition-all duration-300 border border-gray-100 overflow-hidden group hover:-translate-y-1 relative cursor-pointer sm:cursor-default"
-                onClick={(e) => {
-                  if (window.innerWidth < 640) {
-                    router.push(`/educator/${favorite.educator.id}`);
-                  }
-                }}
+                className="bg-white rounded-2xl shadow-md hover:shadow-lg transition-all duration-300 border border-gray-100 overflow-hidden group hover:-translate-y-1 relative cursor-pointer"
+                onClick={() => router.push(`/educator/${favorite.educator.id}`)}
               >
                 {/* Bouton retirer - position absolue en haut à droite */}
                 <div className="absolute top-4 right-4 z-10">
@@ -244,7 +240,7 @@ export default function FavoritesPage() {
                   </button>
                 </div>
 
-                <div className="p-4 sm:p-6 pr-14 sm:pr-6">
+                <div className="p-4 sm:p-6 pr-14">
                   <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-3 sm:gap-4">
                     <div className="flex gap-3 sm:gap-5">
                       {/* Avatar */}
@@ -346,21 +342,6 @@ export default function FavoritesPage() {
                           )}
                         </div>
                       </div>
-                    </div>
-
-                    {/* Actions desktop */}
-                    <div className="hidden sm:flex sm:flex-col gap-3 sm:ml-4">
-                      <Link
-                        href={`/educator/${favorite.educator.id}`}
-                        onClick={(e) => e.stopPropagation()}
-                        className="inline-flex items-center justify-center gap-2 px-5 py-3 text-white rounded-xl hover:opacity-90 text-center text-sm sm:text-base font-bold shadow-md hover:shadow-lg transition-all whitespace-nowrap group/btn"
-                        style={{ backgroundColor: '#027e7e' }}
-                      >
-                        <svg className="w-5 h-5 group-hover/btn:scale-110 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-                        </svg>
-                        Voir le profil
-                      </Link>
                     </div>
                   </div>
                 </div>
