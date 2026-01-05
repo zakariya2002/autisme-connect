@@ -124,7 +124,7 @@ export async function generateEducatorInvoicePDF(data: InvoiceData): Promise<Buf
         .fontSize(9)
         .fillColor(grayColor)
         .font('Helvetica')
-        .text('www.neuro-care.fr', 400, 85, { width: 145, align: 'right' });
+        .text('neuro-care.fr', 400, 85, { width: 145, align: 'right' });
 
       // Ligne séparatrice
       doc
@@ -433,7 +433,7 @@ export async function generateFamilyReceiptPDF(data: InvoiceData): Promise<Buffe
         .fontSize(9)
         .fillColor(grayColor)
         .font('Helvetica')
-        .text('www.neuro-care.fr', 400, 70, { width: 150, align: 'right' });
+        .text('neuro-care.fr', 400, 70, { width: 150, align: 'right' });
 
       // Ligne séparatrice
       doc
@@ -733,7 +733,7 @@ export async function generateFamilyReceiptPDF(data: InvoiceData): Promise<Buffe
       doc.text('Conservez ce document pour vos démarches administratives et fiscales.', 50, y, { align: 'center', width: 500 });
 
       y += 10;
-      doc.text('Contact: contact@neuro-care.fr | www.neuro-care.fr', 50, y, { align: 'center', width: 500 });
+      doc.text('Contact: contact@neuro-care.fr | neuro-care.fr', 50, y, { align: 'center', width: 500 });
 
       doc.end();
     } catch (error) {

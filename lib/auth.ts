@@ -80,7 +80,7 @@ export async function getUserRole(): Promise<UserRole | null> {
 }
 
 export async function resetPassword(email: string) {
-  const baseUrl = typeof window !== 'undefined' ? window.location.origin : 'https://www.neuro-care.fr';
+  const baseUrl = typeof window !== 'undefined' ? window.location.origin : 'https://neuro-care.fr';
 
   const response = await fetch(`${baseUrl}/api/auth/reset-password`, {
     method: 'POST',

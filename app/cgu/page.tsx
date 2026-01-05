@@ -26,7 +26,7 @@ export default function CGU() {
               <p>
                 Les présentes Conditions Générales d'Utilisation (CGU) ont pour objet de définir les
                 modalités d'accès et d'utilisation de la plateforme NeuroCare, accessible à
-                l'adresse https://www.neuro-care.fr
+                l'adresse https://neuro-care.fr
               </p>
               <p>
                 NeuroCare est une plateforme de mise en relation entre les familles ayant un

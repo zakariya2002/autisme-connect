@@ -77,7 +77,7 @@ export function getPremiumWelcomeEmail(firstName: string): string {
               <table role="presentation" style="margin: 0 auto 30px auto;">
                 <tr>
                   <td style="border-radius: 8px; background: linear-gradient(135deg, #027e7e 0%, #05a5a5 100%); box-shadow: 0 4px 12px rgba(2, 126, 126, 0.3);">
-                    <a href="https://www.neuro-care.fr/dashboard/educator"
+                    <a href="https://neuro-care.fr/dashboard/educator"
                        style="display: inline-block; padding: 16px 40px; color: #ffffff; text-decoration: none; font-weight: bold; font-size: 16px;">
                       ⭐ Découvrir mon statut Premium
                     </a>
@@ -105,7 +105,7 @@ export function getPremiumWelcomeEmail(firstName: string): string {
                 Vous recevez cet email car vous êtes devenu membre Premium
               </p>
               <p style="margin: 0 0 15px 0; font-size: 13px; color: #666666;">
-                Gérez votre abonnement dans <a href="https://www.neuro-care.fr/dashboard/educator/subscription" style="color: #027e7e; text-decoration: underline; font-weight: 600;">votre espace</a>
+                Gérez votre abonnement dans <a href="https://neuro-care.fr/dashboard/educator/subscription" style="color: #027e7e; text-decoration: underline; font-weight: 600;">votre espace</a>
               </p>
               <p style="margin: 0; font-size: 14px; color: #888888;">
                 © 2025 <span style="color: #027e7e; font-weight: 600;">neurocare Pro</span> - Tous droits réservés

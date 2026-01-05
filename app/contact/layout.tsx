@@ -6,7 +6,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: 'Contact | NeuroCare',
     description: 'Contactez l\'équipe NeuroCare. Une question ? Un besoin d\'accompagnement ? Nous vous répondons sous 24h.',
-    url: 'https://www.neuro-care.fr/contact',
+    url: 'https://neuro-care.fr/contact',
   },
   alternates: {
     canonical: '/contact',

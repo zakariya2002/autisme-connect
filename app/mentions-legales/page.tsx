@@ -24,7 +24,7 @@ export default function MentionsLegales() {
             <h2 className="text-xl font-semibold text-gray-900 mb-4">1. Éditeur du site</h2>
             <div className="text-gray-600 space-y-2">
               <p><strong>Nom du site :</strong> NeuroCare</p>
-              <p><strong>URL :</strong> https://www.neuro-care.fr</p>
+              <p><strong>URL :</strong> https://neuro-care.fr</p>
               <p><strong>Statut juridique :</strong> Auto-entrepreneur</p>
               <p><strong>Nom du responsable :</strong> [Votre nom complet]</p>
               <p><strong>Adresse :</strong> [Votre adresse]</p>

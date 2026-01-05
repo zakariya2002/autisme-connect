@@ -6,7 +6,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: 'Tarifs Éducateurs | NeuroCare',
     description: 'Découvrez nos offres pour les éducateurs spécialisés. Offre découverte gratuite ou offre Pro à 29€/mois.',
-    url: 'https://www.neuro-care.fr/pricing',
+    url: 'https://neuro-care.fr/pricing',
   },
   alternates: {
     canonical: '/pricing',

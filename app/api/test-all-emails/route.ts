@@ -25,7 +25,7 @@ export async function GET(request: Request) {
       from: fromEmail,
       to: email,
       subject: '1️⃣ Test - Bienvenue Professionnel (avec confirmation)',
-      html: getEducatorWelcomeEmail('Zakariya', 'https://www.neuro-care.fr/auth/confirm?token=test'),
+      html: getEducatorWelcomeEmail('Zakariya', 'https://neuro-care.fr/auth/confirm?token=test'),
     });
     results.push({ template: 'educator-welcome', success: !error, id: data?.id, error });
   } catch (e: any) {
@@ -41,7 +41,7 @@ export async function GET(request: Request) {
       from: fromEmail,
       to: email,
       subject: '2️⃣ Test - Bienvenue Famille (avec confirmation)',
-      html: getFamilyWelcomeEmail('Zakariya', 'https://www.neuro-care.fr/auth/confirm?token=test'),
+      html: getFamilyWelcomeEmail('Zakariya', 'https://neuro-care.fr/auth/confirm?token=test'),
     });
     results.push({ template: 'family-welcome', success: !error, id: data?.id, error });
   } catch (e: any) {

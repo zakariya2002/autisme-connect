@@ -6,7 +6,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: 'Trouver un professionnel spécialisé | NeuroCare',
     description: 'Recherchez et trouvez un éducateur spécialisé en autisme près de chez vous. Filtrez par localisation, certifications et disponibilités.',
-    url: 'https://www.neuro-care.fr/search',
+    url: 'https://neuro-care.fr/search',
   },
   alternates: {
     canonical: '/search',

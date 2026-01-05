@@ -17,7 +17,7 @@ async function testProEmails() {
       from: 'neurocare Pro <admin@neuro-care.fr>',
       to: [email],
       subject: `Confirmez votre email - Bienvenue sur neurocare Pro, ${firstName} !`,
-      html: getEducatorWelcomeEmail(firstName, 'https://www.neuro-care.fr/auth/confirm?token=test123'),
+      html: getEducatorWelcomeEmail(firstName, 'https://neuro-care.fr/auth/confirm?token=test123'),
     });
     if (error) {
       console.log('❌ Échec', error);

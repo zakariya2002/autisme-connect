@@ -6,7 +6,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: 'Connexion | NeuroCare',
     description: 'Connectez-vous à votre espace NeuroCare. Accédez à votre tableau de bord famille ou éducateur.',
-    url: 'https://www.neuro-care.fr/auth/login',
+    url: 'https://neuro-care.fr/auth/login',
   },
   alternates: {
     canonical: '/auth/login',

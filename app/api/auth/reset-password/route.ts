@@ -93,7 +93,7 @@ export async function POST(request: Request) {
     }
 
     // Créer le lien de réinitialisation
-    const baseUrl = (process.env.NEXT_PUBLIC_APP_URL || 'https://www.neuro-care.fr').trim();
+    const baseUrl = (process.env.NEXT_PUBLIC_APP_URL || 'https://neuro-care.fr').trim();
     const resetUrl = `${baseUrl}/auth/reset-password?token=${token}`;
 
     // Envoyer l'email
