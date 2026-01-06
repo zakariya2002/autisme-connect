@@ -9,7 +9,7 @@ export const metadata: Metadata = {
     url: 'https://neuro-care.fr/about',
   },
   alternates: {
-    canonical: '/about',
+    canonical: 'https://neuro-care.fr/about',
   },
 }
 

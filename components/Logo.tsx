@@ -18,6 +18,30 @@ export default function Logo({ href, className = '', iconSize = 'md', showText =
     const checkAuth = async () => {
       const { data: { session } } = await supabase.auth.getSession();
       if (session?.user) {
+        // Vérifier d'abord dans les profils en base de données
+        const { data: educatorProfile } = await supabase
+          .from('educator_profiles')
+          .select('id')
+          .eq('user_id', session.user.id)
+          .single();
+
+        if (educatorProfile) {
+          setDashboardUrl('/dashboard/educator');
+          return;
+        }
+
+        const { data: familyProfile } = await supabase
+          .from('family_profiles')
+          .select('id')
+          .eq('user_id', session.user.id)
+          .single();
+
+        if (familyProfile) {
+          setDashboardUrl('/dashboard/family');
+          return;
+        }
+
+        // Fallback sur user_metadata
         const role = session.user.user_metadata?.role;
         if (role === 'educator') {
           setDashboardUrl('/dashboard/educator');
@@ -30,8 +54,32 @@ export default function Logo({ href, className = '', iconSize = 'md', showText =
     checkAuth();
 
     // Écouter les changements d'auth
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
+    const { data: { subscription } } = supabase.auth.onAuthStateChange(async (event, session) => {
       if (session?.user) {
+        // Vérifier les profils en base de données
+        const { data: educatorProfile } = await supabase
+          .from('educator_profiles')
+          .select('id')
+          .eq('user_id', session.user.id)
+          .single();
+
+        if (educatorProfile) {
+          setDashboardUrl('/dashboard/educator');
+          return;
+        }
+
+        const { data: familyProfile } = await supabase
+          .from('family_profiles')
+          .select('id')
+          .eq('user_id', session.user.id)
+          .single();
+
+        if (familyProfile) {
+          setDashboardUrl('/dashboard/family');
+          return;
+        }
+
+        // Fallback sur user_metadata
         const role = session.user.user_metadata?.role;
         if (role === 'educator') {
           setDashboardUrl('/dashboard/educator');

@@ -82,7 +82,7 @@ export interface AvailabilitySlot {
 }
 
 // Types pour les réservations
-export type BookingStatus = 'pending' | 'confirmed' | 'cancelled' | 'completed';
+export type BookingStatus = 'confirmed' | 'cancelled' | 'completed';
 
 export interface Booking {
   id: string;

@@ -2,12 +2,14 @@
 
 import Link from 'next/link';
 import { useState, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
 import { supabase } from '@/lib/supabase';
 import { signOut } from '@/lib/auth';
 import Logo from '@/components/Logo';
 import EducatorNavbar from '@/components/EducatorNavbar';
 
 export default function SAPAccreditationPage() {
+  const router = useRouter();
   const [openFAQ, setOpenFAQ] = useState<number | null>(null);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [userRole, setUserRole] = useState<string | null>(null);
@@ -118,7 +120,21 @@ export default function SAPAccreditationPage() {
 
       {/* Hero Section */}
       <div className="bg-gradient-to-br from-blue-600 to-primary-600 text-white">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 relative">
+          {/* Bouton retour si connecté */}
+          {isLoggedIn && userRole === 'educator' && (
+            <button
+              onClick={() => router.push('/dashboard/educator')}
+              className="absolute left-4 sm:left-6 lg:left-8 top-4 w-10 h-10 rounded-full flex items-center justify-center transition-all hover:opacity-80"
+              style={{ backgroundColor: 'rgba(255, 255, 255, 0.2)' }}
+              aria-label="Retour"
+            >
+              <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+              </svg>
+            </button>
+          )}
+
           <div className="text-center">
             <div className="inline-block bg-white/20 backdrop-blur-sm rounded-full px-4 py-2 mb-6">
               <span className="text-sm font-semibold">Guide complet pour éducateurs</span>
