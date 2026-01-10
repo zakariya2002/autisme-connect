@@ -8,9 +8,9 @@ export default function SignupChoicePage() {
   const router = useRouter();
 
   const handleRoleSelection = (role: 'family' | 'educator') => {
-    // Redirection directe vers les pages fusionnées
+    // Redirection directe vers les pages d'inscription
     if (role === 'educator') {
-      router.push('/pro');
+      router.push('/auth/register-educator');
     } else {
       router.push('/auth/register-family');
     }
