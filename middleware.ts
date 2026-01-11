@@ -55,7 +55,27 @@ export async function middleware(request: NextRequest) {
   );
 
   // Refresh session if expired
-  await supabase.auth.getSession();
+  const { data: { session } } = await supabase.auth.getSession();
+
+  // Si l'utilisateur est admin, restreindre l'accès uniquement aux pages /admin
+  if (session?.user?.user_metadata?.role === 'admin') {
+    const pathname = request.nextUrl.pathname;
+
+    // Pages autorisées pour les admins
+    const adminAllowedPaths = [
+      '/admin',
+      '/auth/login',
+      '/auth/callback',
+      '/api',
+    ];
+
+    const isAllowed = adminAllowedPaths.some(path => pathname.startsWith(path));
+
+    // Si l'admin essaie d'accéder à une page non autorisée, rediriger vers /admin
+    if (!isAllowed) {
+      return NextResponse.redirect(new URL('/admin', request.url));
+    }
+  }
 
   return response;
 }
