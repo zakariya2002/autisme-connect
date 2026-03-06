@@ -66,8 +66,9 @@ export async function POST(request: Request) {
       price
     });
 
-    // Utiliser APP_URL (server-side) au lieu de NEXT_PUBLIC_APP_URL (build-time)
-    const appUrl = process.env.APP_URL || process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000';
+    // Détecter l'URL de l'app depuis les headers de la requête
+    const origin = request.headers.get('origin') || request.headers.get('referer')?.replace(/\/[^/]*$/, '') || process.env.APP_URL || process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000';
+    const appUrl = origin.replace(/\/$/, '');
     console.log('🌐 APP_URL utilisée:', appUrl);
 
     // Valider les données

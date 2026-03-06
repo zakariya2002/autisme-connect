@@ -332,7 +332,8 @@ export async function POST(
     try {
       console.log('📄 Génération automatique des factures...');
 
-      const appUrl = process.env.APP_URL || process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000';
+      const origin = request.headers.get('origin') || request.headers.get('referer')?.replace(/\/[^/]*$/, '') || process.env.APP_URL || process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000';
+      const appUrl = origin.replace(/\/$/, '');
       console.log('🌐 URL utilisée pour factures:', appUrl);
 
       const invoiceResponse = await fetch(`${appUrl}/api/invoices/generate`, {
