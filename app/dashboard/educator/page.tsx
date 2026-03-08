@@ -479,7 +479,7 @@ export default function EducatorDashboard() {
                       className="w-full h-full object-cover"
                     />
                   </div>
-                  <span className="font-medium text-gray-900 text-sm">{item.label}</span>
+                  <span className="font-medium text-gray-900 text-xs sm:text-sm whitespace-nowrap">{item.label}</span>
                 </Link>
               ))}
             </div>
