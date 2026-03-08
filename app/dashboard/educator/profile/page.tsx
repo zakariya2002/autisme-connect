@@ -1113,8 +1113,12 @@ export default function EducatorProfilePage() {
                         <option value="TEACCH">TEACCH</option>
                         <option value="PECS">PECS (Picture Exchange Communication)</option>
                         <option value="Makaton">Makaton</option>
-                        <option value="DEES">DEES (Diplôme d'État Éducateur Spécialisé)</option>
-                        <option value="DEME">DEME (Diplôme d'État Moniteur Éducateur)</option>
+                        <option value="Denver">Denver (ESDM)</option>
+                        <option value="Montessori">Montessori adapté</option>
+                        <option value="CAA">Communication Alternative (CAA)</option>
+                        <option value="Integration_sensorielle">Intégration sensorielle</option>
+                        <option value="Psychomotricite">Psychomotricité</option>
+                        <option value="Remediation_cognitive">Remédiation cognitive</option>
                         <option value="OTHER">Autre</option>
                       </select>
                     </div>
@@ -1124,25 +1128,13 @@ export default function EducatorProfilePage() {
                         type="text"
                         value={cert.name}
                         onChange={(e) => updateCertification(index, 'name', e.target.value)}
-                        placeholder="Ex: Diplôme d'État d'Éducateur Spécialisé"
+                        placeholder="Ex: Certification ABA - RBT"
                         required
                         aria-required="true"
                         className="w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:ring-2 focus:ring-[#41005c] focus:border-[#41005c]"
                       />
                     </div>
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-2">Organisme émetteur *</label>
-                      <input
-                        type="text"
-                        value={cert.issuing_organization}
-                        onChange={(e) => updateCertification(index, 'issuing_organization', e.target.value)}
-                        placeholder="Ex: IRTS Paris Île-de-France"
-                        required
-                        aria-required="true"
-                        className="w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:ring-2 focus:ring-[#41005c] focus:border-[#41005c]"
-                      />
-                    </div>
-                    <div>
+                    <div className="sm:col-span-2">
                       <label className="block text-sm font-medium text-gray-700 mb-2">Date d'obtention *</label>
                       <input
                         type="date"
@@ -1150,62 +1142,8 @@ export default function EducatorProfilePage() {
                         onChange={(e) => updateCertification(index, 'issue_date', e.target.value)}
                         required
                         aria-required="true"
-                        className="w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:ring-2 focus:ring-[#41005c] focus:border-[#41005c]"
+                        className="w-full sm:w-1/2 border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:ring-2 focus:ring-[#41005c] focus:border-[#41005c]"
                       />
-                    </div>
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-2">
-                        Numéro du diplôme {(cert.type === 'DEES' || cert.type === 'DEME') && <span className="text-red-600">*</span>}
-                      </label>
-                      <input
-                        type="text"
-                        value={cert.diploma_number || ''}
-                        onChange={(e) => updateCertification(index, 'diploma_number', e.target.value.toUpperCase())}
-                        placeholder={
-                          cert.type === 'DEES' ? 'Ex: 2023-IDF-12345' :
-                          cert.type === 'DEME' ? 'Ex: 2022-ARA-56789' :
-                          'Ex: 2023-12345'
-                        }
-                        required={cert.type === 'DEES' || cert.type === 'DEME'}
-                        aria-required={cert.type === 'DEES' || cert.type === 'DEME' ? 'true' : 'false'}
-                        className={`w-full border rounded-md shadow-sm py-2 px-3 focus:ring-2 focus:ring-[#41005c] focus:border-[#41005c] ${
-                          (cert.type === 'DEES' || cert.type === 'DEME') && (!cert.diploma_number || cert.diploma_number === '')
-                            ? 'border-red-300'
-                            : 'border-gray-300'
-                        }`}
-                      />
-                      {cert.type === 'DEES' || cert.type === 'DEME' ? (
-                        <p className="mt-1 text-xs text-red-600 font-medium">
-                          ⚠️ Obligatoire - Format: ANNÉE-RÉGION-NUMÉRO (ex: 2023-IDF-12345)
-                        </p>
-                      ) : (
-                        <p className="mt-1 text-xs text-gray-500">Optionnel pour ce type de certification</p>
-                      )}
-                    </div>
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-2">Région d'obtention</label>
-                      <select
-                        value={cert.issuing_region || ''}
-                        onChange={(e) => updateCertification(index, 'issuing_region', e.target.value)}
-                        className="w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:ring-2 focus:ring-[#41005c] focus:border-[#41005c]"
-                      >
-                        <option value="">Sélectionnez une région</option>
-                        <option value="Île-de-France">Île-de-France</option>
-                        <option value="Auvergne-Rhône-Alpes">Auvergne-Rhône-Alpes</option>
-                        <option value="PACA">Provence-Alpes-Côte d'Azur</option>
-                        <option value="Occitanie">Occitanie</option>
-                        <option value="Hauts-de-France">Hauts-de-France</option>
-                        <option value="Nouvelle-Aquitaine">Nouvelle-Aquitaine</option>
-                        <option value="Grand Est">Grand Est</option>
-                        <option value="Pays de la Loire">Pays de la Loire</option>
-                        <option value="Bretagne">Bretagne</option>
-                        <option value="Normandie">Normandie</option>
-                        <option value="Bourgogne-Franche-Comté">Bourgogne-Franche-Comté</option>
-                        <option value="Centre-Val de Loire">Centre-Val de Loire</option>
-                        <option value="Corse">Corse</option>
-                        <option value="International">International</option>
-                      </select>
-                      <p className="mt-1 text-xs text-gray-500">Pour la vérification auprès de la DREETS</p>
                     </div>
                   </div>
 
