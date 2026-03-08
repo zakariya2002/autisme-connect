@@ -892,26 +892,83 @@ export default function EducatorProfilePage() {
             </div>
 
             <div>
-              <label htmlFor="skills" className="block text-sm font-medium text-gray-700 mb-2">Compétences</label>
-              <textarea
-                id="skills"
-                rows={4}
-                value={profileData.skills}
-                onChange={(e) => setProfileData({ ...profileData, skills: e.target.value })}
-                aria-describedby="skills_help"
-                placeholder="Décrivez vos compétences, atouts et spécialités...
-
-Exemples :
-• Expertise en méthode ABA et TEACCH
-• Spécialisé dans l'accompagnement des enfants de 3 à 12 ans
-• Communication augmentée (PECS, Makaton)
-• Gestion des troubles du comportement
-• Soutien scolaire adapté"
-                className="w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:ring-2 focus:ring-[#41005c] focus:border-[#41005c]"
-              />
-              <p id="skills_help" className="mt-1 text-sm text-gray-500">
-                Décrivez librement vos compétences, vos spécialités et ce qui vous distingue
-              </p>
+              <label className="block text-sm font-medium text-gray-700 mb-2">Compétences</label>
+              <p className="text-xs text-gray-500 mb-3">Sélectionnez vos compétences et spécialités</p>
+              <div className="flex flex-wrap gap-2">
+                {[
+                  'Méthode ABA',
+                  'Méthode TEACCH',
+                  'Méthode Denver (ESDM)',
+                  'Méthode Montessori adaptée',
+                  'PECS (communication par images)',
+                  'Makaton (langue des signes)',
+                  'Communication alternative (CAA)',
+                  'Analyse du comportement',
+                  'Gestion des troubles du comportement',
+                  'Habiletés sociales',
+                  'Intégration sensorielle',
+                  'Psychomotricité',
+                  'Remédiation cognitive',
+                  'Soutien scolaire adapté',
+                  'Accompagnement TDAH',
+                  'Accompagnement TSA',
+                  'Accompagnement DYS',
+                  'Accompagnement TDI',
+                  'Guidance parentale',
+                  'Autonomie quotidienne',
+                  'Apprentissage de la propreté',
+                  'Gestion des émotions',
+                  'Structuration du temps',
+                  'Scénarios sociaux',
+                  'Renforcement positif',
+                  'Pictogrammes et supports visuels',
+                  'Préparation à la scolarisation',
+                  'Inclusion scolaire',
+                  'Travail en milieu ordinaire',
+                  'Stimulation du langage',
+                  'Motricité fine',
+                  'Motricité globale',
+                  'Activités sensorielles',
+                  'Jeu structuré',
+                  'Médiation animale',
+                  'Art-thérapie',
+                  'Musicothérapie',
+                  'Bilan de compétences',
+                  'Projet éducatif individualisé (PEI)',
+                  'Coordination avec l\'équipe pluridisciplinaire',
+                ].map((skill) => {
+                  const selectedSkills = profileData.skills ? profileData.skills.split(',').map(s => s.trim()).filter(Boolean) : [];
+                  const isSelected = selectedSkills.includes(skill);
+                  return (
+                    <button
+                      key={skill}
+                      type="button"
+                      onClick={() => {
+                        let updated: string[];
+                        if (isSelected) {
+                          updated = selectedSkills.filter(s => s !== skill);
+                        } else {
+                          updated = [...selectedSkills, skill];
+                        }
+                        setProfileData({ ...profileData, skills: updated.join(', ') });
+                      }}
+                      className={`px-3 py-1.5 rounded-full text-xs sm:text-sm font-medium border transition-all ${
+                        isSelected
+                          ? 'text-white border-transparent shadow-sm'
+                          : 'text-gray-700 border-gray-300 bg-white hover:border-gray-400'
+                      }`}
+                      style={isSelected ? { backgroundColor: '#41005c' } : {}}
+                    >
+                      {skill}
+                    </button>
+                  );
+                })}
+              </div>
+              {profileData.skills && (
+                <p className="mt-3 text-xs text-gray-500">
+                  {profileData.skills.split(',').filter(s => s.trim()).length} compétence{profileData.skills.split(',').filter(s => s.trim()).length > 1 ? 's' : ''} sélectionnée{profileData.skills.split(',').filter(s => s.trim()).length > 1 ? 's' : ''}
+                </p>
+              )}
             </div>
 
             <div>
