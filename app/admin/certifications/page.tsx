@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import Image from 'next/image';
 import { supabase } from '@/lib/supabase';
+import { createNotification } from '@/lib/notifications';
 
 interface Certification {
   id: string;
@@ -162,7 +163,21 @@ export default function AdminCertificationsPage() {
 
       if (error) throw error;
 
-      alert('✅ Certification approuvée ! Un email a été envoyé à l\'éducateur.');
+      // Envoyer une notification à l'éducateur
+      const educatorUserId = (selectedCert as any).educator?.user_id;
+      if (educatorUserId) {
+        const statusLabel = status === 'document_verified' ? 'vérifiée' : 'confirmée officiellement';
+        await createNotification({
+          user_id: educatorUserId,
+          type: 'system',
+          title: 'Certification approuvée',
+          content: `Votre certification "${selectedCert.name}" a été ${statusLabel}.`,
+          link: '/dashboard/educator/profile',
+          metadata: { certification_id: selectedCert.id },
+        });
+      }
+
+      alert('✅ Certification approuvée ! L\'éducateur a été notifié.');
       closeModal();
       fetchCertifications();
     } catch (error: any) {
@@ -192,7 +207,20 @@ export default function AdminCertificationsPage() {
 
       if (error) throw error;
 
-      alert('❌ Certification rejetée. Un email a été envoyé à l\'éducateur.');
+      // Envoyer une notification à l'éducateur
+      const educatorUserId = (selectedCert as any).educator?.user_id;
+      if (educatorUserId) {
+        await createNotification({
+          user_id: educatorUserId,
+          type: 'system',
+          title: 'Certification rejetée',
+          content: `Votre certification "${selectedCert.name}" a été rejetée. Raison : ${notes}`,
+          link: '/dashboard/educator/profile',
+          metadata: { certification_id: selectedCert.id },
+        });
+      }
+
+      alert('❌ Certification rejetée. L\'éducateur a été notifié.');
       closeModal();
       fetchCertifications();
     } catch (error: any) {
