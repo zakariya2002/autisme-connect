@@ -556,7 +556,7 @@ export default function EducatorProfilePage() {
     <div className="min-h-screen" style={{ backgroundColor: '#fdf9f4' }}>
       <EducatorNavbar profile={profile} subscription={subscription} />
 
-      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8">
+      <div className="max-w-4xl mx-auto px-3 sm:px-6 lg:px-8 py-4 sm:py-8">
         {/* En-tête avec flèche retour */}
         <div className="mb-6 sm:mb-8">
           {/* Flèche retour - desktop uniquement */}
@@ -581,10 +581,10 @@ export default function EducatorProfilePage() {
         </div>
         {/* Informations personnelles */}
         <div className="bg-white rounded-2xl shadow-sm border border-gray-100 mb-6 overflow-hidden">
-          <div className="px-6 py-4" style={{ backgroundColor: '#41005c' }}>
-            <h2 className="text-lg font-semibold text-white">Informations personnelles</h2>
+          <div className="px-4 sm:px-6 py-3 sm:py-4" style={{ backgroundColor: '#41005c' }}>
+            <h2 className="text-sm sm:text-lg font-semibold text-white">Informations personnelles</h2>
           </div>
-          <form onSubmit={handleSubmit} className="p-6 space-y-6">
+          <form onSubmit={handleSubmit} className="p-4 sm:p-6 space-y-4 sm:space-y-6">
             {/* Photo de profil */}
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-3">Photo de profil</label>
@@ -966,12 +966,12 @@ Exemples :
               <p id="languages_help" className="mt-1 text-sm text-gray-500">Séparez les langues par des virgules</p>
             </div>
 
-            <div className="flex justify-end">
+            <div className="flex justify-center sm:justify-end">
               <button
                 type="submit"
                 disabled={saving}
                 aria-busy={saving}
-                className="px-6 py-3 text-white rounded-xl font-semibold hover:opacity-90 disabled:opacity-50 transition-all shadow-md"
+                className="w-full sm:w-auto px-6 py-3 text-white rounded-xl text-sm sm:text-base font-semibold hover:opacity-90 disabled:opacity-50 transition-all shadow-md"
                 style={{ backgroundColor: '#41005c' }}
               >
                 {saving ? 'Enregistrement...' : 'Enregistrer les modifications'}
@@ -982,17 +982,17 @@ Exemples :
 
         {/* Changement d'email */}
         <div className="bg-white rounded-2xl shadow-sm border border-gray-100 mb-6 overflow-hidden">
-          <div className="px-6 py-4" style={{ backgroundColor: '#41005c' }}>
-            <h2 className="text-lg font-semibold text-white">Adresse email</h2>
+          <div className="px-4 sm:px-6 py-3 sm:py-4" style={{ backgroundColor: '#41005c' }}>
+            <h2 className="text-sm sm:text-lg font-semibold text-white">Adresse email</h2>
           </div>
-          <div className="p-6 space-y-4">
-            <div className="bg-gray-50 border border-gray-200 rounded-lg p-4">
-              <div className="flex items-center gap-2 text-sm text-gray-700">
-                <svg className="h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+          <div className="p-4 sm:p-6 space-y-4">
+            <div className="bg-gray-50 border border-gray-200 rounded-lg p-3 sm:p-4">
+              <div className="flex items-center gap-2 text-xs sm:text-sm text-gray-700">
+                <svg className="h-4 w-4 sm:h-5 sm:w-5 text-gray-400 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
                 </svg>
-                <span className="font-medium">Email actuel :</span>
-                <span>{currentEmail || 'Chargement...'}</span>
+                <span className="font-medium whitespace-nowrap">Email actuel :</span>
+                <span className="truncate">{currentEmail || 'Chargement...'}</span>
               </div>
             </div>
 
@@ -1011,12 +1011,12 @@ Exemples :
                   className="w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:ring-2 focus:ring-[#41005c] focus:border-[#41005c]"
                 />
               </div>
-              <div className="flex gap-3 items-center">
+              <div className="flex flex-col sm:flex-row gap-2 sm:gap-3 sm:items-center">
                 <button
                   type="submit"
                   disabled={updatingEmail || !newEmail}
                   aria-busy={updatingEmail}
-                  className="px-4 py-2 text-white rounded-xl hover:opacity-90 disabled:opacity-50 disabled:cursor-not-allowed text-sm font-semibold transition shadow-md"
+                  className="px-4 py-2 text-white rounded-xl hover:opacity-90 disabled:opacity-50 disabled:cursor-not-allowed text-xs sm:text-sm font-semibold transition shadow-md whitespace-nowrap"
                   style={{ backgroundColor: '#41005c' }}
                 >
                   {updatingEmail ? 'Envoi en cours...' : 'Changer mon email'}
@@ -1031,18 +1031,18 @@ Exemples :
 
         {/* Certifications */}
         <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
-          <div className="px-6 py-4 flex justify-between items-center" style={{ backgroundColor: '#41005c' }}>
-            <h2 className="text-lg font-semibold text-white">Mes certifications</h2>
+          <div className="px-4 sm:px-6 py-3 sm:py-4 flex justify-between items-center" style={{ backgroundColor: '#41005c' }}>
+            <h2 className="text-sm sm:text-lg font-semibold text-white">Mes certifications</h2>
             <button
               type="button"
               onClick={addCertification}
-              className="px-4 py-2 text-white rounded-xl text-sm font-semibold hover:opacity-90 transition shadow-md"
+              className="px-3 sm:px-4 py-1.5 sm:py-2 text-white rounded-xl text-xs sm:text-sm font-semibold hover:opacity-90 transition shadow-md whitespace-nowrap"
               style={{ backgroundColor: '#f0879f' }}
             >
               Ajouter une certification
             </button>
           </div>
-          <div className="p-6 space-y-4">
+          <div className="p-4 sm:p-6 space-y-4">
             {certifications.length === 0 ? (
               <p className="text-gray-500 text-center py-8">
                 Aucune certification ajoutée. Cliquez sur &quot;Ajouter une certification&quot; pour commencer.
