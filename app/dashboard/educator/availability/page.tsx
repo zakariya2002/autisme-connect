@@ -93,33 +93,33 @@ export default function EducatorAvailability() {
     if (profileData) {
       setProfile(profileData);
 
-      // Récupérer l'abonnement
-      const { data: subscriptionData } = await supabase
-        .from('subscriptions')
-        .select('*')
-        .eq('educator_id', profileData.id)
-        .in('status', ['active', 'trialing'])
-        .limit(1)
-        .maybeSingle();
-
-      setSubscription(subscriptionData);
-
-      // Récupérer les disponibilités (seulement futures)
+      // Récupérer l'abonnement et les disponibilités en parallèle
       const today = new Date().toISOString().split('T')[0];
-      const { data: availData } = await supabase
-        .from('educator_availability')
-        .select('*')
-        .eq('educator_id', profileData.id)
-        .gte('availability_date', today)
-        .order('availability_date', { ascending: true })
-        .order('start_time', { ascending: true });
+      const [subscriptionResult, availResult] = await Promise.all([
+        supabase
+          .from('subscriptions')
+          .select('*')
+          .eq('educator_id', profileData.id)
+          .in('status', ['active', 'trialing'])
+          .limit(1)
+          .maybeSingle(),
+        supabase
+          .from('educator_availability')
+          .select('*')
+          .eq('educator_id', profileData.id)
+          .gte('availability_date', today)
+          .order('availability_date', { ascending: true })
+          .order('start_time', { ascending: true }),
+      ]);
 
-      if (availData) {
+      setSubscription(subscriptionResult.data);
+
+      if (availResult.data) {
         // Filtrer les créneaux d'aujourd'hui dont l'heure de fin est passée
         const now = new Date();
         const currentTime = now.toTimeString().slice(0, 5); // Format "HH:MM"
 
-        const filteredData = availData.filter(slot => {
+        const filteredData = availResult.data.filter((slot: any) => {
           if (slot.availability_date === today) {
             // Pour aujourd'hui, vérifier que l'heure de fin n'est pas passée
             return slot.end_time > currentTime;
@@ -482,10 +482,10 @@ export default function EducatorAvailability() {
             Ajouter une disponibilité
           </h2>
 
-          <div className="space-y-2 sm:space-y-3 mb-2 sm:mb-3 md:mb-4">
+          <div className="space-y-3 sm:space-y-4 mb-3 sm:mb-4 md:mb-5">
             {/* Date - pleine largeur sur mobile */}
             <div>
-              <label htmlFor="availability-date" className="block text-xs md:text-sm font-medium text-gray-600 mb-1">
+              <label htmlFor="availability-date" className="block text-xs md:text-sm font-medium text-gray-600 mb-1.5">
                 Date
               </label>
               <input
@@ -494,7 +494,7 @@ export default function EducatorAvailability() {
                 value={selectedDate}
                 onChange={(e) => setSelectedDate(e.target.value)}
                 min={new Date().toISOString().split('T')[0]}
-                className="w-full px-2.5 md:px-3 py-1.5 md:py-2 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 text-sm"
+                className="w-full px-3 py-2.5 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 text-sm"
                 style={{ '--tw-ring-color': '#41005c', fontSize: '16px' } as React.CSSProperties}
                 aria-required="true"
                 aria-describedby="date-description"
@@ -505,9 +505,9 @@ export default function EducatorAvailability() {
             </div>
 
             {/* Heures côte à côte */}
-            <div className="grid grid-cols-2 gap-2 sm:gap-3">
+            <div className="grid grid-cols-2 gap-3 sm:gap-4">
               <div>
-                <label htmlFor="availability-start-time" className="block text-xs md:text-sm font-medium text-gray-600 mb-1">
+                <label htmlFor="availability-start-time" className="block text-xs md:text-sm font-medium text-gray-600 mb-1.5">
                   Début
                 </label>
                 <input
@@ -515,14 +515,14 @@ export default function EducatorAvailability() {
                   type="time"
                   value={startTime}
                   onChange={(e) => setStartTime(e.target.value)}
-                  className="w-full px-2 sm:px-3 py-1.5 md:py-2 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 text-sm text-center"
+                  className="w-full px-3 py-2.5 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 text-sm text-center"
                   style={{ '--tw-ring-color': '#41005c', fontSize: '16px' } as React.CSSProperties}
                   aria-required="true"
                 />
               </div>
 
               <div>
-                <label htmlFor="availability-end-time" className="block text-xs md:text-sm font-medium text-gray-600 mb-1">
+                <label htmlFor="availability-end-time" className="block text-xs md:text-sm font-medium text-gray-600 mb-1.5">
                   Fin
                 </label>
                 <input
@@ -530,7 +530,7 @@ export default function EducatorAvailability() {
                   type="time"
                   value={endTime}
                   onChange={(e) => setEndTime(e.target.value)}
-                  className="w-full px-2 sm:px-3 py-1.5 md:py-2 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 text-sm text-center"
+                  className="w-full px-3 py-2.5 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 text-sm text-center"
                   style={{ '--tw-ring-color': '#41005c', fontSize: '16px' } as React.CSSProperties}
                   aria-required="true"
                   aria-describedby="time-description"
