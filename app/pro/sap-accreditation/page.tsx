@@ -58,7 +58,7 @@ export default function ProSAPAccreditationPage() {
         <ProNavbar />
       </div>
 
-      <div className="flex-1 max-w-3xl mx-auto w-full px-3 sm:px-4 md:px-6 lg:px-8 py-3 sm:py-5 md:py-8 pb-24 sm:pb-8">
+      <div className="flex-1 max-w-3xl mx-auto w-full px-3 sm:px-4 md:px-6 lg:px-8 pt-6 sm:pt-8 md:pt-10 pb-24 sm:pb-8">
         {/* Bouton retour */}
         <button
           onClick={() => router.back()}
