@@ -396,16 +396,6 @@ export default function FamilyPublicProfile({ params }: { params: { id: string }
               </svg>
               Envoyer un message
             </Link>
-            <Link
-              href={`/family/${params.id}/request-appointment`}
-              className="flex-1 inline-flex items-center justify-center gap-2 px-5 py-3 text-white rounded-xl font-semibold transition-all shadow-lg hover:shadow-xl hover:opacity-90"
-              style={{ backgroundColor: '#f0879f' }}
-            >
-              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-              </svg>
-              Proposer un RDV
-            </Link>
           </div>
         ) : (
           <div className="rounded-xl p-4 border" style={{ backgroundColor: '#f3e8ff', borderColor: '#d8b4fe' }} role="alert">
