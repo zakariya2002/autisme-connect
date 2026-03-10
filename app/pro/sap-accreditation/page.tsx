@@ -54,11 +54,9 @@ export default function ProSAPAccreditationPage() {
   return (
     <div className="min-h-screen min-h-[100dvh] flex flex-col" style={{ backgroundColor: '#fdf9f4' }}>
       {/* Navigation */}
-      <div className="sticky top-0 z-40">
-        <ProNavbar />
-      </div>
+      <ProNavbar />
 
-      <div className="flex-1 max-w-3xl mx-auto w-full px-3 sm:px-4 md:px-6 lg:px-8 pt-6 sm:pt-8 md:pt-10 pb-24 sm:pb-8">
+      <div className="flex-1 max-w-3xl mx-auto w-full px-3 sm:px-4 md:px-6 lg:px-8 pt-20 sm:pt-22 md:pt-24 pb-24 sm:pb-8">
         {/* Bouton retour */}
         <button
           onClick={() => router.back()}

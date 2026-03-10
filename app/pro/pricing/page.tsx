@@ -38,11 +38,9 @@ export default function ProPricingPage() {
   return (
     <div className="min-h-screen min-h-[100dvh] flex flex-col" style={{ backgroundColor: '#fdf9f4' }}>
       {/* Navigation */}
-      <div className="sticky top-0 z-40">
-        <ProNavbar />
-      </div>
+      <ProNavbar />
 
-      <div className="flex-1 max-w-4xl mx-auto w-full px-3 sm:px-4 md:px-6 lg:px-8 py-3 sm:py-5 md:py-8 pb-24 sm:pb-8">
+      <div className="flex-1 max-w-4xl mx-auto w-full px-3 sm:px-4 md:px-6 lg:px-8 pt-20 sm:pt-22 md:pt-24 pb-24 sm:pb-8">
         {/* Bouton retour */}
         <button
           onClick={() => router.back()}
