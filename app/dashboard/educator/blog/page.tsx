@@ -33,22 +33,23 @@ export default function EducatorBlogPage() {
 
     setUserId(session.user.id);
 
-    // Get profile
-    const { data: profileData } = await supabase
-      .from('educator_profiles')
-      .select('*')
-      .eq('user_id', session.user.id)
-      .single();
+    // Get profile and posts in parallel
+    const [profileResult, postsResult] = await Promise.all([
+      supabase
+        .from('educator_profiles')
+        .select('*')
+        .eq('user_id', session.user.id)
+        .single(),
+      getMyBlogPosts(session.user.id, {
+        status: filter === 'all' ? undefined : filter,
+      }),
+    ]);
 
-    if (profileData) {
-      setProfile(profileData);
+    if (profileResult.data) {
+      setProfile(profileResult.data);
     }
 
-    // Get posts
-    const result = await getMyBlogPosts(session.user.id, {
-      status: filter === 'all' ? undefined : filter,
-    });
-    setPosts(result.posts);
+    setPosts(postsResult.posts);
     setIsLoading(false);
   };
 

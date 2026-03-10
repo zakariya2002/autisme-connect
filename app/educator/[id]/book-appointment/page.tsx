@@ -99,26 +99,34 @@ export default function BookAppointmentPage({ params }: { params: { id: string }
 
     setFamilyId(familyProfile.id);
 
-    try {
-      const response = await fetch(`/api/check-blocked?educatorId=${params.id}&familyId=${familyProfile.id}`);
-      if (response.ok) {
-        const data = await response.json();
-        if (data.isBlocked) {
-          setError('Vous ne pouvez pas réserver de rendez-vous avec ce professionnel');
-          setLoading(false);
-          return;
-        }
-      }
-    } catch (e) {
-      console.error('Erreur vérification blocage:', e);
+    // Parallelize block check and children fetch
+    const [blockCheckResult, childrenResult] = await Promise.all([
+      fetch(`/api/check-blocked?educatorId=${params.id}&familyId=${familyProfile.id}`)
+        .then(async (response) => {
+          if (response.ok) {
+            return response.json();
+          }
+          return null;
+        })
+        .catch((e) => {
+          console.error('Erreur vérification blocage:', e);
+          return null;
+        }),
+      supabase
+        .from('child_profiles')
+        .select('id, first_name, age, support_level_needed')
+        .eq('family_id', familyProfile.id)
+        .eq('is_active', true)
+        .order('created_at', { ascending: true }),
+    ]);
+
+    if (blockCheckResult?.isBlocked) {
+      setError('Vous ne pouvez pas réserver de rendez-vous avec ce professionnel');
+      setLoading(false);
+      return;
     }
 
-    const { data: childrenData } = await supabase
-      .from('child_profiles')
-      .select('id, first_name, age, support_level_needed')
-      .eq('family_id', familyProfile.id)
-      .eq('is_active', true)
-      .order('created_at', { ascending: true });
+    const childrenData = childrenResult.data;
 
     if (childrenData && childrenData.length > 0) {
       setChildren(childrenData);
@@ -142,18 +150,27 @@ export default function BookAppointmentPage({ params }: { params: { id: string }
       const today = new Date().toISOString().split('T')[0];
       const currentTime = new Date().toTimeString().slice(0, 5); // Format "HH:MM"
 
-      const { data: availData } = await supabase
-        .from('educator_availability')
-        .select('*')
-        .eq('educator_id', params.id)
-        .eq('is_available', true)
-        .gte('availability_date', today)
-        .order('availability_date', { ascending: true })
-        .order('start_time', { ascending: true });
+      // Parallelize availability and appointments fetch
+      const [availResult, apptsResult] = await Promise.all([
+        supabase
+          .from('educator_availability')
+          .select('*')
+          .eq('educator_id', params.id)
+          .eq('is_available', true)
+          .gte('availability_date', today)
+          .order('availability_date', { ascending: true })
+          .order('start_time', { ascending: true }),
+        supabase
+          .from('appointments')
+          .select('appointment_date, start_time, end_time, status')
+          .eq('educator_id', params.id)
+          .in('status', ['accepted', 'in_progress'])
+          .gte('appointment_date', today),
+      ]);
 
-      if (availData) {
+      if (availResult.data) {
         // Filtrer les créneaux d'aujourd'hui dont l'heure de fin est passée
-        const filteredData = availData.filter(slot => {
+        const filteredData = availResult.data.filter(slot => {
           if (slot.availability_date === today) {
             return slot.end_time > currentTime;
           }
@@ -162,14 +179,7 @@ export default function BookAppointmentPage({ params }: { params: { id: string }
         setAvailabilities(filteredData);
       }
 
-      const { data: appts } = await supabase
-        .from('appointments')
-        .select('appointment_date, start_time, end_time, status')
-        .eq('educator_id', params.id)
-        .in('status', ['accepted', 'in_progress'])
-        .gte('appointment_date', today);
-
-      if (appts) setAppointments(appts);
+      if (apptsResult.data) setAppointments(apptsResult.data);
 
       setLoading(false);
     } catch (err: any) {

@@ -46,25 +46,19 @@ export default function FamilyDashboard() {
   const [showSuccessMessage, setShowSuccessMessage] = useState(false);
 
   useEffect(() => {
-    fetchProfile();
+    fetchData();
 
     if (searchParams.get('booking') === 'success') {
       setShowSuccessMessage(true);
     }
   }, []);
 
-  useEffect(() => {
-    if (familyId) {
-      fetchUpcomingAppointments(familyId);
-    }
-  }, [familyId]);
-
   const handleCloseSuccessMessage = () => {
     setShowSuccessMessage(false);
     router.replace('/dashboard/family');
   };
 
-  const fetchProfile = async () => {
+  const fetchData = async () => {
     const { data: { session } } = await supabase.auth.getSession();
     if (!session?.user) {
       router.push('/auth/login');
@@ -83,6 +77,8 @@ export default function FamilyDashboard() {
     if (data) {
       setProfile(data);
       setFamilyId(data.id);
+      // Fetch upcoming appointments immediately without waiting for re-render
+      fetchUpcomingAppointments(data.id);
     }
   };
 

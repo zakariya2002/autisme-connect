@@ -37,36 +37,33 @@ export default function CommunityPage() {
 
         setUserId(session.user.id);
 
-        // Check if educator
-        const { data: educator } = await supabase
-          .from('educator_profiles')
-          .select('*')
-          .eq('user_id', session.user.id)
-          .single();
-
-        if (educator) {
-          setUserRole('educator');
-          setProfile(educator);
-          setEducatorId(educator.id);
-        } else {
-          // Check if family
-          const { data: family } = await supabase
+        // Parallelize profile checks and posts fetch
+        const [educatorResult, familyResult, postsResult] = await Promise.all([
+          supabase
+            .from('educator_profiles')
+            .select('*')
+            .eq('user_id', session.user.id)
+            .single(),
+          supabase
             .from('family_profiles')
             .select('*')
             .eq('user_id', session.user.id)
-            .single();
+            .single(),
+          getPosts({ limit: 10 }),
+        ]);
 
-          if (family) {
-            setUserRole('family');
-            setProfile(family);
-            setFamilyId(family.id);
-          }
+        if (educatorResult.data) {
+          setUserRole('educator');
+          setProfile(educatorResult.data);
+          setEducatorId(educatorResult.data.id);
+        } else if (familyResult.data) {
+          setUserRole('family');
+          setProfile(familyResult.data);
+          setFamilyId(familyResult.data.id);
         }
 
-        // Fetch posts
-        const result = await getPosts({ limit: 10 });
-        setPosts(result.posts);
-        setTotalPosts(result.total);
+        setPosts(postsResult.posts);
+        setTotalPosts(postsResult.total);
       } catch (error) {
         console.error('Error fetching data:', error);
       } finally {

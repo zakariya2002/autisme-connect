@@ -49,29 +49,29 @@ export default function EducatorInvoices() {
     if (profileData) {
       setProfile(profileData);
 
-      // Récupérer l'abonnement
-      const { data: subscriptionData } = await supabase
-        .from('subscriptions')
-        .select('*')
-        .eq('educator_id', profileData.id)
-        .in('status', ['active', 'trialing'])
-        .limit(1)
-        .maybeSingle();
+      // Récupérer l'abonnement et les factures en parallèle
+      const [subscriptionResult, invoicesResult] = await Promise.all([
+        supabase
+          .from('subscriptions')
+          .select('*')
+          .eq('educator_id', profileData.id)
+          .in('status', ['active', 'trialing'])
+          .limit(1)
+          .maybeSingle(),
+        supabase
+          .from('invoices')
+          .select('*')
+          .eq('educator_id', profileData.id)
+          .eq('type', 'educator_invoice')
+          .order('invoice_date', { ascending: false }),
+      ]);
 
-      setSubscription(subscriptionData);
+      setSubscription(subscriptionResult.data);
 
-      // Récupérer les factures de l'éducateur
-      const { data: invoicesData, error } = await supabase
-        .from('invoices')
-        .select('*')
-        .eq('educator_id', profileData.id)
-        .eq('type', 'educator_invoice')
-        .order('invoice_date', { ascending: false });
-
-      if (error) {
-        console.error('Erreur lors de la récupération des factures:', error);
+      if (invoicesResult.error) {
+        console.error('Erreur lors de la récupération des factures:', invoicesResult.error);
       } else {
-        setInvoices(invoicesData || []);
+        setInvoices(invoicesResult.data || []);
       }
     }
 

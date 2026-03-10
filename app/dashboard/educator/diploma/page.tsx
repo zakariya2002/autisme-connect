@@ -93,36 +93,39 @@ export default function DiplomePage() {
       if (educatorProfile.diploma_delivery_date) setDeliveryDate(educatorProfile.diploma_delivery_date);
       if (educatorProfile.region) setRegion(educatorProfile.region);
 
-      // Récupérer l'abonnement
-      const { data: subscriptionData } = await supabase
-        .from('subscriptions')
-        .select('*')
-        .eq('educator_id', educatorProfile.id)
-        .in('status', ['active', 'trialing'])
-        .limit(1)
-        .maybeSingle();
+      // Récupérer l'abonnement, signed URL et documents en parallèle
+      const parallelPromises: PromiseLike<any>[] = [
+        supabase
+          .from('subscriptions')
+          .select('*')
+          .eq('educator_id', educatorProfile.id)
+          .in('status', ['active', 'trialing'])
+          .limit(1)
+          .maybeSingle(),
+        supabase
+          .from('verification_documents')
+          .select('*')
+          .eq('educator_id', educatorProfile.id)
+          .order('uploaded_at', { ascending: false }),
+      ];
 
-      setSubscription(subscriptionData);
-
-      // Si le diplôme existe déjà, générer une signed URL
+      // Si le diplôme existe déjà, générer une signed URL en parallèle
       if (educatorProfile.diploma_url) {
-        const { data: signedUrlData } = await supabase.storage
-          .from('diplomas')
-          .createSignedUrl(educatorProfile.diploma_url, 3600);
-
-        if (signedUrlData?.signedUrl) {
-          setPreviewUrl(signedUrlData.signedUrl);
-        }
+        parallelPromises.push(
+          supabase.storage
+            .from('diplomas')
+            .createSignedUrl(educatorProfile.diploma_url, 3600)
+        );
       }
 
-      // Récupérer les documents de vérification
-      const { data: docs } = await supabase
-        .from('verification_documents')
-        .select('*')
-        .eq('educator_id', educatorProfile.id)
-        .order('uploaded_at', { ascending: false });
+      const [subscriptionResult, docsResult, signedUrlResult] = await Promise.all(parallelPromises);
 
-      setDocuments(docs || []);
+      setSubscription(subscriptionResult.data);
+      setDocuments(docsResult.data || []);
+
+      if (signedUrlResult?.data?.signedUrl) {
+        setPreviewUrl(signedUrlResult.data.signedUrl);
+      }
 
       setLoading(false);
     } catch (error) {

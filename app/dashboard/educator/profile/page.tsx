@@ -142,26 +142,26 @@ export default function EducatorProfilePage() {
         setVideoUrl(profile.video_presentation_url || null);
         setVideoDuration(profile.video_duration_seconds || null);
 
-        // Récupérer l'abonnement
-        const { data: subscriptionData } = await supabase
-          .from('subscriptions')
-          .select('*')
-          .eq('educator_id', profile.id)
-          .in('status', ['active', 'trialing'])
-          .limit(1)
-          .maybeSingle();
+        // Récupérer l'abonnement et les certifications en parallèle
+        const [subscriptionResult, certsResult] = await Promise.all([
+          supabase
+            .from('subscriptions')
+            .select('*')
+            .eq('educator_id', profile.id)
+            .in('status', ['active', 'trialing'])
+            .limit(1)
+            .maybeSingle(),
+          supabase
+            .from('certifications')
+            .select('*')
+            .eq('educator_id', profile.id),
+        ]);
 
-        setSubscription(subscriptionData);
-      }
+        setSubscription(subscriptionResult.data);
 
-      // Récupérer les certifications
-      const { data: certs } = await supabase
-        .from('certifications')
-        .select('*')
-        .eq('educator_id', profile?.id);
-
-      if (certs) {
-        setCertifications(certs);
+        if (certsResult.data) {
+          setCertifications(certsResult.data);
+        }
       }
     } catch (err: any) {
       setError(err.message);

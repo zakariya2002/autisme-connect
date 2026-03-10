@@ -28,33 +28,31 @@ export default function NewPostPage() {
 
         setUserId(session.user.id);
 
-        // Check if educator
-        const { data: educator } = await supabase
-          .from('educator_profiles')
-          .select('*')
-          .eq('user_id', session.user.id)
-          .single();
-
-        if (educator) {
-          setUserRole('educator');
-          setProfile(educator);
-        } else {
-          // Check if family
-          const { data: family } = await supabase
+        // Parallelize educator and family profile checks
+        const [educatorResult, familyResult] = await Promise.all([
+          supabase
+            .from('educator_profiles')
+            .select('*')
+            .eq('user_id', session.user.id)
+            .single(),
+          supabase
             .from('family_profiles')
             .select('*')
             .eq('user_id', session.user.id)
-            .single();
+            .single(),
+        ]);
 
-          if (family) {
-            setUserRole('family');
-            setProfile(family);
-            setFamilyId(family.id);
-          } else {
-            // User has no profile, redirect to complete registration
-            router.push('/auth/register');
-            return;
-          }
+        if (educatorResult.data) {
+          setUserRole('educator');
+          setProfile(educatorResult.data);
+        } else if (familyResult.data) {
+          setUserRole('family');
+          setProfile(familyResult.data);
+          setFamilyId(familyResult.data.id);
+        } else {
+          // User has no profile, redirect to complete registration
+          router.push('/auth/register');
+          return;
         }
       } catch (error) {
         console.error('Error fetching user:', error);

@@ -131,36 +131,35 @@ export default function FamilyPublicProfile({ params }: { params: { id: string }
       if (profile) {
         setEducatorProfile(profile);
 
-        // Récupérer l'abonnement
-        const { data: subscriptionData } = await supabase
-          .from('subscriptions')
-          .select('*')
-          .eq('educator_id', profile.id)
-          .in('status', ['active', 'trialing'])
-          .limit(1)
-          .maybeSingle();
+        // Parallelize independent queries that all depend on profile.id
+        const [subResult, convResult, childrenResult] = await Promise.all([
+          // Récupérer l'abonnement
+          supabase
+            .from('subscriptions')
+            .select('*')
+            .eq('educator_id', profile.id)
+            .in('status', ['active', 'trialing'])
+            .limit(1)
+            .maybeSingle(),
+          // Vérifier s'il existe déjà une conversation
+          supabase
+            .from('conversations')
+            .select('id')
+            .eq('educator_id', profile.id)
+            .eq('family_id', params.id)
+            .single(),
+          // Récupérer les accompagnements de la famille
+          supabase
+            .from('child_profiles')
+            .select('id, first_name, birth_date, tnd_types, tnd_other, description, accompaniment_types, accompaniment_goals, location_preference')
+            .eq('family_id', params.id)
+            .eq('is_active', true)
+            .order('created_at', { ascending: true }),
+        ]);
 
-        setSubscription(subscriptionData);
-
-        // Vérifier s'il existe déjà une conversation
-        const { data: conversation } = await supabase
-          .from('conversations')
-          .select('id')
-          .eq('educator_id', profile.id)
-          .eq('family_id', params.id)
-          .single();
-
-        setHasConversation(!!conversation);
-
-        // Récupérer les accompagnements de la famille
-        const { data: childrenData } = await supabase
-          .from('child_profiles')
-          .select('id, first_name, birth_date, tnd_types, tnd_other, description, accompaniment_types, accompaniment_goals, location_preference')
-          .eq('family_id', params.id)
-          .eq('is_active', true)
-          .order('created_at', { ascending: true });
-
-        setChildren(childrenData || []);
+        setSubscription(subResult.data);
+        setHasConversation(!!convResult.data);
+        setChildren(childrenResult.data || []);
       }
     }
   };

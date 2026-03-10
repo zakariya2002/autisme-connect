@@ -53,33 +53,10 @@ export default function FamilyBookingsPage() {
   };
 
   useEffect(() => {
-    fetchProfile();
+    fetchData();
   }, []);
 
-  useEffect(() => {
-    if (familyId) {
-      fetchAppointments();
-      fetchReviews();
-    }
-  }, [familyId]);
-
-  const fetchReviews = async () => {
-    if (!familyId) return;
-    try {
-      const { data } = await supabase
-        .from('reviews')
-        .select('booking_id')
-        .eq('family_id', familyId);
-
-      if (data) {
-        setReviewedAppointments(new Set(data.map(r => r.booking_id)));
-      }
-    } catch (error) {
-      console.error('Erreur lors de la récupération des avis:', error);
-    }
-  };
-
-  const fetchProfile = async () => {
+  const fetchData = async () => {
     try {
       const { data: { session } } = await supabase.auth.getSession();
       if (!session?.user) {
@@ -102,8 +79,51 @@ export default function FamilyBookingsPage() {
 
       setProfile(familyProfile);
       setFamilyId(familyProfile.id);
+
+      // Fetch appointments and reviews in parallel (both depend on familyProfile.id but not on each other)
+      setLoading(true);
+      const [appointmentsResult, reviewsResult] = await Promise.all([
+        supabase
+          .from('appointments')
+          .select(`
+            *,
+            educator:educator_profiles(
+              id,
+              first_name,
+              last_name,
+              phone,
+              profile_image_url,
+              avatar_url
+            )
+          `)
+          .eq('family_id', familyProfile.id)
+          .order('appointment_date', { ascending: true }),
+        supabase
+          .from('reviews')
+          .select('booking_id')
+          .eq('family_id', familyProfile.id),
+      ]);
+
+      if (appointmentsResult.error) {
+        console.error('Erreur:', appointmentsResult.error);
+      } else {
+        // Mapper les données pour gérer le format tableau de Supabase
+        const mappedData = (appointmentsResult.data || []).map((apt: any) => ({
+          ...apt,
+          educator: Array.isArray(apt.educator) && apt.educator.length > 0
+            ? apt.educator[0]
+            : apt.educator
+        }));
+        setAppointments(mappedData);
+      }
+
+      if (reviewsResult.data) {
+        setReviewedAppointments(new Set(reviewsResult.data.map(r => r.booking_id)));
+      }
     } catch (error) {
       console.error('Erreur:', error);
+    } finally {
+      setLoading(false);
     }
   };
 

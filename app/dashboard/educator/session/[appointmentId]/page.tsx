@@ -251,28 +251,31 @@ export default function EducatorSessionDossierPage() {
       setProfile(educatorProfile);
       setEducatorId(educatorProfile.id);
 
-      // Récupérer l'abonnement
-      const { data: subscriptionData } = await supabase
-        .from('subscriptions')
-        .select('*')
-        .eq('educator_id', educatorProfile.id)
-        .in('status', ['active', 'trialing'])
-        .limit(1)
-        .maybeSingle();
+      // Récupérer l'abonnement et le rendez-vous en parallèle
+      const [subscriptionResult, appointmentResult] = await Promise.all([
+        supabase
+          .from('subscriptions')
+          .select('*')
+          .eq('educator_id', educatorProfile.id)
+          .in('status', ['active', 'trialing'])
+          .limit(1)
+          .maybeSingle(),
+        supabase
+          .from('appointments')
+          .select(`
+            *,
+            child_profiles (*),
+            family_profiles (first_name, last_name)
+          `)
+          .eq('id', appointmentId)
+          .eq('educator_id', educatorProfile.id)
+          .single(),
+      ]);
 
-      setSubscription(subscriptionData);
+      setSubscription(subscriptionResult.data);
 
-      // Récupérer le rendez-vous avec les infos de l'enfant
-      const { data: appointmentData, error: appointmentError } = await supabase
-        .from('appointments')
-        .select(`
-          *,
-          child_profiles (*),
-          family_profiles (first_name, last_name)
-        `)
-        .eq('id', appointmentId)
-        .eq('educator_id', educatorProfile.id)
-        .single();
+      const appointmentData = appointmentResult.data;
+      const appointmentError = appointmentResult.error;
 
       if (appointmentError || !appointmentData) {
         router.push('/dashboard/educator/appointments');

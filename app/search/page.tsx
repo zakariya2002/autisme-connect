@@ -195,6 +195,7 @@ export default function SearchPage() {
         setFamilyId(familyProfileData.id);
         setFamilyProfile(familyProfileData);
 
+        // Favorites query depends on familyProfileData.id, runs after profile fetch
         const { data: favoritesData } = await supabase
           .from('favorite_educators')
           .select('educator_id')

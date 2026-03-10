@@ -33,82 +33,69 @@ export default function FamilyReceiptsPage() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetchProfile();
-    fetchReceipts();
+    fetchData();
   }, []);
 
-  const fetchProfile = async () => {
-    const { data: { session } } = await supabase.auth.getSession();
-    if (!session?.user) {
-      router.push('/auth/login');
-      return;
-    }
-
-    setUserId(session.user.id);
-
-    const { data } = await supabase
-      .from('family_profiles')
-      .select('*')
-      .eq('user_id', session.user.id)
-      .single();
-
-    setProfile(data);
-    if (data) {
-      setFamilyId(data.id);
-    }
-  };
-
-  const fetchReceipts = async () => {
+  const fetchData = async () => {
     try {
       const { data: { session } } = await supabase.auth.getSession();
-      if (!session?.user) return;
+      if (!session?.user) {
+        router.push('/auth/login');
+        return;
+      }
+
+      setUserId(session.user.id);
 
       const { data: familyProfile } = await supabase
         .from('family_profiles')
-        .select('id')
+        .select('*')
         .eq('user_id', session.user.id)
         .single();
 
-      if (familyProfile) {
-        const { data, error } = await supabase
-          .from('invoices')
-          .select(`
-            id,
-            invoice_number,
-            invoice_date,
-            amount_total,
-            pdf_url,
-            status,
-            appointment:appointments(
-              appointment_date,
-              start_time,
-              end_time,
-              educator:educator_profiles(
-                first_name,
-                last_name
-              )
-            )
-          `)
-          .eq('family_id', familyProfile.id)
-          .eq('type', 'family_receipt')
-          .order('invoice_date', { ascending: false });
+      setProfile(familyProfile);
+      if (!familyProfile) return;
 
-        if (error) {
-          console.error('Error fetching receipts:', error);
-        } else {
-          const mappedData = (data || []).map((receipt: any) => ({
-            ...receipt,
-            appointment: Array.isArray(receipt.appointment) && receipt.appointment.length > 0
-              ? {
-                  ...receipt.appointment[0],
-                  educator: Array.isArray(receipt.appointment[0].educator) && receipt.appointment[0].educator.length > 0
-                    ? receipt.appointment[0].educator[0]
-                    : receipt.appointment[0].educator
-                }
-              : receipt.appointment
-          }));
-          setReceipts(mappedData);
-        }
+      setFamilyId(familyProfile.id);
+
+      // Fetch receipts in parallel (independent of profile data beyond family_id)
+      const { data: receiptsData, error } = await supabase
+        .from('invoices')
+        .select(`
+          id,
+          invoice_number,
+          invoice_date,
+          amount_total,
+          pdf_url,
+          status,
+          appointment:appointments(
+            appointment_date,
+            start_time,
+            end_time,
+            educator:educator_profiles(
+              first_name,
+              last_name
+            )
+          )
+        `)
+        .eq('family_id', familyProfile.id)
+        .eq('type', 'family_receipt')
+        .order('invoice_date', { ascending: false });
+
+      if (error) {
+        console.error('Error fetching receipts:', error);
+      } else {
+        const mappedData = (receiptsData || []).map((receipt: any) => ({
+          ...receipt,
+          appointment: Array.isArray(receipt.appointment) && receipt.appointment.length > 0
+            ? {
+                ...receipt.appointment[0],
+                educator: Array.isArray(receipt.appointment[0].educator) && receipt.appointment[0].educator.length > 0
+                  ? receipt.appointment[0].educator[0]
+                  : receipt.appointment[0].educator
+              }
+            : receipt.appointment
+        }));
+        setReceipts(mappedData);
       }
     } catch (error) {
       console.error('Error:', error);

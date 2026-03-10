@@ -102,21 +102,28 @@ export default function MessagesPage() {
       }
       setCurrentUser(session.user);
 
-      // Vérifier d'abord si c'est un éducateur
-      const { data: educatorProfile } = await supabase
-        .from('educator_profiles')
-        .select('*')
-        .eq('user_id', session.user.id)
-        .single();
+      // Parallelize educator and family profile checks
+      const [educatorResult, familyResult] = await Promise.all([
+        supabase
+          .from('educator_profiles')
+          .select('*')
+          .eq('user_id', session.user.id)
+          .single(),
+        supabase
+          .from('family_profiles')
+          .select('*')
+          .eq('user_id', session.user.id)
+          .single(),
+      ]);
 
-      if (educatorProfile) {
-        setUserProfile({ ...educatorProfile, role: 'educator' });
+      if (educatorResult.data) {
+        setUserProfile({ ...educatorResult.data, role: 'educator' });
 
         // Récupérer l'abonnement pour les éducateurs
         const { data: subscriptionData } = await supabase
           .from('subscriptions')
           .select('*')
-          .eq('educator_id', educatorProfile.id)
+          .eq('educator_id', educatorResult.data.id)
           .in('status', ['active', 'trialing'])
           .limit(1)
           .maybeSingle();
@@ -125,15 +132,8 @@ export default function MessagesPage() {
         return;
       }
 
-      // Sinon, vérifier si c'est une famille
-      const { data: familyProfile } = await supabase
-        .from('family_profiles')
-        .select('*')
-        .eq('user_id', session.user.id)
-        .single();
-
-      if (familyProfile) {
-        setUserProfile({ ...familyProfile, role: 'family' });
+      if (familyResult.data) {
+        setUserProfile({ ...familyResult.data, role: 'family' });
         return;
       }
 

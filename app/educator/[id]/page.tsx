@@ -141,42 +141,41 @@ export default function EducatorPublicProfile({ params }: { params: { id: string
           setIsAuthenticated(true);
           setUserId(session.user.id);
 
-          // Déterminer le rôle de l'utilisateur
-          const { data: educatorProfile } = await supabase
-            .from('educator_profiles')
-            .select('id')
-            .eq('user_id', session.user.id)
-            .single();
-
-          if (educatorProfile) {
-            setUserRole('educator');
-          } else {
-            const { data: familyProfileData } = await supabase
+          // Parallelize educator and family profile checks
+          const [educatorProfileResult, familyProfileResult] = await Promise.all([
+            supabase
+              .from('educator_profiles')
+              .select('id')
+              .eq('user_id', session.user.id)
+              .single(),
+            supabase
               .from('family_profiles')
               .select('*')
               .eq('user_id', session.user.id)
-              .single();
+              .single(),
+          ]);
 
-            if (familyProfileData) {
-              setUserRole('family');
-              setFamilyProfileId(familyProfileData.id);
-              setFamilyProfile(familyProfileData);
+          if (educatorProfileResult.data) {
+            setUserRole('educator');
+          } else if (familyProfileResult.data) {
+            setUserRole('family');
+            setFamilyProfileId(familyProfileResult.data.id);
+            setFamilyProfile(familyProfileResult.data);
 
-              // Vérifier si la famille est bloquée par cet éducateur
-              try {
-                const response = await fetch(`/api/check-blocked?educatorId=${params.id}&familyId=${familyProfileData.id}`);
-                if (response.ok) {
-                  const data = await response.json();
-                  if (data.isBlocked) {
-                    setIsBlockedByEducator(true);
-                    setError('Ce profil n\'est plus accessible');
-                    setLoading(false);
-                    return;
-                  }
+            // Vérifier si la famille est bloquée par cet éducateur
+            try {
+              const response = await fetch(`/api/check-blocked?educatorId=${params.id}&familyId=${familyProfileResult.data.id}`);
+              if (response.ok) {
+                const data = await response.json();
+                if (data.isBlocked) {
+                  setIsBlockedByEducator(true);
+                  setError('Ce profil n\'est plus accessible');
+                  setLoading(false);
+                  return;
                 }
-              } catch (e) {
-                console.error('Erreur vérification blocage:', e);
               }
+            } catch (e) {
+              console.error('Erreur vérification blocage:', e);
             }
           }
         }
@@ -321,48 +320,69 @@ export default function EducatorPublicProfile({ params }: { params: { id: string
         body: JSON.stringify({ educatorId: params.id }),
       }).catch(error => console.error('Erreur tracking vue:', error));
 
-      // Récupérer les certifications
-      const { data: certs, error: certsError } = await supabase
-        .from('certifications')
-        .select('*')
-        .eq('educator_id', params.id);
-
-      if (certsError) {
-        console.error('Erreur certifications:', certsError);
-      } else if (certs) {
-        setCertifications(certs);
-      }
-
-      // Récupérer les disponibilités hebdomadaires (ancien système)
-      const { data: slots, error: slotsError } = await supabase
-        .from('educator_weekly_availability')
-        .select('*')
-        .eq('educator_id', params.id)
-        .eq('is_active', true)
-        .order('day_of_week')
-        .order('start_time');
-
-      if (!slotsError && slots) {
-        setWeeklySlots(slots);
-      }
-
-      // Récupérer les disponibilités quotidiennes (nouveau système)
       const today = new Date().toISOString().split('T')[0];
       const currentTime = new Date().toTimeString().slice(0, 5); // Format "HH:MM"
 
-      const { data: dailySlots, error: dailySlotsError } = await supabase
-        .from('educator_availability')
-        .select('*')
-        .eq('educator_id', params.id)
-        .eq('is_available', true)
-        .gte('availability_date', today)
-        .order('availability_date')
-        .order('start_time')
-        .limit(30);
+      // Parallelize all independent queries that use params.id
+      const [certsResult, slotsResult, dailySlotsResult, excsResult, reviewsResult] = await Promise.all([
+        // Récupérer les certifications
+        supabase
+          .from('certifications')
+          .select('*')
+          .eq('educator_id', params.id),
+        // Récupérer les disponibilités hebdomadaires (ancien système)
+        supabase
+          .from('educator_weekly_availability')
+          .select('*')
+          .eq('educator_id', params.id)
+          .eq('is_active', true)
+          .order('day_of_week')
+          .order('start_time'),
+        // Récupérer les disponibilités quotidiennes (nouveau système)
+        supabase
+          .from('educator_availability')
+          .select('*')
+          .eq('educator_id', params.id)
+          .eq('is_available', true)
+          .gte('availability_date', today)
+          .order('availability_date')
+          .order('start_time')
+          .limit(30),
+        // Récupérer les exceptions (uniquement futures)
+        supabase
+          .from('educator_availability_exceptions')
+          .select('*')
+          .eq('educator_id', params.id)
+          .gte('date', today)
+          .order('date')
+          .limit(10),
+        // Récupérer les avis
+        supabase
+          .from('reviews')
+          .select(`
+            id,
+            rating,
+            comment,
+            created_at,
+            family:family_profiles(first_name)
+          `)
+          .eq('educator_id', params.id)
+          .order('created_at', { ascending: false }),
+      ]);
 
-      if (!dailySlotsError && dailySlots) {
+      if (certsResult.error) {
+        console.error('Erreur certifications:', certsResult.error);
+      } else if (certsResult.data) {
+        setCertifications(certsResult.data);
+      }
+
+      if (!slotsResult.error && slotsResult.data) {
+        setWeeklySlots(slotsResult.data);
+      }
+
+      if (!dailySlotsResult.error && dailySlotsResult.data) {
         // Filtrer les créneaux d'aujourd'hui dont l'heure de fin est passée
-        const filteredSlots = dailySlots.filter(slot => {
+        const filteredSlots = dailySlotsResult.data.filter(slot => {
           if (slot.availability_date === today) {
             return slot.end_time > currentTime;
           }
@@ -371,34 +391,12 @@ export default function EducatorPublicProfile({ params }: { params: { id: string
         setDailyAvailabilities(filteredSlots);
       }
 
-      // Récupérer les exceptions (uniquement futures)
-      const { data: excs, error: excsError } = await supabase
-        .from('educator_availability_exceptions')
-        .select('*')
-        .eq('educator_id', params.id)
-        .gte('date', new Date().toISOString().split('T')[0])
-        .order('date')
-        .limit(10);
-
-      if (!excsError && excs) {
-        setExceptions(excs);
+      if (!excsResult.error && excsResult.data) {
+        setExceptions(excsResult.data);
       }
 
-      // Récupérer les avis
-      const { data: reviewsData, error: reviewsError } = await supabase
-        .from('reviews')
-        .select(`
-          id,
-          rating,
-          comment,
-          created_at,
-          family:family_profiles(first_name)
-        `)
-        .eq('educator_id', params.id)
-        .order('created_at', { ascending: false });
-
-      if (!reviewsError && reviewsData) {
-        setReviews(reviewsData.map((r: any) => ({
+      if (!reviewsResult.error && reviewsResult.data) {
+        setReviews(reviewsResult.data.map((r: any) => ({
           ...r,
           family: r.family || { first_name: 'Anonyme' }
         })));

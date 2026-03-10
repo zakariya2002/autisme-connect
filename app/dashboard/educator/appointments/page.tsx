@@ -193,7 +193,7 @@ export default function EducatorAppointmentsPage() {
         setEducatorId(profile.id);
         setProfile(profile);
 
-        // Récupérer l'abonnement
+        // Récupérer l'abonnement en parallèle avec le premier chargement des rendez-vous
         const { data: subscriptionData } = await supabase
           .from('subscriptions')
           .select('*')

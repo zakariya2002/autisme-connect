@@ -34,19 +34,20 @@ export default function EditBlogPostPage() {
 
     setUserId(session.user.id);
 
-    // Get profile
-    const { data: profileData } = await supabase
-      .from('educator_profiles')
-      .select('*')
-      .eq('user_id', session.user.id)
-      .single();
+    // Get profile and post in parallel
+    const [profileResult, postData] = await Promise.all([
+      supabase
+        .from('educator_profiles')
+        .select('*')
+        .eq('user_id', session.user.id)
+        .single(),
+      getPostById(postId, session.user.id),
+    ]);
 
-    if (profileData) {
-      setProfile(profileData);
+    if (profileResult.data) {
+      setProfile(profileResult.data);
     }
 
-    // Get post
-    const postData = await getPostById(postId, session.user.id);
     if (!postData) {
       setError('Article non trouvé');
     } else if (!['draft', 'rejected'].includes(postData.status)) {

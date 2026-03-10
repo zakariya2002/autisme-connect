@@ -40,14 +40,17 @@ export default function FeedbackPage() {
 
       setUserId(session.user.id);
 
-      // Déterminer le type d'utilisateur
-      const { data: educator } = await supabase
-        .from('educator_profiles')
-        .select('id')
-        .eq('user_id', session.user.id)
-        .single();
+      // Parallelize user type check and existing feedback fetch
+      const [educatorResult, existingFeedback] = await Promise.all([
+        supabase
+          .from('educator_profiles')
+          .select('id')
+          .eq('user_id', session.user.id)
+          .single(),
+        getUserFeedback(session.user.id),
+      ]);
 
-      const type: UserType = educator ? 'educator' : 'family';
+      const type: UserType = educatorResult.data ? 'educator' : 'family';
       setUserType(type);
 
       // Initialiser les réponses
@@ -57,9 +60,6 @@ export default function FeedbackPage() {
         score: null,
         comment: '',
       }));
-
-      // Charger le feedback existant
-      const existingFeedback = await getUserFeedback(session.user.id);
       if (existingFeedback) {
         setHasExistingFeedback(true);
         // Merger avec les réponses existantes

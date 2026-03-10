@@ -38,40 +38,58 @@ export default function CreateReviewPage() {
 
       setUserId(user.id);
 
-      const { data: profile } = await supabase
-        .from('family_profiles')
-        .select('*')
-        .eq('user_id', user.id)
-        .single();
+      // Parallelize all independent queries
+      const queries: PromiseLike<any>[] = [
+        supabase
+          .from('family_profiles')
+          .select('*')
+          .eq('user_id', user.id)
+          .single(),
+      ];
 
-      if (profile) {
-        setFamilyId(profile.id);
-        setFamilyProfile(profile);
-      }
-
-      // Récupérer les infos de l'éducateur
       if (educatorId) {
-        const { data: educatorData } = await supabase
-          .from('educator_profiles')
-          .select('id, first_name, last_name, avatar_url, profession_type')
-          .eq('id', educatorId)
-          .single();
-
-        if (educatorData) {
-          setEducator(educatorData);
-        }
+        queries.push(
+          supabase
+            .from('educator_profiles')
+            .select('id, first_name, last_name, avatar_url, profession_type')
+            .eq('id', educatorId)
+            .single()
+        );
       }
 
-      // Récupérer les infos du rendez-vous
       if (bookingId) {
-        const { data: appointmentData } = await supabase
-          .from('appointments')
-          .select('id, appointment_date, start_time')
-          .eq('id', bookingId)
-          .single();
+        queries.push(
+          supabase
+            .from('appointments')
+            .select('id, appointment_date, start_time')
+            .eq('id', bookingId)
+            .single()
+        );
+      }
 
-        if (appointmentData) {
-          setAppointment(appointmentData);
+      const results = await Promise.all(queries);
+
+      // Profile is always the first result
+      const profileResult = results[0];
+      if (profileResult.data) {
+        setFamilyId(profileResult.data.id);
+        setFamilyProfile(profileResult.data);
+      }
+
+      // Educator and appointment results depend on which queries were added
+      let resultIndex = 1;
+      if (educatorId) {
+        const educatorResult = results[resultIndex];
+        if (educatorResult?.data) {
+          setEducator(educatorResult.data);
+        }
+        resultIndex++;
+      }
+
+      if (bookingId) {
+        const appointmentResult = results[resultIndex];
+        if (appointmentResult?.data) {
+          setAppointment(appointmentResult.data);
         }
       }
     } catch (error) {
