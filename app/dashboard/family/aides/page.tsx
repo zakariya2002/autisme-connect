@@ -66,7 +66,7 @@ export default function FamilyAidesPage() {
       </div>
 
       {/* Section Titre */}
-      <section className="py-6 sm:py-10 px-4">
+      <section className="py-3 sm:py-5 md:py-8 px-3 sm:px-4 md:px-6">
         <div className="max-w-4xl mx-auto">
           {/* Flèche retour */}
           <button
@@ -87,12 +87,12 @@ export default function FamilyAidesPage() {
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
             </svg>
           </div>
-          <h1 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-4" style={{ fontFamily: 'Verdana, sans-serif' }}>
+          <h1 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold text-gray-900 mb-2 sm:mb-3 md:mb-4" style={{ fontFamily: 'Verdana, sans-serif' }}>
             Aides Financières TND
           </h1>
           {/* Ligne décorative */}
-          <div className="w-32 h-[2px] bg-gray-300 mx-auto mb-6"></div>
-          <p className="text-lg text-gray-600" style={{ fontFamily: 'Open Sans, sans-serif' }}>
+          <div className="w-24 sm:w-32 h-[2px] bg-gray-300 mx-auto mb-3 sm:mb-4 md:mb-6"></div>
+          <p className="text-sm sm:text-base md:text-lg text-gray-600" style={{ fontFamily: 'Open Sans, sans-serif' }}>
             Toutes les aides pour financer l'accompagnement des enfants et adultes avec troubles du neuro-développement
           </p>
           <p className="mt-3 text-sm font-semibold" style={{ color: '#027e7e' }}>
@@ -101,11 +101,11 @@ export default function FamilyAidesPage() {
         </div>
       </section>
 
-      <div className="flex-1 max-w-5xl mx-auto px-4 pb-16 w-full">
+      <div className="flex-1 max-w-5xl mx-auto px-3 sm:px-4 md:px-6 pb-16 w-full">
         {/* Simulateur CTA */}
         <Link
           href="/familles/simulateur-aides"
-          className="block mb-8 bg-white p-6 rounded-2xl shadow-md hover:shadow-lg transition-all duration-300 border border-gray-100 group"
+          className="block mb-3 sm:mb-4 md:mb-6 bg-white p-3 sm:p-4 md:p-6 rounded-xl md:rounded-2xl shadow-md hover:shadow-lg transition-all duration-300 border border-gray-100 group"
         >
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-4">
@@ -131,7 +131,7 @@ export default function FamilyAidesPage() {
         </Link>
 
         {/* Introduction */}
-        <div className="bg-white rounded-2xl shadow-md p-6 sm:p-8 mb-8 border border-gray-100">
+        <div className="bg-white rounded-xl md:rounded-2xl shadow-md p-3 sm:p-4 md:p-6 lg:p-8 mb-3 sm:mb-4 md:mb-6 border border-gray-100">
           <div className="flex items-start gap-4">
             <div className="flex-shrink-0 w-12 h-12 rounded-full flex items-center justify-center" style={{ backgroundColor: '#027e7e' }}>
               <svg className="w-6 h-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
@@ -150,7 +150,7 @@ export default function FamilyAidesPage() {
         </div>
 
         {/* Tableau récapitulatif par âge */}
-        <div className="bg-white rounded-2xl shadow-md p-6 sm:p-8 mb-10 border border-gray-100">
+        <div className="bg-white rounded-xl md:rounded-2xl shadow-md p-3 sm:p-4 md:p-6 lg:p-8 mb-3 sm:mb-4 md:mb-6 border border-gray-100">
           <h2 className="text-2xl font-bold text-gray-900 mb-2 text-center" style={{ fontFamily: 'Verdana, sans-serif' }}>
             Quelles aides selon votre situation ?
           </h2>
@@ -220,10 +220,10 @@ export default function FamilyAidesPage() {
         </div>
 
         {/* Forfait Intervention Précoce */}
-        <div className="bg-white rounded-2xl shadow-md mb-6 overflow-hidden border border-gray-100">
+        <div className="bg-white rounded-xl md:rounded-2xl shadow-md mb-3 sm:mb-4 md:mb-6 overflow-hidden border border-gray-100">
           <button
             onClick={() => toggleSection('forfait')}
-            className="w-full px-6 py-5 flex items-center justify-between hover:bg-gray-50 transition-all duration-300"
+            className="w-full px-3 sm:px-4 md:px-6 py-3 sm:py-4 md:py-5 flex items-center justify-between hover:bg-gray-50 transition-all duration-300"
           >
             <div className="flex items-center gap-4">
               <div className="w-12 h-12 rounded-xl flex items-center justify-center" style={{ backgroundColor: '#027e7e' }}>
@@ -349,10 +349,10 @@ export default function FamilyAidesPage() {
         </div>
 
         {/* CESU */}
-        <div className="bg-white rounded-2xl shadow-md mb-6 overflow-hidden border border-gray-100">
+        <div className="bg-white rounded-xl md:rounded-2xl shadow-md mb-3 sm:mb-4 md:mb-6 overflow-hidden border border-gray-100">
           <button
             onClick={() => toggleSection('cesu')}
-            className="w-full px-6 py-5 flex items-center justify-between hover:bg-gray-50 transition-all duration-300"
+            className="w-full px-3 sm:px-4 md:px-6 py-3 sm:py-4 md:py-5 flex items-center justify-between hover:bg-gray-50 transition-all duration-300"
           >
             <div className="flex items-center gap-4">
               <div className="w-12 h-12 rounded-xl flex items-center justify-center" style={{ backgroundColor: '#3a9e9e' }}>
@@ -439,10 +439,10 @@ export default function FamilyAidesPage() {
         </div>
 
         {/* PCH (MDPH) */}
-        <div className="bg-white rounded-2xl shadow-md mb-6 overflow-hidden border border-gray-100">
+        <div className="bg-white rounded-xl md:rounded-2xl shadow-md mb-3 sm:mb-4 md:mb-6 overflow-hidden border border-gray-100">
           <button
             onClick={() => toggleSection('pch')}
-            className="w-full px-6 py-5 flex items-center justify-between hover:bg-gray-50 transition-all duration-300"
+            className="w-full px-3 sm:px-4 md:px-6 py-3 sm:py-4 md:py-5 flex items-center justify-between hover:bg-gray-50 transition-all duration-300"
           >
             <div className="flex items-center gap-4">
               <div className="w-12 h-12 rounded-xl flex items-center justify-center" style={{ backgroundColor: '#6bbebe' }}>
@@ -576,10 +576,10 @@ export default function FamilyAidesPage() {
         </div>
 
         {/* AEEH (CAF) */}
-        <div className="bg-white rounded-2xl shadow-md mb-6 overflow-hidden border border-gray-100">
+        <div className="bg-white rounded-xl md:rounded-2xl shadow-md mb-3 sm:mb-4 md:mb-6 overflow-hidden border border-gray-100">
           <button
             onClick={() => toggleSection('aeeh')}
-            className="w-full px-6 py-5 flex items-center justify-between hover:bg-gray-50 transition-all duration-300"
+            className="w-full px-3 sm:px-4 md:px-6 py-3 sm:py-4 md:py-5 flex items-center justify-between hover:bg-gray-50 transition-all duration-300"
           >
             <div className="flex items-center gap-4">
               <div className="w-12 h-12 rounded-xl flex items-center justify-center" style={{ backgroundColor: '#f0879f' }}>
@@ -702,10 +702,10 @@ export default function FamilyAidesPage() {
         </div>
 
         {/* AAH */}
-        <div className="bg-white rounded-2xl shadow-md mb-6 overflow-hidden border border-gray-100">
+        <div className="bg-white rounded-xl md:rounded-2xl shadow-md mb-3 sm:mb-4 md:mb-6 overflow-hidden border border-gray-100">
           <button
             onClick={() => toggleSection('aah')}
-            className="w-full px-6 py-5 flex items-center justify-between hover:bg-gray-50 transition-all duration-300"
+            className="w-full px-3 sm:px-4 md:px-6 py-3 sm:py-4 md:py-5 flex items-center justify-between hover:bg-gray-50 transition-all duration-300"
           >
             <div className="flex items-center gap-4">
               <div className="w-12 h-12 rounded-xl flex items-center justify-center" style={{ backgroundColor: '#f4a3b3' }}>
@@ -802,10 +802,10 @@ export default function FamilyAidesPage() {
         </div>
 
         {/* Crédit d'impôt */}
-        <div className="bg-white rounded-2xl shadow-md mb-6 overflow-hidden border border-gray-100">
+        <div className="bg-white rounded-xl md:rounded-2xl shadow-md mb-3 sm:mb-4 md:mb-6 overflow-hidden border border-gray-100">
           <button
             onClick={() => toggleSection('credit')}
-            className="w-full px-6 py-5 flex items-center justify-between hover:bg-gray-50 transition-all duration-300"
+            className="w-full px-3 sm:px-4 md:px-6 py-3 sm:py-4 md:py-5 flex items-center justify-between hover:bg-gray-50 transition-all duration-300"
           >
             <div className="flex items-center gap-4">
               <div className="w-12 h-12 rounded-xl flex items-center justify-center" style={{ backgroundColor: '#f8bfc7' }}>
@@ -916,10 +916,10 @@ export default function FamilyAidesPage() {
         </div>
 
         {/* Mutuelles */}
-        <div className="bg-white rounded-2xl shadow-md mb-6 overflow-hidden border border-gray-100">
+        <div className="bg-white rounded-xl md:rounded-2xl shadow-md mb-3 sm:mb-4 md:mb-6 overflow-hidden border border-gray-100">
           <button
             onClick={() => toggleSection('mutuelle')}
-            className="w-full px-6 py-5 flex items-center justify-between hover:bg-gray-50 transition-all duration-300"
+            className="w-full px-3 sm:px-4 md:px-6 py-3 sm:py-4 md:py-5 flex items-center justify-between hover:bg-gray-50 transition-all duration-300"
           >
             <div className="flex items-center gap-4">
               <div className="w-12 h-12 rounded-xl flex items-center justify-center" style={{ backgroundColor: '#9bd4d4' }}>

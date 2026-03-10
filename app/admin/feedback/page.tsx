@@ -95,35 +95,35 @@ export default function AdminFeedbackPage() {
     <div className="min-h-screen" style={{ backgroundColor: '#fdf9f4' }}>
       {/* Header */}
       <header style={{ backgroundColor: '#027e7e' }}>
-        <div className="max-w-7xl mx-auto px-4 py-4 flex items-center justify-between">
+        <div className="max-w-7xl mx-auto px-3 sm:px-4 md:px-6 py-3 sm:py-4 flex items-center justify-between">
           <Link href="/admin" className="flex items-center gap-2 text-white hover:text-white/80">
             <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
             </svg>
             Admin
           </Link>
-          <h1 className="text-xl font-bold text-white">Feedbacks utilisateurs</h1>
+          <h1 className="text-sm sm:text-base md:text-lg lg:text-xl font-bold text-white">Feedbacks utilisateurs</h1>
           <div className="w-20"></div>
         </div>
       </header>
 
-      <main className="max-w-7xl mx-auto px-4 py-8">
+      <main className="max-w-7xl mx-auto px-3 sm:px-4 md:px-6 lg:px-8 py-3 sm:py-5 md:py-8">
         {/* Stats cards */}
         {stats && (
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-8">
-            <div className="bg-white rounded-xl p-4 shadow-sm border border-gray-100">
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4 mb-3 sm:mb-4 md:mb-6 lg:mb-8">
+            <div className="bg-white rounded-xl p-3 sm:p-4 shadow-sm border border-gray-100">
               <p className="text-sm text-gray-500 mb-1">Total feedbacks</p>
               <p className="text-3xl font-bold" style={{ color: '#027e7e' }}>{stats.total}</p>
             </div>
-            <div className="bg-white rounded-xl p-4 shadow-sm border border-gray-100">
+            <div className="bg-white rounded-xl p-3 sm:p-4 shadow-sm border border-gray-100">
               <p className="text-sm text-gray-500 mb-1">Familles</p>
               <p className="text-3xl font-bold" style={{ color: '#027e7e' }}>{stats.familyCount}</p>
             </div>
-            <div className="bg-white rounded-xl p-4 shadow-sm border border-gray-100">
+            <div className="bg-white rounded-xl p-3 sm:p-4 shadow-sm border border-gray-100">
               <p className="text-sm text-gray-500 mb-1">Professionnels</p>
               <p className="text-3xl font-bold" style={{ color: '#41005c' }}>{stats.educatorCount}</p>
             </div>
-            <div className="bg-white rounded-xl p-4 shadow-sm border border-gray-100">
+            <div className="bg-white rounded-xl p-3 sm:p-4 shadow-sm border border-gray-100">
               <p className="text-sm text-gray-500 mb-1">Score moyen</p>
               <p className="text-3xl font-bold" style={{ color: getScoreColor(stats.averageScore) }}>
                 {stats.averageScore.toFixed(1)}/10
@@ -134,9 +134,9 @@ export default function AdminFeedbackPage() {
 
         {/* Stats par question */}
         {stats && stats.questionStats.length > 0 && (
-          <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-100 mb-8">
-            <h2 className="text-lg font-bold text-gray-900 mb-4">Scores moyens par question</h2>
-            <div className="space-y-4">
+          <div className="bg-white rounded-xl md:rounded-2xl p-3 sm:p-4 md:p-6 shadow-sm border border-gray-100 mb-3 sm:mb-4 md:mb-6 lg:mb-8">
+            <h2 className="text-sm sm:text-base md:text-lg font-bold text-gray-900 mb-3 sm:mb-4">Scores moyens par question</h2>
+            <div className="space-y-3 sm:space-y-4">
               {stats.questionStats.map((qs) => (
                 <div key={qs.questionId} className="flex items-center gap-4">
                   <div className="flex-1 min-w-0">
@@ -167,12 +167,12 @@ export default function AdminFeedbackPage() {
         )}
 
         {/* Filters */}
-        <div className="flex gap-2 mb-6">
+        <div className="flex gap-2 mb-3 sm:mb-4 md:mb-6">
           {(['all', 'family', 'educator'] as const).map((f) => (
             <button
               key={f}
               onClick={() => setFilter(f)}
-              className={`px-4 py-2 rounded-lg font-medium transition ${
+              className={`px-3 md:px-4 py-1.5 md:py-2 rounded-lg text-xs sm:text-sm font-medium transition ${
                 filter === f
                   ? 'text-white'
                   : 'text-gray-600 bg-white border border-gray-200 hover:bg-gray-50'
@@ -267,10 +267,10 @@ export default function AdminFeedbackPage() {
       {/* Modal détails */}
       {selectedFeedback && (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
-          <div className="bg-white rounded-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
-            <div className="sticky top-0 bg-white border-b border-gray-100 px-6 py-4 flex items-center justify-between">
+          <div className="bg-white rounded-xl md:rounded-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
+            <div className="sticky top-0 bg-white border-b border-gray-100 px-3 sm:px-4 md:px-6 py-2.5 sm:py-3 md:py-4 flex items-center justify-between">
               <div>
-                <h2 className="text-lg font-bold text-gray-900">Détails du feedback</h2>
+                <h2 className="text-sm sm:text-base md:text-lg font-bold text-gray-900">Détails du feedback</h2>
                 <p className="text-sm text-gray-500">
                   {format(new Date(selectedFeedback.created_at), 'dd MMMM yyyy à HH:mm', { locale: fr })}
                 </p>
@@ -285,7 +285,7 @@ export default function AdminFeedbackPage() {
               </button>
             </div>
 
-            <div className="p-6">
+            <div className="p-3 sm:p-4 md:p-6">
               {/* Type et score */}
               <div className="flex items-center gap-4 mb-6">
                 <span

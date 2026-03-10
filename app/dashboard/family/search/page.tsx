@@ -497,7 +497,7 @@ export default function FamilySearchPage() {
       </div>
 
       {/* Section Titre */}
-      <section className="py-6 sm:py-10 px-4">
+      <section className="py-3 sm:py-5 md:py-8 px-3 sm:px-4 md:px-6">
         <div className="max-w-4xl mx-auto">
           {/* Flèche retour */}
           <button
@@ -517,17 +517,17 @@ export default function FamilySearchPage() {
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
             </svg>
           </div>
-          <h1 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-4" style={{ fontFamily: 'Verdana, sans-serif' }}>
+          <h1 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold text-gray-900 mb-2 sm:mb-3 md:mb-4" style={{ fontFamily: 'Verdana, sans-serif' }}>
             Trouver un professionnel
           </h1>
-          <div className="w-32 h-[2px] bg-gray-300 mx-auto mb-6"></div>
-          <p className="text-lg text-gray-600" style={{ fontFamily: 'Open Sans, sans-serif' }}>
+          <div className="w-24 sm:w-32 h-[2px] bg-gray-300 mx-auto mb-3 sm:mb-4 md:mb-6"></div>
+          <p className="text-sm sm:text-base md:text-lg text-gray-600" style={{ fontFamily: 'Open Sans, sans-serif' }}>
             Découvrez nos professionnels qualifiés pour l'accompagnement des personnes avec TND
           </p>
         </div>
       </section>
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-16">
+      <div className="max-w-7xl mx-auto px-3 sm:px-4 md:px-6 lg:px-8 pb-16">
         {/* Bouton filtres mobile */}
         <div className="lg:hidden mb-5">
           <button
@@ -559,7 +559,7 @@ export default function FamilySearchPage() {
         <div className="grid grid-cols-1 lg:grid-cols-4 gap-6 sm:gap-8">
           {/* Filtres */}
           <div className={`lg:col-span-1 ${showFilters ? 'block' : 'hidden lg:block'}`}>
-            <div className="bg-white rounded-2xl shadow-xl p-5 sm:p-6 lg:sticky lg:top-24 border border-gray-100 overflow-hidden relative">
+            <div className="bg-white rounded-xl md:rounded-2xl shadow-xl p-3 sm:p-4 md:p-6 lg:sticky lg:top-24 border border-gray-100 overflow-hidden relative">
               <div className="absolute top-0 left-0 right-0 h-1" style={{ background: 'linear-gradient(90deg, #027e7e 0%, #f0879f 100%)' }}></div>
 
               <div className="flex items-center gap-3 mb-5 sm:mb-6 pt-2">
@@ -810,24 +810,24 @@ export default function FamilySearchPage() {
           {/* Résultats */}
           <div className="lg:col-span-3" role="region" aria-label="Résultats de recherche" aria-live="polite" aria-busy={loading}>
             {loading ? (
-              <div className="text-center py-20 bg-white rounded-2xl shadow-md border border-gray-100">
+              <div className="text-center py-12 sm:py-16 md:py-20 bg-white rounded-xl md:rounded-2xl shadow-md border border-gray-100">
                 <div className="relative">
                   <div className="absolute inset-0 flex items-center justify-center">
                     <div className="w-20 h-20 rounded-full border-4" style={{ borderColor: 'rgba(2, 126, 126, 0.2)' }} aria-hidden="true"></div>
                   </div>
                   <div className="animate-spin rounded-full h-20 w-20 border-4 mx-auto" style={{ borderTopColor: '#027e7e', borderRightColor: '#3a9e9e', borderBottomColor: '#6bbebe', borderLeftColor: 'rgba(2, 126, 126, 0.2)' }} aria-hidden="true"></div>
                 </div>
-                <p className="text-gray-700 font-semibold mt-6 text-lg" style={{ fontFamily: 'Verdana, sans-serif' }}>Recherche en cours...</p>
+                <p className="text-gray-700 font-semibold mt-6 text-sm sm:text-base md:text-lg" style={{ fontFamily: 'Verdana, sans-serif' }}>Recherche en cours...</p>
                 <p className="text-gray-500 text-sm mt-1" style={{ fontFamily: 'Open Sans, sans-serif' }}>Nous trouvons les meilleurs professionnels pour vous</p>
               </div>
             ) : educators.length === 0 ? (
-              <div className="text-center py-20 bg-white rounded-2xl shadow-md border border-gray-100">
+              <div className="text-center py-12 sm:py-16 md:py-20 bg-white rounded-xl md:rounded-2xl shadow-md border border-gray-100">
                 <div className="w-24 h-24 mx-auto mb-6 rounded-full flex items-center justify-center" style={{ backgroundColor: 'rgba(2, 126, 126, 0.1)' }}>
                   <svg className="w-12 h-12" style={{ color: '#027e7e' }} fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
                   </svg>
                 </div>
-                <h3 className="text-xl font-bold text-gray-700 mb-2" style={{ fontFamily: 'Verdana, sans-serif' }}>Aucun professionnel trouvé</h3>
+                <h3 className="text-base sm:text-lg md:text-xl font-bold text-gray-700 mb-2" style={{ fontFamily: 'Verdana, sans-serif' }}>Aucun professionnel trouvé</h3>
                 <p className="text-gray-500 mb-6 max-w-md mx-auto" style={{ fontFamily: 'Open Sans, sans-serif' }}>Nous n'avons pas trouvé de professionnels correspondant à vos critères.</p>
                 <button
                   onClick={resetFilters}
@@ -841,11 +841,11 @@ export default function FamilySearchPage() {
                 </button>
               </div>
             ) : (
-              <div className="space-y-5">
+              <div className="space-y-3 sm:space-y-4 md:space-y-5">
                 {paginatedEducators.map((educator) => (
                   <div
                     key={educator.id}
-                    className="bg-white rounded-2xl shadow-md hover:shadow-lg transition-all duration-300 border border-gray-100 overflow-hidden group hover:-translate-y-1 relative cursor-pointer"
+                    className="bg-white rounded-xl md:rounded-2xl shadow-md hover:shadow-lg transition-all duration-300 border border-gray-100 overflow-hidden group hover:-translate-y-1 relative cursor-pointer"
                     onClick={() => router.push(`/educator/${educator.id}`)}
                   >
                     <div className="absolute top-4 right-4 z-10 sm:hidden">
@@ -985,7 +985,7 @@ export default function FamilySearchPage() {
 
                 {/* Pagination */}
                 {totalPages > 1 && (
-                  <div className="bg-white rounded-2xl shadow-md p-4 sm:p-6 border border-gray-100 mt-6">
+                  <div className="bg-white rounded-xl md:rounded-2xl shadow-md p-3 sm:p-4 md:p-6 border border-gray-100 mt-3 sm:mt-4 md:mt-6">
                     <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
                       <p className="text-sm text-gray-500 order-2 sm:order-1" style={{ fontFamily: 'Open Sans, sans-serif' }}>
                         Affichage {startIndex + 1} - {Math.min(endIndex, educators.length)} sur {educators.length} résultats

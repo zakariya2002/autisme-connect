@@ -110,14 +110,14 @@ export default function RegisterPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
+    <div className="min-h-screen bg-gray-50 flex flex-col justify-center py-8 sm:py-12 px-3 sm:px-6 lg:px-8">
       <div className="sm:mx-auto sm:w-full sm:max-w-md">
         <Link href="/" className="flex justify-center mb-4">
           <h1 className="text-3xl font-bold text-primary-600">
             Autisme Connect
           </h1>
         </Link>
-        <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">
+        <h2 className="mt-6 text-center text-2xl sm:text-3xl font-extrabold text-gray-900">
           {roleFromUrl
             ? (role === 'educator' ? 'Inscription Éducateur' : 'Inscription Famille')
             : 'Créer un compte'
@@ -142,8 +142,8 @@ export default function RegisterPage() {
       </div>
 
       <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
-        <div className="bg-white py-8 px-4 shadow sm:rounded-lg sm:px-10">
-          <form className="space-y-6" onSubmit={handleSubmit}>
+        <div className="bg-white py-6 sm:py-8 px-3 sm:px-4 shadow rounded-xl md:rounded-2xl sm:px-10">
+          <form className="space-y-4 sm:space-y-5 md:space-y-6" onSubmit={handleSubmit}>
             {error && (
               <div className="bg-red-50 border border-red-200 text-red-600 px-4 py-3 rounded">
                 {error}
@@ -178,7 +178,7 @@ export default function RegisterPage() {
               </div>
             ) : (
               <div>
-                <label className="block text-sm font-medium text-gray-700">
+                <label className="block text-xs md:text-sm font-medium text-gray-700">
                   Je suis
                 </label>
                 <div className="mt-2 space-y-2">
@@ -192,7 +192,7 @@ export default function RegisterPage() {
                       onChange={(e) => setRole(e.target.value as UserRole)}
                       className="focus:ring-primary-500 h-4 w-4 text-primary-600 border-gray-300"
                     />
-                    <label htmlFor="role-family" className="ml-3 block text-sm font-medium text-gray-700">
+                    <label htmlFor="role-family" className="ml-3 block text-xs md:text-sm font-medium text-gray-700">
                       Une famille / Personne avec TSA
                     </label>
                   </div>
@@ -206,7 +206,7 @@ export default function RegisterPage() {
                       onChange={(e) => setRole(e.target.value as UserRole)}
                       className="focus:ring-primary-500 h-4 w-4 text-primary-600 border-gray-300"
                     />
-                    <label htmlFor="role-educator" className="ml-3 block text-sm font-medium text-gray-700">
+                    <label htmlFor="role-educator" className="ml-3 block text-xs md:text-sm font-medium text-gray-700">
                       Un éducateur spécialisé
                     </label>
                   </div>
@@ -215,7 +215,7 @@ export default function RegisterPage() {
             )}
 
             <div>
-              <label htmlFor="email" className="block text-sm font-medium text-gray-700">
+              <label htmlFor="email" className="block text-xs md:text-sm font-medium text-gray-700">
                 Email
               </label>
               <div className="mt-1">
@@ -227,13 +227,13 @@ export default function RegisterPage() {
                   required
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  className="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-primary-500 focus:border-primary-500 sm:text-sm"
+                  className="appearance-none block w-full px-2.5 md:px-3 py-1.5 md:py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-primary-500 focus:border-primary-500 text-sm"
                 />
               </div>
             </div>
 
             <div>
-              <label htmlFor="password" className="block text-sm font-medium text-gray-700">
+              <label htmlFor="password" className="block text-xs md:text-sm font-medium text-gray-700">
                 Mot de passe
               </label>
               <div className="mt-1">
@@ -245,7 +245,7 @@ export default function RegisterPage() {
                   required
                   value={password}
                   onChange={handlePasswordChange}
-                  className="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-primary-500 focus:border-primary-500 sm:text-sm"
+                  className="appearance-none block w-full px-2.5 md:px-3 py-1.5 md:py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-primary-500 focus:border-primary-500 text-sm"
                 />
               </div>
 
@@ -353,7 +353,7 @@ export default function RegisterPage() {
             </div>
 
             <div>
-              <label htmlFor="confirm-password" className="block text-sm font-medium text-gray-700">
+              <label htmlFor="confirm-password" className="block text-xs md:text-sm font-medium text-gray-700">
                 Confirmer le mot de passe
               </label>
               <div className="mt-1">
@@ -365,7 +365,7 @@ export default function RegisterPage() {
                   required
                   value={confirmPassword}
                   onChange={(e) => setConfirmPassword(e.target.value)}
-                  className="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-primary-500 focus:border-primary-500 sm:text-sm"
+                  className="appearance-none block w-full px-2.5 md:px-3 py-1.5 md:py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-primary-500 focus:border-primary-500 text-sm"
                 />
               </div>
             </div>
@@ -374,7 +374,7 @@ export default function RegisterPage() {
               <button
                 type="submit"
                 disabled={loading}
-                className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-primary-600 hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 disabled:opacity-50"
+                className="w-full flex justify-center py-2 md:py-2.5 px-4 border border-transparent rounded-md shadow-sm text-xs sm:text-sm font-medium text-white bg-primary-600 hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 disabled:opacity-50"
               >
                 {loading ? 'Inscription...' : 'S\'inscrire'}
               </button>

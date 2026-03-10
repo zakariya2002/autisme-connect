@@ -162,10 +162,10 @@ export default function CreateReviewPage() {
         <FamilyNavbar profile={familyProfile} familyId={familyId} userId={userId} />
       </div>
 
-      <div className="flex-1 max-w-2xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8 w-full">
+      <div className="flex-1 max-w-2xl mx-auto px-3 sm:px-4 md:px-6 lg:px-8 py-3 sm:py-5 md:py-8 w-full">
         {/* En-tête */}
         <div className="mb-6 sm:mb-8 text-center">
-          <div className="w-16 h-16 mx-auto mb-4 rounded-full flex items-center justify-center" style={{ backgroundColor: '#f0879f' }}>
+          <div className="w-14 h-14 sm:w-16 sm:h-16 mx-auto mb-3 sm:mb-4 rounded-full flex items-center justify-center" style={{ backgroundColor: '#f0879f' }}>
             <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z" />
             </svg>
@@ -176,7 +176,7 @@ export default function CreateReviewPage() {
 
         {/* Carte professionnel */}
         {educator && (
-          <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-4 mb-6">
+          <div className="bg-white rounded-xl md:rounded-2xl shadow-sm border border-gray-100 p-3 sm:p-4 mb-4 sm:mb-6">
             <div className="flex items-center gap-4">
               {educator.avatar_url ? (
                 <img
@@ -207,10 +207,10 @@ export default function CreateReviewPage() {
         )}
 
         {/* Formulaire */}
-        <form onSubmit={handleSubmit} className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 space-y-6">
+        <form onSubmit={handleSubmit} className="bg-white rounded-xl md:rounded-2xl shadow-sm border border-gray-100 p-4 sm:p-6 space-y-4 sm:space-y-6">
           {/* Note */}
           <div>
-            <label className="block text-sm font-semibold text-gray-700 mb-3">
+            <label className="block text-xs md:text-sm font-semibold text-gray-700 mb-3">
               Votre note
             </label>
             <div className="flex justify-center gap-2 mb-2">
@@ -239,7 +239,7 @@ export default function CreateReviewPage() {
 
           {/* Commentaire */}
           <div>
-            <label className="block text-sm font-semibold text-gray-700 mb-2">
+            <label className="block text-xs md:text-sm font-semibold text-gray-700 mb-2">
               Votre commentaire <span className="text-gray-400 font-normal">(optionnel)</span>
             </label>
             <textarea
@@ -247,10 +247,10 @@ export default function CreateReviewPage() {
               value={comment}
               onChange={(e) => setComment(e.target.value)}
               placeholder="Décrivez votre expérience avec ce professionnel..."
-              className="w-full border border-gray-300 rounded-xl shadow-sm py-3 px-4 focus:ring-2 focus:border-transparent transition-all resize-none text-gray-900"
+              className="w-full border border-gray-300 rounded-xl shadow-sm py-1.5 md:py-2 lg:py-3 px-2.5 md:px-3 lg:px-4 focus:ring-2 focus:border-transparent transition-all resize-none text-sm text-gray-900"
               style={{ outlineColor: '#027e7e' }}
             />
-            <p className="text-xs text-gray-400 mt-1">
+            <p className="text-[11px] md:text-xs text-gray-400 mt-1">
               Votre avis aidera d'autres familles à faire leur choix
             </p>
           </div>
@@ -259,14 +259,14 @@ export default function CreateReviewPage() {
           <div className="flex gap-3 pt-2">
             <Link
               href="/dashboard/family/bookings"
-              className="flex-1 px-4 py-3 bg-gray-100 text-gray-700 rounded-xl hover:bg-gray-200 text-center font-medium transition"
+              className="flex-1 px-3 sm:px-4 py-2 sm:py-3 bg-gray-100 text-gray-700 rounded-xl hover:bg-gray-200 text-center text-xs sm:text-sm md:text-base font-medium transition"
             >
               Annuler
             </Link>
             <button
               type="submit"
               disabled={loading}
-              className="flex-1 px-4 py-3 text-white rounded-xl font-medium transition hover:opacity-90 disabled:opacity-50 flex items-center justify-center gap-2"
+              className="flex-1 px-3 sm:px-4 py-2 sm:py-3 text-white rounded-xl text-xs sm:text-sm md:text-base font-medium transition hover:opacity-90 disabled:opacity-50 flex items-center justify-center gap-2"
               style={{ backgroundColor: '#027e7e' }}
             >
               {loading ? (
@@ -287,7 +287,7 @@ export default function CreateReviewPage() {
         </form>
 
         {/* Note de confidentialité */}
-        <p className="text-xs text-gray-400 text-center mt-6">
+        <p className="text-[11px] md:text-xs text-gray-400 text-center mt-4 sm:mt-6">
           Votre avis sera publié avec votre prénom. Vous pouvez le modifier ou le supprimer à tout moment.
         </p>
       </div>

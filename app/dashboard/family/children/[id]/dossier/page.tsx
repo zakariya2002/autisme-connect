@@ -487,9 +487,9 @@ export default function ChildDossierPage() {
         <FamilyNavbar profile={profile} />
       </div>
 
-      <div className="flex-1 max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8 w-full">
+      <div className="flex-1 max-w-6xl mx-auto px-3 sm:px-4 md:px-6 lg:px-8 py-3 sm:py-5 md:py-8 w-full">
         {/* Header avec infos enfant */}
-        <div className="rounded-2xl p-4 sm:p-6 mb-6 text-white" style={{ background: 'linear-gradient(135deg, #3a9e9e 0%, #6bbebe 50%, #f8c3cf 100%)' }}>
+        <div className="rounded-xl md:rounded-2xl p-3 sm:p-4 md:p-6 mb-3 sm:mb-4 md:mb-6 text-white" style={{ background: 'linear-gradient(135deg, #3a9e9e 0%, #6bbebe 50%, #f8c3cf 100%)' }}>
           <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
             <div className="flex items-center gap-3 sm:gap-4">
               <div className="w-14 h-14 sm:w-18 sm:h-18 bg-white/20 rounded-full flex items-center justify-center text-xl sm:text-2xl font-bold flex-shrink-0 backdrop-blur">
@@ -516,7 +516,7 @@ export default function ChildDossierPage() {
         </div>
 
         {/* Onglets */}
-        <div className="bg-white rounded-2xl shadow-md border border-gray-100 mb-6">
+        <div className="bg-white rounded-xl md:rounded-2xl shadow-md border border-gray-100 mb-3 sm:mb-4 md:mb-6">
           <div className="flex overflow-x-auto scrollbar-hide">
             {tabs.map((tab) => (
               <button
@@ -547,11 +547,11 @@ export default function ChildDossierPage() {
         )}
 
         {/* Contenu des onglets */}
-        <div className="bg-white rounded-2xl shadow-md border border-gray-100 p-4 sm:p-6">
+        <div className="bg-white rounded-xl md:rounded-2xl shadow-md border border-gray-100 p-3 sm:p-4 md:p-6">
           {/* Vue d'ensemble */}
           {activeTab === 'overview' && (
-            <div className="space-y-6">
-              <h2 className="text-lg font-bold text-gray-900" style={{ fontFamily: 'Verdana, sans-serif' }}>Vue d'ensemble</h2>
+            <div className="space-y-3 sm:space-y-4 md:space-y-6">
+              <h2 className="text-sm sm:text-base md:text-lg font-bold text-gray-900" style={{ fontFamily: 'Verdana, sans-serif' }}>Vue d'ensemble</h2>
 
               {/* Stats cards */}
               <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
@@ -636,8 +636,8 @@ export default function ChildDossierPage() {
           {/* Objectifs */}
           {activeTab === 'goals' && (
             <div>
-              <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 mb-6">
-                <h2 className="text-base sm:text-lg font-bold text-gray-900" style={{ fontFamily: 'Verdana, sans-serif' }}>Objectifs éducatifs</h2>
+              <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 mb-3 sm:mb-4 md:mb-6">
+                <h2 className="text-sm sm:text-base md:text-lg font-bold text-gray-900" style={{ fontFamily: 'Verdana, sans-serif' }}>Objectifs éducatifs</h2>
                 <button
                   onClick={() => setShowGoalModal(true)}
                   className="flex items-center gap-2 px-4 sm:px-5 py-2.5 text-white rounded-xl hover:opacity-90 transition text-sm w-full sm:w-auto justify-center font-semibold shadow-md"
@@ -724,8 +724,8 @@ export default function ChildDossierPage() {
           {/* Séances */}
           {activeTab === 'sessions' && (
             <div>
-              <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 mb-6">
-                <h2 className="text-base sm:text-lg font-bold text-gray-900" style={{ fontFamily: 'Verdana, sans-serif' }}>Notes de séances</h2>
+              <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 mb-3 sm:mb-4 md:mb-6">
+                <h2 className="text-sm sm:text-base md:text-lg font-bold text-gray-900" style={{ fontFamily: 'Verdana, sans-serif' }}>Notes de séances</h2>
                 <button
                   onClick={() => setShowSessionModal(true)}
                   className="flex items-center gap-2 px-4 sm:px-5 py-2.5 text-white rounded-xl hover:opacity-90 transition text-sm w-full sm:w-auto justify-center font-semibold shadow-md"
@@ -791,8 +791,8 @@ export default function ChildDossierPage() {
           {/* Compétences */}
           {activeTab === 'skills' && (
             <div>
-              <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 mb-6">
-                <h2 className="text-base sm:text-lg font-bold text-gray-900" style={{ fontFamily: 'Verdana, sans-serif' }}>Compétences</h2>
+              <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 mb-3 sm:mb-4 md:mb-6">
+                <h2 className="text-sm sm:text-base md:text-lg font-bold text-gray-900" style={{ fontFamily: 'Verdana, sans-serif' }}>Compétences</h2>
                 <button
                   onClick={() => setShowSkillModal(true)}
                   className="flex items-center gap-2 px-4 sm:px-5 py-2.5 text-white rounded-xl hover:opacity-90 transition text-sm w-full sm:w-auto justify-center font-semibold shadow-md"
@@ -856,8 +856,8 @@ export default function ChildDossierPage() {
           {/* Préférences */}
           {activeTab === 'preferences' && (
             <div>
-              <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 mb-6">
-                <h2 className="text-base sm:text-lg font-bold text-gray-900" style={{ fontFamily: 'Verdana, sans-serif' }}>Préférences</h2>
+              <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 mb-3 sm:mb-4 md:mb-6">
+                <h2 className="text-sm sm:text-base md:text-lg font-bold text-gray-900" style={{ fontFamily: 'Verdana, sans-serif' }}>Préférences</h2>
                 <button
                   onClick={() => setShowPreferenceModal(true)}
                   className="flex items-center gap-2 px-4 sm:px-5 py-2.5 text-white rounded-xl hover:opacity-90 transition text-sm w-full sm:w-auto justify-center font-semibold shadow-md"
@@ -1029,7 +1029,7 @@ export default function ChildDossierPage() {
       {/* Modal Objectif */}
       {showGoalModal && (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
-          <div className="bg-white rounded-2xl shadow-xl max-w-lg w-full max-h-[90vh] overflow-y-auto">
+          <div className="bg-white rounded-xl md:rounded-2xl shadow-xl max-w-lg w-full max-h-[90vh] overflow-y-auto">
             <div className="px-4 sm:px-6 py-4 border-b border-gray-100 flex items-center justify-between">
               <h2 className="text-lg sm:text-xl font-bold" style={{ fontFamily: 'Verdana, sans-serif' }}>Nouvel objectif</h2>
               <button onClick={() => setShowGoalModal(false)} className="p-2 hover:bg-gray-100 rounded-lg">
@@ -1038,7 +1038,7 @@ export default function ChildDossierPage() {
                 </svg>
               </button>
             </div>
-            <form onSubmit={handleAddGoal} className="p-4 sm:p-6 space-y-4">
+            <form onSubmit={handleAddGoal} className="p-3 sm:p-4 md:p-6 space-y-3 sm:space-y-4">
               <div>
                 <label className="block text-sm font-semibold text-gray-700 mb-2">Titre <span className="text-red-500">*</span></label>
                 <input
@@ -1100,14 +1100,14 @@ export default function ChildDossierPage() {
                 <button
                   type="button"
                   onClick={() => setShowGoalModal(false)}
-                  className="px-6 py-3 text-gray-700 bg-gray-100 rounded-xl hover:bg-gray-200 font-semibold"
+                  className="px-3 md:px-4 py-2 md:py-2.5 text-xs sm:text-sm md:text-base text-gray-700 bg-gray-100 rounded-xl hover:bg-gray-200 font-semibold"
                 >
                   Annuler
                 </button>
                 <button
                   type="submit"
                   disabled={saving}
-                  className="px-6 py-3 text-white rounded-xl hover:opacity-90 disabled:opacity-50 font-semibold shadow-md"
+                  className="px-5 py-2.5 md:px-6 md:py-3 text-xs sm:text-sm md:text-base text-white rounded-xl hover:opacity-90 disabled:opacity-50 font-semibold shadow-md"
                   style={{ backgroundColor: '#027e7e' }}
                 >
                   {saving ? 'Ajout...' : 'Ajouter'}
@@ -1121,7 +1121,7 @@ export default function ChildDossierPage() {
       {/* Modal Séance */}
       {showSessionModal && (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
-          <div className="bg-white rounded-2xl shadow-xl max-w-lg w-full max-h-[90vh] overflow-y-auto">
+          <div className="bg-white rounded-xl md:rounded-2xl shadow-xl max-w-lg w-full max-h-[90vh] overflow-y-auto">
             <div className="px-4 sm:px-6 py-4 border-b border-gray-100 flex items-center justify-between">
               <h2 className="text-lg sm:text-xl font-bold" style={{ fontFamily: 'Verdana, sans-serif' }}>Note de séance</h2>
               <button onClick={() => setShowSessionModal(false)} className="p-2 hover:bg-gray-100 rounded-lg">
@@ -1130,7 +1130,7 @@ export default function ChildDossierPage() {
                 </svg>
               </button>
             </div>
-            <form onSubmit={handleAddSession} className="p-4 sm:p-6 space-y-4">
+            <form onSubmit={handleAddSession} className="p-3 sm:p-4 md:p-6 space-y-3 sm:space-y-4">
               <div>
                 <label className="block text-sm font-semibold text-gray-700 mb-2">Date</label>
                 <input
@@ -1178,14 +1178,14 @@ export default function ChildDossierPage() {
                 <button
                   type="button"
                   onClick={() => setShowSessionModal(false)}
-                  className="px-6 py-3 text-gray-700 bg-gray-100 rounded-xl hover:bg-gray-200 font-semibold"
+                  className="px-3 md:px-4 py-2 md:py-2.5 text-xs sm:text-sm md:text-base text-gray-700 bg-gray-100 rounded-xl hover:bg-gray-200 font-semibold"
                 >
                   Annuler
                 </button>
                 <button
                   type="submit"
                   disabled={saving}
-                  className="px-6 py-3 text-white rounded-xl hover:opacity-90 disabled:opacity-50 font-semibold shadow-md"
+                  className="px-5 py-2.5 md:px-6 md:py-3 text-xs sm:text-sm md:text-base text-white rounded-xl hover:opacity-90 disabled:opacity-50 font-semibold shadow-md"
                   style={{ backgroundColor: '#f0879f' }}
                 >
                   {saving ? 'Ajout...' : 'Ajouter'}
@@ -1199,7 +1199,7 @@ export default function ChildDossierPage() {
       {/* Modal Compétence */}
       {showSkillModal && (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
-          <div className="bg-white rounded-2xl shadow-xl max-w-lg w-full">
+          <div className="bg-white rounded-xl md:rounded-2xl shadow-xl max-w-lg w-full">
             <div className="px-4 sm:px-6 py-4 border-b border-gray-100 flex items-center justify-between">
               <h2 className="text-lg sm:text-xl font-bold" style={{ fontFamily: 'Verdana, sans-serif' }}>Nouvelle compétence</h2>
               <button onClick={() => setShowSkillModal(false)} className="p-2 hover:bg-gray-100 rounded-lg">
@@ -1208,7 +1208,7 @@ export default function ChildDossierPage() {
                 </svg>
               </button>
             </div>
-            <form onSubmit={handleAddSkill} className="p-4 sm:p-6 space-y-4">
+            <form onSubmit={handleAddSkill} className="p-3 sm:p-4 md:p-6 space-y-3 sm:space-y-4">
               <div>
                 <label className="block text-sm font-semibold text-gray-700 mb-2">Nom de la compétence <span className="text-red-500">*</span></label>
                 <input
@@ -1264,14 +1264,14 @@ export default function ChildDossierPage() {
                 <button
                   type="button"
                   onClick={() => setShowSkillModal(false)}
-                  className="px-6 py-3 text-gray-700 bg-gray-100 rounded-xl hover:bg-gray-200 font-semibold"
+                  className="px-3 md:px-4 py-2 md:py-2.5 text-xs sm:text-sm md:text-base text-gray-700 bg-gray-100 rounded-xl hover:bg-gray-200 font-semibold"
                 >
                   Annuler
                 </button>
                 <button
                   type="submit"
                   disabled={saving}
-                  className="px-6 py-3 text-white rounded-xl hover:opacity-90 disabled:opacity-50 font-semibold shadow-md"
+                  className="px-5 py-2.5 md:px-6 md:py-3 text-xs sm:text-sm md:text-base text-white rounded-xl hover:opacity-90 disabled:opacity-50 font-semibold shadow-md"
                   style={{ backgroundColor: '#3a9e9e' }}
                 >
                   {saving ? 'Ajout...' : 'Ajouter'}
@@ -1285,7 +1285,7 @@ export default function ChildDossierPage() {
       {/* Modal Préférence */}
       {showPreferenceModal && (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
-          <div className="bg-white rounded-2xl shadow-xl max-w-lg w-full">
+          <div className="bg-white rounded-xl md:rounded-2xl shadow-xl max-w-lg w-full">
             <div className="px-4 sm:px-6 py-4 border-b border-gray-100 flex items-center justify-between">
               <h2 className="text-lg sm:text-xl font-bold" style={{ fontFamily: 'Verdana, sans-serif' }}>Nouvelle préférence</h2>
               <button onClick={() => setShowPreferenceModal(false)} className="p-2 hover:bg-gray-100 rounded-lg">
@@ -1294,7 +1294,7 @@ export default function ChildDossierPage() {
                 </svg>
               </button>
             </div>
-            <form onSubmit={handleAddPreference} className="p-4 sm:p-6 space-y-4">
+            <form onSubmit={handleAddPreference} className="p-3 sm:p-4 md:p-6 space-y-3 sm:space-y-4">
               <div>
                 <label className="block text-sm font-semibold text-gray-700 mb-2">Type</label>
                 <select
@@ -1335,14 +1335,14 @@ export default function ChildDossierPage() {
                 <button
                   type="button"
                   onClick={() => setShowPreferenceModal(false)}
-                  className="px-6 py-3 text-gray-700 bg-gray-100 rounded-xl hover:bg-gray-200 font-semibold"
+                  className="px-3 md:px-4 py-2 md:py-2.5 text-xs sm:text-sm md:text-base text-gray-700 bg-gray-100 rounded-xl hover:bg-gray-200 font-semibold"
                 >
                   Annuler
                 </button>
                 <button
                   type="submit"
                   disabled={saving}
-                  className="px-6 py-3 text-white rounded-xl hover:opacity-90 disabled:opacity-50 font-semibold shadow-md"
+                  className="px-5 py-2.5 md:px-6 md:py-3 text-xs sm:text-sm md:text-base text-white rounded-xl hover:opacity-90 disabled:opacity-50 font-semibold shadow-md"
                   style={{ backgroundColor: '#027e7e' }}
                 >
                   {saving ? 'Ajout...' : 'Ajouter'}
@@ -1356,7 +1356,7 @@ export default function ChildDossierPage() {
       {/* Modal Lien externe */}
       {showLinkModal && (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
-          <div className="bg-white rounded-2xl shadow-xl max-w-lg w-full max-h-[90vh] overflow-y-auto">
+          <div className="bg-white rounded-xl md:rounded-2xl shadow-xl max-w-lg w-full max-h-[90vh] overflow-y-auto">
             <div className="px-4 sm:px-6 py-4 border-b border-gray-100 flex items-center justify-between">
               <h2 className="text-lg sm:text-xl font-bold" style={{ fontFamily: 'Verdana, sans-serif' }}>Ajouter un lien</h2>
               <button onClick={() => setShowLinkModal(false)} className="p-2 hover:bg-gray-100 rounded-lg">
@@ -1365,7 +1365,7 @@ export default function ChildDossierPage() {
                 </svg>
               </button>
             </div>
-            <form onSubmit={handleAddLink} className="p-4 sm:p-6 space-y-4">
+            <form onSubmit={handleAddLink} className="p-3 sm:p-4 md:p-6 space-y-3 sm:space-y-4">
               <div>
                 <label className="block text-sm font-semibold text-gray-700 mb-2">Type de document</label>
                 <select
@@ -1441,14 +1441,14 @@ export default function ChildDossierPage() {
                 <button
                   type="button"
                   onClick={() => setShowLinkModal(false)}
-                  className="px-6 py-3 text-gray-700 bg-gray-100 rounded-xl hover:bg-gray-200 font-semibold"
+                  className="px-3 md:px-4 py-2 md:py-2.5 text-xs sm:text-sm md:text-base text-gray-700 bg-gray-100 rounded-xl hover:bg-gray-200 font-semibold"
                 >
                   Annuler
                 </button>
                 <button
                   type="submit"
                   disabled={saving}
-                  className="px-6 py-3 text-white rounded-xl hover:opacity-90 disabled:opacity-50 font-semibold shadow-md"
+                  className="px-5 py-2.5 md:px-6 md:py-3 text-xs sm:text-sm md:text-base text-white rounded-xl hover:opacity-90 disabled:opacity-50 font-semibold shadow-md"
                   style={{ backgroundColor: '#027e7e' }}
                 >
                   {saving ? 'Ajout...' : 'Ajouter'}

@@ -112,43 +112,43 @@ export default function EducatorInvoices() {
         <EducatorNavbar profile={profile} subscription={subscription} />
       </div>
 
-      <div className="flex-1 max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8 w-full">
+      <div className="flex-1 max-w-3xl mx-auto px-3 sm:px-4 md:px-6 lg:px-8 py-3 sm:py-5 md:py-8 w-full">
         {/* En-tête avec flèche retour */}
-        <div className="mb-6 sm:mb-8">
+        <div className="mb-3 sm:mb-5 md:mb-8">
           {/* Flèche retour - desktop uniquement */}
           <button
             onClick={() => router.back()}
-            className="flex items-center gap-2 text-gray-600 hover:text-gray-900 mb-4 transition-colors"
+            className="flex items-center gap-2 text-gray-600 hover:text-gray-900 mb-3 sm:mb-4 transition-colors"
             aria-label="Retour à la page précédente"
           >
-            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <svg className="w-4 h-4 md:w-5 md:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
             </svg>
-            <span className="text-sm font-medium">Retour</span>
+            <span className="text-xs md:text-sm font-medium">Retour</span>
           </button>
 
           <div className="text-center">
-            <div className="w-16 h-16 mx-auto mb-4 rounded-full flex items-center justify-center p-1" style={{ backgroundColor: '#41005c' }}>
+            <div className="w-12 h-12 sm:w-14 sm:h-14 md:w-16 md:h-16 mx-auto mb-2 sm:mb-3 md:mb-4 rounded-full flex items-center justify-center p-1" style={{ backgroundColor: '#41005c' }}>
               <img src="/images/icons/7.svg" alt="" className="w-full h-full" />
             </div>
-            <h1 className="text-xl sm:text-2xl font-bold text-gray-900">Mes factures</h1>
-            <p className="text-gray-500 text-sm mt-1">Toutes vos factures pour vos déclarations URSSAF</p>
+            <h1 className="text-base sm:text-lg md:text-2xl font-bold text-gray-900">Mes factures</h1>
+            <p className="text-gray-500 text-[11px] sm:text-xs md:text-sm mt-1">Toutes vos factures pour vos déclarations URSSAF</p>
           </div>
         </div>
 
         {/* Information URSSAF */}
-        <div className="rounded-xl p-4 mb-6" style={{ backgroundColor: '#f3e8ff', border: '1px solid #d8b4fe' }}>
-          <div className="flex items-start gap-3">
-            <div className="w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0" style={{ backgroundColor: '#41005c' }}>
-              <svg className="h-4 w-4 text-white" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
+        <div className="rounded-xl p-3 sm:p-4 mb-3 sm:mb-4 md:mb-6" style={{ backgroundColor: '#f3e8ff', border: '1px solid #d8b4fe' }}>
+          <div className="flex items-start gap-2 sm:gap-3">
+            <div className="w-7 h-7 md:w-8 md:h-8 rounded-lg flex items-center justify-center flex-shrink-0" style={{ backgroundColor: '#41005c' }}>
+              <svg className="h-3.5 w-3.5 md:h-4 md:w-4 text-white" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
                 <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd" />
               </svg>
             </div>
             <div className="flex-1">
-              <h3 className="text-sm font-semibold" style={{ color: '#41005c' }}>
+              <h3 className="text-xs md:text-sm font-semibold" style={{ color: '#41005c' }}>
                 Information importante
               </h3>
-              <p className="mt-1 text-sm" style={{ color: '#5a1a75' }}>
+              <p className="mt-1 text-[11px] md:text-sm" style={{ color: '#5a1a75' }}>
                 Ces factures sont générées automatiquement après chaque prestation terminée et sont prêtes pour vos déclarations URSSAF.
               </p>
             </div>
@@ -157,22 +157,22 @@ export default function EducatorInvoices() {
 
         {/* Liste des factures */}
         {invoices.length === 0 ? (
-          <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-8 text-center">
-            <div className="w-14 h-14 rounded-full flex items-center justify-center mx-auto mb-4" style={{ backgroundColor: '#f3e8ff' }}>
+          <div className="bg-white rounded-xl md:rounded-2xl shadow-sm border border-gray-100 p-4 sm:p-6 md:p-8 text-center">
+            <div className="w-12 h-12 md:w-14 md:h-14 rounded-full flex items-center justify-center mx-auto mb-3 sm:mb-4" style={{ backgroundColor: '#f3e8ff' }}>
               <svg className="h-7 w-7" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true" style={{ color: '#41005c' }}>
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
               </svg>
             </div>
-            <h3 className="text-base font-semibold text-gray-900">
+            <h3 className="text-sm md:text-base font-semibold text-gray-900">
               Aucune facture disponible
             </h3>
-            <p className="mt-2 text-sm text-gray-500">
+            <p className="mt-1 sm:mt-2 text-xs md:text-sm text-gray-500">
               Les factures seront générées automatiquement après vos premières prestations terminées.
             </p>
-            <div className="mt-5">
+            <div className="mt-3 sm:mt-5">
               <Link
                 href="/dashboard/educator/appointments"
-                className="inline-flex items-center px-5 py-2.5 text-sm font-medium rounded-xl text-white hover:opacity-90 transition"
+                className="inline-flex items-center px-5 py-2.5 md:px-6 md:py-3 text-xs sm:text-sm font-medium rounded-xl text-white hover:opacity-90 transition"
                 style={{ backgroundColor: '#41005c' }}
               >
                 Voir mes rendez-vous
@@ -182,12 +182,12 @@ export default function EducatorInvoices() {
         ) : (
           <>
             {/* Vue mobile - Cartes */}
-            <div className="md:hidden space-y-3">
+            <div className="md:hidden space-y-2 sm:space-y-3">
               {invoices.map((invoice) => (
-                <div key={invoice.id} className="bg-white shadow-sm rounded-xl p-4 border border-gray-100">
-                  <div className="flex items-start justify-between mb-3">
+                <div key={invoice.id} className="bg-white shadow-sm rounded-xl p-3 sm:p-4 border border-gray-100">
+                  <div className="flex items-start justify-between mb-2 sm:mb-3">
                     <div className="flex-1">
-                      <h3 className="text-base font-semibold" style={{ color: '#41005c' }}>{invoice.invoice_number}</h3>
+                      <h3 className="text-sm md:text-base font-semibold" style={{ color: '#41005c' }}>{invoice.invoice_number}</h3>
                       <p className="text-xs text-gray-500 mt-0.5">{formatDate(invoice.invoice_date)}</p>
                     </div>
                     <span className={`px-2.5 py-1 text-xs font-semibold rounded-full ${
@@ -203,7 +203,7 @@ export default function EducatorInvoices() {
                     </span>
                   </div>
 
-                  <div className="space-y-1.5 mb-4 text-sm">
+                  <div className="space-y-1 sm:space-y-1.5 mb-3 sm:mb-4 text-xs sm:text-sm">
                     <div className="flex justify-between">
                       <span className="text-gray-500">Client</span>
                       <span className="font-medium text-gray-900">{invoice.client_name}</span>
@@ -226,7 +226,7 @@ export default function EducatorInvoices() {
                     href={invoice.pdf_url || '#'}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="w-full inline-flex items-center justify-center gap-2 px-4 py-2.5 text-white rounded-xl hover:opacity-90 font-medium transition text-sm"
+                    className="w-full inline-flex items-center justify-center gap-2 px-3 md:px-4 py-2 md:py-2.5 text-white rounded-xl hover:opacity-90 font-medium transition text-xs sm:text-sm"
                     style={{ backgroundColor: '#41005c' }}
                     aria-label={`Télécharger la facture ${invoice.invoice_number}`}
                   >
@@ -240,7 +240,7 @@ export default function EducatorInvoices() {
             </div>
 
             {/* Vue desktop - Tableau */}
-            <div className="hidden md:block bg-white shadow-sm rounded-2xl border border-gray-100 overflow-x-auto">
+            <div className="hidden md:block bg-white shadow-sm rounded-xl md:rounded-2xl border border-gray-100 overflow-x-auto">
               <table className="w-full divide-y divide-gray-100">
                 <thead style={{ backgroundColor: '#faf5ff' }}>
                   <tr>
@@ -317,7 +317,7 @@ export default function EducatorInvoices() {
 
         {/* Statistiques des factures */}
         {invoices.length > 0 && (
-          <div className="mt-6 grid grid-cols-3 gap-2 sm:gap-3">
+          <div className="mt-3 sm:mt-4 md:mt-6 grid grid-cols-3 gap-2 sm:gap-3">
             <div className="bg-white rounded-xl p-2.5 sm:p-4 text-center border border-gray-100 shadow-sm">
               <p className="text-lg sm:text-2xl font-bold" style={{ color: '#41005c' }}>{invoices.length}</p>
               <p className="text-[10px] sm:text-xs text-gray-500 mt-0.5 sm:mt-1">Factures</p>

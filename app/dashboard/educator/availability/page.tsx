@@ -359,34 +359,34 @@ export default function EducatorAvailability() {
         <EducatorNavbar profile={profile} subscription={subscription} />
       </div>
 
-      <div className="flex-1 max-w-3xl mx-auto px-3 sm:px-6 lg:px-8 py-4 sm:py-8 pb-24 sm:pb-8 w-full">
+      <div className="flex-1 max-w-3xl mx-auto px-3 sm:px-4 md:px-6 lg:px-8 py-3 sm:py-5 md:py-8 pb-24 sm:pb-8 w-full">
         {/* En-tête avec flèche retour */}
-        <div className="mb-5 sm:mb-8">
+        <div className="mb-3 sm:mb-5 md:mb-8">
           {/* Flèche retour - desktop uniquement */}
           <button
             onClick={() => router.back()}
-            className="flex items-center gap-2 text-gray-600 hover:text-gray-900 mb-4 transition-colors"
+            className="flex items-center gap-2 text-gray-600 hover:text-gray-900 mb-3 sm:mb-4 transition-colors"
             aria-label="Retour à la page précédente"
           >
-            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <svg className="w-4 h-4 md:w-5 md:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
             </svg>
-            <span className="text-sm font-medium">Retour</span>
+            <span className="text-xs md:text-sm font-medium">Retour</span>
           </button>
 
           <div className="text-center">
-            <div className="w-14 h-14 sm:w-16 sm:h-16 mx-auto mb-3 sm:mb-4 rounded-full flex items-center justify-center p-1" style={{ backgroundColor: '#41005c' }}>
+            <div className="w-12 h-12 sm:w-14 sm:h-14 md:w-16 md:h-16 mx-auto mb-2 sm:mb-3 md:mb-4 rounded-full flex items-center justify-center p-1" style={{ backgroundColor: '#41005c' }}>
               <img src="/images/icons/clock.svg" alt="" className="w-full h-full" />
             </div>
-            <h1 className="text-lg sm:text-2xl font-bold text-gray-900">Mes disponibilités</h1>
-            <p className="text-gray-500 text-xs sm:text-sm mt-1 px-2">Ajoutez vos créneaux pour que les familles puissent réserver</p>
+            <h1 className="text-base sm:text-lg md:text-2xl font-bold text-gray-900">Mes disponibilités</h1>
+            <p className="text-gray-500 text-[11px] sm:text-xs md:text-sm mt-1 px-2">Ajoutez vos créneaux pour que les familles puissent réserver</p>
           </div>
         </div>
 
         {/* Messages */}
         {message && (
           <div
-            className={`mb-6 p-4 rounded-lg ${
+            className={`mb-3 sm:mb-4 md:mb-6 p-3 sm:p-4 rounded-lg ${
               message.type === 'success' ? 'bg-green-50 border border-green-200' : 'bg-red-50 border border-red-200'
             }`}
             role="alert"
@@ -399,15 +399,15 @@ export default function EducatorAvailability() {
         )}
 
         {/* Formulaire d'ajout */}
-        <div className="bg-white rounded-2xl shadow-sm p-3 sm:p-5 mb-4 sm:mb-6 border border-gray-100">
-          <h2 className="text-sm sm:text-lg font-semibold mb-3 sm:mb-4" style={{ color: '#41005c' }}>
+        <div className="bg-white rounded-xl md:rounded-2xl shadow-sm p-3 sm:p-4 md:p-5 mb-3 sm:mb-4 md:mb-6 border border-gray-100">
+          <h2 className="text-sm sm:text-base md:text-lg font-semibold mb-2 sm:mb-3 md:mb-4" style={{ color: '#41005c' }}>
             Ajouter une disponibilité
           </h2>
 
-          <div className="space-y-3 mb-3 sm:mb-4">
+          <div className="space-y-2 sm:space-y-3 mb-2 sm:mb-3 md:mb-4">
             {/* Date - pleine largeur sur mobile */}
             <div>
-              <label htmlFor="availability-date" className="block text-xs font-medium text-gray-600 mb-1">
+              <label htmlFor="availability-date" className="block text-xs md:text-sm font-medium text-gray-600 mb-1">
                 Date
               </label>
               <input
@@ -416,7 +416,7 @@ export default function EducatorAvailability() {
                 value={selectedDate}
                 onChange={(e) => setSelectedDate(e.target.value)}
                 min={new Date().toISOString().split('T')[0]}
-                className="w-full px-3 py-3 sm:py-2.5 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 text-base"
+                className="w-full px-2.5 md:px-3 py-1.5 md:py-2 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 text-sm"
                 style={{ '--tw-ring-color': '#41005c', fontSize: '16px' } as React.CSSProperties}
                 aria-required="true"
                 aria-describedby="date-description"
@@ -429,7 +429,7 @@ export default function EducatorAvailability() {
             {/* Heures côte à côte */}
             <div className="grid grid-cols-2 gap-2 sm:gap-3">
               <div>
-                <label htmlFor="availability-start-time" className="block text-xs font-medium text-gray-600 mb-1">
+                <label htmlFor="availability-start-time" className="block text-xs md:text-sm font-medium text-gray-600 mb-1">
                   Début
                 </label>
                 <input
@@ -437,14 +437,14 @@ export default function EducatorAvailability() {
                   type="time"
                   value={startTime}
                   onChange={(e) => setStartTime(e.target.value)}
-                  className="w-full px-2 sm:px-3 py-3 sm:py-2.5 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 text-base text-center"
+                  className="w-full px-2 sm:px-3 py-1.5 md:py-2 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 text-sm text-center"
                   style={{ '--tw-ring-color': '#41005c', fontSize: '16px' } as React.CSSProperties}
                   aria-required="true"
                 />
               </div>
 
               <div>
-                <label htmlFor="availability-end-time" className="block text-xs font-medium text-gray-600 mb-1">
+                <label htmlFor="availability-end-time" className="block text-xs md:text-sm font-medium text-gray-600 mb-1">
                   Fin
                 </label>
                 <input
@@ -452,7 +452,7 @@ export default function EducatorAvailability() {
                   type="time"
                   value={endTime}
                   onChange={(e) => setEndTime(e.target.value)}
-                  className="w-full px-2 sm:px-3 py-3 sm:py-2.5 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 text-base text-center"
+                  className="w-full px-2 sm:px-3 py-1.5 md:py-2 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 text-sm text-center"
                   style={{ '--tw-ring-color': '#41005c', fontSize: '16px' } as React.CSSProperties}
                   aria-required="true"
                   aria-describedby="time-description"
@@ -467,7 +467,7 @@ export default function EducatorAvailability() {
           <button
             onClick={handleAddAvailability}
             disabled={saving}
-            className="w-full text-white py-3 px-4 rounded-xl transition disabled:opacity-50 disabled:cursor-not-allowed font-medium hover:opacity-90 text-sm"
+            className="w-full text-white py-2 md:py-2.5 px-3 md:px-4 rounded-xl transition disabled:opacity-50 disabled:cursor-not-allowed font-medium hover:opacity-90 text-xs sm:text-sm"
             style={{ backgroundColor: '#41005c' }}
             aria-label="Ajouter une nouvelle disponibilité"
             aria-busy={saving}
@@ -485,7 +485,7 @@ export default function EducatorAvailability() {
           {/* Bouton planning hebdomadaire */}
           <button
             onClick={() => setShowWeeklyForm(!showWeeklyForm)}
-            className="w-full py-3 px-4 rounded-xl transition font-medium text-sm border-2 hover:opacity-90"
+            className="w-full py-2 md:py-2.5 px-3 md:px-4 rounded-xl transition font-medium text-xs sm:text-sm border-2 hover:opacity-90"
             style={{
               borderColor: '#41005c',
               color: '#41005c',
@@ -498,17 +498,17 @@ export default function EducatorAvailability() {
 
         {/* Formulaire planning hebdomadaire */}
         {showWeeklyForm && (
-          <div className="bg-white rounded-2xl shadow-sm p-3 sm:p-5 mb-4 sm:mb-6 border border-gray-100">
-            <h2 className="text-sm sm:text-lg font-semibold mb-3 sm:mb-4" style={{ color: '#41005c' }}>
+          <div className="bg-white rounded-xl md:rounded-2xl shadow-sm p-3 sm:p-4 md:p-5 mb-3 sm:mb-4 md:mb-6 border border-gray-100">
+            <h2 className="text-sm sm:text-base md:text-lg font-semibold mb-2 sm:mb-3 md:mb-4" style={{ color: '#41005c' }}>
               Planning hebdomadaire
             </h2>
-            <p className="text-xs text-gray-500 mb-4">
+            <p className="text-[11px] md:text-xs text-gray-500 mb-3 md:mb-4">
               Configurez vos horaires par jour de la semaine et appliquez-les à tout un mois.
             </p>
 
             {/* Sélecteur de mois */}
-            <div className="mb-4">
-              <label htmlFor="month-selector" className="block text-xs font-medium text-gray-600 mb-1">
+            <div className="mb-3 md:mb-4">
+              <label htmlFor="month-selector" className="block text-xs md:text-sm font-medium text-gray-600 mb-1">
                 Mois à configurer
               </label>
               <input
@@ -517,13 +517,13 @@ export default function EducatorAvailability() {
                 value={selectedMonth}
                 onChange={(e) => setSelectedMonth(e.target.value)}
                 min={`${new Date().getFullYear()}-${String(new Date().getMonth() + 1).padStart(2, '0')}`}
-                className="w-full px-3 py-3 sm:py-2.5 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 text-base"
+                className="w-full px-2.5 md:px-3 py-1.5 md:py-2 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 text-sm"
                 style={{ '--tw-ring-color': '#41005c', fontSize: '16px' } as React.CSSProperties}
               />
             </div>
 
             {/* Configuration par jour */}
-            <div className="space-y-3 mb-4">
+            <div className="space-y-2 sm:space-y-3 mb-3 md:mb-4">
               {DAYS_OF_WEEK.map(day => (
                 <div
                   key={day.id}
@@ -587,7 +587,7 @@ export default function EducatorAvailability() {
             <button
               onClick={handleApplyWeeklySchedule}
               disabled={savingWeekly}
-              className="w-full text-white py-3 px-4 rounded-xl transition disabled:opacity-50 disabled:cursor-not-allowed font-medium hover:opacity-90 text-sm"
+              className="w-full text-white py-2 md:py-2.5 px-3 md:px-4 rounded-xl transition disabled:opacity-50 disabled:cursor-not-allowed font-medium hover:opacity-90 text-xs sm:text-sm"
               style={{ backgroundColor: '#027e7e' }}
               aria-busy={savingWeekly}
             >
@@ -597,35 +597,35 @@ export default function EducatorAvailability() {
         )}
 
         {/* Statistiques rapides */}
-        <div className="grid grid-cols-2 gap-3 sm:gap-4 mb-5 sm:mb-6">
-          <div className="bg-white rounded-2xl p-4 sm:p-5 text-center border border-gray-100 shadow-sm">
+        <div className="grid grid-cols-2 gap-2 sm:gap-3 md:gap-4 mb-3 sm:mb-4 md:mb-6">
+          <div className="bg-white rounded-xl md:rounded-2xl p-3 sm:p-4 md:p-5 text-center border border-gray-100 shadow-sm">
             <p className="text-2xl sm:text-3xl font-bold" style={{ color: '#41005c' }}>{availabilities.length}</p>
             <p className="text-xs sm:text-sm text-gray-500 mt-1">Créneaux à venir</p>
           </div>
-          <div className="bg-white rounded-2xl p-4 sm:p-5 text-center border border-gray-100 shadow-sm">
+          <div className="bg-white rounded-xl md:rounded-2xl p-3 sm:p-4 md:p-5 text-center border border-gray-100 shadow-sm">
             <p className="text-2xl sm:text-3xl font-bold" style={{ color: '#41005c' }}>{availabilities.filter(a => a.is_available).length}</p>
             <p className="text-xs sm:text-sm text-gray-500 mt-1">Disponibles</p>
           </div>
         </div>
 
         {/* Liste des disponibilités */}
-        <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
+        <div className="bg-white rounded-xl md:rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
           {/* En-tête de section */}
-          <div className="px-3 sm:px-5 py-3 sm:py-4 border-b border-gray-100" style={{ backgroundColor: '#faf5ff' }}>
+          <div className="px-3 sm:px-4 md:px-6 py-2.5 sm:py-3 md:py-4 border-b border-gray-100" style={{ backgroundColor: '#faf5ff' }}>
             <div className="flex items-center gap-2 sm:gap-3">
               <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-xl flex items-center justify-center flex-shrink-0" style={{ backgroundColor: '#41005c' }}>
-                <svg className="w-4 h-4 sm:w-5 sm:h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg className="w-4 h-4 md:w-5 md:h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
                 </svg>
               </div>
               <div>
-                <h2 className="text-sm sm:text-base font-semibold text-gray-900">Vos créneaux à venir</h2>
-                <p className="text-[10px] sm:text-xs text-gray-500">{availabilities.length} créneau{availabilities.length > 1 ? 'x' : ''} programmé{availabilities.length > 1 ? 's' : ''}</p>
+                <h2 className="text-sm sm:text-base md:text-lg font-semibold text-gray-900">Vos créneaux à venir</h2>
+                <p className="text-[11px] md:text-xs text-gray-500">{availabilities.length} créneau{availabilities.length > 1 ? 'x' : ''} programmé{availabilities.length > 1 ? 's' : ''}</p>
               </div>
             </div>
           </div>
 
-          <div className="p-3 sm:p-5">
+          <div className="p-3 sm:p-4 md:p-5">
             {availabilities.length === 0 ? (
               <div className="text-center py-6 sm:py-8">
                 <div className="mx-auto w-12 h-12 sm:w-14 sm:h-14 rounded-full flex items-center justify-center mb-3" style={{ backgroundColor: '#f3e8ff' }}>
@@ -646,7 +646,7 @@ export default function EducatorAvailability() {
                 </p>
               </div>
             ) : (
-              <div className="space-y-4 sm:space-y-5" role="list" aria-label="Liste des créneaux de disponibilité">
+              <div className="space-y-3 sm:space-y-4 md:space-y-5" role="list" aria-label="Liste des créneaux de disponibilité">
                 {Object.keys(groupedAvailabilities).sort().map(date => (
                   <div key={date}>
                     <h3 className="text-xs sm:text-sm font-semibold mb-2 capitalize" style={{ color: '#41005c' }}>

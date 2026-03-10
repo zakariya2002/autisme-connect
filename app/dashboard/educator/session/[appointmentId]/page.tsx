@@ -563,20 +563,20 @@ export default function EducatorSessionDossierPage() {
         <EducatorNavbar profile={profile} subscription={subscription} />
       </div>
 
-      <div className="flex-1 max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8 w-full">
+      <div className="flex-1 max-w-6xl mx-auto px-3 sm:px-4 md:px-6 lg:px-8 py-3 sm:py-5 md:py-8 w-full">
         {/* Bouton retour */}
         <Link
           href="/dashboard/educator/appointments?tab=in_progress"
-          className="inline-flex items-center gap-2 text-gray-600 hover:text-gray-900 mb-4"
+          className="inline-flex items-center gap-2 text-gray-600 hover:text-gray-900 mb-3 sm:mb-4 text-xs md:text-sm"
         >
-          <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <svg className="w-4 h-4 md:w-5 md:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
           </svg>
           Retour aux rendez-vous
         </Link>
 
         {/* Header avec infos enfant */}
-        <div className="rounded-2xl p-4 sm:p-6 mb-6 text-white" style={{ background: 'linear-gradient(135deg, #41005c 0%, #5a1a75 50%, #8b5cf6 100%)' }}>
+        <div className="rounded-xl md:rounded-2xl p-3 sm:p-4 md:p-6 mb-3 sm:mb-4 md:mb-6 text-white" style={{ background: 'linear-gradient(135deg, #41005c 0%, #5a1a75 50%, #8b5cf6 100%)' }}>
           <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
             <div className="flex items-center gap-3 sm:gap-4">
               <div className="w-14 h-14 sm:w-18 sm:h-18 bg-white/20 rounded-full flex items-center justify-center text-xl sm:text-2xl font-bold flex-shrink-0 backdrop-blur">
@@ -588,8 +588,8 @@ export default function EducatorSessionDossierPage() {
                     Session en cours
                   </span>
                 </div>
-                <h1 className="text-lg sm:text-xl md:text-2xl font-bold">Dossier de {child.first_name}</h1>
-                <p className="text-white/90 text-sm sm:text-base">
+                <h1 className="text-sm sm:text-base md:text-xl lg:text-2xl font-bold">Dossier de {child.first_name}</h1>
+                <p className="text-white/90 text-[11px] sm:text-xs md:text-sm lg:text-base">
                   {child.age ? `${child.age} ans` : ''}
                   {appointment.family_profiles && ` - Famille ${appointment.family_profiles.first_name} ${appointment.family_profiles.last_name}`}
                 </p>
@@ -599,7 +599,7 @@ export default function EducatorSessionDossierPage() {
         </div>
 
         {/* Onglets */}
-        <div className="bg-white rounded-2xl shadow-md border border-gray-100 mb-6">
+        <div className="bg-white rounded-xl md:rounded-2xl shadow-md border border-gray-100 mb-3 sm:mb-4 md:mb-6">
           <div className="flex overflow-x-auto scrollbar-hide">
             {tabs.map((tab) => (
               <button
@@ -623,52 +623,52 @@ export default function EducatorSessionDossierPage() {
         </div>
 
         {error && (
-          <div className="mb-4 bg-red-50 border-l-4 border-red-500 text-red-700 px-4 py-3 rounded-r">
+          <div className="mb-3 sm:mb-4 bg-red-50 border-l-4 border-red-500 text-red-700 px-3 sm:px-4 py-2 sm:py-3 rounded-r text-xs md:text-sm">
             {error}
             <button onClick={() => setError('')} className="float-right font-bold">&times;</button>
           </div>
         )}
 
         {/* Contenu des onglets */}
-        <div className="bg-white rounded-2xl shadow-md border border-gray-100 p-4 sm:p-6">
+        <div className="bg-white rounded-xl md:rounded-2xl shadow-md border border-gray-100 p-3 sm:p-4 md:p-6">
           {/* Vue d'ensemble */}
           {activeTab === 'overview' && (
-            <div className="space-y-6">
-              <h2 className="text-lg font-bold text-gray-900">Vue d'ensemble</h2>
+            <div className="space-y-3 sm:space-y-4 md:space-y-6">
+              <h2 className="text-sm sm:text-base md:text-lg font-bold text-gray-900">Vue d'ensemble</h2>
 
               {/* Description de l'enfant */}
               {child.description && (
-                <div className="p-4 bg-purple-50 border border-purple-200 rounded-xl">
-                  <h3 className="font-medium text-purple-900 mb-2">Description</h3>
-                  <p className="text-sm text-purple-800">{child.description}</p>
+                <div className="p-3 sm:p-4 bg-purple-50 border border-purple-200 rounded-xl">
+                  <h3 className="font-medium text-purple-900 mb-1 sm:mb-2 text-xs md:text-sm">Description</h3>
+                  <p className="text-[11px] md:text-sm text-purple-800">{child.description}</p>
                 </div>
               )}
 
               {/* Objectifs d'accompagnement */}
               {child.accompaniment_goals && (
-                <div className="p-4 bg-blue-50 border border-blue-200 rounded-xl">
-                  <h3 className="font-medium text-blue-900 mb-2">Objectifs d'accompagnement</h3>
-                  <p className="text-sm text-blue-800">{child.accompaniment_goals}</p>
+                <div className="p-3 sm:p-4 bg-blue-50 border border-blue-200 rounded-xl">
+                  <h3 className="font-medium text-blue-900 mb-1 sm:mb-2 text-xs md:text-sm">Objectifs d'accompagnement</h3>
+                  <p className="text-[11px] md:text-sm text-blue-800">{child.accompaniment_goals}</p>
                 </div>
               )}
 
               {/* Stats cards */}
-              <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                <div className="rounded-xl p-4 border" style={{ backgroundColor: 'rgba(65, 0, 92, 0.1)', borderColor: 'rgba(65, 0, 92, 0.2)' }}>
-                  <p className="text-sm font-medium" style={{ color: '#41005c' }}>Objectifs actifs</p>
-                  <p className="text-2xl font-bold" style={{ color: '#41005c' }}>{stats.activeGoals}/{stats.totalGoals}</p>
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-2 sm:gap-3 md:gap-4">
+                <div className="rounded-xl p-2.5 sm:p-3 md:p-4 border" style={{ backgroundColor: 'rgba(65, 0, 92, 0.1)', borderColor: 'rgba(65, 0, 92, 0.2)' }}>
+                  <p className="text-[11px] md:text-sm font-medium" style={{ color: '#41005c' }}>Objectifs actifs</p>
+                  <p className="text-lg sm:text-xl md:text-2xl font-bold" style={{ color: '#41005c' }}>{stats.activeGoals}/{stats.totalGoals}</p>
                 </div>
-                <div className="rounded-xl p-4 border" style={{ backgroundColor: 'rgba(139, 92, 246, 0.1)', borderColor: 'rgba(139, 92, 246, 0.2)' }}>
-                  <p className="text-sm font-medium" style={{ color: '#8b5cf6' }}>Objectifs atteints</p>
-                  <p className="text-2xl font-bold" style={{ color: '#8b5cf6' }}>{stats.achievedGoals}</p>
+                <div className="rounded-xl p-2.5 sm:p-3 md:p-4 border" style={{ backgroundColor: 'rgba(139, 92, 246, 0.1)', borderColor: 'rgba(139, 92, 246, 0.2)' }}>
+                  <p className="text-[11px] md:text-sm font-medium" style={{ color: '#8b5cf6' }}>Objectifs atteints</p>
+                  <p className="text-lg sm:text-xl md:text-2xl font-bold" style={{ color: '#8b5cf6' }}>{stats.achievedGoals}</p>
                 </div>
-                <div className="rounded-xl p-4 border" style={{ backgroundColor: 'rgba(240, 135, 159, 0.1)', borderColor: 'rgba(240, 135, 159, 0.2)' }}>
-                  <p className="text-sm font-medium" style={{ color: '#f0879f' }}>Séances (30j)</p>
-                  <p className="text-2xl font-bold" style={{ color: '#f0879f' }}>{stats.recentSessions}</p>
+                <div className="rounded-xl p-2.5 sm:p-3 md:p-4 border" style={{ backgroundColor: 'rgba(240, 135, 159, 0.1)', borderColor: 'rgba(240, 135, 159, 0.2)' }}>
+                  <p className="text-[11px] md:text-sm font-medium" style={{ color: '#f0879f' }}>Séances (30j)</p>
+                  <p className="text-lg sm:text-xl md:text-2xl font-bold" style={{ color: '#f0879f' }}>{stats.recentSessions}</p>
                 </div>
-                <div className="rounded-xl p-4 border" style={{ backgroundColor: 'rgba(90, 26, 117, 0.1)', borderColor: 'rgba(90, 26, 117, 0.2)' }}>
-                  <p className="text-sm font-medium" style={{ color: '#5a1a75' }}>Compétences acquises</p>
-                  <p className="text-2xl font-bold" style={{ color: '#5a1a75' }}>{stats.acquiredSkills}/{stats.totalSkills}</p>
+                <div className="rounded-xl p-2.5 sm:p-3 md:p-4 border" style={{ backgroundColor: 'rgba(90, 26, 117, 0.1)', borderColor: 'rgba(90, 26, 117, 0.2)' }}>
+                  <p className="text-[11px] md:text-sm font-medium" style={{ color: '#5a1a75' }}>Compétences acquises</p>
+                  <p className="text-lg sm:text-xl md:text-2xl font-bold" style={{ color: '#5a1a75' }}>{stats.acquiredSkills}/{stats.totalSkills}</p>
                 </div>
               </div>
 
@@ -705,18 +705,18 @@ export default function EducatorSessionDossierPage() {
           {/* Objectifs */}
           {activeTab === 'goals' && (
             <div>
-              <div className="flex items-center justify-between mb-6">
-                <h2 className="text-lg font-bold text-gray-900">Objectifs éducatifs</h2>
+              <div className="flex items-center justify-between mb-3 sm:mb-4 md:mb-6">
+                <h2 className="text-sm sm:text-base md:text-lg font-bold text-gray-900">Objectifs éducatifs</h2>
               </div>
 
               {goals.length === 0 ? (
-                <div className="text-center py-12">
-                  <p className="text-gray-500">Aucun objectif défini.</p>
+                <div className="text-center py-8 sm:py-12">
+                  <p className="text-gray-500 text-xs md:text-sm">Aucun objectif défini.</p>
                 </div>
               ) : (
-                <div className="space-y-4">
+                <div className="space-y-3 sm:space-y-4">
                   {goals.map((goal) => (
-                    <div key={goal.id} className="border border-gray-200 rounded-xl p-4">
+                    <div key={goal.id} className="border border-gray-200 rounded-xl p-3 sm:p-4">
                       <div className="flex items-start justify-between mb-3">
                         <div>
                           <div className="flex items-center gap-2 mb-1">
@@ -773,14 +773,14 @@ export default function EducatorSessionDossierPage() {
           {/* Séances */}
           {activeTab === 'sessions' && (
             <div>
-              <div className="flex items-center justify-between mb-6">
-                <h2 className="text-lg font-bold text-gray-900">Notes de séances</h2>
+              <div className="flex items-center justify-between mb-3 sm:mb-4 md:mb-6">
+                <h2 className="text-sm sm:text-base md:text-lg font-bold text-gray-900">Notes de séances</h2>
                 <button
                   onClick={() => setShowSessionModal(true)}
-                  className="flex items-center gap-2 px-4 py-2 text-white rounded-xl hover:opacity-90 transition text-sm font-semibold shadow-md"
+                  className="flex items-center gap-1.5 sm:gap-2 px-3 md:px-4 py-2 md:py-2.5 text-white rounded-xl hover:opacity-90 transition text-xs sm:text-sm font-semibold shadow-md"
                   style={{ backgroundColor: '#41005c' }}
                 >
-                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <svg className="w-4 h-4 md:w-5 md:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
                   </svg>
                   Ajouter une note
@@ -788,13 +788,13 @@ export default function EducatorSessionDossierPage() {
               </div>
 
               {sessions.length === 0 ? (
-                <div className="text-center py-12">
-                  <p className="text-gray-500 mb-4">Aucune note de séance.</p>
+                <div className="text-center py-8 sm:py-12">
+                  <p className="text-gray-500 text-xs md:text-sm mb-3 sm:mb-4">Aucune note de séance.</p>
                 </div>
               ) : (
-                <div className="space-y-4">
+                <div className="space-y-3 sm:space-y-4">
                   {sessions.map((session) => (
-                    <div key={session.id} className="border border-gray-200 rounded-xl p-4">
+                    <div key={session.id} className="border border-gray-200 rounded-xl p-3 sm:p-4">
                       <div className="flex items-start justify-between mb-3">
                         <div>
                           <h3 className="font-semibold text-gray-900">
@@ -839,14 +839,14 @@ export default function EducatorSessionDossierPage() {
           {/* Compétences */}
           {activeTab === 'skills' && (
             <div>
-              <div className="flex items-center justify-between mb-6">
-                <h2 className="text-lg font-bold text-gray-900">Compétences</h2>
+              <div className="flex items-center justify-between mb-3 sm:mb-4 md:mb-6">
+                <h2 className="text-sm sm:text-base md:text-lg font-bold text-gray-900">Compétences</h2>
                 <button
                   onClick={() => setShowSkillModal(true)}
-                  className="flex items-center gap-2 px-4 py-2 text-white rounded-xl hover:opacity-90 transition text-sm font-semibold shadow-md"
+                  className="flex items-center gap-1.5 sm:gap-2 px-3 md:px-4 py-2 md:py-2.5 text-white rounded-xl hover:opacity-90 transition text-xs sm:text-sm font-semibold shadow-md"
                   style={{ backgroundColor: '#5a1a75' }}
                 >
-                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <svg className="w-4 h-4 md:w-5 md:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
                   </svg>
                   Ajouter
@@ -854,8 +854,8 @@ export default function EducatorSessionDossierPage() {
               </div>
 
               {skills.length === 0 ? (
-                <div className="text-center py-12">
-                  <p className="text-gray-500">Aucune compétence enregistrée.</p>
+                <div className="text-center py-8 sm:py-12">
+                  <p className="text-gray-500 text-xs md:text-sm">Aucune compétence enregistrée.</p>
                 </div>
               ) : (
                 <div className="space-y-4">
@@ -898,21 +898,21 @@ export default function EducatorSessionDossierPage() {
           {/* Préférences (lecture seule) */}
           {activeTab === 'preferences' && (
             <div>
-              <h2 className="text-lg font-bold text-gray-900 mb-6">Préférences</h2>
+              <h2 className="text-sm sm:text-base md:text-lg font-bold text-gray-900 mb-3 sm:mb-4 md:mb-6">Préférences</h2>
 
               {preferences.length === 0 ? (
-                <div className="text-center py-12">
-                  <p className="text-gray-500">Aucune préférence enregistrée par la famille.</p>
+                <div className="text-center py-8 sm:py-12">
+                  <p className="text-gray-500 text-xs md:text-sm">Aucune préférence enregistrée par la famille.</p>
                 </div>
               ) : (
-                <div className="grid gap-4 md:grid-cols-2">
+                <div className="grid gap-3 sm:gap-4 md:grid-cols-2">
                   {Object.entries(preferenceTypeLabels).map(([type, { label, icon, color }]) => {
                     const typePrefs = preferences.filter(p => p.type === type);
                     if (typePrefs.length === 0) return null;
 
                     return (
-                      <div key={type} className={`border rounded-xl p-4 ${color}`}>
-                        <h3 className="font-medium text-gray-900 mb-3 flex items-center gap-2">
+                      <div key={type} className={`border rounded-xl p-3 sm:p-4 ${color}`}>
+                        <h3 className="font-medium text-gray-900 mb-2 sm:mb-3 flex items-center gap-2 text-xs md:text-sm">
                           <span>{icon}</span> {label}
                         </h3>
                         <div className="space-y-2">
@@ -936,17 +936,17 @@ export default function EducatorSessionDossierPage() {
           {/* Documents / Liens externes */}
           {activeTab === 'documents' && (
             <div>
-              <div className="flex items-center justify-between mb-6">
+              <div className="flex items-center justify-between mb-3 sm:mb-4 md:mb-6">
                 <div>
-                  <h2 className="text-lg font-bold text-gray-900">Bilans & Documents</h2>
-                  <p className="text-sm text-gray-500 mt-1">Liens vers les bilans et documents externes</p>
+                  <h2 className="text-sm sm:text-base md:text-lg font-bold text-gray-900">Bilans & Documents</h2>
+                  <p className="text-[11px] md:text-sm text-gray-500 mt-0.5 sm:mt-1">Liens vers les bilans et documents externes</p>
                 </div>
                 <button
                   onClick={() => setShowLinkModal(true)}
-                  className="flex items-center gap-2 px-4 py-2 text-white rounded-xl hover:opacity-90 transition text-sm font-semibold shadow-md"
+                  className="flex items-center gap-1.5 sm:gap-2 px-3 md:px-4 py-2 md:py-2.5 text-white rounded-xl hover:opacity-90 transition text-xs sm:text-sm font-semibold shadow-md"
                   style={{ backgroundColor: '#41005c' }}
                 >
-                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <svg className="w-4 h-4 md:w-5 md:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
                   </svg>
                   Ajouter un lien
@@ -954,8 +954,8 @@ export default function EducatorSessionDossierPage() {
               </div>
 
               {externalLinks.length === 0 ? (
-                <div className="text-center py-12">
-                  <p className="text-gray-500">Aucun document référencé.</p>
+                <div className="text-center py-8 sm:py-12">
+                  <p className="text-gray-500 text-xs md:text-sm">Aucun document référencé.</p>
                 </div>
               ) : (
                 <div className="space-y-4">
@@ -970,7 +970,7 @@ export default function EducatorSessionDossierPage() {
                         </h3>
                         <div className="space-y-2">
                           {typeLinks.map((link) => (
-                            <div key={link.id} className={`border rounded-xl p-4 ${color}`}>
+                            <div key={link.id} className={`border rounded-xl p-3 sm:p-4 ${color}`}>
                               <div className="flex items-start justify-between">
                                 <div className="flex-1">
                                   <div className="flex items-center gap-2 mb-1">

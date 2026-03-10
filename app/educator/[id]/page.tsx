@@ -494,7 +494,7 @@ export default function EducatorPublicProfile({ params }: { params: { id: string
 
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 pt-20 xl:pt-24 pb-8 lg:pb-12">
         {/* En-tête du profil */}
-        <div className="bg-white rounded-2xl shadow-xl overflow-hidden mb-8 border border-gray-100">
+        <div className="bg-white rounded-xl md:rounded-2xl shadow-xl overflow-hidden mb-4 sm:mb-6 md:mb-8 border border-gray-100">
           <div className="px-6 sm:px-8 py-8">
             <div className="flex flex-col sm:flex-row items-center sm:items-start gap-6">
               {/* Avatar */}
@@ -1237,7 +1237,7 @@ export default function EducatorPublicProfile({ params }: { params: { id: string
             )}
 
             {/* Call to Action - Sticky */}
-            <div className="sticky top-24 rounded-2xl p-8 border-2 shadow-xl" style={{ background: 'linear-gradient(135deg, rgba(2, 126, 126, 0.05) 0%, rgba(2, 126, 126, 0.15) 100%)', borderColor: 'rgba(2, 126, 126, 0.3)' }}>
+            <div className="sticky top-24 rounded-xl md:rounded-2xl p-4 sm:p-6 md:p-8 border-2 shadow-xl" style={{ background: 'linear-gradient(135deg, rgba(2, 126, 126, 0.05) 0%, rgba(2, 126, 126, 0.15) 100%)', borderColor: 'rgba(2, 126, 126, 0.3)' }}>
               <div className="text-center mb-6">
                 <div className="w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4 shadow-lg" style={{ backgroundColor: '#027e7e' }}>
                   <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">

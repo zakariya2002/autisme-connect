@@ -541,33 +541,33 @@ export default function DiplomePage() {
     <div className="min-h-screen min-h-[100dvh] flex flex-col" style={{ backgroundColor: '#fdf9f4' }}>
       <EducatorNavbar profile={profile} subscription={subscription} />
 
-      <div className="flex-1 max-w-3xl lg:max-w-4xl xl:max-w-5xl mx-auto px-3 sm:px-6 lg:px-8 xl:px-12 py-4 sm:py-8 lg:py-10 pb-20 sm:pb-8 w-full">
+      <div className="flex-1 max-w-3xl lg:max-w-4xl xl:max-w-5xl mx-auto px-3 sm:px-4 md:px-6 lg:px-8 xl:px-12 py-3 sm:py-5 md:py-8 lg:py-10 pb-20 sm:pb-8 w-full">
         {/* En-tête avec flèche retour */}
-        <div className="mb-5 sm:mb-8 lg:mb-10">
+        <div className="mb-3 sm:mb-5 md:mb-8 lg:mb-10">
           {/* Flèche retour - desktop uniquement */}
           <button
             onClick={() => router.back()}
-            className="flex items-center gap-2 text-gray-600 hover:text-gray-900 mb-4 transition-colors"
+            className="flex items-center gap-2 text-gray-600 hover:text-gray-900 mb-3 sm:mb-4 transition-colors"
             aria-label="Retour à la page précédente"
           >
-            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <svg className="w-4 h-4 md:w-5 md:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
             </svg>
-            <span className="text-sm font-medium">Retour</span>
+            <span className="text-xs md:text-sm font-medium">Retour</span>
           </button>
 
           <div className="text-center">
-            <div className="w-14 h-14 sm:w-16 sm:h-16 lg:w-20 lg:h-20 mx-auto mb-3 sm:mb-4 rounded-full flex items-center justify-center p-1" style={{ backgroundColor: '#41005c' }}>
+            <div className="w-12 h-12 sm:w-14 sm:h-14 md:w-16 md:h-16 lg:w-20 lg:h-20 mx-auto mb-2 sm:mb-3 md:mb-4 rounded-full flex items-center justify-center p-1" style={{ backgroundColor: '#41005c' }}>
               <img src="/images/icons/diploma.svg" alt="" className="w-full h-full" />
             </div>
-            <h1 className="text-lg sm:text-2xl lg:text-3xl font-bold text-gray-900">Vérification</h1>
-            <p className="text-gray-500 text-xs sm:text-sm lg:text-base mt-1 lg:mt-2">Diplôme et documents obligatoires</p>
+            <h1 className="text-base sm:text-lg md:text-2xl lg:text-3xl font-bold text-gray-900">Vérification</h1>
+            <p className="text-gray-500 text-[11px] sm:text-xs md:text-sm lg:text-base mt-1 lg:mt-2">Diplôme et documents obligatoires</p>
           </div>
         </div>
 
         {/* Message global */}
         {message && (
-          <div className={`mb-4 p-3 rounded-xl text-sm ${
+          <div className={`mb-3 sm:mb-4 p-2.5 sm:p-3 rounded-xl text-xs md:text-sm ${
             message.type === 'success' ? 'bg-green-50 border border-green-200 text-green-800' :
             message.type === 'error' ? 'bg-red-50 border border-red-200 text-red-800' :
             'bg-purple-50 border border-purple-200 text-purple-800'
@@ -577,9 +577,9 @@ export default function DiplomePage() {
         )}
 
         {/* Section Diplôme */}
-        <div className="bg-white rounded-2xl shadow-sm lg:shadow-md border border-gray-100 p-4 sm:p-5 lg:p-8 mb-4 sm:mb-6 lg:mb-8">
-          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 sm:gap-0 mb-4 lg:mb-6">
-            <h2 className="text-base sm:text-lg lg:text-xl font-semibold" style={{ color: '#41005c' }}>
+        <div className="bg-white rounded-xl md:rounded-2xl shadow-sm lg:shadow-md border border-gray-100 p-3 sm:p-4 md:p-5 lg:p-8 mb-3 sm:mb-4 md:mb-6 lg:mb-8">
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 sm:gap-0 mb-3 sm:mb-4 lg:mb-6">
+            <h2 className="text-sm sm:text-base md:text-lg lg:text-xl font-semibold" style={{ color: '#41005c' }}>
               🎓 Mon Diplôme {professionConfig ? `- ${professionConfig.label}` : ''}
             </h2>
             {profile.diploma_verification_status && getDiplomaStatusBadge(profile.diploma_verification_status)}
@@ -691,8 +691,8 @@ export default function DiplomePage() {
         </div>
 
         {/* Section Documents de vérification */}
-        <div className="bg-white rounded-2xl shadow-sm lg:shadow-md border border-gray-100 p-4 sm:p-5 lg:p-8">
-          <h2 className="text-base sm:text-lg lg:text-xl font-semibold mb-2 sm:mb-4 lg:mb-6" style={{ color: '#41005c' }}>
+        <div className="bg-white rounded-xl md:rounded-2xl shadow-sm lg:shadow-md border border-gray-100 p-3 sm:p-4 md:p-5 lg:p-8">
+          <h2 className="text-sm sm:text-base md:text-lg lg:text-xl font-semibold mb-2 sm:mb-3 md:mb-4 lg:mb-6" style={{ color: '#41005c' }}>
             📋 Documents complémentaires
           </h2>
           <p className="text-xs sm:text-sm lg:text-base text-gray-500 mb-4 lg:mb-6">
@@ -707,9 +707,9 @@ export default function DiplomePage() {
         </div>
 
         {/* Info box */}
-        <div className="mt-4 sm:mt-6 lg:mt-8 rounded-xl lg:rounded-2xl p-3 sm:p-4 lg:p-6" style={{ backgroundColor: '#f3e8ff', border: '1px solid #d8b4fe' }}>
-          <h3 className="text-xs sm:text-sm lg:text-base font-semibold mb-2 lg:mb-3" style={{ color: '#41005c' }}>💡 Pourquoi ces documents ?</h3>
-          <ul className="text-[10px] sm:text-xs lg:text-sm space-y-1 lg:space-y-2" style={{ color: '#5a1a75' }}>
+        <div className="mt-3 sm:mt-4 md:mt-6 lg:mt-8 rounded-xl md:rounded-2xl p-3 sm:p-4 md:p-5 lg:p-6" style={{ backgroundColor: '#f3e8ff', border: '1px solid #d8b4fe' }}>
+          <h3 className="text-xs sm:text-sm md:text-base font-semibold mb-2 md:mb-3" style={{ color: '#41005c' }}>Pourquoi ces documents ?</h3>
+          <ul className="text-[11px] sm:text-xs md:text-sm space-y-1 md:space-y-2" style={{ color: '#5a1a75' }}>
             <li>✓ Sécurité et protection des enfants</li>
             <li>✓ Confiance des familles</li>
             <li>✓ Badge "Vérifié" sur votre profil</li>

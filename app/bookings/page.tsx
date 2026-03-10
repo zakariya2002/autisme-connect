@@ -454,15 +454,15 @@ export default function AppointmentsPage() {
         </div>
       </nav>
 
-      <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+      <div className="max-w-3xl mx-auto px-3 sm:px-4 md:px-6 lg:px-8 py-3 sm:py-5 md:py-6">
         {/* En-tête */}
-        <div className="mb-6">
-          <h1 className="text-2xl font-bold text-gray-900">Mes rendez-vous</h1>
-          <p className="text-gray-500 text-sm mt-1">Gérez et suivez vos rendez-vous</p>
+        <div className="mb-4 sm:mb-6">
+          <h1 className="text-xl sm:text-2xl font-bold text-gray-900">Mes rendez-vous</h1>
+          <p className="text-gray-500 text-xs sm:text-sm mt-1">Gérez et suivez vos rendez-vous</p>
         </div>
 
         {/* Boutons de filtre */}
-        <div className="grid grid-cols-3 gap-3 mb-8">
+        <div className="grid grid-cols-3 gap-2 sm:gap-3 mb-5 sm:mb-8">
           {/* Tous */}
           <button
             onClick={() => appointments.length > 0 && selectFilter('all')}
@@ -475,7 +475,7 @@ export default function AppointmentsPage() {
                   : 'bg-gray-100 hover:bg-gray-200 cursor-pointer'
             }`}
           >
-            <p className="text-2xl font-bold text-gray-700">{appointments.length}</p>
+            <p className="text-xl sm:text-2xl font-bold text-gray-700">{appointments.length}</p>
             <p className="text-xs text-gray-600 mt-1">Tous</p>
           </button>
 
@@ -491,7 +491,7 @@ export default function AppointmentsPage() {
                   : 'bg-emerald-50 hover:bg-emerald-100 cursor-pointer'
             }`}
           >
-            <p className="text-2xl font-bold text-emerald-600">{upcomingAppointments.length}</p>
+            <p className="text-xl sm:text-2xl font-bold text-emerald-600">{upcomingAppointments.length}</p>
             <p className="text-xs text-emerald-700 mt-1">À venir</p>
           </button>
 
@@ -507,7 +507,7 @@ export default function AppointmentsPage() {
                   : 'bg-gray-100 hover:bg-gray-200 cursor-pointer'
             }`}
           >
-            <p className="text-2xl font-bold text-gray-600">{pastAppointments.length}</p>
+            <p className="text-xl sm:text-2xl font-bold text-gray-600">{pastAppointments.length}</p>
             <p className="text-xs text-gray-600 mt-1">Passés</p>
           </button>
         </div>
@@ -518,7 +518,7 @@ export default function AppointmentsPage() {
             <p className="text-gray-500 mt-4 text-sm">Chargement...</p>
           </div>
         ) : appointments.length === 0 ? (
-          <div className="text-center py-12 bg-white rounded-2xl border border-gray-100">
+          <div className="text-center py-12 bg-white rounded-xl md:rounded-2xl border border-gray-100">
             <div className="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
               <svg className="h-8 w-8 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
@@ -539,7 +539,7 @@ export default function AppointmentsPage() {
             )}
           </div>
         ) : activeFilter === null ? (
-          <div className="text-center py-12 bg-white rounded-2xl border border-gray-100">
+          <div className="text-center py-12 bg-white rounded-xl md:rounded-2xl border border-gray-100">
             <div className="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
               <svg className="h-8 w-8 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 15l-2 5L9 9l11 4-5 2zm0 0l5 5M7.188 2.239l.777 2.897M5.136 7.965l-2.898-.777M13.95 4.05l-2.122 2.122m-5.657 5.656l-2.12 2.122" />
@@ -590,7 +590,7 @@ export default function AppointmentsPage() {
       {/* Modal de signalement no-show */}
       {showReportModal && reportingAppointment && (
         <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4">
-          <div className="bg-white rounded-2xl max-w-md w-full p-6 shadow-xl">
+          <div className="bg-white rounded-xl md:rounded-2xl max-w-md w-full p-4 sm:p-6 shadow-xl">
             <div className="flex items-center gap-3 mb-4">
               <div className="w-12 h-12 bg-orange-100 rounded-full flex items-center justify-center">
                 <svg className="h-6 w-6 text-orange-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">

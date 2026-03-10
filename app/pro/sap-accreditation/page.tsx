@@ -49,15 +49,15 @@ export default function ProSAPAccreditationPage() {
 
       {/* Hero Section */}
       <div className="text-white" style={{ backgroundColor: '#5a1a75' }}>
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+        <div className="max-w-7xl mx-auto px-3 sm:px-4 md:px-6 lg:px-8 py-8 sm:py-12 md:py-16">
           <div className="text-center">
-            <div className="inline-block bg-white/20 backdrop-blur-sm rounded-full px-4 py-2 mb-6">
-              <span className="text-sm font-semibold">Guide complet pour professionnels</span>
+            <div className="inline-block bg-white/20 backdrop-blur-sm rounded-full px-3 sm:px-4 py-1.5 sm:py-2 mb-4 sm:mb-6">
+              <span className="text-xs sm:text-sm font-semibold">Guide complet pour professionnels</span>
             </div>
-            <h1 className="text-4xl md:text-5xl font-bold mb-6">
+            <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold mb-4 sm:mb-6">
               Obtenir l'agrément<br />Services à la Personne (SAP)
             </h1>
-            <p className="text-xl max-w-3xl mx-auto mb-8" style={{ color: 'rgba(255, 255, 255, 0.8)' }}>
+            <p className="text-sm sm:text-base md:text-lg lg:text-xl max-w-3xl mx-auto mb-6 sm:mb-8 px-2" style={{ color: 'rgba(255, 255, 255, 0.8)' }}>
               Permettez à vos clients de bénéficier du CESU préfinancé et du crédit d'impôt de 50%
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
@@ -87,44 +87,44 @@ export default function ProSAPAccreditationPage() {
         </div>
       </div>
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+      <div className="max-w-7xl mx-auto px-3 sm:px-4 md:px-6 lg:px-8 py-6 sm:py-10 md:py-16">
         {/* Avantages */}
-        <div className="mb-16">
-          <h2 className="text-3xl font-bold text-gray-900 text-center mb-12">
+        <div className="mb-8 sm:mb-12 md:mb-16">
+          <h2 className="text-xl sm:text-2xl md:text-3xl font-bold text-gray-900 text-center mb-6 sm:mb-8 md:mb-12">
             Pourquoi obtenir l'agrément SAP ?
           </h2>
-          <div className="grid md:grid-cols-3 gap-8">
-            <div className="bg-white rounded-2xl shadow-lg border border-gray-100 p-8 hover:shadow-xl transition hover:-translate-y-1">
+          <div className="grid md:grid-cols-3 gap-4 sm:gap-6 md:gap-8">
+            <div className="bg-white rounded-xl md:rounded-2xl shadow-lg border border-gray-100 p-4 sm:p-6 md:p-8 hover:shadow-xl transition hover:-translate-y-1">
               <div className="w-14 h-14 rounded-2xl flex items-center justify-center mb-5" style={{ backgroundColor: 'rgba(65, 0, 92, 0.1)' }}>
                 <svg className="w-7 h-7" style={{ color: '#41005c' }} fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                 </svg>
               </div>
-              <h3 className="text-xl font-bold text-gray-900 mb-3">Attirer plus de clients</h3>
+              <h3 className="text-lg sm:text-xl font-bold text-gray-900 mb-2 sm:mb-3">Attirer plus de clients</h3>
               <p className="text-gray-600">
                 Les familles peuvent bénéficier d'une prise en charge de 50% à 80% par leur employeur via le CESU préfinancé.
               </p>
             </div>
 
-            <div className="bg-white rounded-2xl shadow-lg border border-gray-100 p-8 hover:shadow-xl transition hover:-translate-y-1">
-              <div className="w-14 h-14 rounded-2xl flex items-center justify-center mb-5" style={{ backgroundColor: 'rgba(240, 135, 159, 0.2)' }}>
+            <div className="bg-white rounded-xl md:rounded-2xl shadow-lg border border-gray-100 p-4 sm:p-6 md:p-8 hover:shadow-xl transition hover:-translate-y-1">
+              <div className="w-14 h-14 rounded-xl md:rounded-2xl flex items-center justify-center mb-4 sm:mb-5" style={{ backgroundColor: 'rgba(240, 135, 159, 0.2)' }}>
                 <svg className="w-7 h-7" style={{ color: '#f0879f' }} fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z" />
                 </svg>
               </div>
-              <h3 className="text-xl font-bold text-gray-900 mb-3">Badge de confiance</h3>
+              <h3 className="text-lg sm:text-xl font-bold text-gray-900 mb-2 sm:mb-3">Badge de confiance</h3>
               <p className="text-gray-600">
                 Affichez le badge "Agréé Services à la Personne" sur votre profil neurocare pour plus de crédibilité.
               </p>
             </div>
 
-            <div className="bg-white rounded-2xl shadow-lg border border-gray-100 p-8 hover:shadow-xl transition hover:-translate-y-1">
-              <div className="w-14 h-14 rounded-2xl flex items-center justify-center mb-5" style={{ backgroundColor: 'rgba(65, 0, 92, 0.1)' }}>
+            <div className="bg-white rounded-xl md:rounded-2xl shadow-lg border border-gray-100 p-4 sm:p-6 md:p-8 hover:shadow-xl transition hover:-translate-y-1">
+              <div className="w-14 h-14 rounded-xl md:rounded-2xl flex items-center justify-center mb-4 sm:mb-5" style={{ backgroundColor: 'rgba(65, 0, 92, 0.1)' }}>
                 <svg className="w-7 h-7" style={{ color: '#41005c' }} fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
                 </svg>
               </div>
-              <h3 className="text-xl font-bold text-gray-900 mb-3">Avantage fiscal</h3>
+              <h3 className="text-lg sm:text-xl font-bold text-gray-900 mb-2 sm:mb-3">Avantage fiscal</h3>
               <p className="text-gray-600">
                 Vos clients bénéficient d'un crédit d'impôt de 50% sur les sommes versées, rendant vos services plus accessibles.
               </p>
@@ -133,10 +133,10 @@ export default function ProSAPAccreditationPage() {
         </div>
 
         {/* Types d'agrément */}
-        <div className="mb-16 rounded-2xl p-8" style={{ backgroundColor: 'rgba(65, 0, 92, 0.05)' }}>
-          <h2 className="text-2xl font-bold text-gray-900 mb-6">Deux options possibles</h2>
-          <div className="grid md:grid-cols-2 gap-6">
-            <div className="bg-white rounded-xl p-6 border-2 border-gray-200">
+        <div className="mb-8 sm:mb-12 md:mb-16 rounded-xl md:rounded-2xl p-3 sm:p-4 md:p-6 lg:p-8" style={{ backgroundColor: 'rgba(65, 0, 92, 0.05)' }}>
+          <h2 className="text-xl sm:text-2xl font-bold text-gray-900 mb-4 sm:mb-6">Deux options possibles</h2>
+          <div className="grid md:grid-cols-2 gap-4 sm:gap-6">
+            <div className="bg-white rounded-xl p-4 sm:p-6 border-2 border-gray-200">
               <div className="flex items-start gap-3 mb-4">
                 <div className="bg-gray-100 rounded-xl p-2">
                   <svg className="w-5 h-5 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -168,7 +168,7 @@ export default function ProSAPAccreditationPage() {
               </ul>
             </div>
 
-            <div className="bg-white rounded-xl p-6 border-2" style={{ borderColor: '#41005c' }}>
+            <div className="bg-white rounded-xl p-4 sm:p-6 border-2" style={{ borderColor: '#41005c' }}>
               <div className="flex items-start gap-3 mb-4">
                 <div className="rounded-xl p-2" style={{ backgroundColor: 'rgba(65, 0, 92, 0.1)' }}>
                   <svg className="w-5 h-5" style={{ color: '#41005c' }} fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -208,20 +208,20 @@ export default function ProSAPAccreditationPage() {
         </div>
 
         {/* Démarches */}
-        <div id="demarches" className="mb-16">
-          <h2 className="text-3xl font-bold text-gray-900 text-center mb-12">
+        <div id="demarches" className="mb-8 sm:mb-12 md:mb-16">
+          <h2 className="text-xl sm:text-2xl md:text-3xl font-bold text-gray-900 text-center mb-6 sm:mb-8 md:mb-12">
             Les étapes pour obtenir l'agrément
           </h2>
 
-          <div className="space-y-6">
+          <div className="space-y-4 sm:space-y-6">
             {/* Étape 1 */}
-            <div className="bg-white rounded-2xl shadow-lg border border-gray-100 p-8 border-l-4" style={{ borderLeftColor: '#41005c' }}>
+            <div className="bg-white rounded-2xl shadow-lg border border-gray-100 p-4 sm:p-6 md:p-8 border-l-4" style={{ borderLeftColor: '#41005c' }}>
               <div className="flex items-start gap-4">
                 <div className="flex-shrink-0 w-12 h-12 rounded-full flex items-center justify-center" style={{ backgroundColor: 'rgba(65, 0, 92, 0.1)' }}>
                   <span className="font-bold text-lg" style={{ color: '#41005c' }}>1</span>
                 </div>
                 <div className="flex-1">
-                  <h3 className="text-xl font-bold text-gray-900 mb-3">Vérifier votre éligibilité</h3>
+                  <h3 className="text-lg sm:text-xl font-bold text-gray-900 mb-2 sm:mb-3">Vérifier votre éligibilité</h3>
                   <p className="text-gray-600 mb-4">
                     Assurez-vous d'avoir un statut juridique actif (auto-entrepreneur, EI, société) avec un SIRET valide.
                   </p>
@@ -239,13 +239,13 @@ export default function ProSAPAccreditationPage() {
             </div>
 
             {/* Étape 2 */}
-            <div className="bg-white rounded-2xl shadow-lg border border-gray-100 p-8 border-l-4" style={{ borderLeftColor: '#f0879f' }}>
+            <div className="bg-white rounded-2xl shadow-lg border border-gray-100 p-4 sm:p-6 md:p-8 border-l-4" style={{ borderLeftColor: '#f0879f' }}>
               <div className="flex items-start gap-4">
                 <div className="flex-shrink-0 w-12 h-12 rounded-full flex items-center justify-center" style={{ backgroundColor: 'rgba(240, 135, 159, 0.2)' }}>
                   <span className="font-bold text-lg" style={{ color: '#f0879f' }}>2</span>
                 </div>
                 <div className="flex-1">
-                  <h3 className="text-xl font-bold text-gray-900 mb-3">Créer votre compte NOVA</h3>
+                  <h3 className="text-lg sm:text-xl font-bold text-gray-900 mb-2 sm:mb-3">Créer votre compte NOVA</h3>
                   <p className="text-gray-600 mb-4">
                     NOVA est la plateforme officielle pour déclarer ou demander l'agrément Services à la Personne.
                   </p>
@@ -266,13 +266,13 @@ export default function ProSAPAccreditationPage() {
             </div>
 
             {/* Étape 3 */}
-            <div className="bg-white rounded-2xl shadow-lg border border-gray-100 p-8 border-l-4" style={{ borderLeftColor: '#41005c' }}>
+            <div className="bg-white rounded-2xl shadow-lg border border-gray-100 p-4 sm:p-6 md:p-8 border-l-4" style={{ borderLeftColor: '#41005c' }}>
               <div className="flex items-start gap-4">
                 <div className="flex-shrink-0 w-12 h-12 rounded-full flex items-center justify-center" style={{ backgroundColor: 'rgba(65, 0, 92, 0.1)' }}>
                   <span className="font-bold text-lg" style={{ color: '#41005c' }}>3</span>
                 </div>
                 <div className="flex-1">
-                  <h3 className="text-xl font-bold text-gray-900 mb-3">Préparer vos documents</h3>
+                  <h3 className="text-lg sm:text-xl font-bold text-gray-900 mb-2 sm:mb-3">Préparer vos documents</h3>
                   <div className="grid md:grid-cols-2 gap-4">
                     <div className="bg-gray-50 rounded-xl p-4">
                       <p className="text-sm font-semibold text-gray-700 mb-2">Documents obligatoires :</p>
@@ -298,13 +298,13 @@ export default function ProSAPAccreditationPage() {
             </div>
 
             {/* Étape 4 */}
-            <div className="bg-white rounded-2xl shadow-lg border border-gray-100 p-8 border-l-4" style={{ borderLeftColor: '#f0879f' }}>
+            <div className="bg-white rounded-2xl shadow-lg border border-gray-100 p-4 sm:p-6 md:p-8 border-l-4" style={{ borderLeftColor: '#f0879f' }}>
               <div className="flex items-start gap-4">
                 <div className="flex-shrink-0 w-12 h-12 rounded-full flex items-center justify-center" style={{ backgroundColor: 'rgba(240, 135, 159, 0.2)' }}>
                   <span className="font-bold text-lg" style={{ color: '#f0879f' }}>4</span>
                 </div>
                 <div className="flex-1">
-                  <h3 className="text-xl font-bold text-gray-900 mb-3">Remplir le formulaire sur NOVA</h3>
+                  <h3 className="text-lg sm:text-xl font-bold text-gray-900 mb-2 sm:mb-3">Remplir le formulaire sur NOVA</h3>
                   <p className="text-gray-600 mb-4">
                     Sélectionnez les activités SAP que vous proposez et votre zone géographique d'intervention.
                   </p>
@@ -319,13 +319,13 @@ export default function ProSAPAccreditationPage() {
             </div>
 
             {/* Étape 5 */}
-            <div className="bg-white rounded-2xl shadow-lg border border-gray-100 p-8 border-l-4" style={{ borderLeftColor: '#41005c' }}>
+            <div className="bg-white rounded-2xl shadow-lg border border-gray-100 p-4 sm:p-6 md:p-8 border-l-4" style={{ borderLeftColor: '#41005c' }}>
               <div className="flex items-start gap-4">
                 <div className="flex-shrink-0 w-12 h-12 rounded-full flex items-center justify-center" style={{ backgroundColor: 'rgba(65, 0, 92, 0.1)' }}>
                   <span className="font-bold text-lg" style={{ color: '#41005c' }}>5</span>
                 </div>
                 <div className="flex-1">
-                  <h3 className="text-xl font-bold text-gray-900 mb-3">Attendre la validation</h3>
+                  <h3 className="text-lg sm:text-xl font-bold text-gray-900 mb-2 sm:mb-3">Attendre la validation</h3>
                   <div className="grid md:grid-cols-2 gap-4">
                     <div className="rounded-xl p-4" style={{ backgroundColor: 'rgba(240, 135, 159, 0.1)', border: '1px solid rgba(240, 135, 159, 0.3)' }}>
                       <p className="font-semibold mb-2" style={{ color: '#f0879f' }}>Déclaration simple</p>
@@ -345,13 +345,13 @@ export default function ProSAPAccreditationPage() {
             </div>
 
             {/* Étape 6 */}
-            <div className="rounded-2xl shadow-lg p-8 text-white border-l-4" style={{ backgroundColor: '#41005c', borderLeftColor: '#f0879f' }}>
+            <div className="rounded-xl md:rounded-2xl shadow-lg p-4 sm:p-6 md:p-8 text-white border-l-4" style={{ backgroundColor: '#41005c', borderLeftColor: '#f0879f' }}>
               <div className="flex items-start gap-4">
                 <div className="flex-shrink-0 w-12 h-12 bg-white/20 backdrop-blur-sm rounded-full flex items-center justify-center">
                   <span className="text-white font-bold text-lg">6</span>
                 </div>
                 <div className="flex-1">
-                  <h3 className="text-xl font-bold mb-3">Ajouter votre numéro SAP sur neurocare</h3>
+                  <h3 className="text-lg sm:text-xl font-bold mb-2 sm:mb-3">Ajouter votre numéro SAP sur neurocare</h3>
                   <p className="mb-4" style={{ color: 'rgba(255, 255, 255, 0.8)' }}>
                     Une fois votre agrément obtenu, ajoutez votre numéro SAP dans votre profil neurocare
                     pour afficher le badge "Agréé Services à la Personne" et apparaître dans les résultats de recherche filtrés.
@@ -373,11 +373,11 @@ export default function ProSAPAccreditationPage() {
         </div>
 
         {/* FAQ */}
-        <div className="mb-16">
-          <h2 className="text-3xl font-bold text-gray-900 text-center mb-12">
+        <div className="mb-8 sm:mb-12 md:mb-16">
+          <h2 className="text-xl sm:text-2xl md:text-3xl font-bold text-gray-900 text-center mb-6 sm:mb-8 md:mb-12">
             Questions fréquentes
           </h2>
-          <div className="max-w-3xl mx-auto space-y-4">
+          <div className="max-w-3xl mx-auto space-y-3 sm:space-y-4">
             {faqs.map((faq, index) => (
               <div key={index} className="bg-white rounded-xl shadow-md overflow-hidden">
                 <button
@@ -408,7 +408,7 @@ export default function ProSAPAccreditationPage() {
         </div>
 
         {/* Contact et aide */}
-        <div className="rounded-2xl p-8 mb-16" style={{ backgroundColor: '#f3e8ff', border: '2px solid #d8b4fe' }}>
+        <div className="rounded-xl md:rounded-2xl p-4 sm:p-6 md:p-8 mb-8 sm:mb-12 md:mb-16" style={{ backgroundColor: '#f3e8ff', border: '2px solid #d8b4fe' }}>
           <div className="flex items-center justify-center gap-3 mb-8">
             <div className="w-12 h-12 rounded-full flex items-center justify-center" style={{ backgroundColor: '#41005c' }}>
               <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -453,11 +453,11 @@ export default function ProSAPAccreditationPage() {
         </div>
 
         {/* CTA Final */}
-        <div className="text-center rounded-2xl p-12" style={{ backgroundColor: 'rgba(65, 0, 92, 0.05)' }}>
-          <h2 className="text-3xl font-bold text-gray-900 mb-4">
+        <div className="text-center rounded-xl md:rounded-2xl p-6 sm:p-8 md:p-12" style={{ backgroundColor: 'rgba(65, 0, 92, 0.05)' }}>
+          <h2 className="text-xl sm:text-2xl md:text-3xl font-bold text-gray-900 mb-3 sm:mb-4">
             Prêt à obtenir votre agrément ?
           </h2>
-          <p className="text-xl text-gray-600 mb-8 max-w-2xl mx-auto">
+          <p className="text-sm sm:text-base md:text-lg lg:text-xl text-gray-600 mb-6 sm:mb-8 max-w-2xl mx-auto px-2">
             L'agrément SAP est gratuit, rapide et vous permettra d'attirer plus de familles sur neurocare.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
@@ -485,7 +485,7 @@ export default function ProSAPAccreditationPage() {
       </div>
 
       {/* Footer */}
-      <footer className="text-white py-12 px-6" style={{ backgroundColor: '#41005c' }} role="contentinfo">
+      <footer className="text-white py-8 sm:py-12 px-4 sm:px-6" style={{ backgroundColor: '#41005c' }} role="contentinfo">
         <div className="max-w-6xl mx-auto">
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 mb-10">
             {/* Logo et description */}

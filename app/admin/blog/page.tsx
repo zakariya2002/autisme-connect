@@ -90,15 +90,15 @@ export default function AdminBlogPage() {
     <div className="min-h-screen bg-gray-50">
       {/* Header */}
       <nav className="bg-white shadow-sm">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between h-16 items-center">
-            <div className="flex items-center gap-4">
+        <div className="max-w-7xl mx-auto px-3 sm:px-4 md:px-6 lg:px-8">
+          <div className="flex justify-between h-14 sm:h-16 items-center">
+            <div className="flex items-center gap-2 sm:gap-4">
               <Link href="/admin" className="text-gray-600 hover:text-gray-900">
-                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg className="w-5 h-5 sm:w-6 sm:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
                 </svg>
               </Link>
-              <h1 className="text-xl font-bold text-gray-900">Modération des articles</h1>
+              <h1 className="text-sm sm:text-base md:text-lg lg:text-xl font-bold text-gray-900">Modération des articles</h1>
             </div>
             <div className="flex items-center gap-2">
               <span className="text-sm text-gray-600">{posts.length} article(s) en attente</span>
@@ -107,13 +107,13 @@ export default function AdminBlogPage() {
         </div>
       </nav>
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <div className="max-w-7xl mx-auto px-3 sm:px-4 md:px-6 lg:px-8 py-3 sm:py-5 md:py-8">
         {isLoading ? (
           <div className="flex items-center justify-center py-12">
             <div className="w-8 h-8 border-2 border-[#41005c] border-t-transparent rounded-full animate-spin" />
           </div>
         ) : posts.length === 0 ? (
-          <div className="bg-white rounded-xl p-12 text-center">
+          <div className="bg-white rounded-xl md:rounded-2xl p-6 sm:p-8 md:p-12 text-center">
             <div className="w-16 h-16 mx-auto mb-4 bg-green-100 rounded-full flex items-center justify-center">
               <svg className="w-8 h-8 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
@@ -123,17 +123,17 @@ export default function AdminBlogPage() {
             <p className="text-gray-600">Tous les articles ont été traités.</p>
           </div>
         ) : (
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-3 sm:gap-4 md:gap-6">
             {/* Posts list */}
-            <div className="space-y-4">
-              <h2 className="text-lg font-semibold text-gray-900">Articles en attente</h2>
+            <div className="space-y-3 sm:space-y-4">
+              <h2 className="text-sm sm:text-base md:text-lg font-semibold text-gray-900">Articles en attente</h2>
               {posts.map((post) => {
                 const categoryInfo = getCategoryInfo(post.category);
                 return (
                   <div
                     key={post.id}
                     onClick={() => handleViewPost(post.id)}
-                    className={`bg-white rounded-xl p-4 shadow-sm border-2 cursor-pointer transition-all ${
+                    className={`bg-white rounded-xl p-3 sm:p-4 shadow-sm border-2 cursor-pointer transition-all ${
                       selectedPost?.id === post.id
                         ? 'border-[#41005c]'
                         : 'border-transparent hover:border-gray-200'
@@ -180,7 +180,7 @@ export default function AdminBlogPage() {
             {/* Preview panel */}
             <div className="lg:sticky lg:top-24 h-fit">
               {selectedPost ? (
-                <div className="bg-white rounded-xl shadow-sm overflow-hidden">
+                <div className="bg-white rounded-xl md:rounded-2xl shadow-sm overflow-hidden">
                   {/* Preview header */}
                   <div className="p-4 border-b border-gray-100">
                     <h2 className="font-semibold text-gray-900">Aperçu de l'article</h2>
@@ -281,8 +281,8 @@ export default function AdminBlogPage() {
       {/* Reject modal */}
       {showRejectModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50">
-          <div className="bg-white rounded-xl max-w-md w-full p-6">
-            <h3 className="text-lg font-bold text-gray-900 mb-4">Refuser l'article</h3>
+          <div className="bg-white rounded-xl md:rounded-2xl max-w-md w-full p-3 sm:p-4 md:p-6">
+            <h3 className="text-sm sm:text-base md:text-lg font-bold text-gray-900 mb-3 sm:mb-4">Refuser l'article</h3>
             <p className="text-sm text-gray-600 mb-4">
               Expliquez à l'auteur pourquoi son article est refusé pour qu'il puisse le corriger.
             </p>
@@ -291,7 +291,7 @@ export default function AdminBlogPage() {
               onChange={(e) => setRejectReason(e.target.value)}
               placeholder="Motif du refus..."
               rows={4}
-              className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-[#41005c] focus:ring-2 focus:ring-purple-100 transition-all resize-none mb-4"
+              className="w-full px-3 md:px-4 py-2 md:py-3 text-sm rounded-xl border border-gray-200 focus:border-[#41005c] focus:ring-2 focus:ring-purple-100 transition-all resize-none mb-3 sm:mb-4"
             />
             {actionError && (
               <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-2 rounded-lg mb-4 text-sm">

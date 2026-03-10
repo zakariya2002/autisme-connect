@@ -36,7 +36,7 @@ export default function ForgotPasswordPage() {
     <div className="min-h-screen flex flex-col" style={{ backgroundColor: '#fdf9f4' }}>
       <PublicNavbar showAuthButtons={true} />
 
-      <div className="flex-1 flex flex-col justify-center pt-20 xl:pt-24 pb-12 sm:px-6 lg:px-8 relative z-0">
+      <div className="flex-1 flex flex-col justify-center pt-20 xl:pt-24 pb-8 sm:pb-12 px-3 sm:px-6 lg:px-8 relative z-0">
         {/* Logo et Titre */}
         <div className="sm:mx-auto sm:w-full sm:max-w-md">
           {/* Logo */}
@@ -50,7 +50,7 @@ export default function ForgotPasswordPage() {
               />
             </Link>
           </div>
-          <h2 className="text-center text-2xl font-bold text-gray-900 mb-2" style={{ fontFamily: 'Verdana, sans-serif' }}>
+          <h2 className="text-center text-xl sm:text-2xl font-bold text-gray-900 mb-2" style={{ fontFamily: 'Verdana, sans-serif' }}>
             Mot de passe oublié
           </h2>
           {/* Ligne décorative */}
@@ -62,7 +62,7 @@ export default function ForgotPasswordPage() {
 
         {/* Formulaire */}
         <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
-          <div className="bg-white py-10 px-6 shadow-xl rounded-2xl sm:px-12 border border-gray-100">
+          <div className="bg-white py-6 sm:py-8 md:py-10 px-4 sm:px-6 shadow-xl rounded-xl md:rounded-2xl sm:px-12 border border-gray-100">
             {success ? (
               <div className="text-center" role="alert" aria-live="assertive">
                 <div className="mx-auto flex items-center justify-center h-16 w-16 rounded-full mb-4" style={{ backgroundColor: '#e6f4f4' }}>
@@ -70,7 +70,7 @@ export default function ForgotPasswordPage() {
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                   </svg>
                 </div>
-                <h3 className="text-lg font-semibold text-gray-900 mb-2" style={{ fontFamily: 'Verdana, sans-serif' }}>
+                <h3 className="text-base sm:text-lg font-semibold text-gray-900 mb-2" style={{ fontFamily: 'Verdana, sans-serif' }}>
                   Email envoyé !
                 </h3>
                 <p className="text-sm text-gray-600 mb-6" style={{ fontFamily: 'Open Sans, sans-serif' }}>
@@ -97,7 +97,7 @@ export default function ForgotPasswordPage() {
                 </div>
               </div>
             ) : (
-              <form className="space-y-6" onSubmit={handleSubmit}>
+              <form className="space-y-4 sm:space-y-5 md:space-y-6" onSubmit={handleSubmit}>
                 {error && (
                   <div className="bg-red-50 border-l-4 border-red-500 text-red-700 px-4 py-3 rounded-r" role="alert" aria-live="assertive">
                     <div className="flex items-center">
@@ -110,7 +110,7 @@ export default function ForgotPasswordPage() {
                 )}
 
                 <div>
-                  <label htmlFor="email" className="block text-sm font-semibold text-gray-700 mb-2">
+                  <label htmlFor="email" className="block text-xs md:text-sm font-semibold text-gray-700 mb-1.5 md:mb-2">
                     Adresse email <span className="text-red-500" aria-hidden="true">*</span>
                   </label>
                   <div className="relative">
@@ -129,7 +129,7 @@ export default function ForgotPasswordPage() {
                       value={email}
                       onChange={(e) => setEmail(e.target.value)}
                       placeholder="votre@email.com"
-                      className="appearance-none block w-full pl-10 pr-3 py-3 border border-gray-300 rounded-lg shadow-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:border-transparent transition-all text-gray-900 bg-white"
+                      className="appearance-none block w-full pl-10 pr-3 py-2 md:py-3 border border-gray-300 rounded-lg shadow-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:border-transparent transition-all text-sm text-gray-900 bg-white"
                       style={{ '--tw-ring-color': '#027e7e' } as any}
                     />
                   </div>
@@ -140,7 +140,7 @@ export default function ForgotPasswordPage() {
                     type="submit"
                     disabled={loading}
                     aria-busy={loading}
-                    className="group relative w-full flex justify-center py-3 px-4 border border-transparent rounded-lg text-sm font-semibold text-white focus:outline-none focus:ring-2 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed shadow-md hover:shadow-lg transition-all transform hover:-translate-y-0.5 hover:opacity-90"
+                    className="group relative w-full flex justify-center py-2.5 md:py-3 px-4 border border-transparent rounded-lg text-xs sm:text-sm font-semibold text-white focus:outline-none focus:ring-2 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed shadow-md hover:shadow-lg transition-all transform hover:-translate-y-0.5 hover:opacity-90"
                     style={{ backgroundColor: '#027e7e' }}
                   >
                     {loading ? (

@@ -641,9 +641,9 @@ export default function RegisterEducatorPage() {
     return (
       <>
       <ProTheme />
-      <div className="min-h-screen flex items-center justify-center px-4" style={{ backgroundColor: '#fdf9f4' }}>
+      <div className="min-h-screen flex items-center justify-center px-3 sm:px-4" style={{ backgroundColor: '#fdf9f4' }}>
         <div className="max-w-md w-full">
-          <div className="bg-white rounded-2xl shadow-xl p-8 text-center">
+          <div className="bg-white rounded-xl md:rounded-2xl shadow-xl p-5 sm:p-6 md:p-8 text-center">
             {/* Icône email */}
             <div className="mx-auto w-20 h-20 rounded-full flex items-center justify-center mb-6" style={{ backgroundColor: 'rgba(65, 0, 92, 0.1)' }}>
               <svg className="w-10 h-10" style={{ color: '#41005c' }} fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
@@ -652,7 +652,7 @@ export default function RegisterEducatorPage() {
             </div>
 
             {/* Titre */}
-            <h2 className="text-2xl font-bold text-gray-900 mb-4">
+            <h2 className="text-xl sm:text-2xl font-bold text-gray-900 mb-4">
               Vérifiez votre boîte mail !
             </h2>
 
@@ -702,7 +702,7 @@ export default function RegisterEducatorPage() {
       {/* Header */}
       <ProNavbar />
 
-      <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12">
+      <div className="max-w-5xl mx-auto px-3 sm:px-4 md:px-6 lg:px-8 py-6 sm:py-8 md:py-12">
         {/* Hero Section */}
         <div className="text-center mb-8 sm:mb-12">
           <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full text-sm font-semibold mb-4" style={{ backgroundColor: 'rgba(65, 0, 92, 0.1)', color: '#41005c' }}>
@@ -711,11 +711,11 @@ export default function RegisterEducatorPage() {
             </svg>
             neurocare Pro
           </div>
-          <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-gray-900 mb-4">
+          <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-gray-900 mb-4">
             Rejoignez notre réseau de
             <span style={{ color: '#41005c' }}> professionnels</span>
           </h1>
-          <p className="text-gray-600 text-lg max-w-2xl mx-auto">
+          <p className="text-gray-600 text-sm sm:text-base md:text-lg max-w-2xl mx-auto">
             Développez votre activité et accompagnez des familles qui ont besoin de vous
           </p>
         </div>
@@ -759,15 +759,15 @@ export default function RegisterEducatorPage() {
         <form onSubmit={handleSubmit}>
           {/* Étape 1: Sélection de la profession */}
           {currentStep === 1 && (
-            <div className="bg-white rounded-2xl shadow-xl p-6 sm:p-8 border border-gray-100">
-              <h2 className="text-xl sm:text-2xl font-bold text-gray-900 mb-2 text-center">
+            <div className="bg-white rounded-xl md:rounded-2xl shadow-xl p-3 sm:p-4 md:p-6 lg:p-8 border border-gray-100">
+              <h2 className="text-lg sm:text-xl md:text-2xl font-bold text-gray-900 mb-2 text-center">
                 Quelle est votre profession ?
               </h2>
               <p className="text-gray-600 text-center mb-8">
                 Sélectionnez votre domaine d'expertise
               </p>
 
-              <div className="space-y-8">
+              <div className="space-y-4 sm:space-y-6 md:space-y-8">
                 {categories.map((category) => (
                   <div key={category.name}>
                     <div className="flex items-center gap-3 mb-4">
@@ -826,7 +826,7 @@ export default function RegisterEducatorPage() {
                   type="button"
                   onClick={() => goToStep(2)}
                   disabled={!professionType}
-                  className="px-8 py-3 text-white rounded-xl font-semibold shadow-lg hover:shadow-xl disabled:opacity-50 disabled:cursor-not-allowed transition-all flex items-center gap-2"
+                  className="px-5 py-2.5 md:px-8 md:py-3 text-xs sm:text-sm md:text-base text-white rounded-xl font-semibold shadow-lg hover:shadow-xl disabled:opacity-50 disabled:cursor-not-allowed transition-all flex items-center gap-2"
                   style={{ backgroundColor: '#41005c' }}
                 >
                   Continuer
@@ -840,9 +840,9 @@ export default function RegisterEducatorPage() {
 
           {/* Étape 2: Informations personnelles et professionnelles */}
           {currentStep === 2 && (
-            <div className="space-y-6">
+            <div className="space-y-3 sm:space-y-4 md:space-y-6">
               {/* Badge profession sélectionnée */}
-              <div className="text-white rounded-2xl p-4 shadow-lg" style={{ backgroundColor: '#41005c' }}>
+              <div className="text-white rounded-xl md:rounded-2xl p-3 sm:p-4 shadow-lg" style={{ backgroundColor: '#41005c' }}>
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-3">
                     <span className="text-3xl">{selectedProfession?.icon}</span>
@@ -862,32 +862,32 @@ export default function RegisterEducatorPage() {
               </div>
 
               {/* Formulaire */}
-              <div className="bg-white rounded-2xl shadow-xl p-6 sm:p-8 border border-gray-100">
-                <h2 className="text-xl font-bold text-gray-900 mb-6 flex items-center gap-2">
+              <div className="bg-white rounded-xl md:rounded-2xl shadow-xl p-3 sm:p-4 md:p-6 lg:p-8 border border-gray-100">
+                <h2 className="text-base sm:text-lg md:text-xl font-bold text-gray-900 mb-3 sm:mb-4 md:mb-6 flex items-center gap-2">
                   <svg className="w-6 h-6 text-[#41005c]" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
                   </svg>
                   Vos informations
                 </h2>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-3 sm:gap-4 md:gap-6">
                   {/* Email */}
                   <div className="md:col-span-2">
-                    <label className="block text-sm font-semibold text-gray-700 mb-2">Adresse email *</label>
+                    <label className="block text-xs md:text-sm font-semibold text-gray-700 mb-1.5 md:mb-2">Adresse email *</label>
                     <input
                       type="email"
                       required
                       aria-required="true"
                       value={authData.email}
                       onChange={(e) => setAuthData({ ...authData, email: e.target.value })}
-                      className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#41005c] focus:border-[#41005c] transition-all"
+                      className="w-full px-3 md:px-4 py-2 md:py-3 text-sm border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#41005c] focus:border-[#41005c] transition-all"
                       placeholder="votre@email.com"
                     />
                   </div>
 
                   {/* Mot de passe */}
                   <div>
-                    <label className="block text-sm font-semibold text-gray-700 mb-2">Mot de passe *</label>
+                    <label className="block text-xs md:text-sm font-semibold text-gray-700 mb-1.5 md:mb-2">Mot de passe *</label>
                     <div className="relative">
                       <input
                         type={showPassword ? 'text' : 'password'}
@@ -895,7 +895,7 @@ export default function RegisterEducatorPage() {
                         aria-required="true"
                         value={authData.password}
                         onChange={handlePasswordChange}
-                        className="w-full px-4 py-3 pr-12 border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#41005c] focus:border-[#41005c] transition-all"
+                        className="w-full px-3 md:px-4 py-2 md:py-3 pr-12 text-sm border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#41005c] focus:border-[#41005c] transition-all"
                         placeholder="••••••••"
                       />
                       <button
@@ -936,7 +936,7 @@ export default function RegisterEducatorPage() {
 
                   {/* Confirmation mot de passe */}
                   <div>
-                    <label className="block text-sm font-semibold text-gray-700 mb-2">Confirmer *</label>
+                    <label className="block text-xs md:text-sm font-semibold text-gray-700 mb-1.5 md:mb-2">Confirmer *</label>
                     <div className="relative">
                       <input
                         type={showConfirmPassword ? 'text' : 'password'}
@@ -944,7 +944,7 @@ export default function RegisterEducatorPage() {
                         aria-required="true"
                         value={authData.confirmPassword}
                         onChange={(e) => setAuthData({ ...authData, confirmPassword: e.target.value })}
-                        className="w-full px-4 py-3 pr-12 border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#41005c] focus:border-[#41005c] transition-all"
+                        className="w-full px-3 md:px-4 py-2 md:py-3 pr-12 text-sm border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#41005c] focus:border-[#41005c] transition-all"
                         placeholder="••••••••"
                       />
                       <button
@@ -969,47 +969,47 @@ export default function RegisterEducatorPage() {
 
                   {/* Prénom */}
                   <div>
-                    <label className="block text-sm font-semibold text-gray-700 mb-2">Prénom *</label>
+                    <label className="block text-xs md:text-sm font-semibold text-gray-700 mb-1.5 md:mb-2">Prénom *</label>
                     <input
                       type="text"
                       required
                       aria-required="true"
                       value={educatorData.first_name}
                       onChange={(e) => setEducatorData({ ...educatorData, first_name: e.target.value })}
-                      className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#41005c] focus:border-[#41005c] transition-all"
+                      className="w-full px-3 md:px-4 py-2 md:py-3 text-sm border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#41005c] focus:border-[#41005c] transition-all"
                       placeholder="Jean"
                     />
                   </div>
 
                   {/* Nom */}
                   <div>
-                    <label className="block text-sm font-semibold text-gray-700 mb-2">Nom *</label>
+                    <label className="block text-xs md:text-sm font-semibold text-gray-700 mb-1.5 md:mb-2">Nom *</label>
                     <input
                       type="text"
                       required
                       aria-required="true"
                       value={educatorData.last_name}
                       onChange={(e) => setEducatorData({ ...educatorData, last_name: e.target.value })}
-                      className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#41005c] focus:border-[#41005c] transition-all"
+                      className="w-full px-3 md:px-4 py-2 md:py-3 text-sm border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#41005c] focus:border-[#41005c] transition-all"
                       placeholder="Dupont"
                     />
                   </div>
 
                   {/* Téléphone */}
                   <div>
-                    <label className="block text-sm font-semibold text-gray-700 mb-2">Téléphone</label>
+                    <label className="block text-xs md:text-sm font-semibold text-gray-700 mb-1.5 md:mb-2">Téléphone</label>
                     <input
                       type="tel"
                       value={educatorData.phone}
                       onChange={(e) => setEducatorData({ ...educatorData, phone: e.target.value })}
-                      className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#41005c] focus:border-[#41005c] transition-all"
+                      className="w-full px-3 md:px-4 py-2 md:py-3 text-sm border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#41005c] focus:border-[#41005c] transition-all"
                       placeholder="06 12 34 56 78"
                     />
                   </div>
 
                   {/* Localisation */}
                   <div>
-                    <label className="block text-sm font-semibold text-gray-700 mb-2">Localisation *</label>
+                    <label className="block text-xs md:text-sm font-semibold text-gray-700 mb-1.5 md:mb-2">Localisation *</label>
                     <div className="flex gap-2">
                       <input
                         type="text"
@@ -1017,7 +1017,7 @@ export default function RegisterEducatorPage() {
                         aria-required="true"
                         value={educatorData.location}
                         onChange={(e) => setEducatorData({ ...educatorData, location: e.target.value })}
-                        className="flex-1 px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#41005c] focus:border-[#41005c] transition-all"
+                        className="flex-1 px-3 md:px-4 py-2 md:py-3 text-sm border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#41005c] focus:border-[#41005c] transition-all"
                         placeholder="Paris, France"
                       />
                       <button
@@ -1043,13 +1043,13 @@ export default function RegisterEducatorPage() {
 
                   {/* Diplôme */}
                   <div className="md:col-span-2">
-                    <label className="block text-sm font-semibold text-gray-700 mb-2">Diplôme principal *</label>
+                    <label className="block text-xs md:text-sm font-semibold text-gray-700 mb-1.5 md:mb-2">Diplôme principal *</label>
                     <select
                       required
                       aria-required="true"
                       value={educatorData.diploma_type}
                       onChange={(e) => setEducatorData({ ...educatorData, diploma_type: e.target.value })}
-                      className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#41005c] focus:border-[#41005c] transition-all"
+                      className="w-full px-3 md:px-4 py-2 md:py-3 text-sm border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#41005c] focus:border-[#41005c] transition-all"
                     >
                       <option value="">Sélectionnez votre diplôme</option>
                       {selectedProfession?.diplomas.map((diploma) => (
@@ -1063,7 +1063,7 @@ export default function RegisterEducatorPage() {
                   {/* RPPS (si requis) */}
                   {selectedProfession?.requiresRpps && (
                     <div className="md:col-span-2">
-                      <label className="block text-sm font-semibold text-gray-700 mb-2">Numéro RPPS *</label>
+                      <label className="block text-xs md:text-sm font-semibold text-gray-700 mb-1.5 md:mb-2">Numéro RPPS *</label>
                       <div className="relative">
                         <input
                           type="text"
@@ -1121,7 +1121,7 @@ export default function RegisterEducatorPage() {
 
                   {/* Expérience */}
                   <div>
-                    <label className="block text-sm font-semibold text-gray-700 mb-2">Années d'expérience * (minimum 1 an)</label>
+                    <label className="block text-xs md:text-sm font-semibold text-gray-700 mb-1.5 md:mb-2">Années d'expérience * (minimum 1 an)</label>
                     <input
                       type="number"
                       required
@@ -1130,32 +1130,32 @@ export default function RegisterEducatorPage() {
                       placeholder="Minimum 1 an"
                       value={educatorData.years_of_experience}
                       onChange={(e) => setEducatorData({ ...educatorData, years_of_experience: parseInt(e.target.value) })}
-                      className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#41005c] focus:border-[#41005c] transition-all"
+                      className="w-full px-3 md:px-4 py-2 md:py-3 text-sm border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#41005c] focus:border-[#41005c] transition-all"
                     />
                   </div>
 
                   {/* Tarif horaire */}
                   <div>
-                    <label className="block text-sm font-semibold text-gray-700 mb-2">Tarif horaire (€)</label>
+                    <label className="block text-xs md:text-sm font-semibold text-gray-700 mb-1.5 md:mb-2">Tarif horaire (€)</label>
                     <input
                       type="number"
                       step="0.01"
                       min="0"
                       value={educatorData.hourly_rate}
                       onChange={(e) => setEducatorData({ ...educatorData, hourly_rate: e.target.value })}
-                      className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#41005c] focus:border-[#41005c] transition-all"
+                      className="w-full px-3 md:px-4 py-2 md:py-3 text-sm border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#41005c] focus:border-[#41005c] transition-all"
                       placeholder="40"
                     />
                   </div>
 
                   {/* Bio */}
                   <div className="md:col-span-2">
-                    <label className="block text-sm font-semibold text-gray-700 mb-2">Présentez-vous</label>
+                    <label className="block text-xs md:text-sm font-semibold text-gray-700 mb-1.5 md:mb-2">Présentez-vous</label>
                     <textarea
                       rows={4}
                       value={educatorData.bio}
                       onChange={(e) => setEducatorData({ ...educatorData, bio: e.target.value })}
-                      className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#41005c] focus:border-[#41005c] transition-all resize-none"
+                      className="w-full px-3 md:px-4 py-2 md:py-3 text-sm border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#41005c] focus:border-[#41005c] transition-all resize-none"
                       placeholder="Décrivez votre parcours, vos motivations et votre approche..."
                     />
                   </div>
@@ -1204,18 +1204,18 @@ export default function RegisterEducatorPage() {
               </div>
 
               {/* Informations professionnelles */}
-              <div className="bg-white rounded-2xl shadow-xl p-6 sm:p-8 border border-gray-100">
-                <h2 className="text-xl font-bold text-gray-900 mb-6 flex items-center gap-2">
+              <div className="bg-white rounded-xl md:rounded-2xl shadow-xl p-3 sm:p-4 md:p-6 lg:p-8 border border-gray-100">
+                <h2 className="text-base sm:text-lg md:text-xl font-bold text-gray-900 mb-3 sm:mb-4 md:mb-6 flex items-center gap-2">
                   <svg className="w-6 h-6 text-[#41005c]" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
                   </svg>
                   Informations administratives
                 </h2>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-3 sm:gap-4 md:gap-6">
                   {/* SIRET */}
                   <div className="md:col-span-2">
-                    <label className="block text-sm font-semibold text-gray-700 mb-2">Numéro SIRET *</label>
+                    <label className="block text-xs md:text-sm font-semibold text-gray-700 mb-1.5 md:mb-2">Numéro SIRET *</label>
                     <div className="relative">
                       <input
                         type="text"
@@ -1272,7 +1272,7 @@ export default function RegisterEducatorPage() {
 
                   {/* SAP */}
                   <div className="md:col-span-2">
-                    <label className="block text-sm font-semibold text-gray-700 mb-2">
+                    <label className="block text-xs md:text-sm font-semibold text-gray-700 mb-1.5 md:mb-2">
                       Numéro d'agrément SAP
                       <span className="text-green-600 font-normal ml-2">(Facultatif)</span>
                     </label>
@@ -1281,7 +1281,7 @@ export default function RegisterEducatorPage() {
                       value={educatorData.sap_number}
                       onChange={(e) => setEducatorData({ ...educatorData, sap_number: e.target.value.toUpperCase() })}
                       placeholder="SAP123456789"
-                      className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#41005c] focus:border-[#41005c] transition-all"
+                      className="w-full px-3 md:px-4 py-2 md:py-3 text-sm border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#41005c] focus:border-[#41005c] transition-all"
                     />
                     <div className="mt-3 rounded-xl p-4" style={{ backgroundColor: 'rgba(65, 0, 92, 0.05)', border: '1px solid rgba(65, 0, 92, 0.2)' }}>
                       <p className="text-sm font-semibold mb-1" style={{ color: '#41005c' }}>
@@ -1296,8 +1296,8 @@ export default function RegisterEducatorPage() {
               </div>
 
               {/* Spécialisations */}
-              <div className="bg-white rounded-2xl shadow-xl p-6 sm:p-8 border border-gray-100">
-                <h2 className="text-xl font-bold text-gray-900 mb-6 flex items-center gap-2">
+              <div className="bg-white rounded-xl md:rounded-2xl shadow-xl p-3 sm:p-4 md:p-6 lg:p-8 border border-gray-100">
+                <h2 className="text-base sm:text-lg md:text-xl font-bold text-gray-900 mb-3 sm:mb-4 md:mb-6 flex items-center gap-2">
                   <svg className="w-6 h-6 text-[#41005c]" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
                   </svg>
@@ -1333,8 +1333,8 @@ export default function RegisterEducatorPage() {
               </div>
 
               {/* Langues */}
-              <div className="bg-white rounded-2xl shadow-xl p-6 sm:p-8 border border-gray-100">
-                <h2 className="text-xl font-bold text-gray-900 mb-6 flex items-center gap-2">
+              <div className="bg-white rounded-xl md:rounded-2xl shadow-xl p-3 sm:p-4 md:p-6 lg:p-8 border border-gray-100">
+                <h2 className="text-base sm:text-lg md:text-xl font-bold text-gray-900 mb-3 sm:mb-4 md:mb-6 flex items-center gap-2">
                   <svg className="w-6 h-6 text-[#41005c]" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 5h12M9 3v2m1.048 9.5A18.022 18.022 0 016.412 9m6.088 9h7M11 21l5-10 5 10M12.751 5C11.783 10.77 8.07 15.61 3 18.129" />
                   </svg>
@@ -1365,8 +1365,8 @@ export default function RegisterEducatorPage() {
               </div>
 
               {/* CV Upload */}
-              <div className="bg-white rounded-2xl shadow-xl p-6 sm:p-8 border border-gray-100">
-                <h2 className="text-xl font-bold text-gray-900 mb-6 flex items-center gap-2">
+              <div className="bg-white rounded-xl md:rounded-2xl shadow-xl p-3 sm:p-4 md:p-6 lg:p-8 border border-gray-100">
+                <h2 className="text-base sm:text-lg md:text-xl font-bold text-gray-900 mb-3 sm:mb-4 md:mb-6 flex items-center gap-2">
                   <svg className="w-6 h-6 text-[#41005c]" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
                   </svg>
@@ -1435,7 +1435,7 @@ export default function RegisterEducatorPage() {
               </div>
 
               {/* Consentement RGPD */}
-              <div className="bg-white rounded-2xl shadow-xl p-6 sm:p-8 border border-gray-100">
+              <div className="bg-white rounded-xl md:rounded-2xl shadow-xl p-3 sm:p-4 md:p-6 lg:p-8 border border-gray-100">
                 <h2 className="text-xl font-bold text-gray-900 mb-6">Consentement et protection de vos données</h2>
 
                 <div className="space-y-4">

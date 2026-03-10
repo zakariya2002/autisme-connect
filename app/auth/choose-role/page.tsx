@@ -57,10 +57,10 @@ export default function ChooseRolePage() {
   };
 
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center p-4" style={{ backgroundColor: '#fdf9f4' }}>
-      <div className="max-w-md w-full bg-white rounded-2xl shadow-xl p-8">
-        <div className="text-center mb-8">
-          <h1 className="text-2xl font-bold text-gray-900 mb-2">
+    <div className="min-h-screen flex flex-col items-center justify-center px-3 sm:px-4 py-6 sm:py-8" style={{ backgroundColor: '#fdf9f4' }}>
+      <div className="max-w-md w-full bg-white rounded-xl md:rounded-2xl shadow-xl p-5 sm:p-6 md:p-8">
+        <div className="text-center mb-6 sm:mb-8">
+          <h1 className="text-xl sm:text-2xl font-bold text-gray-900 mb-2">
             Bienvenue sur NeuroCare !
           </h1>
           <p className="text-gray-600">
@@ -68,12 +68,12 @@ export default function ChooseRolePage() {
           </p>
         </div>
 
-        <div className="space-y-4 mb-8">
+        <div className="space-y-3 sm:space-y-4 mb-6 sm:mb-8">
           {/* Option Aidant */}
           <button
             type="button"
             onClick={() => setSelectedRole('family')}
-            className={`w-full p-4 rounded-xl border-2 transition-all text-left ${
+            className={`w-full p-3 sm:p-4 rounded-xl border-2 transition-all text-left ${
               selectedRole === 'family'
                 ? 'border-[#027e7e] bg-[#027e7e]/5'
                 : 'border-gray-200 hover:border-gray-300'
@@ -98,7 +98,7 @@ export default function ChooseRolePage() {
           <button
             type="button"
             onClick={() => setSelectedRole('educator')}
-            className={`w-full p-4 rounded-xl border-2 transition-all text-left ${
+            className={`w-full p-3 sm:p-4 rounded-xl border-2 transition-all text-left ${
               selectedRole === 'educator'
                 ? 'border-[#41005c] bg-[#41005c]/5'
                 : 'border-gray-200 hover:border-gray-300'
@@ -123,7 +123,7 @@ export default function ChooseRolePage() {
         <button
           onClick={handleRoleSelection}
           disabled={!selectedRole || loading}
-          className="w-full py-3 px-4 rounded-xl text-white font-semibold transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+          className="w-full py-2.5 md:py-3 px-4 rounded-xl text-xs sm:text-sm md:text-base text-white font-semibold transition-all disabled:opacity-50 disabled:cursor-not-allowed"
           style={{ backgroundColor: selectedRole === 'educator' ? '#41005c' : '#027e7e' }}
         >
           {loading ? (

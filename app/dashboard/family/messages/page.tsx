@@ -363,7 +363,7 @@ export default function FamilyMessagesPage() {
           </div>
         )}
 
-        <div className="flex-1 max-w-7xl mx-auto w-full px-4 sm:px-6 lg:px-8 py-2 sm:py-4 pb-4 overflow-hidden">
+        <div className="flex-1 max-w-7xl mx-auto w-full px-3 sm:px-4 md:px-6 lg:px-8 py-2 sm:py-3 md:py-4 pb-3 sm:pb-4 overflow-hidden">
           <div className="h-full bg-white rounded-xl shadow-sm border border-gray-100 flex overflow-hidden">
             {/* Liste des conversations */}
             <div className={`w-full lg:w-1/3 border-r border-gray-100 flex flex-col ${selectedConversation && !showConversationList ? 'hidden lg:flex' : 'flex'}`}>

@@ -162,9 +162,9 @@ export default function AdminVerificationsPage() {
         </div>
       </nav>
 
-      <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 py-4 sm:py-8">
+      <div className="max-w-7xl mx-auto px-3 sm:px-4 md:px-6 lg:px-8 py-3 sm:py-5 md:py-8">
         {/* En-tête avec gradient */}
-        <div className="mb-4 sm:mb-8">
+        <div className="mb-3 sm:mb-4 md:mb-6 lg:mb-8">
           <div className="flex items-center gap-2 sm:gap-3 mb-2">
             <div className="h-1 w-8 sm:w-12 bg-gradient-to-r from-emerald-500 to-teal-500 rounded-full"></div>
             <span className="text-xs sm:text-sm font-semibold text-emerald-600 uppercase tracking-wide">Modération</span>
@@ -174,7 +174,7 @@ export default function AdminVerificationsPage() {
         </div>
 
         {/* Filtres - scrollable sur mobile */}
-        <div className="mb-4 sm:mb-6 -mx-3 px-3 sm:mx-0 sm:px-0 overflow-x-auto">
+        <div className="mb-3 sm:mb-4 md:mb-6 -mx-3 px-3 sm:mx-0 sm:px-0 overflow-x-auto">
           <div className="flex gap-2 min-w-max sm:flex-wrap">
             <button
               onClick={() => setFilter('all')}
@@ -221,7 +221,7 @@ export default function AdminVerificationsPage() {
 
         {/* Liste des éducateurs */}
         {educators.length === 0 ? (
-          <div className="bg-white rounded-2xl shadow-sm p-8 sm:p-12 text-center border border-gray-100">
+          <div className="bg-white rounded-xl md:rounded-2xl shadow-sm p-6 sm:p-8 md:p-12 text-center border border-gray-100">
             <div className="w-12 h-12 sm:w-16 sm:h-16 mx-auto mb-4 bg-green-100 rounded-full flex items-center justify-center">
               <svg className="w-6 h-6 sm:w-8 sm:h-8 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
@@ -279,7 +279,7 @@ export default function AdminVerificationsPage() {
             </div>
 
             {/* Vue desktop - Tableau */}
-            <div className="hidden lg:block bg-white rounded-2xl shadow-sm overflow-hidden border border-gray-100">
+            <div className="hidden lg:block bg-white rounded-xl md:rounded-2xl shadow-sm overflow-hidden border border-gray-100">
               <table className="min-w-full divide-y divide-gray-200">
                 <thead className="bg-gray-50/50">
                   <tr>

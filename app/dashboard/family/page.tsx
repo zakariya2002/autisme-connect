@@ -215,7 +215,7 @@ export default function FamilyDashboard() {
       {familyId && <FamilyOnboarding familyId={familyId} userEmail={userEmail || undefined} />}
 
       {/* Bandeau de bienvenue */}
-      <div className="px-4 py-6 flex items-center justify-start lg:justify-center gap-4" style={{ backgroundColor: '#05a5a5' }} data-tour="welcome-banner">
+      <div className="px-3 sm:px-4 md:px-6 py-3 sm:py-5 md:py-6 flex items-center justify-start lg:justify-center gap-4" style={{ backgroundColor: '#05a5a5' }} data-tour="welcome-banner">
         <div className="flex items-center gap-4 lg:flex-col lg:text-center">
           {/* Avatar */}
           <div className="w-14 h-14 lg:w-20 lg:h-20 rounded-full bg-white flex items-center justify-center overflow-hidden flex-shrink-0 shadow-md">
@@ -243,10 +243,10 @@ export default function FamilyDashboard() {
         </div>
       </div>
 
-      <div className="flex-1 pb-8 lg:max-w-5xl lg:mx-auto lg:w-full lg:px-8">
+      <div className="flex-1 pb-8 lg:max-w-5xl lg:mx-auto lg:w-full lg:px-8 px-3 sm:px-4 md:px-6">
         {/* Message de succès après paiement */}
         {showSuccessMessage && (
-          <div className="mx-4 lg:mx-0 mt-4 bg-green-50 border border-green-200 rounded-xl p-4" role="status" aria-live="polite">
+          <div className="lg:mx-0 mt-3 sm:mt-4 bg-green-50 border border-green-200 rounded-xl md:rounded-2xl p-3 sm:p-4 md:p-6" role="status" aria-live="polite">
             <div className="flex items-start gap-3">
               <div className="flex-shrink-0">
                 <svg className="h-6 w-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
@@ -308,33 +308,33 @@ export default function FamilyDashboard() {
         )}
 
         {/* Section Mes prochains rendez-vous */}
-        <div className="mt-6 px-4 lg:px-0" data-tour="appointments-section">
-          <h2 className="text-lg font-bold text-gray-900 mb-3">Mes prochains rendez-vous</h2>
+        <div className="mt-3 sm:mt-4 md:mt-6 lg:px-0" data-tour="appointments-section">
+          <h2 className="text-sm sm:text-base md:text-lg font-bold text-gray-900 mb-2 sm:mb-3">Mes prochains rendez-vous</h2>
 
           {upcomingAppointments.length > 0 ? (
-            <div className="flex gap-4 overflow-x-auto pb-3 scrollbar-hide" style={{ scrollSnapType: 'x mandatory' }}>
+            <div className="flex gap-3 sm:gap-4 overflow-x-auto pb-3 scrollbar-hide" style={{ scrollSnapType: 'x mandatory' }}>
               {upcomingAppointments.map((apt) => (
                 <div
                   key={apt.id}
-                  className="flex-shrink-0 bg-white rounded-2xl shadow-md border border-gray-100 overflow-hidden"
+                  className="flex-shrink-0 bg-white rounded-xl md:rounded-2xl shadow-md border border-gray-100 overflow-hidden"
                   style={{ width: 'calc(50% - 8px)', minWidth: '170px', scrollSnapAlign: 'start' }}
                 >
                   {/* Date badge */}
                   <div
-                    className="px-3 py-3 flex items-center gap-2"
+                    className="px-2.5 sm:px-3 py-2 sm:py-3 flex items-center gap-2"
                     style={{ backgroundColor: '#027e7e' }}
                   >
-                    <svg className="w-5 h-5 text-white flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <svg className="w-4 h-4 md:w-5 md:h-5 text-white flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
                     </svg>
-                    <span className="text-xs font-semibold text-white">
+                    <span className="text-[11px] md:text-xs font-semibold text-white">
                       {formatAppointmentDate(apt.appointment_date, apt.start_time)}
                     </span>
                   </div>
 
                   {/* Educator info */}
-                  <div className="p-4">
-                    <div className="flex items-center gap-3">
+                  <div className="p-3 sm:p-4">
+                    <div className="flex items-center gap-2 sm:gap-3">
                       {/* Avatar éducateur */}
                       <div className="w-12 h-12 rounded-full overflow-hidden flex-shrink-0 border-2 border-gray-200" style={{ background: apt.educator?.avatar_url ? 'transparent' : 'linear-gradient(135deg, #027e7e 0%, #3a9e9e 100%)' }}>
                         {apt.educator?.avatar_url ? (
@@ -369,16 +369,16 @@ export default function FamilyDashboard() {
               ))}
             </div>
           ) : (
-            <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 text-center">
+            <div className="bg-white rounded-xl md:rounded-2xl shadow-sm border border-gray-100 p-3 sm:p-4 md:p-6 text-center">
               <div className="w-16 h-16 mx-auto mb-4 rounded-full flex items-center justify-center" style={{ backgroundColor: '#e6f5f5' }}>
                 <svg className="w-8 h-8" style={{ color: '#027e7e' }} fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
                 </svg>
               </div>
-              <p className="text-gray-600 text-sm mb-4">Vous n'avez pas encore de rendez-vous prévu</p>
+              <p className="text-gray-600 text-xs md:text-sm mb-3 sm:mb-4">Vous n'avez pas encore de rendez-vous prévu</p>
               <Link
                 href="/dashboard/family/search"
-                className="inline-flex items-center gap-2 px-5 py-2.5 text-white font-semibold rounded-xl transition-all hover:opacity-90"
+                className="inline-flex items-center gap-2 px-5 py-2.5 md:px-6 md:py-3 text-xs sm:text-sm md:text-base text-white font-semibold rounded-xl transition-all hover:opacity-90"
                 style={{ backgroundColor: '#027e7e' }}
               >
                 <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -391,18 +391,18 @@ export default function FamilyDashboard() {
         </div>
 
         {/* Section Mon compte */}
-        <div className="mt-6 mx-4 lg:mx-0 bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden" data-tour="account-section">
-          <div className="px-4 py-3 border-b border-gray-100">
-            <h2 className="text-lg font-bold text-gray-900">Mon compte</h2>
+        <div className="mt-3 sm:mt-4 md:mt-6 lg:mx-0 bg-white rounded-xl md:rounded-2xl shadow-sm border border-gray-100 overflow-hidden" data-tour="account-section">
+          <div className="px-3 sm:px-4 md:px-6 py-2.5 sm:py-3 border-b border-gray-100">
+            <h2 className="text-sm sm:text-base md:text-lg font-bold text-gray-900">Mon compte</h2>
           </div>
 
-          <div className="p-3">
-            <div className="grid grid-cols-2 gap-3">
+          <div className="p-2 sm:p-3">
+            <div className="grid grid-cols-2 gap-2 sm:gap-3">
               {menuItems.map((item) => (
                 <Link
                   key={item.href}
                   href={item.href}
-                  className="flex items-center gap-3 p-3 rounded-xl hover:bg-gray-50 transition-colors"
+                  className="flex items-center gap-2 sm:gap-3 p-2 sm:p-3 rounded-xl hover:bg-gray-50 transition-colors"
                   data-tour={item.tourId}
                 >
                   <div className="w-10 h-10 rounded-full overflow-hidden flex-shrink-0">
@@ -412,7 +412,7 @@ export default function FamilyDashboard() {
                       className="w-full h-full object-cover"
                     />
                   </div>
-                  <span className="font-medium text-gray-900 text-sm">{item.label}</span>
+                  <span className="font-medium text-gray-900 text-xs md:text-sm">{item.label}</span>
                 </Link>
               ))}
             </div>

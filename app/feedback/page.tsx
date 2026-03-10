@@ -142,7 +142,7 @@ export default function FeedbackPage() {
   if (submitted) {
     return (
       <div className="min-h-screen flex items-center justify-center p-4" style={{ backgroundColor: '#fdf9f4' }}>
-        <div className="bg-white rounded-2xl shadow-xl p-8 sm:p-12 max-w-md w-full text-center">
+        <div className="bg-white rounded-xl md:rounded-2xl shadow-xl p-5 sm:p-8 md:p-12 max-w-md w-full text-center">
           <div
             className="w-24 h-24 mx-auto mb-6 rounded-full flex items-center justify-center"
             style={{ backgroundColor: '#e6f4f4' }}
@@ -152,11 +152,11 @@ export default function FeedbackPage() {
             </svg>
           </div>
 
-          <h1 className="text-2xl sm:text-3xl font-bold mb-4" style={{ color: '#027e7e' }}>
+          <h1 className="text-xl sm:text-2xl md:text-3xl font-bold mb-3 sm:mb-4" style={{ color: '#027e7e' }}>
             Merci pour votre retour !
           </h1>
 
-          <p className="text-gray-600 mb-8">
+          <p className="text-sm sm:text-base text-gray-600 mb-5 sm:mb-8">
             Vos réponses nous aideront à améliorer NeuroCare pour mieux vous accompagner.
           </p>
 
@@ -204,7 +204,7 @@ export default function FeedbackPage() {
       </header>
 
       {/* Content */}
-      <main className="max-w-2xl mx-auto px-4 py-8">
+      <main className="max-w-2xl mx-auto px-3 sm:px-4 md:px-6 py-4 sm:py-6 md:py-8">
         {/* Info banner */}
         {hasExistingFeedback && currentStep === 0 && (
           <div className="mb-6 p-4 rounded-xl" style={{ backgroundColor: '#fef3c7', border: '1px solid #fcd34d' }}>

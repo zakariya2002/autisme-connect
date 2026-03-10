@@ -394,24 +394,24 @@ export default function EducatorVerificationDetailPage() {
   return (
     <div className="min-h-screen bg-gray-50">
       <nav className="bg-white shadow-sm">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between h-16 items-center">
-            <div className="flex items-center gap-4">
-              <Link href="/admin/verifications" className="text-gray-600 hover:text-primary-600">
-                ← Retour à la liste
+        <div className="max-w-7xl mx-auto px-3 sm:px-4 md:px-6 lg:px-8">
+          <div className="flex justify-between h-14 sm:h-16 items-center">
+            <div className="flex items-center gap-2 sm:gap-4">
+              <Link href="/admin/verifications" className="text-gray-600 hover:text-primary-600 text-xs sm:text-sm">
+                ← Retour
               </Link>
-              <h1 className="text-lg md:text-xl font-bold text-gray-900">Vérification de l'éducateur</h1>
+              <h1 className="text-sm sm:text-base md:text-lg lg:text-xl font-bold text-gray-900">Vérification</h1>
             </div>
           </div>
         </div>
       </nav>
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <div className="max-w-7xl mx-auto px-3 sm:px-4 md:px-6 lg:px-8 py-3 sm:py-5 md:py-8">
         {/* Informations éducateur */}
-        <div className="bg-white rounded-lg shadow p-6 mb-8">
+        <div className="bg-white rounded-xl md:rounded-2xl shadow p-3 sm:p-4 md:p-6 mb-3 sm:mb-4 md:mb-6 lg:mb-8">
           <div className="flex items-start justify-between">
             <div>
-              <h2 className="text-xl md:text-2xl font-bold text-gray-900 mb-2">
+              <h2 className="text-base sm:text-lg md:text-xl lg:text-2xl font-bold text-gray-900 mb-2">
                 {educator.first_name} {educator.last_name}
               </h2>
               <div className="space-y-1 text-sm text-gray-600">
@@ -467,16 +467,16 @@ export default function EducatorVerificationDetailPage() {
         </div>
 
         {/* Documents */}
-        <div className="mb-8">
-          <h3 className="text-lg md:text-xl font-bold text-gray-900 mb-4">📄 Documents soumis ({documents.length}/4)</h3>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div className="mb-3 sm:mb-4 md:mb-6 lg:mb-8">
+          <h3 className="text-sm sm:text-base md:text-lg lg:text-xl font-bold text-gray-900 mb-3 sm:mb-4">📄 Documents soumis ({documents.length}/4)</h3>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-3 sm:gap-4 md:gap-6">
             {['diploma', 'criminal_record', 'id_card', 'insurance'].map((type) => {
               const doc = documents.find(d => d.document_type === type);
               const info = getDocumentInfo(type);
               const statusBadge = doc ? getStatusBadge(doc.status) : null;
 
               return (
-                <div key={type} className={`bg-white rounded-lg shadow-lg border-2 p-6 ${
+                <div key={type} className={`bg-white rounded-xl md:rounded-2xl shadow-lg border-2 p-3 sm:p-4 md:p-6 ${
                   doc?.status === 'approved' ? 'border-green-300' :
                   doc?.status === 'rejected' ? 'border-red-300' :
                   doc ? 'border-yellow-300' :
@@ -574,8 +574,8 @@ export default function EducatorVerificationDetailPage() {
 
         {/* Actions globales */}
         {educator.verification_status === 'documents_verified' && (
-          <div className="bg-blue-50 border-2 border-blue-300 rounded-lg p-6">
-            <h3 className="text-lg font-bold text-gray-900 mb-3">
+          <div className="bg-blue-50 border-2 border-blue-300 rounded-xl md:rounded-2xl p-3 sm:p-4 md:p-6">
+            <h3 className="text-sm sm:text-base md:text-lg font-bold text-gray-900 mb-2 sm:mb-3">
               📞 Prochaine étape : Contacter l'éducateur pour l'entretien
             </h3>
             <p className="text-gray-700 mb-4">
@@ -667,8 +667,8 @@ export default function EducatorVerificationDetailPage() {
         )}
 
         {educator.verification_status === 'interview_scheduled' && (
-          <div className="bg-purple-50 border-2 border-purple-300 rounded-lg p-6">
-            <h3 className="text-lg font-bold text-gray-900 mb-3">
+          <div className="bg-purple-50 border-2 border-purple-300 rounded-xl md:rounded-2xl p-3 sm:p-4 md:p-6">
+            <h3 className="text-sm sm:text-base md:text-lg font-bold text-gray-900 mb-2 sm:mb-3">
               📞 Entretien en cours
             </h3>
 
@@ -740,7 +740,7 @@ export default function EducatorVerificationDetailPage() {
         )}
 
         {allDocumentsApproved && educator.verification_status === 'documents_submitted' && (
-          <div className="bg-green-50 border-2 border-green-300 rounded-lg p-6">
+          <div className="bg-green-50 border-2 border-green-300 rounded-xl md:rounded-2xl p-3 sm:p-4 md:p-6">
             <h3 className="text-lg font-bold text-green-800 mb-3">
               ✅ Tous les documents sont approuvés !
             </h3>

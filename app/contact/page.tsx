@@ -78,32 +78,32 @@ export default function ContactPage() {
       <PublicNavbar />
 
       {/* Section Titre */}
-      <section className="pt-20 xl:pt-24 pb-12 sm:pb-16 px-4">
+      <section className="pt-20 xl:pt-24 pb-8 sm:pb-12 md:pb-16 px-3 sm:px-4">
         <div className="max-w-4xl mx-auto text-center">
           {/* Pictogramme */}
-          <div className="w-16 h-16 mx-auto mb-6 rounded-full flex items-center justify-center" style={{ backgroundColor: '#027e7e' }}>
+          <div className="w-14 h-14 sm:w-16 sm:h-16 mx-auto mb-4 sm:mb-6 rounded-full flex items-center justify-center" style={{ backgroundColor: '#027e7e' }}>
             <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
             </svg>
           </div>
-          <h1 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-4" style={{ fontFamily: 'Verdana, sans-serif' }}>
+          <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-900 mb-3 sm:mb-4" style={{ fontFamily: 'Verdana, sans-serif' }}>
             Contactez-nous
           </h1>
           {/* Ligne décorative */}
-          <div className="w-32 h-[2px] bg-gray-300 mx-auto mb-6"></div>
-          <p className="text-lg text-gray-600" style={{ fontFamily: 'Open Sans, sans-serif' }}>
+          <div className="w-24 sm:w-32 h-[2px] bg-gray-300 mx-auto mb-4 sm:mb-6"></div>
+          <p className="text-base sm:text-lg text-gray-600" style={{ fontFamily: 'Open Sans, sans-serif' }}>
             Une question ? Un besoin d'accompagnement ? Notre équipe est là pour vous aider.
           </p>
         </div>
       </section>
 
       {/* Contenu Principal */}
-      <div className="max-w-5xl mx-auto px-4 pb-16">
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+      <div className="max-w-5xl mx-auto px-3 sm:px-4 pb-8 sm:pb-12 md:pb-16">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-6 md:gap-8">
           {/* Formulaire de contact */}
           <div className="lg:col-span-2">
-            <div className="bg-white rounded-2xl shadow-md p-6 sm:p-8">
-              <h2 className="text-xl font-bold text-gray-900 mb-6" style={{ fontFamily: 'Verdana, sans-serif' }}>
+            <div className="bg-white rounded-xl md:rounded-2xl shadow-md p-4 sm:p-6 md:p-8">
+              <h2 className="text-lg sm:text-xl font-bold text-gray-900 mb-4 sm:mb-6" style={{ fontFamily: 'Verdana, sans-serif' }}>
                 Envoyez-nous un message
               </h2>
 
@@ -124,10 +124,10 @@ export default function ContactPage() {
                 </div>
               )}
 
-              <form onSubmit={handleSubmit} className="space-y-5">
+              <form onSubmit={handleSubmit} className="space-y-3 sm:space-y-4 md:space-y-5">
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
                   <div>
-                    <label htmlFor="name" className="block text-sm font-semibold text-gray-700 mb-2">
+                    <label htmlFor="name" className="block text-xs md:text-sm font-semibold text-gray-700 mb-1.5 sm:mb-2">
                       Nom complet <span className="text-red-600" aria-label="champ requis">*</span>
                     </label>
                     <input
@@ -138,13 +138,13 @@ export default function ContactPage() {
                       aria-required="true"
                       value={formData.name}
                       onChange={handleChange}
-                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-transparent transition-all"
+                      className="w-full px-2.5 md:px-3 lg:px-4 py-1.5 md:py-2 lg:py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-transparent transition-all text-sm"
                       placeholder="Votre nom"
                     />
                   </div>
 
                   <div>
-                    <label htmlFor="email" className="block text-sm font-semibold text-gray-700 mb-2">
+                    <label htmlFor="email" className="block text-xs md:text-sm font-semibold text-gray-700 mb-1.5 sm:mb-2">
                       Email <span className="text-red-600" aria-label="champ requis">*</span>
                     </label>
                     <input
@@ -155,14 +155,14 @@ export default function ContactPage() {
                       aria-required="true"
                       value={formData.email}
                       onChange={handleChange}
-                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-transparent transition-all"
+                      className="w-full px-2.5 md:px-3 lg:px-4 py-1.5 md:py-2 lg:py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-transparent transition-all text-sm"
                       placeholder="votre@email.com"
                     />
                   </div>
                 </div>
 
                 <div>
-                  <label htmlFor="userType" className="block text-sm font-semibold text-gray-700 mb-2">
+                  <label htmlFor="userType" className="block text-xs md:text-sm font-semibold text-gray-700 mb-1.5 sm:mb-2">
                     Vous êtes <span className="text-red-600" aria-label="champ requis">*</span>
                   </label>
                   <select
@@ -172,7 +172,7 @@ export default function ContactPage() {
                     aria-required="true"
                     value={formData.userType}
                     onChange={handleChange}
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-transparent transition-all"
+                    className="w-full px-2.5 md:px-3 lg:px-4 py-1.5 md:py-2 lg:py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-transparent transition-all text-sm"
                   >
                     <option value="family">Aidant</option>
                     <option value="educator">Professionnel</option>
@@ -182,7 +182,7 @@ export default function ContactPage() {
                 </div>
 
                 <div>
-                  <label htmlFor="subject" className="block text-sm font-semibold text-gray-700 mb-2">
+                  <label htmlFor="subject" className="block text-xs md:text-sm font-semibold text-gray-700 mb-1.5 sm:mb-2">
                     Sujet <span className="text-red-600" aria-label="champ requis">*</span>
                   </label>
                   <input
@@ -193,13 +193,13 @@ export default function ContactPage() {
                     aria-required="true"
                     value={formData.subject}
                     onChange={handleChange}
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-transparent transition-all"
+                    className="w-full px-2.5 md:px-3 lg:px-4 py-1.5 md:py-2 lg:py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-transparent transition-all text-sm"
                     placeholder="Comment pouvons-nous vous aider ?"
                   />
                 </div>
 
                 <div>
-                  <label htmlFor="message" className="block text-sm font-semibold text-gray-700 mb-2">
+                  <label htmlFor="message" className="block text-xs md:text-sm font-semibold text-gray-700 mb-1.5 sm:mb-2">
                     Message <span className="text-red-600" aria-label="champ requis">*</span>
                   </label>
                   <textarea
@@ -269,9 +269,9 @@ export default function ContactPage() {
           </div>
 
           {/* Informations de contact */}
-          <div className="space-y-6">
+          <div className="space-y-4 sm:space-y-6">
             {/* Coordonnées */}
-            <div className="bg-white rounded-2xl shadow-md p-6">
+            <div className="bg-white rounded-xl md:rounded-2xl shadow-md p-4 sm:p-6">
               <h3 className="text-lg font-bold text-gray-900 mb-5" style={{ fontFamily: 'Verdana, sans-serif' }}>
                 Nos coordonnées
               </h3>
@@ -318,8 +318,8 @@ export default function ContactPage() {
             </div>
 
             {/* FAQ rapide */}
-            <div className="bg-white rounded-2xl shadow-md p-6">
-              <h3 className="text-lg font-bold text-gray-900 mb-4" style={{ fontFamily: 'Verdana, sans-serif' }}>
+            <div className="bg-white rounded-xl md:rounded-2xl shadow-md p-4 sm:p-6">
+              <h3 className="text-base sm:text-lg font-bold text-gray-900 mb-3 sm:mb-4" style={{ fontFamily: 'Verdana, sans-serif' }}>
                 Questions fréquentes
               </h3>
               <div className="space-y-3">
@@ -348,22 +348,22 @@ export default function ContactPage() {
       </div>
 
       {/* Footer */}
-      <footer className="text-white py-12" style={{ backgroundColor: '#027e7e' }}>
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <footer className="text-white py-8 sm:py-12" style={{ backgroundColor: '#027e7e' }}>
+        <div className="max-w-7xl mx-auto px-3 sm:px-4 md:px-6 lg:px-8">
           <div className="text-center">
-            <div className="mb-6">
+            <div className="mb-4 sm:mb-6">
               <Link href="/" className="inline-block">
                 <img
                   src="/images/logo-neurocare.svg"
                   alt="neurocare"
-                  className="h-20 brightness-0 invert mx-auto"
+                  className="h-16 sm:h-20 brightness-0 invert mx-auto"
                 />
               </Link>
             </div>
-            <p className="text-teal-100 text-lg mb-8">
+            <p className="text-teal-100 text-sm sm:text-base md:text-lg mb-5 sm:mb-8">
               Connecter les familles avec les meilleurs éducateurs spécialisés
             </p>
-            <div className="flex justify-center gap-6 mb-8 flex-wrap">
+            <div className="flex justify-center gap-4 sm:gap-6 mb-5 sm:mb-8 flex-wrap text-sm sm:text-base">
               <Link href="/about" className="text-teal-100 hover:text-white transition-colors">
                 Qui sommes-nous ?
               </Link>
@@ -374,7 +374,7 @@ export default function ContactPage() {
                 Contact
               </Link>
             </div>
-            <div className="flex justify-center gap-6 mb-8 flex-wrap text-sm">
+            <div className="flex justify-center gap-4 sm:gap-6 mb-5 sm:mb-8 flex-wrap text-xs sm:text-sm">
               <Link href="/privacy" className="text-teal-100 hover:text-white transition-colors">
                 Politique de confidentialité
               </Link>
@@ -385,8 +385,8 @@ export default function ContactPage() {
                 CGU
               </Link>
             </div>
-            <div className="border-t border-teal-600 pt-8">
-              <p className="text-teal-200">
+            <div className="border-t border-teal-600 pt-5 sm:pt-8">
+              <p className="text-teal-200 text-xs sm:text-sm">
                 © 2024 neurocare. Tous droits réservés.
               </p>
             </div>

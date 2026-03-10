@@ -70,7 +70,7 @@ export default function ProLoginPage() {
       <ProNavbar />
 
       {/* Login Form */}
-      <div className="flex-1 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
+      <div className="flex-1 flex flex-col justify-center py-8 sm:py-12 px-3 sm:px-6 lg:px-8">
       {/* Logo et Titre */}
       <div className="sm:mx-auto sm:w-full sm:max-w-md">
         <div className="flex justify-center mb-6">
@@ -81,7 +81,7 @@ export default function ProLoginPage() {
             style={{ filter: 'brightness(0) saturate(100%) invert(12%) sepia(50%) saturate(5000%) hue-rotate(275deg) brightness(60%) contrast(120%)' }}
           />
         </div>
-        <h2 className="text-center text-2xl font-bold text-gray-900 mb-2">
+        <h2 className="text-center text-xl sm:text-2xl font-bold text-gray-900 mb-2">
           Connexion Professionnels
         </h2>
         <p className="text-center text-sm text-gray-600">
@@ -94,8 +94,8 @@ export default function ProLoginPage() {
 
       {/* Formulaire de connexion */}
       <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
-        <div className="bg-white py-10 px-6 shadow-xl rounded-2xl sm:px-12 border border-gray-100">
-          <form className="space-y-6" onSubmit={handleSubmit}>
+        <div className="bg-white py-6 sm:py-8 md:py-10 px-4 sm:px-6 shadow-xl rounded-xl md:rounded-2xl sm:px-12 border border-gray-100">
+          <form className="space-y-4 sm:space-y-5 md:space-y-6" onSubmit={handleSubmit}>
             {error && (
               <div className="bg-red-50 border-l-4 border-red-500 text-red-700 px-4 py-3 rounded-r animate-pulse" role="alert">
                 <div className="flex items-center">
@@ -108,7 +108,7 @@ export default function ProLoginPage() {
             )}
 
             <div>
-              <label htmlFor="email" className="block text-sm font-semibold text-gray-700 mb-2">
+              <label htmlFor="email" className="block text-xs md:text-sm font-semibold text-gray-700 mb-1.5 md:mb-2">
                 Adresse email
               </label>
               <div className="relative">
@@ -126,13 +126,13 @@ export default function ProLoginPage() {
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   placeholder="votre@email.com"
-                  className="appearance-none block w-full pl-10 pr-3 py-3 border border-gray-300 rounded-lg shadow-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-transparent transition-all"
+                  className="appearance-none block w-full pl-10 pr-3 py-2 md:py-3 border border-gray-300 rounded-lg shadow-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-transparent transition-all text-sm"
                 />
               </div>
             </div>
 
             <div>
-              <label htmlFor="password" className="block text-sm font-semibold text-gray-700 mb-2">
+              <label htmlFor="password" className="block text-xs md:text-sm font-semibold text-gray-700 mb-1.5 md:mb-2">
                 Mot de passe
               </label>
               <div className="relative">
@@ -150,7 +150,7 @@ export default function ProLoginPage() {
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   placeholder="••••••••"
-                  className="appearance-none block w-full pl-10 pr-12 py-3 border border-gray-300 rounded-lg shadow-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-transparent transition-all"
+                  className="appearance-none block w-full pl-10 pr-12 py-2 md:py-3 border border-gray-300 rounded-lg shadow-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-transparent transition-all text-sm"
                 />
                 <button
                   type="button"
@@ -180,7 +180,7 @@ export default function ProLoginPage() {
                   type="checkbox"
                   className="h-4 w-4 text-[#41005c] focus:ring-[#41005c] border-gray-300 rounded"
                 />
-                <label htmlFor="remember-me" className="ml-2 block text-sm text-gray-700">
+                <label htmlFor="remember-me" className="ml-2 block text-xs md:text-sm text-gray-700">
                   Se souvenir de moi
                 </label>
               </div>
@@ -196,7 +196,7 @@ export default function ProLoginPage() {
               <button
                 type="submit"
                 disabled={loading || googleLoading}
-                className="group relative w-full flex justify-center py-3 px-4 border border-transparent rounded-lg text-sm font-semibold text-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#41005c] disabled:opacity-50 disabled:cursor-not-allowed shadow-md hover:shadow-lg transition-all transform hover:-translate-y-0.5 hover:opacity-90"
+                className="group relative w-full flex justify-center py-2.5 md:py-3 px-4 border border-transparent rounded-lg text-xs sm:text-sm font-semibold text-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#41005c] disabled:opacity-50 disabled:cursor-not-allowed shadow-md hover:shadow-lg transition-all transform hover:-translate-y-0.5 hover:opacity-90"
                 style={{ backgroundColor: '#41005c' }}
               >
                 {loading ? (
@@ -222,7 +222,7 @@ export default function ProLoginPage() {
           {/* Séparateur */}
           <div className="mt-6 flex items-center">
             <div className="flex-1 border-t border-gray-300"></div>
-            <span className="px-4 text-sm text-gray-500">ou continuer avec</span>
+            <span className="px-4 text-xs md:text-sm text-gray-500">ou continuer avec</span>
             <div className="flex-1 border-t border-gray-300"></div>
           </div>
 
@@ -232,7 +232,7 @@ export default function ProLoginPage() {
               type="button"
               onClick={handleGoogleSignIn}
               disabled={loading || googleLoading}
-              className="w-full flex items-center justify-center gap-3 py-3 px-4 border border-gray-300 rounded-lg bg-white text-gray-700 font-medium hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 disabled:opacity-50 disabled:cursor-not-allowed transition-all shadow-sm hover:shadow"
+              className="w-full flex items-center justify-center gap-3 py-2.5 md:py-3 px-4 border border-gray-300 rounded-lg bg-white text-gray-700 font-medium hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 disabled:opacity-50 disabled:cursor-not-allowed transition-all shadow-sm hover:shadow text-sm"
             >
               {googleLoading ? (
                 <svg className="animate-spin h-5 w-5 text-gray-600" fill="none" viewBox="0 0 24 24">
@@ -277,7 +277,7 @@ export default function ProLoginPage() {
       {/* Popup de confirmation d'email */}
       {showConfirmationPopup && (
         <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4">
-          <div className="bg-white rounded-2xl max-w-md w-full p-8 shadow-2xl animate-in fade-in zoom-in duration-300">
+          <div className="bg-white rounded-xl md:rounded-2xl max-w-md w-full p-5 sm:p-6 md:p-8 shadow-2xl animate-in fade-in zoom-in duration-300">
             <div className="text-center">
               {/* Icône de succès */}
               <div className="mx-auto w-20 h-20 rounded-full flex items-center justify-center mb-6" style={{ backgroundColor: 'rgba(65, 0, 92, 0.1)' }}>
@@ -287,7 +287,7 @@ export default function ProLoginPage() {
               </div>
 
               {/* Titre */}
-              <h3 className="text-2xl font-bold text-gray-900 mb-3">
+              <h3 className="text-xl sm:text-2xl font-bold text-gray-900 mb-3">
                 Email vérifié !
               </h3>
 

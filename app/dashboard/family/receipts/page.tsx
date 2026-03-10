@@ -147,7 +147,7 @@ export default function FamilyReceiptsPage() {
         <FamilyNavbar profile={profile} familyId={familyId} userId={userId} />
       </div>
 
-      <div className="flex-1 max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8 w-full">
+      <div className="flex-1 max-w-4xl mx-auto px-3 sm:px-4 md:px-6 lg:px-8 py-3 sm:py-5 md:py-8 w-full">
         {/* Flèche retour */}
         <button
           onClick={() => router.back()}
@@ -161,23 +161,23 @@ export default function FamilyReceiptsPage() {
         </button>
 
         {/* Header avec icône */}
-        <div className="mb-6 sm:mb-8 text-center">
-          <div className="w-16 h-16 mx-auto mb-4 rounded-full flex items-center justify-center p-1" style={{ backgroundColor: '#027e7e' }}>
+        <div className="mb-3 sm:mb-4 md:mb-6 text-center">
+          <div className="w-14 h-14 md:w-16 md:h-16 mx-auto mb-3 md:mb-4 rounded-full flex items-center justify-center p-1" style={{ backgroundColor: '#027e7e' }}>
             <img src="/images/icons/7.svg" alt="" className="w-full h-full" />
           </div>
-          <h1 className="text-xl sm:text-2xl font-bold text-gray-900">Mes reçus</h1>
-          <p className="text-sm text-gray-500 mt-1">Téléchargez vos reçus de paiement</p>
+          <h1 className="text-lg sm:text-xl md:text-2xl font-bold text-gray-900">Mes reçus</h1>
+          <p className="text-[11px] md:text-sm text-gray-500 mt-1">Téléchargez vos reçus de paiement</p>
         </div>
 
         {/* Liste des reçus */}
-        <div className="bg-white rounded-xl shadow-sm border border-gray-100">
-          <div className="px-4 sm:px-6 py-3 sm:py-4 border-b border-gray-100">
-            <h2 className="text-base sm:text-lg font-semibold text-gray-900">
+        <div className="bg-white rounded-xl md:rounded-2xl shadow-sm border border-gray-100">
+          <div className="px-3 sm:px-4 md:px-6 py-2.5 sm:py-3 md:py-4 border-b border-gray-100">
+            <h2 className="text-sm sm:text-base md:text-lg font-semibold text-gray-900">
               Historique ({receipts.length})
             </h2>
           </div>
 
-          <div className="p-3 sm:p-6">
+          <div className="p-3 sm:p-4 md:p-6">
             {loading ? (
               <div className="text-center py-8 sm:py-12">
                 <div className="inline-block animate-spin rounded-full h-10 w-10 sm:h-12 sm:w-12 border-b-2" style={{ borderColor: '#027e7e' }}></div>

@@ -255,7 +255,7 @@ export default function EducatorDashboard() {
       </nav>
 
       {/* Bandeau de bienvenue */}
-      <div className="px-4 py-6 flex items-center justify-start lg:justify-center gap-4" style={{ backgroundColor: '#5a1a75' }}>
+      <div className="px-3 sm:px-4 md:px-6 py-4 sm:py-5 md:py-6 flex items-center justify-start lg:justify-center gap-4" style={{ backgroundColor: '#5a1a75' }}>
         <div className="flex items-center gap-4 lg:flex-col lg:text-center">
           {/* Avatar */}
           <div className="w-14 h-14 lg:w-20 lg:h-20 rounded-full bg-white flex items-center justify-center overflow-hidden flex-shrink-0 shadow-md">
@@ -296,10 +296,10 @@ export default function EducatorDashboard() {
         </div>
       </div>
 
-      <div className="flex-1 pb-8 lg:max-w-5xl lg:mx-auto lg:w-full lg:px-8">
+      <div className="flex-1 pb-8 lg:max-w-5xl lg:mx-auto lg:w-full lg:px-8 px-0">
         {/* Message de succès après paiement */}
         {showSuccessMessage && (
-          <div className="mx-4 lg:mx-0 mt-4 bg-green-50 border border-green-200 rounded-xl p-4" role="status" aria-live="polite">
+          <div className="mx-3 sm:mx-4 lg:mx-0 mt-3 sm:mt-4 bg-green-50 border border-green-200 rounded-xl md:rounded-2xl p-3 sm:p-4" role="status" aria-live="polite">
             <div className="flex items-start gap-3">
               <div className="flex-shrink-0">
                 <svg className="h-6 w-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
@@ -329,7 +329,7 @@ export default function EducatorDashboard() {
 
         {/* Message de synchronisation */}
         {syncingSubscription && (
-          <div className="mx-4 lg:mx-0 mt-4 bg-blue-50 border border-blue-200 rounded-xl p-4 flex items-center gap-3" role="status" aria-live="polite">
+          <div className="mx-3 sm:mx-4 lg:mx-0 mt-3 sm:mt-4 bg-blue-50 border border-blue-200 rounded-xl md:rounded-2xl p-3 sm:p-4 flex items-center gap-3" role="status" aria-live="polite">
             <div className="animate-spin h-5 w-5 border-2 border-blue-600 border-t-transparent rounded-full" aria-hidden="true"></div>
             <p className="text-blue-800 font-medium">
               Synchronisation de votre abonnement en cours...
@@ -339,7 +339,7 @@ export default function EducatorDashboard() {
 
         {/* Alerte si profil non vérifié */}
         {profile && !profile.verification_badge && (
-          <div className="mx-4 lg:mx-0 mt-4 bg-gradient-to-r from-amber-50 to-yellow-50 border-2 border-amber-200 rounded-xl p-4" role="alert">
+          <div className="mx-3 sm:mx-4 lg:mx-0 mt-3 sm:mt-4 bg-gradient-to-r from-amber-50 to-yellow-50 border-2 border-amber-200 rounded-xl md:rounded-2xl p-3 sm:p-4" role="alert">
             <div className="flex items-start gap-3">
               <div className="w-10 h-10 bg-amber-400 rounded-lg flex items-center justify-center flex-shrink-0" aria-hidden="true">
                 <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -368,8 +368,8 @@ export default function EducatorDashboard() {
         )}
 
         {/* Section Mes prochains rendez-vous */}
-        <div className="mt-6 lg:mt-8 px-4 lg:px-0">
-          <h2 className="text-lg font-bold text-gray-900 mb-3">Mes prochains rendez-vous</h2>
+        <div className="mt-4 sm:mt-6 lg:mt-8 px-3 sm:px-4 lg:px-0">
+          <h2 className="text-sm sm:text-base md:text-lg font-bold text-gray-900 mb-2 sm:mb-3">Mes prochains rendez-vous</h2>
 
           {upcomingAppointments.length > 0 ? (
             <div
@@ -379,7 +379,7 @@ export default function EducatorDashboard() {
               {upcomingAppointments.map((apt) => (
                 <div
                   key={apt.id}
-                  className="flex-shrink-0 bg-white rounded-2xl shadow-md border border-gray-100 overflow-hidden"
+                  className="flex-shrink-0 bg-white rounded-xl md:rounded-2xl shadow-md border border-gray-100 overflow-hidden"
                   style={{
                     width: upcomingAppointments.length === 1 ? 'calc(80% - 8px)' : 'calc(55% - 6px)',
                     minWidth: upcomingAppointments.length === 1 ? '280px' : '200px',
@@ -437,16 +437,16 @@ export default function EducatorDashboard() {
               ))}
             </div>
           ) : (
-            <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 text-center">
+            <div className="bg-white rounded-xl md:rounded-2xl shadow-sm border border-gray-100 p-3 sm:p-4 md:p-6 text-center">
               <div className="w-16 h-16 mx-auto mb-4 rounded-full flex items-center justify-center" style={{ backgroundColor: 'rgba(65, 0, 92, 0.1)' }}>
                 <svg className="w-8 h-8" style={{ color: '#41005c' }} fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
                 </svg>
               </div>
-              <p className="text-gray-600 text-sm mb-4">Vous n'avez pas encore de rendez-vous prévu</p>
+              <p className="text-gray-600 text-xs md:text-sm mb-3 sm:mb-4">Vous n'avez pas encore de rendez-vous prévu</p>
               <Link
                 href="/dashboard/educator/appointments"
-                className="inline-flex items-center gap-2 px-5 py-2.5 text-white font-semibold rounded-xl transition-all hover:opacity-90"
+                className="inline-flex items-center gap-2 px-5 py-2.5 md:px-6 md:py-3 text-xs sm:text-sm md:text-base text-white font-semibold rounded-xl transition-all hover:opacity-90"
                 style={{ backgroundColor: '#41005c' }}
               >
                 <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -459,18 +459,18 @@ export default function EducatorDashboard() {
         </div>
 
         {/* Section Mon compte */}
-        <div className="mt-6 lg:mt-8 mx-4 lg:mx-0 bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
-          <div className="px-4 py-3 border-b border-gray-100">
-            <h2 className="text-lg font-bold text-gray-900">Mon compte</h2>
+        <div className="mt-4 sm:mt-6 lg:mt-8 mx-3 sm:mx-4 lg:mx-0 bg-white rounded-xl md:rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
+          <div className="px-3 sm:px-4 md:px-6 py-2.5 sm:py-3 border-b border-gray-100">
+            <h2 className="text-sm sm:text-base md:text-lg font-bold text-gray-900">Mon compte</h2>
           </div>
 
-          <div className="p-3">
-            <div className="grid grid-cols-2 gap-3">
+          <div className="p-2 sm:p-3">
+            <div className="grid grid-cols-2 gap-2 sm:gap-3">
               {menuItems.map((item) => (
                 <Link
                   key={item.href}
                   href={item.href}
-                  className="flex items-center gap-3 p-3 rounded-xl hover:bg-gray-50 transition-colors"
+                  className="flex items-center gap-2 sm:gap-3 p-2 sm:p-3 rounded-xl hover:bg-gray-50 transition-colors"
                 >
                   <div className="w-10 h-10 rounded-full overflow-hidden flex-shrink-0">
                     <img

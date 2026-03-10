@@ -287,9 +287,9 @@ export default function BlogPage() {
       </section>
 
       {/* Footer - Same as landing page */}
-      <footer className="text-white py-12 px-6" style={{ backgroundColor: '#027e7e' }} role="contentinfo">
+      <footer className="text-white py-8 sm:py-12 px-3 sm:px-4 md:px-6" style={{ backgroundColor: '#027e7e' }} role="contentinfo">
         <div className="max-w-6xl mx-auto">
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 mb-10">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 sm:gap-8 mb-6 sm:mb-10">
             {/* Logo et description */}
             <div>
               <Link href="/" className="inline-block mb-4" aria-label="Retour à l'accueil NeuroCare">

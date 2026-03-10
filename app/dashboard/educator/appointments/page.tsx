@@ -749,7 +749,7 @@ export default function EducatorAppointmentsPage() {
     return (
       <div className={`bg-white rounded-xl border ${isPast && appointment.status !== 'completed' ? 'border-gray-200 opacity-70' : 'border-gray-100'} shadow-sm hover:shadow-md transition-all`}>
         {/* En-tête compact */}
-        <div className="p-4 border-b border-gray-100">
+        <div className="p-3 sm:p-4 border-b border-gray-100">
           <div className="flex items-center justify-between mb-2">
             <div className="flex items-center gap-3">
               <div className="w-10 h-10 rounded-full flex items-center justify-center" style={{ background: 'linear-gradient(135deg, #5a1a75 0%, #41005c 100%)' }}>
@@ -991,13 +991,13 @@ export default function EducatorAppointmentsPage() {
   };
 
   const SectionHeader = ({ title, count, icon, color }: { title: string; count: number; icon: React.ReactNode; color: string }) => (
-    <div className="flex items-center gap-3 mb-4">
-      <div className={`w-10 h-10 ${color} rounded-xl flex items-center justify-center`}>
+    <div className="flex items-center gap-2 sm:gap-3 mb-2 sm:mb-3 md:mb-4">
+      <div className={`w-8 h-8 md:w-10 md:h-10 ${color} rounded-xl flex items-center justify-center`}>
         {icon}
       </div>
       <div>
-        <h2 className="text-lg font-semibold text-gray-900">{title}</h2>
-        <p className="text-sm text-gray-500">{count} rendez-vous</p>
+        <h2 className="text-sm sm:text-base md:text-lg font-semibold text-gray-900">{title}</h2>
+        <p className="text-[11px] md:text-sm text-gray-500">{count} rendez-vous</p>
       </div>
     </div>
   );
@@ -1009,35 +1009,35 @@ export default function EducatorAppointmentsPage() {
         <EducatorNavbar profile={profile} subscription={subscription} />
       </div>
 
-      <div className="flex-1 max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8 w-full">
+      <div className="flex-1 max-w-3xl mx-auto px-3 sm:px-4 md:px-6 lg:px-8 py-3 sm:py-5 md:py-8 w-full">
         {/* En-tête avec flèche retour */}
-        <div className="mb-6 sm:mb-8">
+        <div className="mb-3 sm:mb-5 md:mb-8">
           {/* Flèche retour - desktop uniquement */}
           <button
             onClick={() => router.back()}
-            className="flex items-center gap-2 text-gray-600 hover:text-gray-900 mb-4 transition-colors"
+            className="flex items-center gap-2 text-gray-600 hover:text-gray-900 mb-3 sm:mb-4 transition-colors"
             aria-label="Retour à la page précédente"
           >
-            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <svg className="w-4 h-4 md:w-5 md:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
             </svg>
-            <span className="text-sm font-medium">Retour</span>
+            <span className="text-xs md:text-sm font-medium">Retour</span>
           </button>
 
           <div className="text-center">
-            <div className="w-16 h-16 mx-auto mb-4 rounded-full flex items-center justify-center p-1" style={{ backgroundColor: '#41005c' }}>
+            <div className="w-12 h-12 sm:w-14 sm:h-14 md:w-16 md:h-16 mx-auto mb-2 sm:mb-3 md:mb-4 rounded-full flex items-center justify-center p-1" style={{ backgroundColor: '#41005c' }}>
               <img src="/images/icons/4.svg" alt="" className="w-full h-full" />
             </div>
-            <h1 className="text-xl sm:text-2xl font-bold text-gray-900">Mes rendez-vous</h1>
-            <p className="text-gray-500 text-sm mt-1">Gérez vos demandes et séances</p>
+            <h1 className="text-base sm:text-lg md:text-2xl font-bold text-gray-900">Mes rendez-vous</h1>
+            <p className="text-gray-500 text-[11px] sm:text-xs md:text-sm mt-1">Gérez vos demandes et séances</p>
           </div>
         </div>
 
         {/* Onglets */}
-        <div className="flex bg-white rounded-xl p-1 mb-6 shadow-sm border border-gray-100">
+        <div className="flex bg-white rounded-xl p-1 mb-3 sm:mb-4 md:mb-6 shadow-sm border border-gray-100">
           <button
             onClick={() => setActiveTab('appointments')}
-            className={`flex-1 py-2.5 px-4 rounded-lg font-medium text-sm transition-all ${
+            className={`flex-1 py-2 md:py-2.5 px-3 md:px-4 rounded-lg font-medium text-xs sm:text-sm transition-all ${
               activeTab === 'appointments'
                 ? 'text-white shadow-sm'
                 : 'text-gray-600 hover:text-gray-900'
@@ -1053,7 +1053,7 @@ export default function EducatorAppointmentsPage() {
           </button>
           <button
             onClick={() => setActiveTab('families')}
-            className={`flex-1 py-2.5 px-4 rounded-lg font-medium text-sm transition-all ${
+            className={`flex-1 py-2 md:py-2.5 px-3 md:px-4 rounded-lg font-medium text-xs sm:text-sm transition-all ${
               activeTab === 'families'
                 ? 'text-white shadow-sm'
                 : 'text-gray-600 hover:text-gray-900'
@@ -1081,7 +1081,7 @@ export default function EducatorAppointmentsPage() {
         {inProgressAppointments.length > 0 && (
           <div
             onClick={() => selectFilter('in_progress')}
-            className="mb-6 p-4 bg-gradient-to-r from-primary-800 via-primary-700 to-primary-800 rounded-2xl shadow-lg cursor-pointer hover:shadow-xl transition-all animate-pulse-slow border border-primary-600/30"
+            className="mb-3 sm:mb-4 md:mb-6 p-3 sm:p-4 bg-gradient-to-r from-primary-800 via-primary-700 to-primary-800 rounded-xl md:rounded-2xl shadow-lg cursor-pointer hover:shadow-xl transition-all animate-pulse-slow border border-primary-600/30"
           >
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-3">
@@ -1092,10 +1092,10 @@ export default function EducatorAppointmentsPage() {
                   </svg>
                 </div>
                 <div>
-                  <h3 className="font-bold text-white text-lg">
+                  <h3 className="font-bold text-white text-sm sm:text-base md:text-lg">
                     {inProgressAppointments.length} séance{inProgressAppointments.length > 1 ? 's' : ''} en cours
                   </h3>
-                  <p className="text-primary-200 text-sm">Cliquez pour voir le compte à rebours</p>
+                  <p className="text-primary-200 text-[11px] md:text-sm">Cliquez pour voir le compte à rebours</p>
                 </div>
               </div>
               <div className="flex items-center gap-2">
@@ -1112,7 +1112,7 @@ export default function EducatorAppointmentsPage() {
         )}
 
         {/* Boutons de filtre - Responsive */}
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 sm:gap-3 mb-6 sm:mb-8">
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 sm:gap-3 mb-3 sm:mb-4 md:mb-6 lg:mb-8">
           {/* Tous */}
           <button
             onClick={() => appointments.length > 0 && selectFilter('all')}
@@ -1190,17 +1190,17 @@ export default function EducatorAppointmentsPage() {
             <p className="text-gray-500 mt-4 text-sm">Chargement...</p>
           </div>
         ) : appointments.length === 0 ? (
-          <div className="text-center py-12 bg-white rounded-2xl border border-gray-100">
-            <div className="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
-              <svg className="h-8 w-8 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+          <div className="text-center py-8 sm:py-12 bg-white rounded-xl md:rounded-2xl border border-gray-100">
+            <div className="w-12 h-12 md:w-16 md:h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-3 sm:mb-4">
+              <svg className="h-6 w-6 md:h-8 md:w-8 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
               </svg>
             </div>
-            <h3 className="text-lg font-medium text-gray-900">Aucun rendez-vous</h3>
-            <p className="text-gray-500 mt-2 text-sm">Vous n'avez pas encore de demandes de rendez-vous.</p>
+            <h3 className="text-sm sm:text-base md:text-lg font-medium text-gray-900">Aucun rendez-vous</h3>
+            <p className="text-gray-500 mt-1 sm:mt-2 text-[11px] md:text-sm">Vous n'avez pas encore de demandes de rendez-vous.</p>
           </div>
         ) : (
-          <div className="space-y-8">
+          <div className="space-y-4 sm:space-y-6 md:space-y-8">
             {/* Section: En cours */}
             {(activeFilter === 'all' || activeFilter === 'in_progress') && inProgressAppointments.length > 0 && (
               <section>
@@ -1217,7 +1217,7 @@ export default function EducatorAppointmentsPage() {
                   {inProgressAppointments.length > INITIAL_DISPLAY_COUNT && (
                     <button
                       onClick={() => toggleSection('in_progress')}
-                      className="w-full py-2.5 text-sm font-medium rounded-xl border border-gray-200 hover:bg-gray-50 transition-colors"
+                      className="w-full py-2 md:py-2.5 text-xs sm:text-sm font-medium rounded-xl border border-gray-200 hover:bg-gray-50 transition-colors"
                       style={{ color: '#41005c' }}
                     >
                       {expandedSections['in_progress']
@@ -1245,7 +1245,7 @@ export default function EducatorAppointmentsPage() {
                   {upcomingAppointments.length > INITIAL_DISPLAY_COUNT && (
                     <button
                       onClick={() => toggleSection('upcoming')}
-                      className="w-full py-2.5 text-sm font-medium rounded-xl border border-gray-200 hover:bg-gray-50 transition-colors"
+                      className="w-full py-2 md:py-2.5 text-xs sm:text-sm font-medium rounded-xl border border-gray-200 hover:bg-gray-50 transition-colors"
                       style={{ color: '#41005c' }}
                     >
                       {expandedSections['upcoming']
@@ -1273,7 +1273,7 @@ export default function EducatorAppointmentsPage() {
                   {completedAppointments.length > INITIAL_DISPLAY_COUNT && (
                     <button
                       onClick={() => toggleSection('completed')}
-                      className="w-full py-2.5 text-sm font-medium rounded-xl border border-gray-200 hover:bg-gray-50 transition-colors"
+                      className="w-full py-2 md:py-2.5 text-xs sm:text-sm font-medium rounded-xl border border-gray-200 hover:bg-gray-50 transition-colors"
                       style={{ color: '#41005c' }}
                     >
                       {expandedSections['completed']
@@ -1301,7 +1301,7 @@ export default function EducatorAppointmentsPage() {
                   {missedAppointments.length > INITIAL_DISPLAY_COUNT && (
                     <button
                       onClick={() => toggleSection('missed')}
-                      className="w-full py-2.5 text-sm font-medium rounded-xl border border-gray-200 hover:bg-gray-50 transition-colors"
+                      className="w-full py-2 md:py-2.5 text-xs sm:text-sm font-medium rounded-xl border border-gray-200 hover:bg-gray-50 transition-colors"
                       style={{ color: '#41005c' }}
                     >
                       {expandedSections['missed']
@@ -1329,7 +1329,7 @@ export default function EducatorAppointmentsPage() {
                   {cancelledAppointments.length > INITIAL_DISPLAY_COUNT && (
                     <button
                       onClick={() => toggleSection('cancelled')}
-                      className="w-full py-2.5 text-sm font-medium rounded-xl border border-gray-200 hover:bg-gray-50 transition-colors"
+                      className="w-full py-2 md:py-2.5 text-xs sm:text-sm font-medium rounded-xl border border-gray-200 hover:bg-gray-50 transition-colors"
                       style={{ color: '#41005c' }}
                     >
                       {expandedSections['cancelled']

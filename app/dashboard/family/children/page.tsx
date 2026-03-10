@@ -335,7 +335,7 @@ export default function ChildrenPage() {
       </div>
 
       {/* Section Titre */}
-      <section className="py-6 sm:py-10 px-4">
+      <section className="py-3 sm:py-5 md:py-8 px-3 sm:px-4 md:px-6">
         <div className="max-w-4xl mx-auto">
           {/* Flèche retour */}
           <button
@@ -357,16 +357,16 @@ export default function ChildrenPage() {
               className="w-full h-full"
             />
           </div>
-          <h1 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-4" style={{ fontFamily: 'Verdana, sans-serif' }}>
+          <h1 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold text-gray-900 mb-2 sm:mb-3 md:mb-4" style={{ fontFamily: 'Verdana, sans-serif' }}>
             Mes proches
           </h1>
-          <div className="w-32 h-[2px] bg-gray-300 mx-auto mb-6"></div>
-          <p className="text-lg text-gray-600 mb-6" style={{ fontFamily: 'Open Sans, sans-serif' }}>
+          <div className="w-24 sm:w-32 h-[2px] bg-gray-300 mx-auto mb-3 sm:mb-4 md:mb-6"></div>
+          <p className="text-sm sm:text-base md:text-lg text-gray-600 mb-3 sm:mb-4 md:mb-6" style={{ fontFamily: 'Open Sans, sans-serif' }}>
             Gérez les profils des personnes que vous accompagnez
           </p>
           <button
             onClick={openAddModal}
-            className="inline-flex items-center justify-center gap-2 px-6 py-3 text-white rounded-xl hover:opacity-90 transition-all text-base font-bold shadow-md hover:shadow-lg"
+            className="inline-flex items-center justify-center gap-2 px-5 py-2.5 md:px-6 md:py-3 text-white rounded-xl hover:opacity-90 transition-all text-xs sm:text-sm md:text-base font-bold shadow-md hover:shadow-lg"
             style={{ backgroundColor: '#f0879f' }}
           >
             <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
@@ -377,7 +377,7 @@ export default function ChildrenPage() {
         </div>
       </section>
 
-      <div className="flex-1 max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 pb-16 w-full">
+      <div className="flex-1 max-w-4xl mx-auto px-3 sm:px-4 md:px-6 lg:px-8 pb-16 w-full">
         {/* Liste des enfants */}
         {children.length === 0 ? (
           <div className="text-center py-20 bg-white rounded-2xl shadow-md border border-gray-100">
@@ -402,9 +402,9 @@ export default function ChildrenPage() {
             </button>
           </div>
         ) : (
-          <div className="space-y-5">
+          <div className="space-y-3 sm:space-y-4 md:space-y-5">
             {children.map((child) => (
-              <div key={child.id} className="bg-white rounded-2xl shadow-md hover:shadow-lg transition-all duration-300 border border-gray-100 overflow-hidden group relative">
+              <div key={child.id} className="bg-white rounded-xl md:rounded-2xl shadow-md hover:shadow-lg transition-all duration-300 border border-gray-100 overflow-hidden group relative">
                 {/* Actions en position absolue sur mobile */}
                 <div className="absolute top-4 right-4 flex items-center gap-1 sm:hidden z-10">
                   <button
@@ -573,7 +573,7 @@ export default function ChildrenPage() {
               </button>
             </div>
 
-            <form onSubmit={handleSubmit} className="p-4 sm:p-6 space-y-5 sm:space-y-6">
+            <form onSubmit={handleSubmit} className="p-3 sm:p-4 md:p-6 space-y-3 sm:space-y-4 md:space-y-6">
               {error && (
                 <div className="bg-red-50 border-l-4 border-red-500 text-red-700 px-4 py-3 rounded-r" role="alert">
                   {error}
@@ -583,7 +583,7 @@ export default function ChildrenPage() {
               {/* Prénom et date de naissance */}
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm font-semibold text-gray-700 mb-2">Prénom <span className="text-red-500">*</span></label>
+                  <label className="block text-xs md:text-sm font-semibold text-gray-700 mb-2">Prénom <span className="text-red-500">*</span></label>
                   <input
                     type="text"
                     required
@@ -595,7 +595,7 @@ export default function ChildrenPage() {
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-semibold text-gray-700 mb-2">Date de naissance</label>
+                  <label className="block text-xs md:text-sm font-semibold text-gray-700 mb-2">Date de naissance</label>
                   <input
                     type="date"
                     value={formData.birth_date}
@@ -608,7 +608,7 @@ export default function ChildrenPage() {
 
               {/* Description */}
               <div>
-                <label className="block text-sm font-semibold text-gray-700 mb-2">Description</label>
+                <label className="block text-xs md:text-sm font-semibold text-gray-700 mb-2">Description</label>
                 <textarea
                   rows={3}
                   value={formData.description}
@@ -621,7 +621,7 @@ export default function ChildrenPage() {
 
               {/* Types de TND */}
               <div>
-                <label className="block text-sm font-semibold text-gray-700 mb-2">
+                <label className="block text-xs md:text-sm font-semibold text-gray-700 mb-2">
                   Troubles du Neurodéveloppement (TND)
                 </label>
                 <p className="text-xs text-gray-500 mb-3">
@@ -659,7 +659,7 @@ export default function ChildrenPage() {
                 {/* Champ texte si "Autre" est sélectionné */}
                 {formData.tnd_types.includes('autre') && (
                   <div className="mt-3">
-                    <label className="block text-sm font-semibold text-gray-700 mb-2">
+                    <label className="block text-xs md:text-sm font-semibold text-gray-700 mb-2">
                       Précisez le trouble
                     </label>
                     <input

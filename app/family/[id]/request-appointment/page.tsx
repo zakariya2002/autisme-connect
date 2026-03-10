@@ -311,7 +311,7 @@ export default function RequestAppointmentPage({ params }: { params: { id: strin
             Retour au profil
           </Link>
 
-          <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-5 sm:p-6">
+          <div className="bg-white rounded-xl md:rounded-2xl shadow-sm border border-gray-100 p-5 sm:p-6">
             <div className="flex items-start gap-4">
               <div className="w-12 h-12 rounded-xl flex items-center justify-center flex-shrink-0" style={{ backgroundColor: '#f3e8ff' }}>
                 <svg className="w-6 h-6" style={{ color: '#41005c' }} fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -345,7 +345,7 @@ export default function RequestAppointmentPage({ params }: { params: { id: strin
 
         <form onSubmit={handleSubmit} className="space-y-4 sm:space-y-6">
           {/* Calendrier */}
-          <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-4 sm:p-5">
+          <div className="bg-white rounded-xl md:rounded-2xl shadow-sm border border-gray-100 p-4 sm:p-5">
             <label className="block text-sm font-semibold text-gray-900 mb-3">
               Sélectionner une date
             </label>
@@ -358,7 +358,7 @@ export default function RequestAppointmentPage({ params }: { params: { id: strin
 
           {/* Créneaux disponibles */}
           {selectedDate && (
-            <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-4 sm:p-5">
+            <div className="bg-white rounded-xl md:rounded-2xl shadow-sm border border-gray-100 p-4 sm:p-5">
               <label className="block text-sm font-semibold text-gray-900 mb-3">
                 Créneaux pour le {new Date(selectedDate + 'T00:00:00').toLocaleDateString('fr-FR', {
                   weekday: 'long',
@@ -419,7 +419,7 @@ export default function RequestAppointmentPage({ params }: { params: { id: strin
           )}
 
           {/* Type de rendez-vous */}
-          <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-4 sm:p-5">
+          <div className="bg-white rounded-xl md:rounded-2xl shadow-sm border border-gray-100 p-4 sm:p-5">
             <label className="block text-sm font-semibold text-gray-900 mb-3">
               Type de rendez-vous
             </label>
@@ -468,7 +468,7 @@ export default function RequestAppointmentPage({ params }: { params: { id: strin
 
           {/* Adresse */}
           {locationType === 'home' && (
-            <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-4 sm:p-5">
+            <div className="bg-white rounded-xl md:rounded-2xl shadow-sm border border-gray-100 p-4 sm:p-5">
               <label htmlFor="address" className="block text-sm font-semibold text-gray-900 mb-2">
                 Adresse du rendez-vous <span style={{ color: '#f0879f' }}>*</span>
               </label>
@@ -487,7 +487,7 @@ export default function RequestAppointmentPage({ params }: { params: { id: strin
           )}
 
           {/* Notes */}
-          <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-4 sm:p-5">
+          <div className="bg-white rounded-xl md:rounded-2xl shadow-sm border border-gray-100 p-4 sm:p-5">
             <label htmlFor="notes" className="block text-sm font-semibold text-gray-900 mb-2">
               Notes complémentaires <span className="text-gray-400 font-normal">(optionnel)</span>
             </label>

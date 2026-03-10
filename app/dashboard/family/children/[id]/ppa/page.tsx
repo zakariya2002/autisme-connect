@@ -695,7 +695,7 @@ export default function PPAPage() {
 
       {/* Document PPA */}
       <div className="flex-1 pb-24 sm:pb-8">
-      <div id="ppa-document" ref={printRef} className="max-w-5xl mx-auto bg-white p-4 sm:p-6 md:p-8 print:my-0 sm:shadow-sm sm:rounded-lg sm:my-4">
+      <div id="ppa-document" ref={printRef} className="max-w-5xl mx-auto bg-white p-3 sm:p-4 md:p-6 lg:p-8 print:my-0 sm:shadow-sm sm:rounded-lg sm:my-4">
 
         {/* En-tête */}
         <div className="border-b-4 pb-4 sm:pb-6 mb-6 sm:mb-8" style={{ borderColor: '#027e7e' }}>

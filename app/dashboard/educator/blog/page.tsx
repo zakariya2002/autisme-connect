@@ -106,31 +106,31 @@ export default function EducatorBlogPage() {
       </nav>
 
       {/* Flèche retour - desktop uniquement */}
-      <div className="max-w-3xl mx-auto px-4 pt-4">
+      <div className="max-w-3xl mx-auto px-3 sm:px-4 pt-3 sm:pt-4">
         <button
           onClick={() => router.back()}
-          className="flex items-center gap-2 text-gray-600 hover:text-gray-900 mb-4 transition-colors"
+          className="flex items-center gap-2 text-gray-600 hover:text-gray-900 mb-3 sm:mb-4 transition-colors"
           aria-label="Retour à la page précédente"
         >
-          <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <svg className="w-4 h-4 md:w-5 md:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
           </svg>
-          <span className="text-sm font-medium">Retour</span>
+          <span className="text-xs md:text-sm font-medium">Retour</span>
         </button>
       </div>
 
       {/* Header */}
-      <div className="px-4 py-6" style={{ backgroundColor: '#5a1a75' }}>
+      <div className="px-3 sm:px-4 md:px-6 py-4 sm:py-5 md:py-6" style={{ backgroundColor: '#5a1a75' }}>
         <div className="flex items-center justify-between">
           <div>
-            <h1 className="text-xl font-bold text-white">Mes articles</h1>
-            <p className="text-white/70 text-sm mt-1">Partagez votre expertise avec la communauté</p>
+            <h1 className="text-base sm:text-lg md:text-xl font-bold text-white">Mes articles</h1>
+            <p className="text-white/70 text-[11px] sm:text-xs md:text-sm mt-0.5 sm:mt-1">Partagez votre expertise avec la communauté</p>
           </div>
           <Link
             href="/dashboard/educator/blog/new"
-            className="flex items-center gap-2 px-4 py-2.5 bg-white text-[#41005c] rounded-xl font-semibold text-sm hover:bg-gray-100 transition-colors"
+            className="flex items-center gap-1.5 sm:gap-2 px-3 md:px-4 py-2 md:py-2.5 bg-white text-[#41005c] rounded-xl font-semibold text-xs sm:text-sm hover:bg-gray-100 transition-colors"
           >
-            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <svg className="w-4 h-4 md:w-5 md:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
             </svg>
             Nouvel article
@@ -138,9 +138,9 @@ export default function EducatorBlogPage() {
         </div>
       </div>
 
-      <div className="flex-1 px-4 py-6">
+      <div className="flex-1 px-3 sm:px-4 md:px-6 py-3 sm:py-4 md:py-6">
         {/* Filters */}
-        <div className="flex gap-2 mb-6 overflow-x-auto pb-2 scrollbar-hide">
+        <div className="flex gap-1.5 sm:gap-2 mb-3 sm:mb-4 md:mb-6 overflow-x-auto pb-2 scrollbar-hide">
           {[
             { value: 'all', label: 'Tous' },
             { value: 'draft', label: 'Brouillons' },
@@ -151,7 +151,7 @@ export default function EducatorBlogPage() {
             <button
               key={option.value}
               onClick={() => setFilter(option.value as typeof filter)}
-              className={`px-4 py-2 rounded-full text-sm font-medium whitespace-nowrap transition-colors ${
+              className={`px-3 md:px-4 py-1.5 md:py-2 rounded-full text-xs sm:text-sm font-medium whitespace-nowrap transition-colors ${
                 filter === option.value
                   ? 'bg-[#41005c] text-white'
                   : 'bg-white text-gray-700 hover:bg-gray-100'
@@ -164,26 +164,26 @@ export default function EducatorBlogPage() {
 
         {/* Posts list */}
         {isLoading ? (
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-3 md:gap-4">
             {[1, 2, 3].map((i) => (
-              <div key={i} className="bg-white rounded-xl p-4 animate-pulse">
-                <div className="h-40 bg-gray-200 rounded-lg mb-4" />
+              <div key={i} className="bg-white rounded-xl p-3 sm:p-4 animate-pulse">
+                <div className="h-32 sm:h-40 bg-gray-200 rounded-lg mb-3 sm:mb-4" />
                 <div className="h-4 bg-gray-200 rounded w-3/4 mb-2" />
                 <div className="h-3 bg-gray-200 rounded w-1/2" />
               </div>
             ))}
           </div>
         ) : filteredPosts.length === 0 ? (
-          <div className="bg-white rounded-xl p-8 text-center">
-            <div className="w-16 h-16 mx-auto mb-4 bg-purple-100 rounded-full flex items-center justify-center">
-              <svg className="w-8 h-8 text-[#41005c]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <div className="bg-white rounded-xl md:rounded-2xl p-4 sm:p-6 md:p-8 text-center">
+            <div className="w-12 h-12 md:w-16 md:h-16 mx-auto mb-3 sm:mb-4 bg-purple-100 rounded-full flex items-center justify-center">
+              <svg className="w-6 h-6 md:w-8 md:h-8 text-[#41005c]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 8h6v4H7V8z" />
               </svg>
             </div>
-            <h3 className="text-lg font-semibold text-gray-900 mb-2">
+            <h3 className="text-sm sm:text-base md:text-lg font-semibold text-gray-900 mb-1 sm:mb-2">
               {filter === 'all' ? 'Aucun article' : `Aucun article ${filter === 'draft' ? 'en brouillon' : filter === 'pending' ? 'en attente' : filter === 'published' ? 'publié' : 'refusé'}`}
             </h3>
-            <p className="text-gray-600 mb-6">
+            <p className="text-xs md:text-sm text-gray-600 mb-3 sm:mb-4 md:mb-6">
               {filter === 'all'
                 ? 'Commencez à rédiger votre premier article pour partager votre expertise.'
                 : 'Vous n\'avez pas d\'article dans cette catégorie.'}
@@ -191,9 +191,9 @@ export default function EducatorBlogPage() {
             {filter === 'all' && (
               <Link
                 href="/dashboard/educator/blog/new"
-                className="inline-flex items-center gap-2 px-6 py-3 bg-[#41005c] text-white font-semibold rounded-xl hover:opacity-90 transition-colors"
+                className="inline-flex items-center gap-2 px-5 py-2.5 md:px-6 md:py-3 bg-[#41005c] text-white font-semibold rounded-xl hover:opacity-90 transition-colors text-xs sm:text-sm md:text-base"
               >
-                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg className="w-4 h-4 md:w-5 md:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
                 </svg>
                 Créer mon premier article
@@ -201,7 +201,7 @@ export default function EducatorBlogPage() {
             )}
           </div>
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-3 md:gap-4">
             {filteredPosts.map((post) => (
               <BlogPostCard
                 key={post.id}

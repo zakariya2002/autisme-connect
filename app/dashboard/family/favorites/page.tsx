@@ -141,7 +141,7 @@ export default function FavoritesPage() {
       </div>
 
       {/* Section Titre */}
-      <section className="py-6 sm:py-10 px-4">
+      <section className="py-3 sm:py-5 md:py-8 px-3 sm:px-4 md:px-6">
         <div className="max-w-4xl mx-auto">
           {/* Flèche retour */}
           <button
@@ -161,17 +161,17 @@ export default function FavoritesPage() {
               <path d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
             </svg>
           </div>
-          <h1 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-4" style={{ fontFamily: 'Verdana, sans-serif' }}>
+          <h1 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold text-gray-900 mb-2 sm:mb-3 md:mb-4" style={{ fontFamily: 'Verdana, sans-serif' }}>
             Mes favoris
           </h1>
-          <div className="w-32 h-[2px] bg-gray-300 mx-auto mb-6"></div>
-          <p className="text-lg text-gray-600" style={{ fontFamily: 'Open Sans, sans-serif' }}>
+          <div className="w-24 sm:w-32 h-[2px] bg-gray-300 mx-auto mb-3 sm:mb-4 md:mb-6"></div>
+          <p className="text-sm sm:text-base md:text-lg text-gray-600" style={{ fontFamily: 'Open Sans, sans-serif' }}>
             Professionnels que vous avez enregistrés
           </p>
         </div>
       </section>
 
-      <div className="flex-1 max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 pb-16 w-full">
+      <div className="flex-1 max-w-4xl mx-auto px-3 sm:px-4 md:px-6 lg:px-8 pb-16 w-full">
         {/* Liste des favoris */}
         {loading ? (
           <div className="text-center py-20 bg-white rounded-2xl shadow-md border border-gray-100">
@@ -207,7 +207,7 @@ export default function FavoritesPage() {
             </Link>
           </div>
         ) : (
-          <div className="space-y-5">
+          <div className="space-y-3 sm:space-y-4 md:space-y-5">
             <p className="text-sm text-gray-500 mb-4" style={{ fontFamily: 'Open Sans, sans-serif' }}>
               {favorites.length} professionnel(s) dans vos favoris
             </p>
@@ -215,7 +215,7 @@ export default function FavoritesPage() {
             {favorites.map((favorite) => (
               <div
                 key={favorite.id}
-                className="bg-white rounded-2xl shadow-md hover:shadow-lg transition-all duration-300 border border-gray-100 overflow-hidden group hover:-translate-y-1 relative cursor-pointer"
+                className="bg-white rounded-xl md:rounded-2xl shadow-md hover:shadow-lg transition-all duration-300 border border-gray-100 overflow-hidden group hover:-translate-y-1 relative cursor-pointer"
                 onClick={() => router.push(`/educator/${favorite.educator.id}`)}
               >
                 {/* Bouton retirer - position absolue en haut à droite */}

@@ -33,59 +33,59 @@ export default function ProPricingPage() {
       {/* Navigation */}
       <ProNavbar />
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 lg:py-20">
+      <div className="max-w-7xl mx-auto px-3 sm:px-4 md:px-6 lg:px-8 py-3 sm:py-5 md:py-8 lg:py-20">
         {/* Hero */}
-        <div className="text-center mb-16">
-          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full mb-6 text-white font-bold" style={{ backgroundColor: '#f0879f' }}>
+        <div className="text-center mb-8 sm:mb-12 md:mb-16">
+          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full mb-4 sm:mb-6 text-white font-bold text-sm sm:text-base" style={{ backgroundColor: '#f0879f' }}>
             <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
               <path fillRule="evenodd" d="M6.267 3.455a3.066 3.066 0 001.745-.723 3.066 3.066 0 013.976 0 3.066 3.066 0 001.745.723 3.066 3.066 0 012.812 2.812c.051.643.304 1.254.723 1.745a3.066 3.066 0 010 3.976 3.066 3.066 0 00-.723 1.745 3.066 3.066 0 01-2.812 2.812 3.066 3.066 0 00-1.745.723 3.066 3.066 0 01-3.976 0 3.066 3.066 0 00-1.745-.723 3.066 3.066 0 01-2.812-2.812 3.066 3.066 0 00-.723-1.745 3.066 3.066 0 010-3.976 3.066 3.066 0 00.723-1.745 3.066 3.066 0 012.812-2.812zm7.44 5.252a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
             </svg>
             100% Gratuit
           </div>
-          <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-gray-900 mb-6">
+          <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-bold text-gray-900 mb-3 sm:mb-4 md:mb-6">
             Un modèle{' '}
             <span style={{ color: '#41005c' }}>
               transparent
             </span>
           </h1>
-          <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+          <p className="text-sm sm:text-base md:text-lg lg:text-xl text-gray-600 max-w-3xl mx-auto px-2">
             Inscription et utilisation gratuites. Vous ne payez que lorsque vous gagnez de l'argent.
           </p>
         </div>
 
         {/* Main Card */}
-        <div className="max-w-3xl mx-auto mb-20">
-          <div className="rounded-3xl shadow-2xl border-2 overflow-hidden" style={{ borderColor: '#41005c' }}>
+        <div className="max-w-3xl mx-auto mb-10 sm:mb-16 md:mb-20">
+          <div className="rounded-xl md:rounded-2xl lg:rounded-3xl shadow-2xl border-2 overflow-hidden" style={{ borderColor: '#41005c' }}>
             {/* Header */}
-            <div className="p-8 text-white text-center" style={{ background: 'linear-gradient(135deg, #41005c 0%, #5a1a75 100%)' }}>
-              <div className="w-20 h-20 bg-white/20 rounded-full flex items-center justify-center mx-auto mb-6">
-                <svg className="w-10 h-10 text-white" fill="currentColor" viewBox="0 0 20 20">
+            <div className="p-4 sm:p-6 md:p-8 text-white text-center" style={{ background: 'linear-gradient(135deg, #41005c 0%, #5a1a75 100%)' }}>
+              <div className="w-16 h-16 sm:w-20 sm:h-20 bg-white/20 rounded-full flex items-center justify-center mx-auto mb-4 sm:mb-6">
+                <svg className="w-8 h-8 sm:w-10 sm:h-10 text-white" fill="currentColor" viewBox="0 0 20 20">
                   <path fillRule="evenodd" d="M6.267 3.455a3.066 3.066 0 001.745-.723 3.066 3.066 0 013.976 0 3.066 3.066 0 001.745.723 3.066 3.066 0 012.812 2.812c.051.643.304 1.254.723 1.745a3.066 3.066 0 010 3.976 3.066 3.066 0 00-.723 1.745 3.066 3.066 0 01-2.812 2.812 3.066 3.066 0 00-1.745.723 3.066 3.066 0 01-3.976 0 3.066 3.066 0 00-1.745-.723 3.066 3.066 0 01-2.812-2.812 3.066 3.066 0 00-.723-1.745 3.066 3.066 0 010-3.976 3.066 3.066 0 00.723-1.745 3.066 3.066 0 012.812-2.812zm7.44 5.252a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
                 </svg>
               </div>
-              <h2 className="text-3xl font-bold mb-2">Accès Premium Gratuit</h2>
+              <h2 className="text-xl sm:text-2xl md:text-3xl font-bold mb-2">Accès Premium Gratuit</h2>
               <p className="text-white/80">Toutes les fonctionnalités, sans abonnement</p>
             </div>
 
             {/* Content */}
-            <div className="p-8 bg-white">
+            <div className="p-4 sm:p-6 md:p-8 bg-white">
               {/* Price */}
-              <div className="text-center mb-8 pb-8 border-b border-gray-200">
-                <div className="flex items-center justify-center gap-4">
+              <div className="text-center mb-6 sm:mb-8 pb-6 sm:pb-8 border-b border-gray-200">
+                <div className="flex items-center justify-center gap-3 sm:gap-4">
                   <div>
-                    <div className="text-6xl font-bold" style={{ color: '#41005c' }}>0€</div>
+                    <div className="text-4xl sm:text-5xl md:text-6xl font-bold" style={{ color: '#41005c' }}>0€</div>
                     <p className="text-gray-500 font-medium">Inscription gratuite</p>
                   </div>
-                  <div className="text-3xl text-gray-300">+</div>
+                  <div className="text-2xl sm:text-3xl text-gray-300">+</div>
                   <div>
-                    <div className="text-6xl font-bold" style={{ color: '#41005c' }}>12%</div>
+                    <div className="text-4xl sm:text-5xl md:text-6xl font-bold" style={{ color: '#41005c' }}>12%</div>
                     <p className="text-gray-500 font-medium">Commission sur RDV*</p>
                   </div>
                 </div>
               </div>
 
               {/* Features list */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-8">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4 mb-6 sm:mb-8">
                 {[
                   'Rendez-vous illimités',
                   'Conversations illimitées',
@@ -110,7 +110,7 @@ export default function ProPricingPage() {
               {/* CTA */}
               <Link
                 href={isLoggedIn ? "/dashboard/educator" : "/auth/register-educator"}
-                className="block w-full text-center px-8 py-4 text-white rounded-xl font-bold text-lg shadow-xl hover:shadow-2xl transition-all hover:opacity-90"
+                className="block w-full text-center px-6 sm:px-8 py-3 sm:py-4 text-white rounded-xl font-bold text-sm sm:text-base md:text-lg shadow-xl hover:shadow-2xl transition-all hover:opacity-90"
                 style={{ backgroundColor: '#41005c' }}
               >
                 {isLoggedIn ? 'Accéder à mon compte' : 'Créer mon profil gratuitement'}
@@ -124,12 +124,12 @@ export default function ProPricingPage() {
         </div>
 
         {/* Comment ça marche */}
-        <div className="max-w-4xl mx-auto mb-20 bg-white rounded-3xl shadow-xl p-8 lg:p-12 border border-gray-100">
-          <h2 className="text-3xl font-bold text-gray-900 mb-8 text-center">
+        <div className="max-w-4xl mx-auto mb-10 sm:mb-16 md:mb-20 bg-white rounded-xl md:rounded-2xl lg:rounded-3xl shadow-xl p-4 sm:p-6 md:p-8 lg:p-12 border border-gray-100">
+          <h2 className="text-xl sm:text-2xl md:text-3xl font-bold text-gray-900 mb-4 sm:mb-6 md:mb-8 text-center">
             Comment fonctionne la commission ?
           </h2>
 
-          <div className="grid md:grid-cols-3 gap-6 mb-8">
+          <div className="grid md:grid-cols-3 gap-4 sm:gap-6 mb-6 sm:mb-8">
             <div className="text-center">
               <div className="w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4" style={{ backgroundColor: 'rgba(65, 0, 92, 0.1)' }}>
                 <span className="text-2xl font-bold" style={{ color: '#41005c' }}>1</span>
@@ -155,19 +155,19 @@ export default function ProPricingPage() {
             </div>
           </div>
 
-          <div className="rounded-2xl p-6 border" style={{ backgroundColor: 'rgba(65, 0, 92, 0.05)', borderColor: 'rgba(65, 0, 92, 0.2)' }}>
-            <h4 className="font-bold text-gray-900 mb-4 text-lg">Exemple concret :</h4>
+          <div className="rounded-xl md:rounded-2xl p-3 sm:p-4 md:p-6 border" style={{ backgroundColor: 'rgba(65, 0, 92, 0.05)', borderColor: 'rgba(65, 0, 92, 0.2)' }}>
+            <h4 className="font-bold text-gray-900 mb-3 sm:mb-4 text-base sm:text-lg">Exemple concret :</h4>
             <p className="text-gray-700 mb-3">
               Une famille vous réserve pour <strong style={{ color: '#41005c' }}>400€/mois</strong> via la plateforme
             </p>
-            <div className="flex flex-wrap gap-6 text-gray-700">
+            <div className="flex flex-wrap gap-4 sm:gap-6 text-gray-700">
               <div>
-                <span className="text-sm text-gray-500">Vous recevez</span>
-                <p className="text-2xl font-bold" style={{ color: '#41005c' }}>352€</p>
+                <span className="text-xs md:text-sm text-gray-500">Vous recevez</span>
+                <p className="text-xl sm:text-2xl font-bold" style={{ color: '#41005c' }}>352€</p>
               </div>
               <div>
-                <span className="text-sm text-gray-500">Commission NeuroCare</span>
-                <p className="text-2xl font-bold text-gray-600">48€</p>
+                <span className="text-xs md:text-sm text-gray-500">Commission NeuroCare</span>
+                <p className="text-xl sm:text-2xl font-bold text-gray-600">48€</p>
               </div>
             </div>
             <div className="mt-4 pt-4 border-t" style={{ borderColor: 'rgba(65, 0, 92, 0.2)' }}>
@@ -179,32 +179,32 @@ export default function ProPricingPage() {
         </div>
 
         {/* Features Grid */}
-        <div className="mb-20">
-          <h2 className="text-3xl font-bold text-center text-gray-900 mb-12">
+        <div className="mb-10 sm:mb-16 md:mb-20">
+          <h2 className="text-xl sm:text-2xl md:text-3xl font-bold text-center text-gray-900 mb-6 sm:mb-8 md:mb-12">
             Tout ce dont vous avez besoin
           </h2>
-          <div className="grid grid-cols-2 lg:grid-cols-4 gap-6">
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 md:gap-6">
             {features.map((feature, index) => (
               <div
                 key={index}
-                className="bg-white rounded-2xl shadow-lg p-6 border border-gray-100 hover:shadow-xl transition-all hover:-translate-y-1"
+                className="bg-white rounded-xl md:rounded-2xl shadow-lg p-3 sm:p-4 md:p-6 border border-gray-100 hover:shadow-xl transition-all hover:-translate-y-1"
               >
-                <div className="text-4xl mb-4">{feature.icon}</div>
-                <h3 className="font-bold text-gray-900 mb-2">{feature.title}</h3>
-                <p className="text-gray-600 text-sm">{feature.description}</p>
+                <div className="text-2xl sm:text-3xl md:text-4xl mb-2 sm:mb-3 md:mb-4">{feature.icon}</div>
+                <h3 className="font-bold text-gray-900 mb-1 sm:mb-2 text-sm sm:text-base">{feature.title}</h3>
+                <p className="text-gray-600 text-xs sm:text-sm">{feature.description}</p>
               </div>
             ))}
           </div>
         </div>
 
         {/* Pourquoi ce modèle */}
-        <div className="max-w-4xl mx-auto mb-20 bg-gradient-to-br from-white to-purple-50 rounded-3xl shadow-xl p-8 lg:p-12 border border-purple-100">
-          <h2 className="text-3xl font-bold text-gray-900 mb-8 text-center">
+        <div className="max-w-4xl mx-auto mb-10 sm:mb-16 md:mb-20 bg-gradient-to-br from-white to-purple-50 rounded-xl md:rounded-2xl lg:rounded-3xl shadow-xl p-4 sm:p-6 md:p-8 lg:p-12 border border-purple-100">
+          <h2 className="text-xl sm:text-2xl md:text-3xl font-bold text-gray-900 mb-4 sm:mb-6 md:mb-8 text-center">
             Pourquoi ce modèle ?
           </h2>
 
-          <div className="grid md:grid-cols-2 gap-8">
-            <div className="flex gap-4">
+          <div className="grid md:grid-cols-2 gap-4 sm:gap-6 md:gap-8">
+            <div className="flex gap-3 sm:gap-4">
               <div className="w-12 h-12 rounded-full flex items-center justify-center flex-shrink-0" style={{ backgroundColor: '#f0879f' }}>
                 <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
@@ -255,11 +255,11 @@ export default function ProPricingPage() {
         </div>
 
         {/* FAQ */}
-        <div className="max-w-3xl mx-auto mb-20">
-          <h2 className="text-3xl font-bold text-center text-gray-900 mb-12">
+        <div className="max-w-3xl mx-auto mb-10 sm:mb-16 md:mb-20">
+          <h2 className="text-xl sm:text-2xl md:text-3xl font-bold text-center text-gray-900 mb-6 sm:mb-8 md:mb-12">
             Questions fréquentes
           </h2>
-          <div className="space-y-4">
+          <div className="space-y-3 sm:space-y-4">
             {[
               {
                 q: "L'inscription est-elle vraiment gratuite ?",
@@ -283,13 +283,13 @@ export default function ProPricingPage() {
               },
             ].map((faq, index) => (
               <details key={index} className="bg-white rounded-xl shadow-md overflow-hidden group">
-                <summary className="px-6 py-4 cursor-pointer font-semibold text-gray-900 hover:bg-gray-50 transition flex items-center justify-between">
+                <summary className="px-4 sm:px-6 py-3 sm:py-4 cursor-pointer font-semibold text-gray-900 hover:bg-gray-50 transition flex items-center justify-between text-sm sm:text-base">
                   {faq.q}
                   <svg className="w-5 h-5 group-open:rotate-180 transition-transform flex-shrink-0 ml-2" style={{ color: '#41005c' }} fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
                   </svg>
                 </summary>
-                <div className="px-6 py-4 bg-gray-50 text-gray-700 border-t border-gray-200">
+                <div className="px-4 sm:px-6 py-3 sm:py-4 bg-gray-50 text-gray-700 border-t border-gray-200 text-sm sm:text-base">
                   {faq.a}
                 </div>
               </details>
@@ -298,16 +298,16 @@ export default function ProPricingPage() {
         </div>
 
         {/* CTA */}
-        <div className="rounded-3xl shadow-2xl p-12 text-center text-white" style={{ backgroundColor: '#41005c' }}>
-          <h2 className="text-4xl font-bold mb-4">
+        <div className="rounded-xl md:rounded-2xl lg:rounded-3xl shadow-2xl p-6 sm:p-8 md:p-12 text-center text-white" style={{ backgroundColor: '#41005c' }}>
+          <h2 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold mb-3 sm:mb-4">
             Prêt à développer votre activité ?
           </h2>
-          <p className="text-xl mb-8 opacity-90">
+          <p className="text-sm sm:text-base md:text-lg lg:text-xl mb-6 sm:mb-8 opacity-90">
             Rejoignez les professionnels qui font confiance à NeuroCare
           </p>
           <Link
             href={isLoggedIn ? "/dashboard/educator" : "/auth/register-educator"}
-            className="inline-block px-8 py-4 bg-white rounded-xl hover:bg-gray-100 font-bold text-lg shadow-xl transition-all"
+            className="inline-block px-6 sm:px-8 py-3 sm:py-4 bg-white rounded-xl hover:bg-gray-100 font-bold text-sm sm:text-base md:text-lg shadow-xl transition-all"
             style={{ color: '#41005c' }}
           >
             {isLoggedIn ? 'Accéder à mon compte' : 'Créer mon profil gratuitement'}
@@ -316,7 +316,7 @@ export default function ProPricingPage() {
       </div>
 
       {/* Footer */}
-      <footer className="text-white py-12 px-6 mt-20" style={{ backgroundColor: '#41005c' }} role="contentinfo">
+      <footer className="text-white py-8 sm:py-12 px-4 sm:px-6 mt-10 sm:mt-16 md:mt-20" style={{ backgroundColor: '#41005c' }} role="contentinfo">
         <div className="max-w-6xl mx-auto">
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 mb-10">
             {/* Logo et description */}

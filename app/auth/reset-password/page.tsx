@@ -123,7 +123,7 @@ export default function ResetPasswordPage() {
     return (
       <div className="min-h-screen flex flex-col" style={{ backgroundColor: '#fdf9f4' }}>
         <PublicNavbar showAuthButtons={true} />
-        <div className="flex-1 flex flex-col justify-center pt-20 xl:pt-24 pb-12 sm:px-6 lg:px-8">
+        <div className="flex-1 flex flex-col justify-center pt-20 xl:pt-24 pb-8 sm:pb-12 px-3 sm:px-6 lg:px-8">
           <div className="sm:mx-auto sm:w-full sm:max-w-md">
             {/* Logo */}
             <div className="flex justify-center mb-6">
@@ -136,14 +136,14 @@ export default function ResetPasswordPage() {
                 />
               </Link>
             </div>
-            <div className="bg-white py-10 px-6 shadow-xl rounded-2xl sm:px-12 border border-gray-100">
+            <div className="bg-white py-6 sm:py-8 md:py-10 px-4 sm:px-6 shadow-xl rounded-xl md:rounded-2xl sm:px-12 border border-gray-100">
               <div className="text-center">
                 <div className="mx-auto flex items-center justify-center h-16 w-16 rounded-full bg-red-100 mb-4">
                   <svg className="h-8 w-8 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
                   </svg>
                 </div>
-                <h3 className="text-lg font-semibold text-gray-900 mb-2" style={{ fontFamily: 'Verdana, sans-serif' }}>
+                <h3 className="text-base sm:text-lg font-semibold text-gray-900 mb-2" style={{ fontFamily: 'Verdana, sans-serif' }}>
                   Lien invalide ou expiré
                 </h3>
                 <p className="text-sm text-gray-600 mb-6" style={{ fontFamily: 'Open Sans, sans-serif' }}>
@@ -168,7 +168,7 @@ export default function ResetPasswordPage() {
     <div className="min-h-screen flex flex-col" style={{ backgroundColor: '#fdf9f4' }}>
       <PublicNavbar showAuthButtons={true} />
 
-      <div className="flex-1 flex flex-col justify-center pt-20 xl:pt-24 pb-12 sm:px-6 lg:px-8 relative z-0">
+      <div className="flex-1 flex flex-col justify-center pt-20 xl:pt-24 pb-8 sm:pb-12 px-3 sm:px-6 lg:px-8 relative z-0">
         {/* Logo et Titre */}
         <div className="sm:mx-auto sm:w-full sm:max-w-md">
           <div className="flex justify-center mb-6">
@@ -181,7 +181,7 @@ export default function ResetPasswordPage() {
               />
             </Link>
           </div>
-          <h2 className="text-center text-2xl font-bold text-gray-900 mb-2" style={{ fontFamily: 'Verdana, sans-serif' }}>
+          <h2 className="text-center text-xl sm:text-2xl font-bold text-gray-900 mb-2" style={{ fontFamily: 'Verdana, sans-serif' }}>
             Nouveau mot de passe
           </h2>
           <div className="w-16 h-[2px] mx-auto mb-4" style={{ background: 'linear-gradient(90deg, #027e7e 0%, #f0879f 100%)' }}></div>
@@ -192,7 +192,7 @@ export default function ResetPasswordPage() {
 
         {/* Formulaire */}
         <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
-          <div className="bg-white py-10 px-6 shadow-xl rounded-2xl sm:px-12 border border-gray-100">
+          <div className="bg-white py-6 sm:py-8 md:py-10 px-4 sm:px-6 shadow-xl rounded-xl md:rounded-2xl sm:px-12 border border-gray-100">
             {success ? (
               <div className="text-center" role="alert" aria-live="assertive">
                 <div className="mx-auto flex items-center justify-center h-16 w-16 rounded-full mb-4" style={{ backgroundColor: '#e6f4f4' }}>
@@ -200,7 +200,7 @@ export default function ResetPasswordPage() {
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                   </svg>
                 </div>
-                <h3 className="text-lg font-semibold text-gray-900 mb-2" style={{ fontFamily: 'Verdana, sans-serif' }}>
+                <h3 className="text-base sm:text-lg font-semibold text-gray-900 mb-2" style={{ fontFamily: 'Verdana, sans-serif' }}>
                   Mot de passe modifié !
                 </h3>
                 <p className="text-sm text-gray-600 mb-6" style={{ fontFamily: 'Open Sans, sans-serif' }}>
@@ -214,7 +214,7 @@ export default function ResetPasswordPage() {
                 </div>
               </div>
             ) : (
-              <form className="space-y-6" onSubmit={handleSubmit}>
+              <form className="space-y-4 sm:space-y-5 md:space-y-6" onSubmit={handleSubmit}>
                 {error && (
                   <div className="bg-red-50 border-l-4 border-red-500 text-red-700 px-4 py-3 rounded-r" role="alert">
                     <div className="flex items-center">
@@ -227,7 +227,7 @@ export default function ResetPasswordPage() {
                 )}
 
                 <div>
-                  <label htmlFor="password" className="block text-sm font-semibold text-gray-700 mb-2">
+                  <label htmlFor="password" className="block text-xs md:text-sm font-semibold text-gray-700 mb-1.5 md:mb-2">
                     Nouveau mot de passe <span className="text-red-500">*</span>
                   </label>
                   <div className="relative">
@@ -244,7 +244,7 @@ export default function ResetPasswordPage() {
                       value={password}
                       onChange={(e) => setPassword(e.target.value)}
                       placeholder="••••••••"
-                      className="appearance-none block w-full pl-10 pr-12 py-3 border border-gray-300 rounded-lg shadow-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:border-transparent transition-all"
+                      className="appearance-none block w-full pl-10 pr-12 py-2 md:py-3 border border-gray-300 rounded-lg shadow-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:border-transparent transition-all text-sm"
                       style={{ '--tw-ring-color': '#027e7e' } as any}
                     />
                     <button
@@ -292,7 +292,7 @@ export default function ResetPasswordPage() {
                 </div>
 
                 <div>
-                  <label htmlFor="confirmPassword" className="block text-sm font-semibold text-gray-700 mb-2">
+                  <label htmlFor="confirmPassword" className="block text-xs md:text-sm font-semibold text-gray-700 mb-1.5 md:mb-2">
                     Confirmer le mot de passe <span className="text-red-500">*</span>
                   </label>
                   <div className="relative">
@@ -309,7 +309,7 @@ export default function ResetPasswordPage() {
                       value={confirmPassword}
                       onChange={(e) => setConfirmPassword(e.target.value)}
                       placeholder="••••••••"
-                      className="appearance-none block w-full pl-10 pr-12 py-3 border border-gray-300 rounded-lg shadow-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:border-transparent transition-all"
+                      className="appearance-none block w-full pl-10 pr-12 py-2 md:py-3 border border-gray-300 rounded-lg shadow-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:border-transparent transition-all text-sm"
                       style={{ '--tw-ring-color': '#027e7e' } as any}
                     />
                     <button
@@ -377,7 +377,7 @@ export default function ResetPasswordPage() {
                   <button
                     type="submit"
                     disabled={loading || !password || !confirmPassword || password !== confirmPassword}
-                    className="group relative w-full flex justify-center py-3 px-4 border border-transparent rounded-lg text-sm font-semibold text-white focus:outline-none focus:ring-2 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed shadow-md hover:shadow-lg transition-all transform hover:-translate-y-0.5 hover:opacity-90"
+                    className="group relative w-full flex justify-center py-2.5 md:py-3 px-4 border border-transparent rounded-lg text-xs sm:text-sm font-semibold text-white focus:outline-none focus:ring-2 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed shadow-md hover:shadow-lg transition-all transform hover:-translate-y-0.5 hover:opacity-90"
                     style={{ backgroundColor: '#027e7e' }}
                   >
                     {loading ? (

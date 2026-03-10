@@ -111,13 +111,13 @@ export default function CreateEducatorProfile() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
+    <div className="min-h-screen bg-gray-50 py-6 sm:py-8 md:py-12 px-3 sm:px-4 md:px-6 lg:px-8">
       <div className="max-w-3xl mx-auto">
-        <h2 className="text-3xl font-extrabold text-gray-900 mb-8">
+        <h2 className="text-2xl sm:text-3xl font-extrabold text-gray-900 mb-5 sm:mb-8">
           Créer votre profil éducateur
         </h2>
 
-        <form onSubmit={handleSubmit} className="space-y-6 bg-white shadow-sm rounded-lg p-6">
+        <form onSubmit={handleSubmit} className="space-y-4 sm:space-y-6 bg-white shadow-sm rounded-lg md:rounded-xl p-3 sm:p-4 md:p-6">
           {error && (
             <div className="bg-red-50 border border-red-200 text-red-600 px-4 py-3 rounded">
               {error}
@@ -126,59 +126,59 @@ export default function CreateEducatorProfile() {
 
           {/* Informations personnelles */}
           <div className="border-b border-gray-200 pb-6">
-            <h3 className="text-lg font-medium text-gray-900 mb-4">Informations personnelles</h3>
+            <h3 className="text-base sm:text-lg font-medium text-gray-900 mb-3 sm:mb-4">Informations personnelles</h3>
             <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
               <div>
-                <label className="block text-sm font-medium text-gray-700">Prénom *</label>
+                <label className="block text-xs md:text-sm font-medium text-gray-700">Prénom *</label>
                 <input
                   type="text"
                   required
                   value={formData.first_name}
                   onChange={(e) => setFormData({ ...formData, first_name: e.target.value })}
-                  className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:ring-primary-500 focus:border-primary-500"
+                  className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-1.5 md:py-2 px-2.5 md:px-3 text-sm focus:ring-primary-500 focus:border-primary-500"
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700">Nom *</label>
+                <label className="block text-xs md:text-sm font-medium text-gray-700">Nom *</label>
                 <input
                   type="text"
                   required
                   value={formData.last_name}
                   onChange={(e) => setFormData({ ...formData, last_name: e.target.value })}
-                  className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:ring-primary-500 focus:border-primary-500"
+                  className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-1.5 md:py-2 px-2.5 md:px-3 text-sm focus:ring-primary-500 focus:border-primary-500"
                 />
               </div>
             </div>
 
             <div className="mt-4">
-              <label className="block text-sm font-medium text-gray-700">Téléphone</label>
+              <label className="block text-xs md:text-sm font-medium text-gray-700">Téléphone</label>
               <input
                 type="tel"
                 value={formData.phone}
                 onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
-                className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:ring-primary-500 focus:border-primary-500"
+                className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-1.5 md:py-2 px-2.5 md:px-3 text-sm focus:ring-primary-500 focus:border-primary-500"
               />
             </div>
 
             <div className="mt-4">
-              <label className="block text-sm font-medium text-gray-700">Localisation *</label>
+              <label className="block text-xs md:text-sm font-medium text-gray-700">Localisation *</label>
               <input
                 type="text"
                 required
                 placeholder="Ex: Paris, France"
                 value={formData.location}
                 onChange={(e) => setFormData({ ...formData, location: e.target.value })}
-                className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:ring-primary-500 focus:border-primary-500"
+                className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-1.5 md:py-2 px-2.5 md:px-3 text-sm focus:ring-primary-500 focus:border-primary-500"
               />
             </div>
 
             <div className="mt-4">
-              <label className="block text-sm font-medium text-gray-700">Bio</label>
+              <label className="block text-xs md:text-sm font-medium text-gray-700">Bio</label>
               <textarea
                 rows={4}
                 value={formData.bio}
                 onChange={(e) => setFormData({ ...formData, bio: e.target.value })}
-                className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:ring-primary-500 focus:border-primary-500"
+                className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-1.5 md:py-2 px-2.5 md:px-3 text-sm focus:ring-primary-500 focus:border-primary-500"
                 placeholder="Présentez-vous et décrivez votre expérience..."
               />
             </div>
@@ -186,51 +186,51 @@ export default function CreateEducatorProfile() {
 
           {/* Expérience et tarifs */}
           <div className="border-b border-gray-200 pb-6">
-            <h3 className="text-lg font-medium text-gray-900 mb-4">Expérience et tarifs</h3>
+            <h3 className="text-base sm:text-lg font-medium text-gray-900 mb-3 sm:mb-4">Expérience et tarifs</h3>
             <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
               <div>
-                <label className="block text-sm font-medium text-gray-700">Années d'expérience *</label>
+                <label className="block text-xs md:text-sm font-medium text-gray-700">Années d'expérience *</label>
                 <input
                   type="number"
                   required
                   min="0"
                   value={formData.years_of_experience}
                   onChange={(e) => setFormData({ ...formData, years_of_experience: parseInt(e.target.value) })}
-                  className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:ring-primary-500 focus:border-primary-500"
+                  className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-1.5 md:py-2 px-2.5 md:px-3 text-sm focus:ring-primary-500 focus:border-primary-500"
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700">Tarif horaire (€)</label>
+                <label className="block text-xs md:text-sm font-medium text-gray-700">Tarif horaire (€)</label>
                 <input
                   type="number"
                   step="0.01"
                   min="0"
                   value={formData.hourly_rate}
                   onChange={(e) => setFormData({ ...formData, hourly_rate: e.target.value })}
-                  className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:ring-primary-500 focus:border-primary-500"
+                  className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-1.5 md:py-2 px-2.5 md:px-3 text-sm focus:ring-primary-500 focus:border-primary-500"
                 />
               </div>
             </div>
 
             <div className="mt-4">
-              <label className="block text-sm font-medium text-gray-700">Spécialisations (séparées par des virgules)</label>
+              <label className="block text-xs md:text-sm font-medium text-gray-700">Spécialisations (séparées par des virgules)</label>
               <input
                 type="text"
                 placeholder="Ex: Troubles du comportement, Communication, Autonomie"
                 value={formData.specializations}
                 onChange={(e) => setFormData({ ...formData, specializations: e.target.value })}
-                className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:ring-primary-500 focus:border-primary-500"
+                className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-1.5 md:py-2 px-2.5 md:px-3 text-sm focus:ring-primary-500 focus:border-primary-500"
               />
             </div>
 
             <div className="mt-4">
-              <label className="block text-sm font-medium text-gray-700">Langues parlées (séparées par des virgules)</label>
+              <label className="block text-xs md:text-sm font-medium text-gray-700">Langues parlées (séparées par des virgules)</label>
               <input
                 type="text"
                 placeholder="Ex: Français, Anglais, Arabe"
                 value={formData.languages}
                 onChange={(e) => setFormData({ ...formData, languages: e.target.value })}
-                className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:ring-primary-500 focus:border-primary-500"
+                className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-1.5 md:py-2 px-2.5 md:px-3 text-sm focus:ring-primary-500 focus:border-primary-500"
               />
             </div>
           </div>
@@ -238,7 +238,7 @@ export default function CreateEducatorProfile() {
           {/* Certifications */}
           <div>
             <div className="flex justify-between items-center mb-4">
-              <h3 className="text-lg font-medium text-gray-900">Certifications</h3>
+              <h3 className="text-base sm:text-lg font-medium text-gray-900">Certifications</h3>
               <button
                 type="button"
                 onClick={addCertification}
@@ -262,11 +262,11 @@ export default function CreateEducatorProfile() {
                 </div>
                 <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
                   <div>
-                    <label className="block text-sm font-medium text-gray-700">Type</label>
+                    <label className="block text-xs md:text-sm font-medium text-gray-700">Type</label>
                     <select
                       value={cert.type}
                       onChange={(e) => updateCertification(index, 'type', e.target.value)}
-                      className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:ring-primary-500 focus:border-primary-500"
+                      className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-1.5 md:py-2 px-2.5 md:px-3 text-sm focus:ring-primary-500 focus:border-primary-500"
                     >
                       <option value="ABA">ABA</option>
                       <option value="TEACCH">TEACCH</option>
@@ -275,30 +275,30 @@ export default function CreateEducatorProfile() {
                     </select>
                   </div>
                   <div>
-                    <label className="block text-sm font-medium text-gray-700">Nom de la certification</label>
+                    <label className="block text-xs md:text-sm font-medium text-gray-700">Nom de la certification</label>
                     <input
                       type="text"
                       value={cert.name}
                       onChange={(e) => updateCertification(index, 'name', e.target.value)}
-                      className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:ring-primary-500 focus:border-primary-500"
+                      className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-1.5 md:py-2 px-2.5 md:px-3 text-sm focus:ring-primary-500 focus:border-primary-500"
                     />
                   </div>
                   <div>
-                    <label className="block text-sm font-medium text-gray-700">Organisme émetteur</label>
+                    <label className="block text-xs md:text-sm font-medium text-gray-700">Organisme émetteur</label>
                     <input
                       type="text"
                       value={cert.issuing_organization}
                       onChange={(e) => updateCertification(index, 'issuing_organization', e.target.value)}
-                      className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:ring-primary-500 focus:border-primary-500"
+                      className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-1.5 md:py-2 px-2.5 md:px-3 text-sm focus:ring-primary-500 focus:border-primary-500"
                     />
                   </div>
                   <div>
-                    <label className="block text-sm font-medium text-gray-700">Date d'obtention</label>
+                    <label className="block text-xs md:text-sm font-medium text-gray-700">Date d'obtention</label>
                     <input
                       type="date"
                       value={cert.issue_date}
                       onChange={(e) => updateCertification(index, 'issue_date', e.target.value)}
-                      className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:ring-primary-500 focus:border-primary-500"
+                      className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-1.5 md:py-2 px-2.5 md:px-3 text-sm focus:ring-primary-500 focus:border-primary-500"
                     />
                   </div>
                 </div>

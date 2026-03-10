@@ -250,9 +250,9 @@ export default function AdminAvatarsPage() {
         </div>
       </nav>
 
-      <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 py-4 sm:py-8">
+      <div className="max-w-7xl mx-auto px-3 sm:px-4 md:px-6 lg:px-8 py-3 sm:py-5 md:py-8">
         {/* En-tête avec gradient */}
-        <div className="mb-4 sm:mb-8">
+        <div className="mb-3 sm:mb-4 md:mb-6 lg:mb-8">
           <div className="flex items-center gap-2 sm:gap-3 mb-2">
             <div className="h-1 w-8 sm:w-12 bg-gradient-to-r from-blue-500 to-cyan-500 rounded-full"></div>
             <span className="text-xs sm:text-sm font-semibold text-blue-600 uppercase tracking-wide">Modération</span>
@@ -262,7 +262,7 @@ export default function AdminAvatarsPage() {
         </div>
 
         {/* Filtres - scrollable sur mobile */}
-        <div className="bg-white/80 backdrop-blur-sm rounded-xl sm:rounded-2xl shadow-sm p-3 sm:p-4 mb-4 sm:mb-6 border border-gray-100 -mx-3 sm:mx-0">
+        <div className="bg-white/80 backdrop-blur-sm rounded-xl md:rounded-2xl shadow-sm p-3 sm:p-4 mb-3 sm:mb-4 md:mb-6 border border-gray-100 -mx-3 sm:mx-0">
           <div className="flex gap-2 overflow-x-auto pb-1 sm:pb-0 sm:flex-wrap">
             <button
               onClick={() => setFilter('all')}
@@ -308,7 +308,7 @@ export default function AdminAvatarsPage() {
         </div>
 
         {/* Grille des avatars */}
-        <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-6">
+        <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-4 md:gap-6">
           {avatars.length === 0 ? (
             <div className="col-span-full bg-white rounded-xl sm:rounded-2xl shadow-sm p-8 sm:p-12 text-center border border-gray-100">
               <div className="w-12 h-12 sm:w-16 sm:h-16 mx-auto mb-4 bg-gray-100 rounded-full flex items-center justify-center">
@@ -382,10 +382,10 @@ export default function AdminAvatarsPage() {
       {/* Modal de modération */}
       {modalOpen && selectedAvatar && (
         <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center p-3 sm:p-4 z-50">
-          <div className="bg-white rounded-xl sm:rounded-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto border border-gray-100 shadow-2xl">
-            <div className="p-4 sm:p-6 border-b border-gray-100 bg-gradient-to-r from-blue-50 to-cyan-50">
+          <div className="bg-white rounded-xl md:rounded-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto border border-gray-100 shadow-2xl">
+            <div className="px-3 sm:px-4 md:px-6 py-2.5 sm:py-3 md:py-4 border-b border-gray-100 bg-gradient-to-r from-blue-50 to-cyan-50">
               <div className="flex justify-between items-start">
-                <h2 className="text-lg sm:text-2xl font-bold text-gray-900">Modération de photo</h2>
+                <h2 className="text-sm sm:text-base md:text-lg lg:text-2xl font-bold text-gray-900">Modération de photo</h2>
                 <button
                   onClick={closeModal}
                   className="text-gray-400 hover:text-gray-600 p-2 hover:bg-gray-100 rounded-lg transition-colors"
@@ -396,7 +396,7 @@ export default function AdminAvatarsPage() {
                 </button>
               </div>
             </div>
-            <div className="p-4 sm:p-6">
+            <div className="p-3 sm:p-4 md:p-6">
 
               {/* Photo en grand */}
               <div className="mb-4 sm:mb-6">
@@ -446,15 +446,15 @@ export default function AdminAvatarsPage() {
               </div>
 
               {/* Champ de raison pour le rejet */}
-              <div className="mb-4 sm:mb-6">
-                <label className="block text-xs sm:text-sm font-medium text-gray-700 mb-2">
+              <div className="mb-3 sm:mb-4 md:mb-6">
+                <label className="block text-xs md:text-sm font-medium text-gray-700 mb-1.5 md:mb-2">
                   Raison du rejet (si applicable)
                 </label>
                 <textarea
                   value={reason}
                   onChange={(e) => setReason(e.target.value)}
                   rows={2}
-                  className="w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:ring-primary-500 focus:border-primary-500 text-sm"
+                  className="w-full border border-gray-300 rounded-md shadow-sm py-1.5 md:py-2 px-2.5 md:px-3 focus:ring-primary-500 focus:border-primary-500 text-sm"
                   placeholder="Photo inappropriée, de mauvaise qualité, etc."
                 />
               </div>

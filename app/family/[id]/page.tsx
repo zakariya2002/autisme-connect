@@ -226,7 +226,7 @@ export default function FamilyPublicProfile({ params }: { params: { id: string }
       {/* Contenu principal */}
       <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 pt-20 xl:pt-24 pb-6 sm:pb-8">
         {/* En-tête du profil */}
-        <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden mb-4 sm:mb-6">
+        <div className="bg-white rounded-xl md:rounded-2xl shadow-sm border border-gray-100 overflow-hidden mb-4 sm:mb-6">
           {/* Bannière */}
           <div className="h-24 sm:h-32" style={{ background: 'linear-gradient(135deg, #41005c 0%, #6b21a8 100%)' }}></div>
 
@@ -270,7 +270,7 @@ export default function FamilyPublicProfile({ params }: { params: { id: string }
         </div>
 
         {/* Informations de contact */}
-        <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-4 sm:p-5 mb-4 sm:mb-6">
+        <div className="bg-white rounded-xl md:rounded-2xl shadow-sm border border-gray-100 p-4 sm:p-5 mb-4 sm:mb-6">
           <h2 className="text-base sm:text-lg font-semibold text-gray-900 mb-3 flex items-center gap-2">
             <div className="w-8 h-8 rounded-lg flex items-center justify-center" style={{ backgroundColor: '#f3e8ff' }}>
               <svg className="w-4 h-4" style={{ color: '#41005c' }} fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
@@ -297,7 +297,7 @@ export default function FamilyPublicProfile({ params }: { params: { id: string }
 
         {/* Section Accompagnements - visible uniquement pour les éducateurs */}
         {userRole === 'educator' && children.length > 0 && (
-          <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-4 sm:p-5 mb-4 sm:mb-6">
+          <div className="bg-white rounded-xl md:rounded-2xl shadow-sm border border-gray-100 p-4 sm:p-5 mb-4 sm:mb-6">
             <h2 className="text-base sm:text-lg font-semibold text-gray-900 mb-4 flex items-center gap-2">
               <div className="w-8 h-8 rounded-lg flex items-center justify-center" style={{ backgroundColor: '#fdf2f4' }}>
                 <svg className="w-4 h-4" style={{ color: '#f0879f' }} fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">

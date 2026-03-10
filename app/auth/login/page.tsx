@@ -68,7 +68,7 @@ export default function LoginPage() {
     <div className="min-h-screen flex flex-col" style={{ backgroundColor: '#fdf9f4' }}>
       <PublicNavbar showAuthButtons={true} />
 
-      <div className="flex-1 flex flex-col justify-center pt-20 xl:pt-24 pb-12 sm:px-6 lg:px-8 relative z-0">
+      <div className="flex-1 flex flex-col justify-center pt-20 xl:pt-24 pb-8 sm:pb-12 px-3 sm:px-6 lg:px-8 relative z-0">
         {/* Logo et Titre */}
         <div className="sm:mx-auto sm:w-full sm:max-w-md">
           {/* Logo */}
@@ -82,7 +82,7 @@ export default function LoginPage() {
               />
             </Link>
           </div>
-          <h2 className="text-center text-2xl font-bold text-gray-900 mb-2" style={{ fontFamily: 'Verdana, sans-serif' }}>
+          <h2 className="text-center text-xl sm:text-2xl font-bold text-gray-900 mb-2" style={{ fontFamily: 'Verdana, sans-serif' }}>
             Connexion
           </h2>
           {/* Ligne décorative */}
@@ -97,8 +97,8 @@ export default function LoginPage() {
 
       {/* Formulaire de connexion */}
       <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
-        <div className="bg-white py-10 px-6 shadow-xl rounded-2xl sm:px-12 border border-gray-100">
-          <form className="space-y-6" onSubmit={handleSubmit}>
+        <div className="bg-white py-6 sm:py-8 md:py-10 px-4 sm:px-6 shadow-xl rounded-xl md:rounded-2xl sm:px-12 border border-gray-100">
+          <form className="space-y-4 sm:space-y-5 md:space-y-6" onSubmit={handleSubmit}>
             {error && (
               <div
                 role="alert"
@@ -115,7 +115,7 @@ export default function LoginPage() {
             )}
 
             <div>
-              <label htmlFor="email" className="block text-sm font-semibold text-gray-700 mb-2">
+              <label htmlFor="email" className="block text-xs md:text-sm font-semibold text-gray-700 mb-1.5 md:mb-2">
                 Adresse email <span className="text-red-500" aria-hidden="true">*</span>
               </label>
               <div className="relative">
@@ -134,14 +134,14 @@ export default function LoginPage() {
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   placeholder="votre@email.com"
-                  className="appearance-none block w-full pl-10 pr-3 py-3 border border-gray-300 rounded-lg shadow-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:border-transparent transition-all text-gray-900 bg-white"
+                  className="appearance-none block w-full pl-10 pr-3 py-2 md:py-3 border border-gray-300 rounded-lg shadow-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:border-transparent transition-all text-sm text-gray-900 bg-white"
                   style={{ '--tw-ring-color': '#027e7e' } as any}
                 />
               </div>
             </div>
 
             <div>
-              <label htmlFor="password" className="block text-sm font-semibold text-gray-700 mb-2">
+              <label htmlFor="password" className="block text-xs md:text-sm font-semibold text-gray-700 mb-1.5 md:mb-2">
                 Mot de passe <span className="text-red-500" aria-hidden="true">*</span>
               </label>
               <div className="relative">
@@ -160,7 +160,7 @@ export default function LoginPage() {
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   placeholder="••••••••"
-                  className="appearance-none block w-full pl-10 pr-12 py-3 border border-gray-300 rounded-lg shadow-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:border-transparent transition-all text-gray-900 bg-white"
+                  className="appearance-none block w-full pl-10 pr-12 py-2 md:py-3 border border-gray-300 rounded-lg shadow-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:border-transparent transition-all text-sm text-gray-900 bg-white"
                   style={{ '--tw-ring-color': '#027e7e' } as any}
                 />
                 <button
@@ -193,7 +193,7 @@ export default function LoginPage() {
                   className="h-4 w-4 border-gray-300 rounded"
                   style={{ accentColor: '#027e7e' }}
                 />
-                <label htmlFor="remember-me" className="ml-2 block text-sm text-gray-700">
+                <label htmlFor="remember-me" className="ml-2 block text-xs md:text-sm text-gray-700">
                   Se souvenir de moi
                 </label>
               </div>
@@ -209,7 +209,7 @@ export default function LoginPage() {
               <button
                 type="submit"
                 disabled={loading || googleLoading}
-                className="group relative w-full flex justify-center py-3 px-4 border border-transparent rounded-lg text-sm font-semibold text-white focus:outline-none focus:ring-2 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed shadow-md hover:shadow-lg transition-all transform hover:-translate-y-0.5 hover:opacity-90"
+                className="group relative w-full flex justify-center py-2.5 md:py-3 px-4 border border-transparent rounded-lg text-xs sm:text-sm font-semibold text-white focus:outline-none focus:ring-2 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed shadow-md hover:shadow-lg transition-all transform hover:-translate-y-0.5 hover:opacity-90"
                 style={{ backgroundColor: '#027e7e' }}
                 aria-busy={loading}
               >
@@ -236,7 +236,7 @@ export default function LoginPage() {
           {/* Séparateur */}
           <div className="mt-6 flex items-center">
             <div className="flex-1 border-t border-gray-300"></div>
-            <span className="px-4 text-sm text-gray-500">ou continuer avec</span>
+            <span className="px-4 text-xs md:text-sm text-gray-500">ou continuer avec</span>
             <div className="flex-1 border-t border-gray-300"></div>
           </div>
 
@@ -246,7 +246,7 @@ export default function LoginPage() {
               type="button"
               onClick={handleGoogleSignIn}
               disabled={loading || googleLoading}
-              className="w-full flex items-center justify-center gap-3 py-3 px-4 border border-gray-300 rounded-lg bg-white text-gray-700 font-medium hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 disabled:opacity-50 disabled:cursor-not-allowed transition-all shadow-sm hover:shadow"
+              className="w-full flex items-center justify-center gap-3 py-2.5 md:py-3 px-4 border border-gray-300 rounded-lg bg-white text-gray-700 font-medium hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 disabled:opacity-50 disabled:cursor-not-allowed transition-all shadow-sm hover:shadow text-sm"
             >
               {googleLoading ? (
                 <svg className="animate-spin h-5 w-5 text-gray-600" fill="none" viewBox="0 0 24 24">
@@ -307,7 +307,7 @@ export default function LoginPage() {
           aria-labelledby="confirmation-title"
           aria-describedby="confirmation-description"
         >
-          <div className="bg-white rounded-2xl max-w-md w-full p-8 shadow-2xl animate-in fade-in zoom-in duration-300">
+          <div className="bg-white rounded-xl md:rounded-2xl max-w-md w-full p-5 sm:p-6 md:p-8 shadow-2xl animate-in fade-in zoom-in duration-300">
             <div className="text-center">
               {/* Icône de succès */}
               <div className="mx-auto w-20 h-20 rounded-full flex items-center justify-center mb-6" style={{ backgroundColor: '#e6f4f4' }}>
@@ -317,7 +317,7 @@ export default function LoginPage() {
               </div>
 
               {/* Titre */}
-              <h3 id="confirmation-title" className="text-2xl font-bold text-gray-900 mb-3" style={{ fontFamily: 'Verdana, sans-serif' }}>
+              <h3 id="confirmation-title" className="text-xl sm:text-2xl font-bold text-gray-900 mb-3" style={{ fontFamily: 'Verdana, sans-serif' }}>
                 Email vérifié !
               </h3>
 

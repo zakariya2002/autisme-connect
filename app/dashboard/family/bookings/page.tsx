@@ -395,8 +395,8 @@ export default function FamilyBookingsPage() {
     const cancelInfo = canCancelAppointment(appointment);
 
     return (
-      <div className={`bg-white rounded-xl border ${isPast ? 'border-gray-200 opacity-75' : 'border-gray-100'} shadow-sm hover:shadow-md transition-all p-4`}>
-        <div className="flex items-start gap-4">
+      <div className={`bg-white rounded-xl border ${isPast ? 'border-gray-200 opacity-75' : 'border-gray-100'} shadow-sm hover:shadow-md transition-all p-3 sm:p-4`}>
+        <div className="flex items-start gap-3 sm:gap-4">
           {/* Avatar */}
           <div className="flex-shrink-0">
             {appointment.educator?.avatar_url || appointment.educator?.profile_image_url ? (
@@ -597,7 +597,7 @@ export default function FamilyBookingsPage() {
         <FamilyNavbar profile={profile} familyId={familyId} userId={userId} />
       </div>
 
-      <div className="flex-1 max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8 w-full">
+      <div className="flex-1 max-w-3xl mx-auto px-3 sm:px-4 md:px-6 lg:px-8 py-3 sm:py-5 md:py-8 w-full">
         {/* Flèche retour */}
         <button
           onClick={() => router.back()}
@@ -611,16 +611,16 @@ export default function FamilyBookingsPage() {
         </button>
 
         {/* En-tête avec icône */}
-        <div className="mb-6 sm:mb-8 text-center">
-          <div className="w-16 h-16 mx-auto mb-4 rounded-full flex items-center justify-center p-1" style={{ backgroundColor: '#027e7e' }}>
+        <div className="mb-3 sm:mb-4 md:mb-6 text-center">
+          <div className="w-14 h-14 md:w-16 md:h-16 mx-auto mb-3 md:mb-4 rounded-full flex items-center justify-center p-1" style={{ backgroundColor: '#027e7e' }}>
             <img src="/images/icons/4.svg" alt="" className="w-full h-full" />
           </div>
-          <h1 className="text-xl sm:text-2xl font-bold text-gray-900">Mes rendez-vous</h1>
-          <p className="text-gray-500 text-sm mt-1">Gérez et suivez vos rendez-vous</p>
+          <h1 className="text-lg sm:text-xl md:text-2xl font-bold text-gray-900">Mes rendez-vous</h1>
+          <p className="text-gray-500 text-[11px] md:text-sm mt-1">Gérez et suivez vos rendez-vous</p>
         </div>
 
         {/* Onglets */}
-        <div className="flex bg-white rounded-xl p-1 mb-6 shadow-sm border border-gray-100">
+        <div className="flex bg-white rounded-xl p-1 mb-3 sm:mb-4 md:mb-6 shadow-sm border border-gray-100">
           <button
             onClick={() => setActiveTab('appointments')}
             className={`flex-1 py-2.5 px-4 rounded-lg font-medium text-sm transition-all ${
@@ -664,7 +664,7 @@ export default function FamilyBookingsPage() {
         {activeTab === 'appointments' && (
           <>
         {/* Boutons de filtre */}
-        <div className="grid grid-cols-3 gap-3 mb-8">
+        <div className="grid grid-cols-3 gap-2 sm:gap-3 mb-3 sm:mb-4 md:mb-6">
           {/* Tous */}
           <button
             onClick={() => appointments.length > 0 && selectFilter('all')}
@@ -799,17 +799,17 @@ export default function FamilyBookingsPage() {
                 <p className="text-gray-500 mt-4 text-sm">Chargement...</p>
               </div>
             ) : uniqueCaregivers.length === 0 ? (
-              <div className="text-center py-12 bg-white rounded-2xl border border-gray-100 shadow-sm">
-                <div className="w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4" style={{ backgroundColor: '#e6f4f4' }}>
-                  <svg className="h-8 w-8" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true" style={{ color: '#027e7e' }}>
+              <div className="text-center py-8 md:py-12 bg-white rounded-xl md:rounded-2xl border border-gray-100 shadow-sm">
+                <div className="w-12 h-12 md:w-16 md:h-16 rounded-full flex items-center justify-center mx-auto mb-3 md:mb-4" style={{ backgroundColor: '#e6f4f4' }}>
+                  <svg className="h-6 w-6 md:h-8 md:w-8" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true" style={{ color: '#027e7e' }}>
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
                   </svg>
                 </div>
-                <h3 className="text-lg font-medium text-gray-900">Aucun soignant rencontré</h3>
-                <p className="text-gray-500 mt-2 text-sm">Les professionnels avec qui vous avez eu des rendez-vous apparaîtront ici.</p>
+                <h3 className="text-base md:text-lg font-medium text-gray-900">Aucun soignant rencontré</h3>
+                <p className="text-gray-500 mt-2 text-xs md:text-sm">Les professionnels avec qui vous avez eu des rendez-vous apparaîtront ici.</p>
                 <Link
                   href="/dashboard/family/search"
-                  className="mt-6 inline-flex items-center px-5 py-2.5 text-white rounded-xl font-medium hover:opacity-90 transition"
+                  className="mt-4 md:mt-6 inline-flex items-center px-4 md:px-5 py-2 md:py-2.5 text-sm md:text-base text-white rounded-lg md:rounded-xl font-medium hover:opacity-90 transition"
                   style={{ backgroundColor: '#f0879f' }}
                   aria-label="Trouver un professionnel"
                 >
@@ -896,20 +896,20 @@ export default function FamilyBookingsPage() {
       {/* Modal de signalement no-show */}
       {showReportModal && reportingAppointment && (
         <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4" role="dialog" aria-modal="true" aria-labelledby="modal-title">
-          <div className="bg-white rounded-2xl max-w-md w-full p-6 shadow-xl">
-            <div className="flex items-center gap-3 mb-4">
-              <div className="w-12 h-12 bg-orange-100 rounded-full flex items-center justify-center">
-                <svg className="h-6 w-6 text-orange-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+          <div className="bg-white rounded-xl md:rounded-2xl max-w-md w-full p-4 sm:p-5 md:p-6 shadow-xl">
+            <div className="flex items-center gap-2 sm:gap-3 mb-3 md:mb-4">
+              <div className="w-10 h-10 md:w-12 md:h-12 bg-orange-100 rounded-full flex items-center justify-center">
+                <svg className="h-5 w-5 md:h-6 md:w-6 text-orange-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
                 </svg>
               </div>
               <div>
-                <h3 id="modal-title" className="text-lg font-semibold text-gray-900">Signaler un problème</h3>
+                <h3 id="modal-title" className="text-base md:text-lg font-semibold text-gray-900">Signaler un problème</h3>
                 <p className="text-sm text-gray-500">Le professionnel ne s'est pas présenté</p>
               </div>
             </div>
 
-            <div className="bg-orange-50 border border-orange-200 rounded-lg p-3 mb-4">
+            <div className="bg-orange-50 border border-orange-200 rounded-lg p-2.5 sm:p-3 mb-3 md:mb-4">
               <p className="text-sm text-orange-800">
                 <strong>Rendez-vous avec:</strong> {reportingAppointment.educator?.first_name} {reportingAppointment.educator?.last_name}
               </p>
@@ -922,43 +922,43 @@ export default function FamilyBookingsPage() {
               </p>
             </div>
 
-            <div className="mb-4">
-              <label htmlFor="report-description" className="block text-sm font-medium text-gray-700 mb-2">
+            <div className="mb-3 md:mb-4">
+              <label htmlFor="report-description" className="block text-xs md:text-sm font-medium text-gray-700 mb-1.5 md:mb-2">
                 Description (optionnel)
               </label>
               <textarea
                 id="report-description"
                 value={reportDescription}
                 onChange={(e) => setReportDescription(e.target.value)}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500 text-sm"
+                className="w-full px-2.5 py-1.5 md:px-3 md:py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500 text-xs md:text-sm"
                 rows={3}
                 placeholder="Décrivez la situation si vous le souhaitez..."
                 aria-describedby="report-description-help"
               />
             </div>
 
-            <div className="bg-gray-50 rounded-lg p-3 mb-4">
+            <div className="bg-gray-50 rounded-lg p-2.5 sm:p-3 mb-3 md:mb-4">
               <p id="report-description-help" className="text-xs text-gray-600">
                 Ce signalement sera transmis à notre équipe. Si ce professionnel accumule 3 signalements,
                 il sera temporairement suspendu de la plateforme.
               </p>
             </div>
 
-            <div className="flex gap-3">
+            <div className="flex gap-2 sm:gap-3">
               <button
                 onClick={() => {
                   setShowReportModal(false);
                   setReportingAppointment(null);
                   setReportDescription('');
                 }}
-                className="flex-1 px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 font-medium transition"
+                className="flex-1 px-3 md:px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 text-sm md:text-base font-medium transition"
                 disabled={reportLoading}
               >
                 Annuler
               </button>
               <button
                 onClick={handleReportNoShow}
-                className="flex-1 px-4 py-2 bg-orange-600 text-white rounded-lg hover:bg-orange-700 font-medium transition flex items-center justify-center gap-2"
+                className="flex-1 px-3 md:px-4 py-2 bg-orange-600 text-white rounded-lg hover:bg-orange-700 text-sm md:text-base font-medium transition flex items-center justify-center gap-2"
                 disabled={reportLoading}
                 aria-label="Confirmer le signalement"
               >

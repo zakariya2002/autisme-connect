@@ -86,7 +86,7 @@ export default function NewPostPage() {
         <FamilyNavbar profile={profile} familyId={familyId} userId={userId} />
       )}
 
-      <main className="max-w-2xl mx-auto px-4 py-8">
+      <main className="max-w-2xl mx-auto px-3 sm:px-4 md:px-6 py-4 sm:py-6 md:py-8">
         {/* Back button */}
         <Link
           href="/community"
@@ -99,22 +99,22 @@ export default function NewPostPage() {
         </Link>
 
         {/* Page header */}
-        <div className="mb-8">
-          <h1 className="text-2xl font-bold text-gray-900 mb-2">
+        <div className="mb-5 sm:mb-8">
+          <h1 className="text-xl sm:text-2xl font-bold text-gray-900 mb-2">
             Créer un nouveau post
           </h1>
-          <p className="text-gray-600">
+          <p className="text-sm sm:text-base text-gray-600">
             Partagez votre expérience, posez une question ou donnez des conseils à la communauté
           </p>
         </div>
 
         {/* Form */}
-        <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
+        <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-3 sm:p-4 md:p-6">
           <NewPostForm />
         </div>
 
         {/* Guidelines */}
-        <div className="mt-6 p-4 bg-teal-50 rounded-xl border border-teal-100">
+        <div className="mt-4 sm:mt-6 p-3 sm:p-4 bg-teal-50 rounded-xl border border-teal-100">
           <h3 className="font-medium text-teal-800 mb-2 flex items-center gap-2">
             <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />

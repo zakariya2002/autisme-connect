@@ -136,70 +136,70 @@ export default function BlockedFamiliesPage() {
     <div className="min-h-screen bg-gray-50">
       <EducatorNavbar profile={profile} subscription={subscription} />
 
-      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8">
+      <div className="max-w-4xl mx-auto px-3 sm:px-4 md:px-6 lg:px-8 py-3 sm:py-5 md:py-8">
         {/* Bouton retour */}
         <Link
           href="/messages"
-          className="inline-flex items-center gap-2 text-gray-600 hover:text-gray-900 mb-4 sm:mb-6 transition-colors"
+          className="inline-flex items-center gap-2 text-gray-600 hover:text-gray-900 mb-3 sm:mb-4 md:mb-6 transition-colors"
         >
-          <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <svg className="w-4 h-4 md:w-5 md:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
           </svg>
-          <span className="text-sm font-medium">Retour à la messagerie</span>
+          <span className="text-xs md:text-sm font-medium">Retour à la messagerie</span>
         </Link>
 
-        <div className="mb-6 sm:mb-8">
-          <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">Familles bloquées</h1>
-          <p className="text-gray-600 text-sm sm:text-base mt-2">
+        <div className="mb-3 sm:mb-4 md:mb-6 lg:mb-8">
+          <h1 className="text-lg sm:text-xl md:text-2xl lg:text-3xl font-bold text-gray-900">Familles bloquées</h1>
+          <p className="text-gray-600 text-xs sm:text-sm md:text-base mt-1 sm:mt-2">
             Gérez les familles que vous avez bloquées. Elles ne peuvent plus voir votre profil ni vous contacter.
           </p>
         </div>
 
         {blockedFamilies.length === 0 ? (
-          <div className="bg-white rounded-xl shadow-lg p-12 text-center">
-            <svg className="w-20 h-20 text-gray-300 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <div className="bg-white rounded-xl md:rounded-2xl shadow-lg p-6 sm:p-8 md:p-12 text-center">
+            <svg className="w-14 h-14 md:w-20 md:h-20 text-gray-300 mx-auto mb-3 sm:mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728A9 9 0 015.636 5.636m12.728 12.728L5.636 5.636" />
             </svg>
-            <h3 className="text-xl font-bold text-gray-900 mb-2">
+            <h3 className="text-base sm:text-lg md:text-xl font-bold text-gray-900 mb-1 sm:mb-2">
               Aucune famille bloquée
             </h3>
-            <p className="text-gray-600">
+            <p className="text-xs sm:text-sm md:text-base text-gray-600">
               Vous n&apos;avez bloqué aucune famille pour le moment.
             </p>
           </div>
         ) : (
-          <div className="bg-white rounded-xl shadow-lg overflow-hidden">
-            <div className="p-4 bg-gray-50 border-b border-gray-200">
-              <p className="text-sm text-gray-600">
+          <div className="bg-white rounded-xl md:rounded-2xl shadow-lg overflow-hidden">
+            <div className="p-3 sm:p-4 bg-gray-50 border-b border-gray-200">
+              <p className="text-xs md:text-sm text-gray-600">
                 {blockedFamilies.length} famille{blockedFamilies.length > 1 ? 's' : ''} bloquée{blockedFamilies.length > 1 ? 's' : ''}
               </p>
             </div>
             <div className="divide-y divide-gray-200">
               {blockedFamilies.map((bf) => (
-                <div key={bf.id} className="p-4 sm:p-6 flex items-center justify-between gap-4">
-                  <div className="flex items-center gap-4 min-w-0">
+                <div key={bf.id} className="p-3 sm:p-4 md:p-6 flex items-center justify-between gap-3 sm:gap-4">
+                  <div className="flex items-center gap-3 sm:gap-4 min-w-0">
                     {bf.family?.avatar_url ? (
                       <img
                         src={bf.family.avatar_url}
                         alt=""
-                        className="w-12 h-12 rounded-full object-cover flex-shrink-0"
+                        className="w-10 h-10 md:w-12 md:h-12 rounded-full object-cover flex-shrink-0"
                       />
                     ) : (
-                      <div className="w-12 h-12 rounded-full bg-gray-200 flex items-center justify-center flex-shrink-0">
-                        <span className="text-gray-600 font-semibold text-lg">
+                      <div className="w-10 h-10 md:w-12 md:h-12 rounded-full bg-gray-200 flex items-center justify-center flex-shrink-0">
+                        <span className="text-gray-600 font-semibold text-sm md:text-lg">
                           {bf.family?.first_name?.[0]?.toUpperCase()}{bf.family?.last_name?.[0]?.toUpperCase()}
                         </span>
                       </div>
                     )}
                     <div className="min-w-0">
-                      <p className="font-semibold text-gray-900 truncate">
+                      <p className="font-semibold text-gray-900 truncate text-sm md:text-base">
                         {bf.family?.first_name} {bf.family?.last_name}
                       </p>
-                      <p className="text-sm text-gray-500">
+                      <p className="text-xs md:text-sm text-gray-500">
                         Bloqué le {formatDate(bf.blocked_at)}
                       </p>
                       {bf.reason && (
-                        <p className="text-sm text-gray-600 mt-1 italic">
+                        <p className="text-xs md:text-sm text-gray-600 mt-1 italic">
                           Raison : {bf.reason}
                         </p>
                       )}
@@ -208,7 +208,7 @@ export default function BlockedFamiliesPage() {
                   <button
                     onClick={() => handleUnblock(bf.family_id)}
                     disabled={unblocking === bf.family_id}
-                    className="flex-shrink-0 px-4 py-2 bg-green-100 text-green-700 rounded-lg hover:bg-green-200 font-medium transition text-sm flex items-center gap-2 disabled:opacity-50"
+                    className="flex-shrink-0 px-3 md:px-4 py-2 bg-green-100 text-green-700 rounded-lg hover:bg-green-200 font-medium transition text-xs sm:text-sm flex items-center gap-1.5 sm:gap-2 disabled:opacity-50"
                   >
                     {unblocking === bf.family_id ? (
                       <>
@@ -233,14 +233,14 @@ export default function BlockedFamiliesPage() {
           </div>
         )}
 
-        <div className="mt-8 bg-blue-50 rounded-xl p-6 border border-blue-200">
-          <div className="flex items-start gap-3">
-            <svg className="w-6 h-6 text-blue-600 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <div className="mt-4 sm:mt-6 md:mt-8 bg-blue-50 rounded-xl md:rounded-2xl p-3 sm:p-4 md:p-6 border border-blue-200">
+          <div className="flex items-start gap-2 sm:gap-3">
+            <svg className="w-5 h-5 md:w-6 md:h-6 text-blue-600 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
             </svg>
             <div>
-              <h4 className="font-semibold text-blue-900">À savoir</h4>
-              <ul className="text-sm text-blue-800 mt-2 space-y-1 list-disc list-inside">
+              <h4 className="font-semibold text-blue-900 text-xs md:text-sm">A savoir</h4>
+              <ul className="text-[11px] md:text-sm text-blue-800 mt-1 sm:mt-2 space-y-1 list-disc list-inside">
                 <li>Une famille bloquée ne peut plus voir votre profil</li>
                 <li>Elle ne peut plus vous envoyer de messages</li>
                 <li>Elle ne peut plus prendre de rendez-vous avec vous</li>

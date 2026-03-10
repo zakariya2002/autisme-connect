@@ -61,26 +61,26 @@ export default function NewBlogPostPage() {
       </nav>
 
       {/* Header */}
-      <div className="px-4 py-6" style={{ backgroundColor: '#5a1a75' }}>
-        <div className="flex items-center gap-3">
+      <div className="px-3 sm:px-4 md:px-6 py-4 sm:py-5 md:py-6" style={{ backgroundColor: '#5a1a75' }}>
+        <div className="flex items-center gap-2 sm:gap-3">
           <Link
             href="/dashboard/educator/blog"
-            className="p-2 text-white/70 hover:text-white hover:bg-white/10 rounded-lg transition-colors"
+            className="p-1.5 sm:p-2 text-white/70 hover:text-white hover:bg-white/10 rounded-lg transition-colors"
           >
-            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <svg className="w-5 h-5 md:w-6 md:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
             </svg>
           </Link>
           <div>
-            <h1 className="text-xl font-bold text-white">Nouvel article</h1>
-            <p className="text-white/70 text-sm mt-0.5">Partagez vos connaissances</p>
+            <h1 className="text-base sm:text-lg md:text-xl font-bold text-white">Nouvel article</h1>
+            <p className="text-white/70 text-[11px] sm:text-xs md:text-sm mt-0.5">Partagez vos connaissances</p>
           </div>
         </div>
       </div>
 
       {/* Form */}
-      <div className="flex-1 px-4 py-6">
-        <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-4 sm:p-6">
+      <div className="flex-1 px-3 sm:px-4 md:px-6 py-3 sm:py-4 md:py-6">
+        <div className="bg-white rounded-xl md:rounded-2xl shadow-sm border border-gray-100 p-3 sm:p-4 md:p-6">
           <BlogPostForm userId={userId} mode="create" />
         </div>
       </div>

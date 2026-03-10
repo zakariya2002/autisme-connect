@@ -156,9 +156,9 @@ export default function AdminDashboard() {
         </div>
       </nav>
 
-      <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 py-4 sm:py-8">
+      <div className="max-w-7xl mx-auto px-3 sm:px-4 md:px-6 lg:px-8 py-3 sm:py-5 md:py-8">
         {/* Header avec gradient */}
-        <div className="mb-6 sm:mb-10">
+        <div className="mb-3 sm:mb-4 md:mb-6 lg:mb-10">
           <div className="flex items-center gap-2 sm:gap-3 mb-2">
             <div className="h-1 w-8 sm:w-12 bg-gradient-to-r from-purple-600 to-purple-400 rounded-full"></div>
             <span className="text-xs sm:text-sm font-semibold text-purple-600 uppercase tracking-wide">Dashboard</span>
@@ -172,7 +172,7 @@ export default function AdminDashboard() {
         </div>
 
         {/* Statistiques avec design moderne */}
-        <div className="grid grid-cols-2 gap-3 sm:gap-5 lg:grid-cols-4 mb-6 sm:mb-10">
+        <div className="grid grid-cols-2 gap-3 sm:gap-4 md:gap-5 lg:grid-cols-4 mb-3 sm:mb-4 md:mb-6 lg:mb-10">
           {/* Certifications en attente */}
           <div className="group relative bg-white rounded-xl sm:rounded-2xl p-4 sm:p-6 shadow-sm hover:shadow-xl transition-all duration-300 border border-gray-100 overflow-hidden">
             <div className="absolute top-0 right-0 w-20 sm:w-32 h-20 sm:h-32 bg-gradient-to-br from-amber-400/10 to-orange-500/10 rounded-full -mr-10 sm:-mr-16 -mt-10 sm:-mt-16 group-hover:scale-110 transition-transform duration-300"></div>
@@ -256,12 +256,12 @@ export default function AdminDashboard() {
 
         {/* Section Modération */}
         <div className="mb-6">
-          <div className="flex items-center gap-2 sm:gap-3 mb-4 sm:mb-6">
+          <div className="flex items-center gap-2 sm:gap-3 mb-3 sm:mb-4 md:mb-6">
             <div className="h-1 w-6 sm:w-8 bg-gradient-to-r from-purple-600 to-purple-400 rounded-full"></div>
-            <h2 className="text-lg sm:text-xl font-bold text-gray-900">Modération</h2>
+            <h2 className="text-sm sm:text-base md:text-lg lg:text-xl font-bold text-gray-900">Modération</h2>
           </div>
 
-          <div className="grid grid-cols-2 gap-3 sm:gap-5 lg:grid-cols-4">
+          <div className="grid grid-cols-2 gap-3 sm:gap-4 md:gap-5 lg:grid-cols-4">
             {/* Vérifications */}
             <Link
               href="/admin/verifications"

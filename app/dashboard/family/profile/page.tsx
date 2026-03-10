@@ -233,9 +233,9 @@ export default function FamilyProfilePage() {
         <FamilyNavbar profile={profile} familyId={familyId} userId={userId} />
       </div>
 
-      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8">
+      <div className="max-w-4xl mx-auto px-3 sm:px-4 md:px-6 lg:px-8 py-3 sm:py-5 md:py-8">
         {/* En-tête avec flèche retour */}
-        <div className="mb-6 sm:mb-8">
+        <div className="mb-3 sm:mb-4 md:mb-6">
           {/* Flèche retour */}
           <button
             onClick={() => router.back()}
@@ -277,20 +277,20 @@ export default function FamilyProfilePage() {
           </div>
         )}
 
-        <div className="bg-white rounded-2xl shadow-sm border border-gray-100">
-          <div className="px-6 py-4 border-b border-gray-100">
-            <h2 className="text-lg font-bold text-gray-900">Informations personnelles</h2>
-            <p className="text-sm text-gray-600 mt-2">
+        <div className="bg-white rounded-xl md:rounded-2xl shadow-sm border border-gray-100">
+          <div className="px-3 sm:px-4 md:px-6 py-2.5 sm:py-3 md:py-4 border-b border-gray-100">
+            <h2 className="text-sm sm:text-base md:text-lg font-bold text-gray-900">Informations personnelles</h2>
+            <p className="text-xs md:text-sm text-gray-600 mt-2">
               <svg className="w-4 h-4 inline mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
               </svg>
               Vos données personnelles sont protégées conformément au RGPD. Toute modification est enregistrée de manière sécurisée.
             </p>
           </div>
-          <form onSubmit={handleSubmit} className="p-6 space-y-6">
+          <form onSubmit={handleSubmit} className="p-3 sm:p-4 md:p-6 space-y-3 sm:space-y-4 md:space-y-6">
             {/* Photo de profil */}
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-3">Photo de profil</label>
+              <label className="block text-xs md:text-sm font-medium text-gray-700 mb-3">Photo de profil</label>
               <AvatarUpload
                 currentAvatarUrl={avatarUrl}
                 userId={userId || ''}
@@ -303,26 +303,26 @@ export default function FamilyProfilePage() {
 
             <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">Prénom *</label>
+                <label className="block text-xs md:text-sm font-medium text-gray-700 mb-2">Prénom *</label>
                 <input
                   type="text"
                   required
                   aria-required="true"
                   value={profileData.first_name}
                   onChange={(e) => setProfileData({ ...profileData, first_name: e.target.value })}
-                  className="w-full border border-gray-300 rounded-lg shadow-sm py-3 px-4 focus:ring-2 focus:outline-none focus:border-transparent"
+                  className="w-full border border-gray-300 rounded-lg shadow-sm py-1.5 md:py-2 px-2.5 md:px-3 text-sm focus:ring-2 focus:outline-none focus:border-transparent"
                   style={{ '--tw-ring-color': '#027e7e' } as any}
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">Nom *</label>
+                <label className="block text-xs md:text-sm font-medium text-gray-700 mb-2">Nom *</label>
                 <input
                   type="text"
                   required
                   aria-required="true"
                   value={profileData.last_name}
                   onChange={(e) => setProfileData({ ...profileData, last_name: e.target.value })}
-                  className="w-full border border-gray-300 rounded-lg shadow-sm py-3 px-4 focus:ring-2 focus:outline-none focus:border-transparent"
+                  className="w-full border border-gray-300 rounded-lg shadow-sm py-1.5 md:py-2 px-2.5 md:px-3 text-sm focus:ring-2 focus:outline-none focus:border-transparent"
                   style={{ '--tw-ring-color': '#027e7e' } as any}
                 />
               </div>
@@ -330,7 +330,7 @@ export default function FamilyProfilePage() {
 
             {/* Sélection du genre */}
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-3">Genre</label>
+              <label className="block text-xs md:text-sm font-medium text-gray-700 mb-3">Genre</label>
               <div className="flex gap-3">
                 <button
                   type="button"
@@ -372,12 +372,12 @@ export default function FamilyProfilePage() {
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">Téléphone</label>
+              <label className="block text-xs md:text-sm font-medium text-gray-700 mb-2">Téléphone</label>
               <input
                 type="tel"
                 value={profileData.phone}
                 onChange={(e) => setProfileData({ ...profileData, phone: e.target.value })}
-                className="w-full border border-gray-300 rounded-lg shadow-sm py-3 px-4 focus:ring-2 focus:outline-none focus:border-transparent"
+                className="w-full border border-gray-300 rounded-lg shadow-sm py-1.5 md:py-2 px-2.5 md:px-3 text-sm focus:ring-2 focus:outline-none focus:border-transparent"
                 style={{ '--tw-ring-color': '#027e7e' } as any}
               />
             </div>
@@ -419,7 +419,7 @@ export default function FamilyProfilePage() {
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">Localisation *</label>
+              <label className="block text-xs md:text-sm font-medium text-gray-700 mb-2">Localisation *</label>
               <div className="flex gap-2">
                 <input
                   type="text"
@@ -428,7 +428,7 @@ export default function FamilyProfilePage() {
                   placeholder="Ex: Paris, France"
                   value={profileData.location}
                   onChange={(e) => setProfileData({ ...profileData, location: e.target.value })}
-                  className="flex-1 border border-gray-300 rounded-lg shadow-sm py-3 px-4 focus:ring-2 focus:outline-none focus:border-transparent"
+                  className="flex-1 border border-gray-300 rounded-lg shadow-sm py-1.5 md:py-2 px-2.5 md:px-3 text-sm focus:ring-2 focus:outline-none focus:border-transparent"
                   style={{ '--tw-ring-color': '#027e7e' } as any}
                 />
                 <button
@@ -459,12 +459,12 @@ export default function FamilyProfilePage() {
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">Vous êtes *</label>
+              <label className="block text-xs md:text-sm font-medium text-gray-700 mb-2">Vous êtes *</label>
               <select
                 value={profileData.relationship}
                 onChange={(e) => setProfileData({ ...profileData, relationship: e.target.value })}
                 aria-required="true"
-                className="w-full border border-gray-300 rounded-lg shadow-sm py-3 px-4 focus:ring-2 focus:outline-none focus:border-transparent"
+                className="w-full border border-gray-300 rounded-lg shadow-sm py-1.5 md:py-2 px-2.5 md:px-3 text-sm focus:ring-2 focus:outline-none focus:border-transparent"
                 style={{ '--tw-ring-color': '#027e7e' } as any}
               >
                 <option value="parent">Parent</option>
@@ -475,13 +475,13 @@ export default function FamilyProfilePage() {
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">Besoins spécifiques</label>
+              <label className="block text-xs md:text-sm font-medium text-gray-700 mb-2">Besoins spécifiques</label>
               <textarea
                 rows={3}
                 placeholder="Ex: Communication non verbale, Gestion des comportements, Compétences sociales"
                 value={profileData.specific_needs}
                 onChange={(e) => setProfileData({ ...profileData, specific_needs: e.target.value })}
-                className="w-full border border-gray-300 rounded-lg shadow-sm py-3 px-4 focus:ring-2 focus:outline-none focus:border-transparent"
+                className="w-full border border-gray-300 rounded-lg shadow-sm py-1.5 md:py-2 px-2.5 md:px-3 text-sm focus:ring-2 focus:outline-none focus:border-transparent"
                 style={{ '--tw-ring-color': '#027e7e' } as any}
               />
               <p className="mt-1 text-sm text-gray-500">Séparez les besoins par des virgules</p>
@@ -490,26 +490,26 @@ export default function FamilyProfilePage() {
 
             <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">Budget minimum (€/h)</label>
+                <label className="block text-xs md:text-sm font-medium text-gray-700 mb-2">Budget minimum (€/h)</label>
                 <input
                   type="number"
                   step="0.01"
                   min="0"
                   value={profileData.budget_min}
                   onChange={(e) => setProfileData({ ...profileData, budget_min: e.target.value })}
-                  className="w-full border border-gray-300 rounded-lg shadow-sm py-3 px-4 focus:ring-2 focus:outline-none focus:border-transparent"
+                  className="w-full border border-gray-300 rounded-lg shadow-sm py-1.5 md:py-2 px-2.5 md:px-3 text-sm focus:ring-2 focus:outline-none focus:border-transparent"
                   style={{ '--tw-ring-color': '#027e7e' } as any}
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">Budget maximum (€/h)</label>
+                <label className="block text-xs md:text-sm font-medium text-gray-700 mb-2">Budget maximum (€/h)</label>
                 <input
                   type="number"
                   step="0.01"
                   min="0"
                   value={profileData.budget_max}
                   onChange={(e) => setProfileData({ ...profileData, budget_max: e.target.value })}
-                  className="w-full border border-gray-300 rounded-lg shadow-sm py-3 px-4 focus:ring-2 focus:outline-none focus:border-transparent"
+                  className="w-full border border-gray-300 rounded-lg shadow-sm py-1.5 md:py-2 px-2.5 md:px-3 text-sm focus:ring-2 focus:outline-none focus:border-transparent"
                   style={{ '--tw-ring-color': '#027e7e' } as any}
                 />
               </div>
@@ -520,7 +520,7 @@ export default function FamilyProfilePage() {
                 type="submit"
                 disabled={saving}
                 aria-busy={saving}
-                className="px-6 py-3 text-white rounded-lg disabled:opacity-50 font-semibold transition hover:opacity-90 shadow-md"
+                className="px-5 py-2.5 md:px-6 md:py-3 text-xs sm:text-sm md:text-base text-white rounded-lg disabled:opacity-50 font-semibold transition hover:opacity-90 shadow-md"
                 style={{ backgroundColor: '#027e7e' }}
               >
                 {saving ? 'Enregistrement...' : 'Enregistrer les modifications'}
@@ -530,8 +530,8 @@ export default function FamilyProfilePage() {
         </div>
 
         {/* Export des données RGPD */}
-        <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 mt-8">
-          <div className="rounded-xl p-4" style={{ backgroundColor: 'rgba(2, 126, 126, 0.1)' }}>
+        <div className="bg-white rounded-xl md:rounded-2xl shadow-sm border border-gray-100 p-3 sm:p-4 md:p-6 mt-3 sm:mt-4 md:mt-6">
+          <div className="rounded-xl p-3 sm:p-4" style={{ backgroundColor: 'rgba(2, 126, 126, 0.1)' }}>
             <h3 className="font-bold text-gray-900 mb-2 flex items-center gap-2">
               <svg className="w-5 h-5" style={{ color: '#027e7e' }} fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
@@ -557,8 +557,8 @@ export default function FamilyProfilePage() {
         </div>
 
         {/* Suppression du compte */}
-        <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 mt-8">
-          <div className="bg-red-50 border border-red-200 rounded-xl p-4">
+        <div className="bg-white rounded-xl md:rounded-2xl shadow-sm border border-gray-100 p-3 sm:p-4 md:p-6 mt-3 sm:mt-4 md:mt-6">
+          <div className="bg-red-50 border border-red-200 rounded-xl p-3 sm:p-4">
             <h3 className="font-semibold text-red-800 mb-2">⚠️ Supprimer mon compte</h3>
             <p className="text-sm text-red-700 mb-3">
               Cette action est <strong>irréversible</strong>. Toutes vos données seront définitivement supprimées :

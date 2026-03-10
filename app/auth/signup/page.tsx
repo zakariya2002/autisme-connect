@@ -20,14 +20,14 @@ export default function SignupChoicePage() {
     <div className="min-h-screen flex flex-col" style={{ backgroundColor: '#fdf9f4' }}>
       <PublicNavbar showAuthButtons={true} />
 
-      <div className="flex-1 flex flex-col justify-center pt-20 xl:pt-24 pb-12 px-4 sm:px-6 lg:px-8 relative z-0">
+      <div className="flex-1 flex flex-col justify-center pt-20 xl:pt-24 pb-8 sm:pb-12 px-3 sm:px-4 md:px-6 lg:px-8 relative z-0">
         <div className="sm:mx-auto sm:w-full sm:max-w-4xl">
           {/* En-tête */}
           <div className="text-center mb-10">
-            <h1 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-3">
+            <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-900 mb-3">
               Créer un compte
             </h1>
-            <p className="text-lg text-gray-600">
+            <p className="text-sm sm:text-base md:text-lg text-gray-600">
               Choisissez le type de compte que vous souhaitez créer
             </p>
             <p className="mt-4 text-sm text-gray-600">
@@ -43,10 +43,10 @@ export default function SignupChoicePage() {
             {/* Carte Aidant */}
             <button
               onClick={() => handleRoleSelection('family')}
-              className="group relative bg-white rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-300 overflow-hidden border-2 border-transparent hover:border-[#027e7e] transform hover:-translate-y-1 text-left"
+              className="group relative bg-white rounded-xl md:rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-300 overflow-hidden border-2 border-transparent hover:border-[#027e7e] transform hover:-translate-y-1 text-left"
               aria-label="Créer un compte aidant ou personne avec TND"
             >
-              <div className="p-6 sm:p-8">
+              <div className="p-4 sm:p-6 md:p-8">
                 {/* En-tête avec icône */}
                 <div className="flex items-center gap-4 mb-6">
                   <div className="w-14 h-14 rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform duration-300" style={{ backgroundColor: 'rgba(2, 126, 126, 0.1)' }}>
@@ -55,7 +55,7 @@ export default function SignupChoicePage() {
                     </svg>
                   </div>
                   <div>
-                    <h2 className="text-xl sm:text-2xl font-bold text-gray-900">
+                    <h2 className="text-lg sm:text-xl md:text-2xl font-bold text-gray-900">
                       Je suis un aidant
                     </h2>
                     <p className="text-gray-500 text-sm">ou une personne avec TND</p>
@@ -105,10 +105,10 @@ export default function SignupChoicePage() {
             {/* Carte Professionnel */}
             <button
               onClick={() => handleRoleSelection('educator')}
-              className="group relative bg-white rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-300 overflow-hidden border-2 border-transparent hover:border-[#41005c] transform hover:-translate-y-1 text-left"
+              className="group relative bg-white rounded-xl md:rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-300 overflow-hidden border-2 border-transparent hover:border-[#41005c] transform hover:-translate-y-1 text-left"
               aria-label="Créer un compte professionnel"
             >
-              <div className="p-6 sm:p-8">
+              <div className="p-4 sm:p-6 md:p-8">
                 {/* En-tête avec icône */}
                 <div className="flex items-center gap-4 mb-6">
                   <div className="w-14 h-14 rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform duration-300" style={{ backgroundColor: 'rgba(65, 0, 92, 0.1)' }}>
@@ -117,7 +117,7 @@ export default function SignupChoicePage() {
                     </svg>
                   </div>
                   <div>
-                    <h2 className="text-xl sm:text-2xl font-bold text-gray-900">
+                    <h2 className="text-lg sm:text-xl md:text-2xl font-bold text-gray-900">
                       Je suis un professionnel
                     </h2>
                     <p className="text-gray-500 text-sm">Éducateur, psychologue, etc.</p>

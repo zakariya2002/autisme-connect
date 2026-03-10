@@ -198,7 +198,7 @@ export default function RegisterFamilyPage() {
       <div className="min-h-screen py-12 px-4 sm:px-6 lg:px-8 flex items-center justify-center" style={{ backgroundColor: '#fdf9f4' }}>
         <div className="max-w-md w-full">
           <div
-            className="bg-white rounded-2xl shadow-xl p-8 text-center"
+            className="bg-white rounded-xl md:rounded-2xl shadow-xl p-5 sm:p-6 md:p-8 text-center"
             role="dialog"
             aria-modal="true"
             aria-labelledby="confirmation-title"
@@ -212,7 +212,7 @@ export default function RegisterFamilyPage() {
             </div>
 
             {/* Titre */}
-            <h2 id="confirmation-title" className="text-2xl font-bold text-gray-900 mb-4">
+            <h2 id="confirmation-title" className="text-xl sm:text-2xl font-bold text-gray-900 mb-4">
               Vérifiez votre boîte mail !
             </h2>
 
@@ -250,7 +250,7 @@ export default function RegisterFamilyPage() {
   }
 
   return (
-    <div className="min-h-screen py-8 px-4 sm:px-6 lg:px-8" style={{ backgroundColor: '#fdf9f4' }}>
+    <div className="min-h-screen py-6 sm:py-8 px-3 sm:px-4 md:px-6 lg:px-8" style={{ backgroundColor: '#fdf9f4' }}>
       <div className="max-w-2xl mx-auto">
         {/* Header */}
         <div className="text-center mb-8">
@@ -273,7 +273,7 @@ export default function RegisterFamilyPage() {
           </div>
         </div>
 
-        <div className="bg-white rounded-2xl shadow-lg p-6 sm:p-8">
+        <div className="bg-white rounded-xl md:rounded-2xl shadow-lg p-3 sm:p-4 md:p-6 lg:p-8">
           {error && (
             <div
               className="mb-6 bg-red-50 border border-red-200 text-red-600 px-4 py-3 rounded-xl"
@@ -284,7 +284,7 @@ export default function RegisterFamilyPage() {
             </div>
           )}
 
-          <form onSubmit={handleSubmit} className="space-y-6">
+          <form onSubmit={handleSubmit} className="space-y-3 sm:space-y-4 md:space-y-6">
             {/* Section Compte */}
             <div className="rounded-xl p-4 mb-6" style={{ backgroundColor: 'rgba(2, 126, 126, 0.05)', border: '1px solid rgba(2, 126, 126, 0.2)' }}>
               <div className="flex items-center justify-center gap-2">
@@ -298,19 +298,19 @@ export default function RegisterFamilyPage() {
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Email *</label>
+              <label className="block text-xs md:text-sm font-medium text-gray-700 mb-1">Email *</label>
               <input
                 type="email"
                 required
                 aria-required="true"
                 value={authData.email}
                 onChange={(e) => setAuthData({ ...authData, email: e.target.value })}
-                className="block w-full border border-gray-300 rounded-xl shadow-sm py-3 px-4 focus:ring-2 focus:ring-[#027e7e] focus:border-[#027e7e] transition-all"
+                className="block w-full border border-gray-300 rounded-xl shadow-sm py-2 md:py-3 px-3 md:px-4 text-sm focus:ring-2 focus:ring-[#027e7e] focus:border-[#027e7e] transition-all"
               />
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Mot de passe *</label>
+              <label className="block text-xs md:text-sm font-medium text-gray-700 mb-1">Mot de passe *</label>
               <div className="relative">
                 <input
                   type={showPassword ? 'text' : 'password'}
@@ -392,7 +392,7 @@ export default function RegisterFamilyPage() {
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Confirmer le mot de passe *</label>
+              <label className="block text-xs md:text-sm font-medium text-gray-700 mb-1">Confirmer le mot de passe *</label>
               <div className="relative">
                 <input
                   type={showConfirmPassword ? 'text' : 'password'}
@@ -425,46 +425,46 @@ export default function RegisterFamilyPage() {
 
             {/* Séparateur */}
             <div className="border-t border-gray-200 pt-6">
-              <h3 className="text-lg font-semibold text-gray-900 mb-4">Votre profil aidant</h3>
+              <h3 className="text-base sm:text-lg font-semibold text-gray-900 mb-3 sm:mb-4">Votre profil aidant</h3>
             </div>
 
             <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Prénom *</label>
+                <label className="block text-xs md:text-sm font-medium text-gray-700 mb-1">Prénom *</label>
                 <input
                   type="text"
                   required
                   aria-required="true"
                   value={familyData.first_name}
                   onChange={(e) => setFamilyData({ ...familyData, first_name: e.target.value })}
-                  className="block w-full border border-gray-300 rounded-xl shadow-sm py-3 px-4 focus:ring-2 focus:ring-[#027e7e] focus:border-[#027e7e] transition-all"
+                  className="block w-full border border-gray-300 rounded-xl shadow-sm py-2 md:py-3 px-3 md:px-4 text-sm focus:ring-2 focus:ring-[#027e7e] focus:border-[#027e7e] transition-all"
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Nom *</label>
+                <label className="block text-xs md:text-sm font-medium text-gray-700 mb-1">Nom *</label>
                 <input
                   type="text"
                   required
                   aria-required="true"
                   value={familyData.last_name}
                   onChange={(e) => setFamilyData({ ...familyData, last_name: e.target.value })}
-                  className="block w-full border border-gray-300 rounded-xl shadow-sm py-3 px-4 focus:ring-2 focus:ring-[#027e7e] focus:border-[#027e7e] transition-all"
+                  className="block w-full border border-gray-300 rounded-xl shadow-sm py-2 md:py-3 px-3 md:px-4 text-sm focus:ring-2 focus:ring-[#027e7e] focus:border-[#027e7e] transition-all"
                 />
               </div>
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Téléphone</label>
+              <label className="block text-xs md:text-sm font-medium text-gray-700 mb-1">Téléphone</label>
               <input
                 type="tel"
                 value={familyData.phone}
                 onChange={(e) => setFamilyData({ ...familyData, phone: e.target.value })}
-                className="block w-full border border-gray-300 rounded-xl shadow-sm py-3 px-4 focus:ring-2 focus:ring-[#027e7e] focus:border-[#027e7e] transition-all"
+                className="block w-full border border-gray-300 rounded-xl shadow-sm py-2 md:py-3 px-3 md:px-4 text-sm focus:ring-2 focus:ring-[#027e7e] focus:border-[#027e7e] transition-all"
               />
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Localisation *</label>
+              <label className="block text-xs md:text-sm font-medium text-gray-700 mb-1">Localisation *</label>
               <div className="flex gap-2">
                 <input
                   type="text"
@@ -473,7 +473,7 @@ export default function RegisterFamilyPage() {
                   placeholder="Ex: Paris, France"
                   value={familyData.location}
                   onChange={(e) => setFamilyData({ ...familyData, location: e.target.value })}
-                  className="flex-1 border border-gray-300 rounded-xl shadow-sm py-3 px-4 focus:ring-2 focus:ring-[#027e7e] focus:border-[#027e7e] transition-all"
+                  className="flex-1 border border-gray-300 rounded-xl shadow-sm py-2 md:py-3 px-3 md:px-4 text-sm focus:ring-2 focus:ring-[#027e7e] focus:border-[#027e7e] transition-all"
                 />
                 <button
                   type="button"
@@ -503,7 +503,7 @@ export default function RegisterFamilyPage() {
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">Vous êtes *</label>
+              <label className="block text-xs md:text-sm font-medium text-gray-700 mb-1.5 md:mb-2">Vous êtes *</label>
               <div className="grid grid-cols-3 gap-2">
                 {[
                   { value: 'parent', label: 'Parent' },
@@ -514,7 +514,7 @@ export default function RegisterFamilyPage() {
                     key={option.value}
                     type="button"
                     onClick={() => setFamilyData({ ...familyData, relationship: option.value })}
-                    className={`py-3 px-4 rounded-xl border-2 text-sm font-medium transition-all ${
+                    className={`py-2 md:py-3 px-3 md:px-4 rounded-xl border-2 text-xs sm:text-sm font-medium transition-all ${
                       familyData.relationship === option.value
                         ? 'border-[#027e7e] bg-[#027e7e] text-white'
                         : 'border-gray-300 bg-white text-gray-700 hover:border-[#027e7e] hover:bg-[#f0fdfa]'
@@ -527,7 +527,7 @@ export default function RegisterFamilyPage() {
             </div>
 
             {/* Consentement RGPD */}
-            <div className="space-y-3 p-4 bg-gray-50 rounded-xl border border-gray-200">
+            <div className="space-y-3 p-3 sm:p-4 bg-gray-50 rounded-xl border border-gray-200">
               <label className="flex items-start gap-3 cursor-pointer">
                 <input
                   type="checkbox"
@@ -566,7 +566,7 @@ export default function RegisterFamilyPage() {
               type="submit"
               disabled={loading}
               aria-busy={loading}
-              className="w-full py-3.5 px-4 rounded-xl text-white font-semibold hover:opacity-90 disabled:opacity-50 transition-all shadow-lg hover:shadow-xl"
+              className="w-full py-2.5 md:py-3.5 px-4 rounded-xl text-xs sm:text-sm md:text-base text-white font-semibold hover:opacity-90 disabled:opacity-50 transition-all shadow-lg hover:shadow-xl"
               style={{ backgroundColor: '#027e7e' }}
             >
               {loading ? 'Création en cours...' : 'Créer mon compte'}
