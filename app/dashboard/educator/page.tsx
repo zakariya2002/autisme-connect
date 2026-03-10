@@ -32,6 +32,7 @@ export default function EducatorDashboard() {
   const [upcomingAppointments, setUpcomingAppointments] = useState<UpcomingAppointment[]>([]);
   const [showSuccessMessage, setShowSuccessMessage] = useState(false);
   const [syncingSubscription, setSyncingSubscription] = useState(false);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     fetchProfile();
@@ -79,10 +80,13 @@ export default function EducatorDashboard() {
         .maybeSingle();
 
       setSubscription(subscriptionData);
+      setLoading(false);
 
       if (searchParams.get('subscription') === 'success' && !subscriptionData && data?.id) {
         syncSubscription(data.id);
       }
+    } else {
+      setLoading(false);
     }
   };
 
@@ -222,6 +226,50 @@ export default function EducatorDashboard() {
       icon: '/images/icons/sap-badge.svg',
     },
   ];
+
+  if (loading) {
+    return (
+      <div className="min-h-screen min-h-[100dvh] flex flex-col" style={{ backgroundColor: '#fdf9f4' }}>
+        {/* Navbar skeleton */}
+        <div className="sticky top-0 z-40 h-14" style={{ backgroundColor: '#41005c' }}>
+          <div className="flex items-center justify-between px-4 py-4">
+            <div className="w-7 h-7 rounded bg-white/20 animate-pulse" />
+            <div className="flex items-center gap-2">
+              <div className="h-10 w-24 rounded bg-white/20 animate-pulse" />
+              <div className="px-2 py-0.5 rounded-full w-10 h-5 bg-white/20 animate-pulse" />
+            </div>
+            <div className="w-7 h-7 rounded bg-white/20 animate-pulse" />
+          </div>
+        </div>
+        {/* Welcome banner skeleton */}
+        <div className="px-4 py-5 flex items-center gap-4" style={{ backgroundColor: '#5a1a75' }}>
+          <div className="w-14 h-14 rounded-full bg-white/20 animate-pulse flex-shrink-0" />
+          <div className="space-y-2">
+            <div className="h-5 w-40 rounded bg-white/20 animate-pulse" />
+            <div className="h-3 w-28 rounded bg-white/20 animate-pulse" />
+          </div>
+        </div>
+        {/* Content skeleton */}
+        <div className="flex-1 px-3 sm:px-4 py-4">
+          <div className="h-4 w-48 rounded bg-gray-200 animate-pulse mb-3" />
+          <div className="bg-white rounded-xl border border-gray-100 p-6 mb-6">
+            <div className="h-20 rounded-lg bg-gray-100 animate-pulse" />
+          </div>
+          <div className="bg-white rounded-xl border border-gray-100 p-4">
+            <div className="h-4 w-32 rounded bg-gray-200 animate-pulse mb-4" />
+            <div className="grid grid-cols-2 gap-3">
+              {[...Array(8)].map((_, i) => (
+                <div key={i} className="flex items-center gap-3 p-2">
+                  <div className="w-10 h-10 rounded-full bg-gray-100 animate-pulse flex-shrink-0" />
+                  <div className="h-3 w-20 rounded bg-gray-100 animate-pulse" />
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen min-h-[100dvh] flex flex-col" style={{ backgroundColor: '#fdf9f4' }}>
