@@ -3,18 +3,52 @@
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
+import { supabase } from '@/lib/supabase';
 import ProNavbar from '@/components/ProNavbar';
+import EducatorNavbar from '@/components/EducatorNavbar';
 
 export default function ProSAPAccreditationPage() {
   const router = useRouter();
   const [openFAQ, setOpenFAQ] = useState<number | null>(null);
+  const [educatorProfile, setEducatorProfile] = useState<any>(null);
+  const [subscription, setSubscription] = useState<any>(null);
+  const [isEducator, setIsEducator] = useState(false);
+  const [authChecked, setAuthChecked] = useState(false);
 
   useEffect(() => {
     document.documentElement.classList.add('pro-theme');
+    checkAuth();
     return () => {
       document.documentElement.classList.remove('pro-theme');
     };
   }, []);
+
+  const checkAuth = async () => {
+    const { data: { session } } = await supabase.auth.getSession();
+    if (session?.user?.user_metadata?.role === 'educator') {
+      const { data: profile } = await supabase
+        .from('educator_profiles')
+        .select('*')
+        .eq('user_id', session.user.id)
+        .single();
+
+      if (profile) {
+        setEducatorProfile(profile);
+        setIsEducator(true);
+
+        const { data: sub } = await supabase
+          .from('subscriptions')
+          .select('*')
+          .eq('educator_id', profile.id)
+          .in('status', ['active', 'trialing'])
+          .limit(1)
+          .maybeSingle();
+
+        setSubscription(sub);
+      }
+    }
+    setAuthChecked(true);
+  };
 
   const toggleFAQ = (index: number) => {
     setOpenFAQ(openFAQ === index ? null : index);
@@ -54,9 +88,15 @@ export default function ProSAPAccreditationPage() {
   return (
     <div className="min-h-screen min-h-[100dvh] flex flex-col" style={{ backgroundColor: '#fdf9f4' }}>
       {/* Navigation */}
-      <ProNavbar />
+      {isEducator ? (
+        <div className="sticky top-0 z-40">
+          <EducatorNavbar profile={educatorProfile} subscription={subscription} />
+        </div>
+      ) : (
+        <ProNavbar />
+      )}
 
-      <div className="flex-1 max-w-3xl mx-auto w-full px-3 sm:px-4 md:px-6 lg:px-8 pt-20 sm:pt-22 md:pt-24 pb-24 sm:pb-8">
+      <div className={`flex-1 max-w-3xl mx-auto w-full px-3 sm:px-4 md:px-6 lg:px-8 pb-24 sm:pb-8 ${isEducator ? 'py-3 sm:py-5 md:py-8' : 'pt-20 sm:pt-22 md:pt-24'}`}>
         {/* Bouton retour */}
         <button
           onClick={() => router.back()}
