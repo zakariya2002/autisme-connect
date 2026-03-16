@@ -343,6 +343,14 @@ export default function DiplomePage() {
           });
       }
 
+      // Mettre à jour le verification_status du profil si encore en pending_documents
+      if (profile.verification_status === 'pending_documents' || !profile.verification_status) {
+        await supabase
+          .from('educator_profiles')
+          .update({ verification_status: 'documents_submitted' })
+          .eq('id', profile.id);
+      }
+
       await checkAuth();
       const docInfo = getDocumentInfo(documentType);
       setMessage({ type: 'success', text: `${docInfo.label} uploadé avec succès !` });
