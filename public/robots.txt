@@ -4,6 +4,14 @@ Allow: /
 Disallow: /api/
 Disallow: /dashboard/
 Disallow: /admin/
+Disallow: /auth/reset-password
+Disallow: /auth/callback
+Disallow: /video-call/
+
+# Pages privées
+Disallow: /messages
+Disallow: /bookings
+Disallow: /reviews/create
 
 # Sitemap
 Sitemap: https://neuro-care.fr/sitemap.xml

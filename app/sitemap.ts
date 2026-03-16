@@ -5,7 +5,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
   const currentDate = new Date()
 
   return [
-    // Page d'accueil
+    // Page d'accueil — mot-clé principal : "éducateur autisme"
     {
       url: baseUrl,
       lastModified: currentDate,
@@ -13,107 +13,39 @@ export default function sitemap(): MetadataRoute.Sitemap {
       priority: 1,
     },
 
-    // Pages principales
-    {
-      url: `${baseUrl}/about`,
-      lastModified: currentDate,
-      changeFrequency: 'monthly',
-      priority: 0.8,
-    },
+    // Recherche — "trouver éducateur autisme près de chez moi"
     {
       url: `${baseUrl}/search`,
+      lastModified: currentDate,
+      changeFrequency: 'daily',
+      priority: 1,
+    },
+
+    // Espace Pro — "plateforme éducateurs TND"
+    {
+      url: `${baseUrl}/pro`,
       lastModified: currentDate,
       changeFrequency: 'weekly',
       priority: 0.9,
     },
+
+    // Devenir libéral — "devenir éducateur libéral autisme"
     {
-      url: `${baseUrl}/contact`,
+      url: `${baseUrl}/pro/devenir-liberal`,
       lastModified: currentDate,
       changeFrequency: 'monthly',
-      priority: 0.7,
-    },
-    {
-      url: `${baseUrl}/pricing`,
-      lastModified: currentDate,
-      changeFrequency: 'monthly',
-      priority: 0.8,
-    },
-    {
-      url: `${baseUrl}/support`,
-      lastModified: currentDate,
-      changeFrequency: 'monthly',
-      priority: 0.6,
-    },
-    {
-      url: `${baseUrl}/feedback`,
-      lastModified: currentDate,
-      changeFrequency: 'monthly',
-      priority: 0.5,
+      priority: 0.9,
     },
 
-    // Blog
+    // Blog — contenu longue traîne
     {
       url: `${baseUrl}/blog`,
       lastModified: currentDate,
       changeFrequency: 'weekly',
       priority: 0.9,
     },
-    {
-      url: `${baseUrl}/blog/activite-physique`,
-      lastModified: currentDate,
-      changeFrequency: 'monthly',
-      priority: 0.7,
-    },
-    {
-      url: `${baseUrl}/blog/bien-etre-aidants`,
-      lastModified: currentDate,
-      changeFrequency: 'monthly',
-      priority: 0.7,
-    },
-    {
-      url: `${baseUrl}/blog/crises-sensorielles`,
-      lastModified: currentDate,
-      changeFrequency: 'monthly',
-      priority: 0.7,
-    },
-    {
-      url: `${baseUrl}/blog/harcelement-scolaire`,
-      lastModified: currentDate,
-      changeFrequency: 'monthly',
-      priority: 0.7,
-    },
-    {
-      url: `${baseUrl}/blog/mdph-dossier`,
-      lastModified: currentDate,
-      changeFrequency: 'monthly',
-      priority: 0.7,
-    },
-    {
-      url: `${baseUrl}/blog/nutrition`,
-      lastModified: currentDate,
-      changeFrequency: 'monthly',
-      priority: 0.7,
-    },
-    {
-      url: `${baseUrl}/blog/preparer-consultation`,
-      lastModified: currentDate,
-      changeFrequency: 'monthly',
-      priority: 0.7,
-    },
-    {
-      url: `${baseUrl}/blog/psychomotricien`,
-      lastModified: currentDate,
-      changeFrequency: 'monthly',
-      priority: 0.7,
-    },
-    {
-      url: `${baseUrl}/blog/temoignage-famille`,
-      lastModified: currentDate,
-      changeFrequency: 'monthly',
-      priority: 0.7,
-    },
 
-    // Espace Familles
+    // Pages familles — "aides autisme", "simulateur AEEH"
     {
       url: `${baseUrl}/familles/aides-financieres`,
       lastModified: currentDate,
@@ -127,9 +59,41 @@ export default function sitemap(): MetadataRoute.Sitemap {
       priority: 0.8,
     },
 
-    // Espace Pro
+    // Pages principales
     {
-      url: `${baseUrl}/pro`,
+      url: `${baseUrl}/about`,
+      lastModified: currentDate,
+      changeFrequency: 'monthly',
+      priority: 0.7,
+    },
+    {
+      url: `${baseUrl}/contact`,
+      lastModified: currentDate,
+      changeFrequency: 'monthly',
+      priority: 0.7,
+    },
+    {
+      url: `${baseUrl}/pricing`,
+      lastModified: currentDate,
+      changeFrequency: 'monthly',
+      priority: 0.7,
+    },
+    {
+      url: `${baseUrl}/support`,
+      lastModified: currentDate,
+      changeFrequency: 'monthly',
+      priority: 0.5,
+    },
+    {
+      url: `${baseUrl}/feedback`,
+      lastModified: currentDate,
+      changeFrequency: 'monthly',
+      priority: 0.4,
+    },
+
+    // Pro sous-pages — guides
+    {
+      url: `${baseUrl}/pro/sap-accreditation`,
       lastModified: currentDate,
       changeFrequency: 'monthly',
       priority: 0.8,
@@ -147,58 +111,62 @@ export default function sitemap(): MetadataRoute.Sitemap {
       priority: 0.7,
     },
     {
-      url: `${baseUrl}/pro/sap-accreditation`,
-      lastModified: currentDate,
-      changeFrequency: 'monthly',
-      priority: 0.7,
-    },
-    {
       url: `${baseUrl}/educators/sap-accreditation`,
       lastModified: currentDate,
       changeFrequency: 'monthly',
       priority: 0.7,
     },
 
-    // Communaute
+    // Blog articles
+    ...[
+      'activite-physique',
+      'bien-etre-aidants',
+      'crises-sensorielles',
+      'harcelement-scolaire',
+      'mdph-dossier',
+      'nutrition',
+      'preparer-consultation',
+      'psychomotricien',
+      'temoignage-famille',
+    ].map((slug) => ({
+      url: `${baseUrl}/blog/${slug}`,
+      lastModified: currentDate,
+      changeFrequency: 'monthly' as const,
+      priority: 0.7,
+    })),
+
+    // Communauté
     {
       url: `${baseUrl}/community`,
       lastModified: currentDate,
       changeFrequency: 'daily',
-      priority: 0.7,
+      priority: 0.6,
     },
 
-    // Authentification
+    // Auth
+    {
+      url: `${baseUrl}/auth/register-educator`,
+      lastModified: currentDate,
+      changeFrequency: 'monthly',
+      priority: 0.6,
+    },
     {
       url: `${baseUrl}/auth/login`,
       lastModified: currentDate,
       changeFrequency: 'monthly',
-      priority: 0.5,
-    },
-    {
-      url: `${baseUrl}/auth/signup`,
-      lastModified: currentDate,
-      changeFrequency: 'monthly',
-      priority: 0.7,
+      priority: 0.4,
     },
 
-    // Pages legales
-    {
-      url: `${baseUrl}/cgu`,
+    // Pages légales
+    ...[
+      'cgu',
+      'mentions-legales',
+      'politique-confidentialite',
+    ].map((page) => ({
+      url: `${baseUrl}/${page}`,
       lastModified: currentDate,
-      changeFrequency: 'yearly',
-      priority: 0.3,
-    },
-    {
-      url: `${baseUrl}/mentions-legales`,
-      lastModified: currentDate,
-      changeFrequency: 'yearly',
-      priority: 0.3,
-    },
-    {
-      url: `${baseUrl}/politique-confidentialite`,
-      lastModified: currentDate,
-      changeFrequency: 'yearly',
-      priority: 0.3,
-    },
+      changeFrequency: 'yearly' as const,
+      priority: 0.2,
+    })),
   ]
 }
