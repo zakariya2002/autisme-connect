@@ -712,7 +712,7 @@ export default function RegisterEducatorPage() {
   return (
     <>
     <ProTheme />
-    <div className="min-h-screen" style={{ backgroundColor: '#fdf9f4' }}>
+    <div className="min-h-screen pt-16" style={{ backgroundColor: '#fdf9f4' }}>
       {/* Header */}
       <ProNavbar />
 
