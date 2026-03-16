@@ -118,15 +118,13 @@ export default function EducatorNavbar({ profile: propProfile, subscription: pro
 
           {/* Mobile: Logo centré */}
           <Link href="/dashboard/educator" className="lg:hidden absolute left-1/2 transform -translate-x-1/2" aria-label="Retour au tableau de bord éducateur">
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-1">
               <img
                 src="/images/logo-neurocare.svg"
                 alt="NeuroCare"
-                className="h-10"
+                className="h-16"
               />
-              <span className="px-2 py-0.5 text-xs font-bold rounded-full text-white" style={{ backgroundColor: '#f0879f' }}>
-                PRO
-              </span>
+              <span className="px-1.5 py-0.5 text-xs font-bold rounded-full text-white" style={{ backgroundColor: '#f0879f' }}>PRO</span>
             </div>
           </Link>
 

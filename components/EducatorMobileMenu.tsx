@@ -430,9 +430,11 @@ export default function EducatorMobileMenu({ profile: propProfile, isPremium, on
         className="p-1 text-white transition-colors duration-200 lg:hidden"
         aria-label="Ouvrir le menu"
       >
-        <svg className="w-9 h-9" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M4 6h16M4 12h16M4 18h16" />
-        </svg>
+        <div className="w-6 h-5 flex flex-col justify-between">
+          <span className="block h-0.5 w-6 bg-white rounded-full" />
+          <span className="block h-0.5 w-6 bg-white rounded-full" />
+          <span className="block h-0.5 w-6 bg-white rounded-full" />
+        </div>
       </button>
 
       {/* Rendu via portal pour être au-dessus de tout */}
