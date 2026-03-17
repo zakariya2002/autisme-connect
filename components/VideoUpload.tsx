@@ -114,28 +114,27 @@ export default function VideoUpload({
         setUploadProgress(prev => Math.min(prev + 10, 90));
       }, 500);
 
-      // Upload via l'API (qui utilise le service role)
-      const formData = new FormData();
-      formData.append('file', file);
-      formData.append('educatorId', educatorId);
+      // Upload directement vers Supabase Storage (bypass la limite 4.5MB de Vercel)
+      const fileExt = file.name.split('.').pop();
+      const fileName = `${educatorId}/presentation-${Date.now()}.${fileExt}`;
 
-      const uploadResponse = await fetch('/api/educator/upload-video', {
-        method: 'POST',
-        headers: {
-          'Authorization': `Bearer ${session.access_token}`
-        },
-        body: formData
-      });
+      const { error: uploadError } = await supabase.storage
+        .from('educator-videos')
+        .upload(fileName, file, {
+          contentType: file.type,
+          cacheControl: '3600',
+          upsert: true
+        });
 
       clearInterval(progressInterval);
 
-      if (!uploadResponse.ok) {
-        const errorData = await uploadResponse.json();
-        throw new Error(errorData.error || 'Erreur lors de l\'upload');
+      if (uploadError) {
+        throw new Error(uploadError.message || 'Erreur lors de l\'upload');
       }
 
-      const uploadResult = await uploadResponse.json();
-      const publicUrl = uploadResult.url;
+      const { data: { publicUrl } } = supabase.storage
+        .from('educator-videos')
+        .getPublicUrl(fileName);
 
       setUploadProgress(95);
       setVideoDuration(validation.duration || null);
