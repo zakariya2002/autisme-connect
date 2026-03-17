@@ -6,6 +6,7 @@ import { useRouter } from 'next/navigation';
 import { supabase } from '@/lib/supabase';
 import { professions } from '@/lib/professions-config';
 import CommunityPreview from '@/components/community/CommunityPreview';
+import BetaModal from '@/components/BetaModal';
 
 // Types de suggestions pour la recherche
 type SuggestionType = 'profession' | 'city' | 'tnd';
@@ -259,6 +260,7 @@ export default function Home() {
 
   return (
     <div className="min-h-screen overflow-x-hidden" style={{ backgroundColor: '#fdf9f4' }}>
+      <BetaModal variant="family" />
       {/* Header */}
       <header className="fixed top-0 left-0 right-0 z-50" style={{ backgroundColor: '#027e7e' }}>
         <div className="max-w-7xl mx-auto px-4 lg:px-8">
