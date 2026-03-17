@@ -84,8 +84,7 @@ export default function NotificationBell({ educatorId, userId, position = 'right
           id,
           content,
           created_at,
-          sender_id,
-          sender:sender_id(first_name, last_name)
+          sender_id
         `)
         .eq('receiver_id', userId)
         .eq('is_read', false)
@@ -94,9 +93,7 @@ export default function NotificationBell({ educatorId, userId, position = 'right
 
       if (!msgError && unreadMessages) {
         unreadMessages.forEach((msg: any) => {
-          const senderName = msg.sender ?
-            `${msg.sender.first_name || ''} ${msg.sender.last_name || ''}`.trim() :
-            'Quelqu\'un';
+          const senderName = 'Nouveau message';
           notifs.push({
             id: `msg-${msg.id}`,
             type: 'message',
