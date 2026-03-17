@@ -286,7 +286,7 @@ export default function EducatorPublicProfile({ params }: { params: { id: string
     try {
       // Récupérer le profil éducateur (requête publique, pas besoin d'être connecté)
       const { data: profile, error: profileError } = await supabase
-        .from('educator_profiles')
+        .from('public_educator_profiles')
         .select('*')
         .eq('id', params.id)
         .single();

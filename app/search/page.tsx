@@ -233,13 +233,8 @@ export default function SearchPage() {
     setLoading(true);
     try {
       let query = supabase
-        .from('educator_profiles')
-        .select(`
-          *,
-          subscriptions!educator_id (
-            status
-          )
-        `)
+        .from('public_educator_profiles')
+        .select('*')
         .eq('verification_badge', true)
         .gte('years_of_experience', 1)
         .order('rating', { ascending: false });
@@ -336,10 +331,8 @@ export default function SearchPage() {
           filtered = educatorsWithDistance
             .filter(e => e.distance !== undefined && e.distance <= radiusKm)
             .sort((a, b) => {
-              const aSubscription = (a as any).subscriptions;
-              const bSubscription = (b as any).subscriptions;
-              const aIsPremium = aSubscription && ['active', 'trialing'].includes(aSubscription.status);
-              const bIsPremium = bSubscription && ['active', 'trialing'].includes(bSubscription.status);
+              const aIsPremium = ['active', 'trialing'].includes((a as any).subscription_status);
+              const bIsPremium = ['active', 'trialing'].includes((b as any).subscription_status);
 
               if (aIsPremium && !bIsPremium) return -1;
               if (!aIsPremium && bIsPremium) return 1;
@@ -353,13 +346,8 @@ export default function SearchPage() {
       }
 
       const sortedFiltered = [...filtered].sort((a, b) => {
-        const aSubscription = (a as any).subscriptions;
-        const bSubscription = (b as any).subscriptions;
-
-        const aIsPremium = aSubscription &&
-          ['active', 'trialing'].includes(aSubscription.status);
-        const bIsPremium = bSubscription &&
-          ['active', 'trialing'].includes(bSubscription.status);
+        const aIsPremium = ['active', 'trialing'].includes((a as any).subscription_status);
+        const bIsPremium = ['active', 'trialing'].includes((b as any).subscription_status);
 
         if (aIsPremium && !bIsPremium) return -1;
         if (!aIsPremium && bIsPremium) return 1;
@@ -915,11 +903,7 @@ export default function SearchPage() {
                             )}
                             {/* Badge premium */}
                             {(() => {
-                              const subs = (educator as any).subscriptions;
-                              if (!subs) return null;
-                              const isPremium = Array.isArray(subs)
-                                ? subs.some((sub: any) => ['active', 'trialing'].includes(sub.status))
-                                : (typeof subs === 'object' && subs.status && ['active', 'trialing'].includes(subs.status));
+                              const isPremium = ['active', 'trialing'].includes((educator as any).subscription_status);
                               return isPremium ? (
                                 <div className="absolute -bottom-1 -right-1 w-6 h-6 rounded-full flex items-center justify-center shadow-lg border-2 border-white" style={{ backgroundColor: '#f0879f' }} aria-label="Professionnel premium">
                                   <svg className="w-4 h-4 text-white" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">

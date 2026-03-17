@@ -223,13 +223,8 @@ export default function FamilySearchPage() {
     setLoading(true);
     try {
       let query = supabase
-        .from('educator_profiles')
-        .select(`
-          *,
-          subscriptions!educator_id (
-            status
-          )
-        `)
+        .from('public_educator_profiles')
+        .select('*')
         .eq('verification_badge', true)
         .gte('years_of_experience', 1)
         .order('rating', { ascending: false });
@@ -317,10 +312,8 @@ export default function FamilySearchPage() {
           filtered = educatorsWithDistance
             .filter(e => e.distance !== undefined && e.distance <= radiusKm)
             .sort((a, b) => {
-              const aSubscription = (a as any).subscriptions;
-              const bSubscription = (b as any).subscriptions;
-              const aIsPremium = aSubscription && ['active', 'trialing'].includes(aSubscription.status);
-              const bIsPremium = bSubscription && ['active', 'trialing'].includes(bSubscription.status);
+              const aIsPremium = ['active', 'trialing'].includes((a as any).subscription_status);
+              const bIsPremium = ['active', 'trialing'].includes((b as any).subscription_status);
 
               if (aIsPremium && !bIsPremium) return -1;
               if (!aIsPremium && bIsPremium) return 1;
@@ -334,13 +327,8 @@ export default function FamilySearchPage() {
       }
 
       const sortedFiltered = [...filtered].sort((a, b) => {
-        const aSubscription = (a as any).subscriptions;
-        const bSubscription = (b as any).subscriptions;
-
-        const aIsPremium = aSubscription &&
-          ['active', 'trialing'].includes(aSubscription.status);
-        const bIsPremium = bSubscription &&
-          ['active', 'trialing'].includes(bSubscription.status);
+        const aIsPremium = ['active', 'trialing'].includes((a as any).subscription_status);
+        const bIsPremium = ['active', 'trialing'].includes((b as any).subscription_status);
 
         if (aIsPremium && !bIsPremium) return -1;
         if (!aIsPremium && bIsPremium) return 1;

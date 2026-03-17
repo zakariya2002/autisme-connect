@@ -139,7 +139,7 @@ export default function BookAppointmentPage({ params }: { params: { id: string }
   const fetchEducatorData = async () => {
     try {
       const { data: educatorData, error: educatorError } = await supabase
-        .from('educator_profiles')
+        .from('public_educator_profiles')
         .select('id, first_name, last_name, hourly_rate')
         .eq('id', params.id)
         .single();
