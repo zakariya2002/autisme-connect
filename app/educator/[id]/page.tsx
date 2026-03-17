@@ -360,7 +360,7 @@ export default function EducatorPublicProfile({ params }: { params: { id: string
             rating,
             comment,
             created_at,
-            family:family_profiles(first_name)
+            family_id
           `)
           .eq('educator_id', params.id)
           .order('created_at', { ascending: false }),
@@ -394,7 +394,7 @@ export default function EducatorPublicProfile({ params }: { params: { id: string
       if (!reviewsResult.error && reviewsResult.data) {
         setReviews(reviewsResult.data.map((r: any) => ({
           ...r,
-          family: r.family || { first_name: 'Anonyme' }
+          family: { first_name: 'Famille' }
         })));
       }
 
