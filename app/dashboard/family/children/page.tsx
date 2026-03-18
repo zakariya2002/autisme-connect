@@ -434,9 +434,8 @@ export default function ChildrenPage() {
                   <div className="flex items-start gap-4 sm:gap-5 pr-20 sm:pr-0">
                     {/* Avatar */}
                     <div className="flex-shrink-0 relative">
-                      <div className="relative group/avatar">
-                        <div className="absolute -inset-1 rounded-full blur opacity-25 group-hover/avatar:opacity-50 transition-opacity" style={{ backgroundColor: '#027e7e' }} aria-hidden="true"></div>
-                        <div className="relative w-14 h-14 sm:w-20 sm:h-20 rounded-full flex items-center justify-center border-2 sm:border-3 border-white shadow-xl ring-2 ring-[rgba(2,126,126,0.2)] transition-all" style={{ backgroundColor: 'rgba(2, 126, 126, 0.1)' }}>
+                      <div className="relative">
+                        <div className="relative w-14 h-14 sm:w-20 sm:h-20 rounded-full flex items-center justify-center border-2 sm:border-3 border-white transition-all" style={{ backgroundColor: 'rgba(2, 126, 126, 0.1)' }}>
                           <span className="text-xl sm:text-2xl font-bold" style={{ color: '#027e7e' }}>
                             {child.first_name[0].toUpperCase()}
                           </span>

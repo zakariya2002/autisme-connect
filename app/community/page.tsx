@@ -94,12 +94,9 @@ export default function CommunityPage() {
       <main className="max-w-4xl mx-auto px-3 sm:px-4 pt-18 xl:pt-20 pb-3 sm:pb-6">
         {/* Page header */}
         <div className="mb-5 sm:mb-6">
-          <h1 className="text-xl sm:text-2xl font-bold text-gray-900 mb-1 sm:mb-1.5">
+          <h1 className="text-xl sm:text-2xl font-bold text-gray-900">
             Communauté NeuroCare
           </h1>
-          <p className="text-xs sm:text-sm text-gray-600">
-            Un espace d'échange et de soutien pour les familles et professionnels
-          </p>
         </div>
 
         {/* Login prompt for non-authenticated users */}
