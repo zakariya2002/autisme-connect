@@ -717,6 +717,125 @@ export default function DiplomePage() {
           </div>
         </div>
 
+        {/* Section Suivi de la validation */}
+        <div className="bg-white rounded-xl md:rounded-2xl shadow-sm lg:shadow-md border border-gray-100 p-3 sm:p-4 md:p-5 lg:p-8 mt-3 sm:mt-4 md:mt-6">
+          <h2 className="text-sm sm:text-base md:text-lg lg:text-xl font-semibold mb-2 sm:mb-3 md:mb-4 lg:mb-6" style={{ color: '#41005c' }}>
+            📊 Suivi de la validation des documents
+          </h2>
+
+          <div className="space-y-3 lg:space-y-4">
+            {/* Diplôme */}
+            <div className={`flex items-center justify-between p-3 lg:p-4 rounded-xl border ${
+              profile?.diploma_verification_status === 'verified' ? 'bg-green-50 border-green-200' :
+              profile?.diploma_verification_status === 'rejected' ? 'bg-red-50 border-red-200' :
+              profile?.diploma_url ? 'bg-amber-50 border-amber-200' : 'bg-gray-50 border-gray-200'
+            }`}>
+              <div className="flex items-center gap-3 min-w-0">
+                <span className="text-lg lg:text-xl">🎓</span>
+                <div className="min-w-0">
+                  <p className="font-medium text-xs sm:text-sm lg:text-base text-gray-900">Diplôme</p>
+                  {profile?.diploma_url ? (
+                    <p className="text-[10px] sm:text-xs text-gray-500 truncate">{profile.diploma_url.split('/').pop()}</p>
+                  ) : (
+                    <p className="text-[10px] sm:text-xs text-gray-400">Non uploadé</p>
+                  )}
+                </div>
+              </div>
+              <div className="flex items-center gap-2 flex-shrink-0">
+                {profile?.diploma_url && (
+                  <button
+                    onClick={() => handleViewDocument(profile.diploma_url)}
+                    className="px-2 py-1 lg:px-3 lg:py-1.5 text-[10px] sm:text-xs lg:text-sm font-medium rounded-lg transition-colors"
+                    style={{ color: '#41005c', backgroundColor: 'rgba(65, 0, 92, 0.1)' }}
+                  >
+                    Voir
+                  </button>
+                )}
+                <span className={`px-2 py-1 lg:px-3 lg:py-1.5 rounded-lg text-[10px] sm:text-xs lg:text-sm font-medium whitespace-nowrap ${
+                  profile?.diploma_verification_status === 'verified' ? 'bg-green-100 text-green-800' :
+                  profile?.diploma_verification_status === 'rejected' ? 'bg-red-100 text-red-800' :
+                  profile?.diploma_url ? 'bg-amber-100 text-amber-800' : 'bg-gray-100 text-gray-500'
+                }`}>
+                  {profile?.diploma_verification_status === 'verified' ? '✓ Validé' :
+                   profile?.diploma_verification_status === 'rejected' ? '✗ Refusé' :
+                   profile?.diploma_url ? '⏳ En attente' : '— Non fourni'}
+                </span>
+              </div>
+            </div>
+
+            {/* Documents complémentaires */}
+            {(['criminal_record', 'id_card', 'insurance'] as DocumentType[]).map((type) => {
+              const info = getDocumentInfo(type);
+              const doc = getDocumentByType(type);
+              return (
+                <div key={type} className={`flex items-center justify-between p-3 lg:p-4 rounded-xl border ${
+                  doc?.status === 'approved' ? 'bg-green-50 border-green-200' :
+                  doc?.status === 'rejected' ? 'bg-red-50 border-red-200' :
+                  doc ? 'bg-amber-50 border-amber-200' : 'bg-gray-50 border-gray-200'
+                }`}>
+                  <div className="flex items-center gap-3 min-w-0">
+                    <span className="text-lg lg:text-xl">{info.icon}</span>
+                    <div className="min-w-0">
+                      <p className="font-medium text-xs sm:text-sm lg:text-base text-gray-900">{info.label}</p>
+                      {doc ? (
+                        <p className="text-[10px] sm:text-xs text-gray-500">Uploadé le {new Date(doc.uploaded_at).toLocaleDateString('fr-FR')}</p>
+                      ) : (
+                        <p className="text-[10px] sm:text-xs text-gray-400">Non uploadé</p>
+                      )}
+                    </div>
+                  </div>
+                  <div className="flex items-center gap-2 flex-shrink-0">
+                    {doc?.file_url && (
+                      <button
+                        onClick={() => doc.file_url && handleViewDocument(doc.file_url)}
+                        className="px-2 py-1 lg:px-3 lg:py-1.5 text-[10px] sm:text-xs lg:text-sm font-medium rounded-lg transition-colors"
+                        style={{ color: '#41005c', backgroundColor: 'rgba(65, 0, 92, 0.1)' }}
+                      >
+                        Voir
+                      </button>
+                    )}
+                    <span className={`px-2 py-1 lg:px-3 lg:py-1.5 rounded-lg text-[10px] sm:text-xs lg:text-sm font-medium whitespace-nowrap ${
+                      doc?.status === 'approved' ? 'bg-green-100 text-green-800' :
+                      doc?.status === 'rejected' ? 'bg-red-100 text-red-800' :
+                      doc ? 'bg-amber-100 text-amber-800' : 'bg-gray-100 text-gray-500'
+                    }`}>
+                      {doc?.status === 'approved' ? '✓ Validé' :
+                       doc?.status === 'rejected' ? '✗ Refusé' :
+                       doc ? '⏳ En attente' : '— Non fourni'}
+                    </span>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+
+          {/* Progression globale */}
+          {(() => {
+            const totalDocs = 4;
+            const uploadedDocs = (profile?.diploma_url ? 1 : 0) + documents.length;
+            const validatedDocs = (profile?.diploma_verification_status === 'verified' ? 1 : 0) + documents.filter(d => d.status === 'approved').length;
+            const percentage = Math.round((uploadedDocs / totalDocs) * 100);
+
+            return (
+              <div className="mt-4 lg:mt-6 p-3 lg:p-4 bg-gray-50 rounded-xl border border-gray-200">
+                <div className="flex items-center justify-between mb-2">
+                  <span className="text-xs sm:text-sm font-medium text-gray-700">Progression</span>
+                  <span className="text-xs sm:text-sm font-semibold" style={{ color: '#41005c' }}>{uploadedDocs}/{totalDocs} documents fournis</span>
+                </div>
+                <div className="w-full bg-gray-200 rounded-full h-2.5 lg:h-3">
+                  <div
+                    className="h-2.5 lg:h-3 rounded-full transition-all duration-500"
+                    style={{ width: `${percentage}%`, backgroundColor: percentage === 100 ? '#16a34a' : '#41005c' }}
+                  ></div>
+                </div>
+                {validatedDocs > 0 && (
+                  <p className="text-[10px] sm:text-xs text-green-600 mt-2">{validatedDocs} document{validatedDocs > 1 ? 's' : ''} validé{validatedDocs > 1 ? 's' : ''} par l'équipe NeuroCare</p>
+                )}
+              </div>
+            );
+          })()}
+        </div>
+
         {/* Info box */}
         <div className="mt-3 sm:mt-4 md:mt-6 lg:mt-8 rounded-xl md:rounded-2xl p-3 sm:p-4 md:p-5 lg:p-6" style={{ backgroundColor: '#f3e8ff', border: '1px solid #d8b4fe' }}>
           <h3 className="text-xs sm:text-sm md:text-base font-semibold mb-2 md:mb-3" style={{ color: '#41005c' }}>Pourquoi ces documents ?</h3>
