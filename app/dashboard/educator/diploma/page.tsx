@@ -322,7 +322,7 @@ export default function DiplomePage() {
       const existingDoc = documents.find(d => d.document_type === documentType);
 
       if (existingDoc) {
-        await supabase
+        const { error: updateErr } = await supabase
           .from('verification_documents')
           .update({
             file_url: fileName,
@@ -332,8 +332,9 @@ export default function DiplomePage() {
             rejection_reason: null
           })
           .eq('id', existingDoc.id);
+        if (updateErr) throw new Error('Erreur sauvegarde: ' + updateErr.message);
       } else {
-        await supabase
+        const { error: insertErr } = await supabase
           .from('verification_documents')
           .insert({
             educator_id: profile.id,
@@ -341,6 +342,7 @@ export default function DiplomePage() {
             file_url: fileName,
             status: 'pending'
           });
+        if (insertErr) throw new Error('Erreur sauvegarde: ' + insertErr.message);
       }
 
       // Mettre à jour le verification_status du profil si encore en pending_documents
