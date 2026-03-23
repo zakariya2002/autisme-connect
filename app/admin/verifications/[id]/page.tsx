@@ -49,6 +49,8 @@ export default function EducatorVerificationDetailPage() {
   const [adminNotes, setAdminNotes] = useState('');
   const [scheduledDate, setScheduledDate] = useState('');
   const [savingNotes, setSavingNotes] = useState(false);
+  const [analyzingDoc, setAnalyzingDoc] = useState<string | null>(null);
+  const [analyses, setAnalyses] = useState<Record<string, { analysis: string; confidenceScore: number | null; recommendation: string; analyzedAt: string }>>({});
 
   useEffect(() => {
     loadData();
@@ -103,6 +105,25 @@ export default function EducatorVerificationDetailPage() {
       insurance: { label: 'Assurance RC Pro', icon: '🛡️' }
     };
     return infos[type] || { label: type, icon: '📎' };
+  };
+
+  const handleAnalyzeDocument = async (documentType: string, fileUrl: string) => {
+    setAnalyzingDoc(documentType);
+    try {
+      const response = await fetch('/api/analyze-document', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ documentType, fileUrl }),
+      });
+      const result = await response.json();
+      if (!response.ok) throw new Error(result.error);
+      setAnalyses(prev => ({ ...prev, [documentType]: result }));
+      showToast('Analyse terminée', 'success');
+    } catch (err: any) {
+      showToast(err.message || 'Erreur lors de l\'analyse', 'error');
+    } finally {
+      setAnalyzingDoc(null);
+    }
   };
 
   const handleApproveDocument = async (documentId: string, documentType: string) => {
@@ -374,6 +395,63 @@ export default function EducatorVerificationDetailPage() {
                       >
                         👁️ Voir le document
                       </a>
+
+                      {/* Analyse Claude Vision */}
+                      <button
+                        onClick={() => handleAnalyzeDocument(type, doc.file_url)}
+                        disabled={analyzingDoc !== null}
+                        className="block w-full mb-3 px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 font-medium text-center transition disabled:opacity-50"
+                      >
+                        {analyzingDoc === type ? (
+                          <span className="flex items-center justify-center gap-2">
+                            <span className="animate-spin rounded-full h-4 w-4 border-2 border-white border-t-transparent"></span>
+                            Analyse en cours...
+                          </span>
+                        ) : (
+                          '🔍 Analyser avec Claude Vision'
+                        )}
+                      </button>
+
+                      {/* Résultat de l'analyse */}
+                      {analyses[type] && (
+                        <div className={`mb-3 p-4 rounded-lg border ${
+                          analyses[type].recommendation === 'validate' ? 'bg-green-50 border-green-200' :
+                          analyses[type].recommendation === 'reject' ? 'bg-red-50 border-red-200' :
+                          'bg-amber-50 border-amber-200'
+                        }`}>
+                          <div className="flex items-center justify-between mb-2">
+                            <span className="text-sm font-bold text-gray-900">
+                              🤖 Analyse Claude Vision
+                            </span>
+                            <div className="flex items-center gap-2">
+                              {analyses[type].confidenceScore !== null && (
+                                <span className={`px-2 py-0.5 rounded text-xs font-bold ${
+                                  analyses[type].confidenceScore! >= 7 ? 'bg-green-100 text-green-800' :
+                                  analyses[type].confidenceScore! >= 4 ? 'bg-amber-100 text-amber-800' :
+                                  'bg-red-100 text-red-800'
+                                }`}>
+                                  {analyses[type].confidenceScore}/10
+                                </span>
+                              )}
+                              <span className={`px-2 py-0.5 rounded text-xs font-bold ${
+                                analyses[type].recommendation === 'validate' ? 'bg-green-100 text-green-800' :
+                                analyses[type].recommendation === 'reject' ? 'bg-red-100 text-red-800' :
+                                'bg-amber-100 text-amber-800'
+                              }`}>
+                                {analyses[type].recommendation === 'validate' ? '✓ VALIDER' :
+                                 analyses[type].recommendation === 'reject' ? '✗ REJETER' :
+                                 '⚠ VÉRIFIER'}
+                              </span>
+                            </div>
+                          </div>
+                          <div className="text-xs text-gray-700 whitespace-pre-wrap leading-relaxed max-h-60 overflow-y-auto">
+                            {analyses[type].analysis}
+                          </div>
+                          <p className="text-[10px] text-gray-400 mt-2">
+                            Analysé le {new Date(analyses[type].analyzedAt).toLocaleString('fr-FR')}
+                          </p>
+                        </div>
+                      )}
 
                       {/* Actions si en attente */}
                       {doc.status === 'pending' && (
