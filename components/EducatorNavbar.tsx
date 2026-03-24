@@ -95,32 +95,32 @@ export default function EducatorNavbar({ profile: propProfile, subscription: pro
             <EducatorMobileMenu profile={profile} isPremium={isPremium} onLogout={handleLogout} />
           </div>
 
-          {/* Desktop: Notifications à gauche */}
-          <div className="hidden lg:flex items-center">
+          {/* Desktop gauche: Notifications + Logo */}
+          <div className="hidden lg:flex items-center gap-4">
             {profile?.id && userId && (
               <NotificationBell educatorId={profile.id} userId={userId} position="left" />
             )}
+            <Link href="/dashboard/educator" className="flex items-center gap-1.5" aria-label="Accueil">
+              <img src="/images/logo-neurocare.svg" alt="NeuroCare" className="h-9" />
+              <span className="px-1.5 py-0.5 text-[10px] font-bold rounded-full text-white" style={{ backgroundColor: '#f0879f' }}>PRO</span>
+            </Link>
           </div>
 
           {/* Mobile: Logo centré */}
           <Link href="/dashboard/educator" className="lg:hidden absolute left-1/2 transform -translate-x-1/2" aria-label="Retour au tableau de bord éducateur">
             <div className="flex items-center gap-1">
-              <img
-                src="/images/logo-neurocare.svg"
-                alt="NeuroCare"
-                className="h-16"
-              />
+              <img src="/images/logo-neurocare.svg" alt="NeuroCare" className="h-16" />
               <span className="px-1.5 py-0.5 text-xs font-bold rounded-full text-white" style={{ backgroundColor: '#f0879f' }}>PRO</span>
             </div>
           </Link>
 
           {/* Desktop: Navigation centrale */}
           <div className="hidden lg:flex items-center gap-1">
-            {navLinks.map((link) => (
+            {navLinks.filter(l => !l.exact).map((link) => (
               <Link
                 key={link.href}
                 href={link.href}
-                className={`px-3 py-1.5 rounded-md text-sm font-medium transition-colors ${
+                className={`px-2.5 py-1.5 rounded-md text-xs font-medium transition-colors ${
                   isActive(link.href, link.exact)
                     ? 'bg-white/20 text-white'
                     : 'text-white/80 hover:text-white hover:bg-white/10'
@@ -133,13 +133,12 @@ export default function EducatorNavbar({ profile: propProfile, subscription: pro
 
           {/* Droite: Notifications mobile + Déconnexion desktop */}
           <div className="flex items-center gap-3">
-            {/* Mobile: notifications à droite */}
             <div className="lg:hidden">
               {profile?.id && userId && (
                 <NotificationBell educatorId={profile.id} userId={userId} />
               )}
             </div>
-            <button onClick={handleLogout} className="hidden lg:flex items-center gap-1.5 px-4 py-1.5 text-sm font-medium rounded-lg border border-white/30 bg-white/10 text-white hover:bg-white hover:text-[#41005c] transition-all">
+            <button onClick={handleLogout} className="hidden lg:flex items-center gap-1.5 px-4 py-1.5 text-xs font-medium rounded-lg border border-white/30 bg-white/10 text-white hover:bg-white hover:text-[#41005c] transition-all">
               Déconnexion
             </button>
           </div>
