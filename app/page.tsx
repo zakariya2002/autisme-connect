@@ -63,12 +63,12 @@ const faqItems = [
 ];
 
 const professionTypes = [
-  { label: 'Éducateurs spécialisés', desc: 'Autisme, TDAH, habiletés sociales', icon: '🧑‍🏫', color: '#027e7e', bg: '#e6f5f5' },
-  { label: 'Psychologues', desc: 'Bilans, thérapies, guidance parentale', icon: '🧠', color: '#6b21a8', bg: '#f3e8ff' },
-  { label: 'Orthophonistes', desc: 'Langage, communication, troubles DYS', icon: '💬', color: '#0369a1', bg: '#e0f2fe' },
-  { label: 'Psychomotriciens', desc: 'Motricité, régulation sensorielle', icon: '🤸', color: '#b45309', bg: '#fef3c7' },
-  { label: 'Ergothérapeutes', desc: 'Autonomie, adaptation du quotidien', icon: '✋', color: '#059669', bg: '#d1fae5' },
-  { label: 'Neuropsychologues', desc: 'Bilans neuropsychologiques, TDAH', icon: '🔬', color: '#dc2626', bg: '#fee2e2' },
+  { label: 'Éducateurs spécialisés', value: 'educator', desc: 'Autisme, TDAH, habiletés sociales', icon: '🧑‍🏫', color: '#027e7e', bg: '#e6f5f5' },
+  { label: 'Psychologues', value: 'psychologist', desc: 'Bilans, thérapies, guidance parentale', icon: '🧠', color: '#6b21a8', bg: '#f3e8ff' },
+  { label: 'Orthophonistes', value: 'speech_therapist', desc: 'Langage, communication, troubles DYS', icon: '💬', color: '#0369a1', bg: '#e0f2fe' },
+  { label: 'Psychomotriciens', value: 'psychomotricist', desc: 'Motricité, régulation sensorielle', icon: '🤸', color: '#b45309', bg: '#fef3c7' },
+  { label: 'Ergothérapeutes', value: 'occupational_therapist', desc: 'Autonomie, adaptation du quotidien', icon: '✋', color: '#059669', bg: '#d1fae5' },
+  { label: 'Neuropsychologues', value: 'neuropsychologist', desc: 'Bilans neuropsychologiques, TDAH', icon: '🔬', color: '#dc2626', bg: '#fee2e2' },
 ];
 
 const testimonials = [
@@ -641,7 +641,7 @@ export default function Home() {
             {professionTypes.map((prof) => (
               <Link
                 key={prof.label}
-                href={`/search?profession=${encodeURIComponent(prof.label)}`}
+                href={`/search?profession=${encodeURIComponent(prof.value)}`}
                 className="group p-4 sm:p-5 rounded-xl border border-gray-100 hover:shadow-lg hover:border-gray-200 transition-all"
                 style={{ backgroundColor: prof.bg }}
               >
