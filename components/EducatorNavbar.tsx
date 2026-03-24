@@ -95,26 +95,12 @@ export default function EducatorNavbar({ profile: propProfile, subscription: pro
             <EducatorMobileMenu profile={profile} isPremium={isPremium} onLogout={handleLogout} />
           </div>
 
-          {/* Desktop: Logo à gauche (seulement sur la page d'accueil) */}
-          {isHomePage ? (
-            <Link href="/dashboard/educator" className="hidden lg:flex items-center gap-2" aria-label="Retour au tableau de bord éducateur">
-              <img
-                src="/images/logo-neurocare.svg"
-                alt="NeuroCare"
-                className="h-10"
-              />
-              <span className="px-2 py-0.5 text-xs font-bold rounded-full text-white" style={{ backgroundColor: '#f0879f' }}>
-                PRO
-              </span>
-            </Link>
-          ) : (
-            /* Desktop: Notifications à gauche (sur les autres pages) */
-            <div className="hidden lg:flex items-center">
-              {profile?.id && userId && (
-                <NotificationBell educatorId={profile.id} userId={userId} position="left" />
-              )}
-            </div>
-          )}
+          {/* Desktop: Notifications à gauche */}
+          <div className="hidden lg:flex items-center">
+            {profile?.id && userId && (
+              <NotificationBell educatorId={profile.id} userId={userId} position="left" />
+            )}
+          </div>
 
           {/* Mobile: Logo centré */}
           <Link href="/dashboard/educator" className="lg:hidden absolute left-1/2 transform -translate-x-1/2" aria-label="Retour au tableau de bord éducateur">
@@ -145,12 +131,9 @@ export default function EducatorNavbar({ profile: propProfile, subscription: pro
             ))}
           </div>
 
-          {/* Droite: Notifications (seulement sur accueil) et déconnexion */}
+          {/* Droite: Notifications mobile + Déconnexion desktop */}
           <div className="flex items-center gap-3">
-            {isHomePage && profile?.id && userId && (
-              <NotificationBell educatorId={profile.id} userId={userId} />
-            )}
-            {/* Mobile: toujours afficher les notifications à droite */}
+            {/* Mobile: notifications à droite */}
             <div className="lg:hidden">
               {profile?.id && userId && (
                 <NotificationBell educatorId={profile.id} userId={userId} />
