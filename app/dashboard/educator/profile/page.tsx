@@ -8,6 +8,8 @@ import { signOut } from '@/lib/auth';
 import { CertificationType } from '@/types';
 import { getCurrentPosition, reverseGeocode } from '@/lib/geolocation';
 import AvatarUpload from '@/components/AvatarUpload';
+import CityAutocomplete from '@/components/CityAutocomplete';
+import AddressAutocomplete from '@/components/AddressAutocomplete';
 import CVUpload from '@/components/CVUpload';
 import VideoUpload from '@/components/VideoUpload';
 import CertificationDocumentUpload from '@/components/CertificationDocumentUpload';
@@ -829,11 +831,10 @@ export default function EducatorProfilePage() {
               <p className="text-[11px] md:text-xs text-gray-500 mb-3">
                 Si vous recevez des patients dans un cabinet, renseignez son adresse. Elle sera proposée automatiquement lors des prises de rendez-vous.
               </p>
-              <input
+              <AddressAutocomplete
                 id="cabinet_address"
-                type="text"
                 value={profileData.cabinet_address}
-                onChange={(e) => setProfileData({ ...profileData, cabinet_address: e.target.value })}
+                onChange={(val) => setProfileData({ ...profileData, cabinet_address: val })}
                 placeholder="Ex: 12 rue de la Paix, 75002 Paris"
                 className="w-full border border-gray-300 rounded-md shadow-sm py-1.5 md:py-2 px-2.5 md:px-3 text-sm focus:ring-2 focus:ring-[#41005c] focus:border-[#41005c]"
               />
@@ -842,14 +843,10 @@ export default function EducatorProfilePage() {
             <div>
               <label htmlFor="location" className="block text-xs sm:text-xs md:text-sm font-medium text-gray-700 mb-1 md:mb-2">Localisation *</label>
               <div className="flex gap-2">
-                <input
-                  id="location"
-                  type="text"
-                  required
-                  aria-required="true"
-                  placeholder="Ex: Paris, France"
+                <CityAutocomplete
                   value={profileData.location}
-                  onChange={(e) => setProfileData({ ...profileData, location: e.target.value })}
+                  onChange={(val) => setProfileData({ ...profileData, location: val })}
+                  required
                   className="flex-1 border border-gray-300 rounded-md shadow-sm py-1.5 md:py-2 px-2.5 md:px-3 text-sm focus:ring-2 focus:ring-[#41005c] focus:border-[#41005c]"
                 />
                 <button

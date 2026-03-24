@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { supabase } from '@/lib/supabase';
 import PublicNavbar from '@/components/PublicNavbar';
+import AddressAutocomplete from '@/components/AddressAutocomplete';
 
 interface Educator {
   id: string;
@@ -841,15 +842,12 @@ export default function BookAppointmentPage({ params }: { params: { id: string }
                     <label className="block text-sm font-medium text-gray-700 mb-2">
                       Adresse <span className="text-red-600" aria-label="requis">*</span>
                     </label>
-                    <input
-                      type="text"
+                    <AddressAutocomplete
                       value={address}
-                      onChange={(e) => setAddress(e.target.value)}
+                      onChange={(val) => setAddress(val)}
                       placeholder="Entrez votre adresse complète"
                       className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:border-transparent"
-                      style={{ outlineColor: '#027e7e' }}
                       required
-                      aria-required="true"
                     />
                   </div>
                 )}

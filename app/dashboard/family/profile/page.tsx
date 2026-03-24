@@ -8,6 +8,7 @@ import { signOut } from '@/lib/auth';
 import { getCurrentPosition, reverseGeocode } from '@/lib/geolocation';
 import AvatarUpload from '@/components/AvatarUpload';
 import FamilyNavbar from '@/components/FamilyNavbar';
+import CityAutocomplete from '@/components/CityAutocomplete';
 
 export default function FamilyProfilePage() {
   const router = useRouter();
@@ -421,15 +422,11 @@ export default function FamilyProfilePage() {
             <div>
               <label className="block text-xs md:text-sm font-medium text-gray-700 mb-2">Localisation *</label>
               <div className="flex gap-2">
-                <input
-                  type="text"
-                  required
-                  aria-required="true"
-                  placeholder="Ex: Paris, France"
+                <CityAutocomplete
                   value={profileData.location}
-                  onChange={(e) => setProfileData({ ...profileData, location: e.target.value })}
+                  onChange={(val) => setProfileData({ ...profileData, location: val })}
+                  required
                   className="flex-1 border border-gray-300 rounded-lg shadow-sm py-1.5 md:py-2 px-2.5 md:px-3 text-sm focus:ring-2 focus:outline-none focus:border-transparent"
-                  style={{ '--tw-ring-color': '#027e7e' } as any}
                 />
                 <button
                   type="button"
