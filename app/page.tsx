@@ -355,20 +355,20 @@ export default function Home() {
                 <>
                   <Link
                     href="/pro"
-                    className="group ml-1 flex items-center gap-0.5 px-2 xl:px-2.5 py-1 xl:py-1.5 text-[10px] xl:text-xs rounded font-semibold transition-all hover:opacity-90 whitespace-nowrap"
+                    className="group ml-2 flex items-center gap-1 px-3 py-1.5 text-xs rounded-lg font-semibold transition-all hover:opacity-90 whitespace-nowrap"
                     style={{ backgroundColor: '#f3e8ff', color: '#41005c' }}
                   >
-                    <svg className="w-3 h-3 xl:w-3.5 xl:h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
                     </svg>
                     Espace Pro
                   </Link>
-                  <Link href="/auth/login" className="ml-4 xl:ml-6 px-2 xl:px-3 py-1.5 xl:py-2 text-xs xl:text-sm text-white/90 hover:text-white font-medium transition-all whitespace-nowrap">
+                  <Link href="/auth/login" className="ml-3 xl:ml-4 px-3 py-1.5 xl:py-2 text-xs xl:text-sm text-white/90 hover:text-white font-medium transition-all whitespace-nowrap">
                     Connexion
                   </Link>
                   <Link
                     href="/auth/signup"
-                    className="ml-1 xl:ml-2 px-2.5 xl:px-3.5 py-1.5 xl:py-2 text-xs xl:text-sm text-white font-semibold rounded-md transition-all hover:opacity-90 whitespace-nowrap"
+                    className="ml-2 xl:ml-3 px-4 xl:px-5 py-1.5 xl:py-2 text-xs xl:text-sm text-white font-semibold rounded-lg transition-all hover:opacity-90 whitespace-nowrap"
                     style={{ backgroundColor: '#f0879f' }}
                   >
                     Inscription
