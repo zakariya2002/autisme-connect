@@ -96,7 +96,7 @@ export default function EducatorNavbar({ profile: propProfile, subscription: pro
           </div>
 
           {/* Desktop gauche: Notifications + Logo */}
-          <div className="hidden lg:flex items-center gap-4">
+          <div className="hidden lg:flex items-center gap-3 flex-shrink-0">
             {profile?.id && userId && (
               <NotificationBell educatorId={profile.id} userId={userId} position="left" />
             )}
@@ -114,13 +114,13 @@ export default function EducatorNavbar({ profile: propProfile, subscription: pro
             </div>
           </Link>
 
-          {/* Desktop: Navigation centrale */}
-          <div className="hidden lg:flex items-center gap-1">
+          {/* Desktop: Navigation centrale - overflow scroll si trop de liens */}
+          <div className="hidden lg:flex items-center gap-0.5 overflow-x-auto scrollbar-hide mx-2">
             {navLinks.filter(l => !l.exact).map((link) => (
               <Link
                 key={link.href}
                 href={link.href}
-                className={`px-2.5 py-1.5 rounded-md text-xs font-medium transition-colors ${
+                className={`px-2 py-1.5 rounded-md text-xs font-medium transition-colors whitespace-nowrap ${
                   isActive(link.href, link.exact)
                     ? 'bg-white/20 text-white'
                     : 'text-white/80 hover:text-white hover:bg-white/10'
@@ -132,7 +132,7 @@ export default function EducatorNavbar({ profile: propProfile, subscription: pro
           </div>
 
           {/* Droite: Notifications mobile + Déconnexion desktop */}
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-3 flex-shrink-0">
             <div className="lg:hidden">
               {profile?.id && userId && (
                 <NotificationBell educatorId={profile.id} userId={userId} />
