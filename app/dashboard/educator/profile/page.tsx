@@ -519,20 +519,17 @@ export default function EducatorProfilePage() {
     setError('');
 
     try {
-      // 1. Supprimer le profil éducateur (cascade supprimera les données liées)
-      const { error: profileError } = await supabase
-        .from('educator_profiles')
-        .delete()
-        .eq('id', profile.id);
+      const response = await fetch('/api/user/delete-account', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ confirm: true }),
+      });
 
-      if (profileError) throw profileError;
+      if (!response.ok) {
+        const data = await response.json();
+        throw new Error(data.error || 'Erreur lors de la suppression');
+      }
 
-      // 2. Supprimer le compte utilisateur
-      const { error: authError } = await supabase.auth.admin.deleteUser(userId);
-
-      if (authError) throw authError;
-
-      // 3. Se déconnecter et rediriger
       await signOut();
       router.push('/?deleted=true');
     } catch (err: any) {

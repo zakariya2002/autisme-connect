@@ -159,6 +159,10 @@ export default function RegisterFamilyPage() {
         preferred_certifications: familyData.preferred_certifications,
         budget_min: familyData.budget_min ? parseFloat(familyData.budget_min) : null,
         budget_max: familyData.budget_max ? parseFloat(familyData.budget_max) : null,
+        cgu_accepted_at: new Date().toISOString(),
+        data_consent_at: new Date().toISOString(),
+        health_data_consent_at: new Date().toISOString(),
+        cgu_version: '2026-03-24',
       };
 
       // Appeler la nouvelle API d'inscription avec confirmation
@@ -559,6 +563,18 @@ export default function RegisterFamilyPage() {
                 />
                 <span className="text-sm text-gray-700">
                   Je consens au traitement de mes données personnelles pour la mise en relation avec des professionnels. <span className="text-red-500">*</span>
+                </span>
+              </label>
+              <label className="flex items-start gap-3 cursor-pointer">
+                <input
+                  type="checkbox"
+                  required
+                  aria-required="true"
+                  className="mt-1 h-4 w-4 rounded cursor-pointer border-gray-300"
+                  style={{ accentColor: '#027e7e' }}
+                />
+                <span className="text-sm text-gray-700">
+                  Je consens explicitement au traitement des données de santé de mon enfant (troubles neurodéveloppementaux, niveau de soutien, besoins spécifiques) conformément à l&apos;Article 9 du RGPD. <span className="text-red-500">*</span>
                 </span>
               </label>
             </div>

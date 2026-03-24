@@ -585,6 +585,9 @@ export default function RegisterEducatorPage() {
         profession_type: professionType,
         diploma_type: educatorData.diploma_type,
         rpps_number: educatorData.rpps_number || null,
+        cgu_accepted_at: new Date().toISOString(),
+        data_consent_at: new Date().toISOString(),
+        cgu_version: '2026-03-24',
       };
 
       // Appeler la nouvelle API d'inscription avec confirmation

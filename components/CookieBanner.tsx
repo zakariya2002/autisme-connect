@@ -20,8 +20,8 @@ export default function CookieBanner() {
     setShowBanner(false);
   };
 
-  const refuseCookies = () => {
-    localStorage.setItem('cookie-consent', 'refused');
+  const dismissBanner = () => {
+    localStorage.setItem('cookie-consent', 'dismissed');
     localStorage.setItem('cookie-consent-date', new Date().toISOString());
     setShowBanner(false);
   };
@@ -53,8 +53,8 @@ export default function CookieBanner() {
             <div className="flex-1">
               <h3 className="font-bold text-lg mb-1" style={{ color: '#027e7e' }}>Votre vie privée compte</h3>
               <p className="text-sm text-gray-600 leading-relaxed">
-                NeuroCare utilise uniquement des <span className="font-medium" style={{ color: '#027e7e' }}>cookies essentiels</span> pour
-                l'authentification et la session. Aucun tracking publicitaire.{' '}
+                Ce site utilise uniquement des <span className="font-medium" style={{ color: '#027e7e' }}>cookies essentiels</span> pour
+                le fonctionnement du service (authentification, session). Aucun cookie publicitaire ou de suivi n'est utilisé.{' '}
                 <Link
                   href="/politique-confidentialite"
                   className="underline underline-offset-2 transition-colors hover:opacity-80"
@@ -68,7 +68,7 @@ export default function CookieBanner() {
             {/* Boutons */}
             <div className="flex gap-3 w-full sm:w-auto">
               <button
-                onClick={refuseCookies}
+                onClick={dismissBanner}
                 className="flex-1 sm:flex-none px-5 py-2.5 text-sm font-semibold rounded-xl transition-all duration-200 hover:opacity-80"
                 style={{
                   color: '#027e7e',
@@ -76,7 +76,7 @@ export default function CookieBanner() {
                   border: '1px solid #c9eaea'
                 }}
               >
-                Refuser
+                Continuer sans accepter
               </button>
               <button
                 onClick={acceptCookies}

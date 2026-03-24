@@ -84,6 +84,9 @@ export async function POST(request: Request) {
           sap_number: profileData.sap_number || null,
           diploma_type: profileData.diploma_type || null,
           rpps_number: profileData.rpps_number || null,
+          cgu_accepted_at: profileData.cgu_accepted_at || null,
+          data_consent_at: profileData.data_consent_at || null,
+          cgu_version: profileData.cgu_version || null,
         });
 
       if (profileError) {
@@ -117,6 +120,10 @@ export async function POST(request: Request) {
           preferred_certifications: profileData.preferred_certifications || [],
           budget_min: profileData.budget_min || null,
           budget_max: profileData.budget_max || null,
+          cgu_accepted_at: profileData.cgu_accepted_at || null,
+          data_consent_at: profileData.data_consent_at || null,
+          health_data_consent_at: profileData.health_data_consent_at || null,
+          cgu_version: profileData.cgu_version || null,
         });
 
       if (profileError) {

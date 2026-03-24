@@ -264,7 +264,7 @@ export default function EducatorSessionDossierPage() {
           .from('appointments')
           .select(`
             *,
-            child_profiles (*),
+            child_profiles (id, first_name, age, description, accompaniment_types, accompaniment_goals),
             family_profiles (first_name, last_name)
           `)
           .eq('id', appointmentId)

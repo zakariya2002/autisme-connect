@@ -87,7 +87,21 @@ export async function DELETE(request: NextRequest) {
       .delete()
       .eq('email', user!.email);
 
-    // 9. Supprimer le profil
+    // 9. Supprimer les fichiers storage (RGPD: droit à l'effacement)
+    const storageBuckets = ['avatars', 'cvs', 'diplomas', 'educator-videos', 'verification-documents', 'certification-documents', 'profiles', 'documents'];
+    for (const bucket of storageBuckets) {
+      try {
+        const { data: files } = await supabaseAdmin.storage.from(bucket).list(userId);
+        if (files && files.length > 0) {
+          const filePaths = files.map((f: any) => `${userId}/${f.name}`);
+          await supabaseAdmin.storage.from(bucket).remove(filePaths);
+        }
+      } catch (e) {
+        // Bucket may not exist or be empty, continue
+      }
+    }
+
+    // 10. Supprimer le profil
     if (role === 'educator') {
       await supabaseAdmin
         .from('certifications')
