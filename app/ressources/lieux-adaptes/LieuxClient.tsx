@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useMemo, useCallback } from 'react';
+import { useState, useMemo, useCallback, useEffect, useRef } from 'react';
 import Link from 'next/link';
 import PublicNavbar from '@/components/PublicNavbar';
 
@@ -30,12 +30,32 @@ const TYPE_COLORS: Record<string, { bg: string; text: string; border: string; li
   CRA:    { bg: '#fce7f3', text: '#9d174d', border: '#fbcfe8', lightBg: '#fdf2f8' },
 };
 
-const TYPE_DESCRIPTIONS: Record<string, string> = {
-  CMP: 'Centre M\u00e9dico-Psychologique \u2014 Consultations psychiatriques et psychologiques gratuites',
-  CAMSP: 'Centre d\u2019Action M\u00e9dico-Sociale Pr\u00e9coce \u2014 D\u00e9pistage et soins pour enfants 0-6 ans',
-  SESSAD: 'Service d\u2019\u00c9ducation Sp\u00e9ciale et de Soins \u00e0 Domicile \u2014 Accompagnement ambulatoire',
-  CMPP: 'Centre M\u00e9dico-Psycho-P\u00e9dagogique \u2014 Diagnostic et soins pour enfants et adolescents',
-  CRA: 'Centre Ressources Autisme \u2014 Information, diagnostic et orientation r\u00e9gionale',
+const TYPE_DESCRIPTIONS: Record<string, { short: string; detail: string; public: string }> = {
+  CMP: {
+    short: 'Centre M\u00e9dico-Psychologique',
+    detail: 'Les CMP proposent des consultations gratuites en psychiatrie, psychologie, orthophonie et psychomotricit\u00e9. Pour les personnes avec un TND (autisme, TDAH, DYS), c\u2019est souvent le premier lieu de diagnostic et de suivi r\u00e9gulier. Les soins sont pris en charge \u00e0 100\u00a0% par l\u2019Assurance Maladie.',
+    public: 'Enfants, adolescents et adultes',
+  },
+  CAMSP: {
+    short: 'Centre d\u2019Action M\u00e9dico-Sociale Pr\u00e9coce',
+    detail: 'Les CAMSP sont d\u00e9di\u00e9s au d\u00e9pistage et \u00e0 la prise en charge pr\u00e9coce des enfants de 0 \u00e0 6 ans. Ils interviennent d\u00e8s les premiers signes de retard de d\u00e9veloppement ou de TND, avec une \u00e9quipe pluridisciplinaire (p\u00e9diatre, psychologue, orthophoniste, psychomotricien). Gratuit et sans avance de frais.',
+    public: 'Enfants de 0 \u00e0 6 ans',
+  },
+  SESSAD: {
+    short: 'Service d\u2019\u00c9ducation Sp\u00e9ciale et de Soins \u00e0 Domicile',
+    detail: 'Les SESSAD accompagnent les enfants et adolescents en situation de handicap dans leur milieu de vie (domicile, \u00e9cole). Pour les TND, ils proposent un soutien \u00e9ducatif, r\u00e9\u00e9ducatif et th\u00e9rapeutique adapt\u00e9 pour favoriser l\u2019inclusion scolaire et l\u2019autonomie. Orientation via la MDPH.',
+    public: 'Enfants et adolescents (0-20 ans)',
+  },
+  CMPP: {
+    short: 'Centre M\u00e9dico-Psycho-P\u00e9dagogique',
+    detail: 'Les CMPP r\u00e9alisent des bilans diagnostiques et proposent des soins ambulatoires pour les troubles du d\u00e9veloppement, les difficult\u00e9s d\u2019apprentissage et les troubles du comportement. Ils sont particuli\u00e8rement adapt\u00e9s pour le TDAH, les troubles DYS et l\u2019autisme l\u00e9ger. Prise en charge par l\u2019Assurance Maladie.',
+    public: 'Enfants et adolescents (0-20 ans)',
+  },
+  CRA: {
+    short: 'Centre Ressources Autisme',
+    detail: 'Les CRA sont les r\u00e9f\u00e9rents r\u00e9gionaux pour l\u2019autisme et les TND. Ils r\u00e9alisent des diagnostics complexes, informent les familles, forment les professionnels et orientent vers les structures adapt\u00e9es. Chaque r\u00e9gion dispose d\u2019au moins un CRA. C\u2019est le point d\u2019entr\u00e9e recommand\u00e9 si vous ne savez pas vers qui vous tourner.',
+    public: 'Tous \u00e2ges \u2014 familles et professionnels',
+  },
 };
 
 const REGIONS = [
@@ -122,6 +142,35 @@ export default function LieuxClient({ structures }: { structures: Structure[] })
               );
             })}
           </div>
+
+          {/* Description du type sélectionné */}
+          {type && TYPE_DESCRIPTIONS[type] && (
+            <div
+              className="mt-4 p-4 rounded-xl border"
+              style={{
+                backgroundColor: TYPE_COLORS[type].lightBg,
+                borderColor: TYPE_COLORS[type].border,
+              }}
+            >
+              <div className="flex items-center gap-2 mb-2">
+                <span
+                  className="px-2.5 py-0.5 rounded-full text-[11px] font-bold"
+                  style={{ backgroundColor: TYPE_COLORS[type].bg, color: TYPE_COLORS[type].text, border: `1px solid ${TYPE_COLORS[type].border}` }}
+                >
+                  {type}
+                </span>
+                <h3 className="text-sm font-bold" style={{ color: TYPE_COLORS[type].text }}>
+                  {TYPE_DESCRIPTIONS[type].short}
+                </h3>
+              </div>
+              <p className="text-sm text-gray-600 leading-relaxed mb-2">
+                {TYPE_DESCRIPTIONS[type].detail}
+              </p>
+              <p className="text-xs font-medium text-gray-400">
+                Public concern&eacute; : {TYPE_DESCRIPTIONS[type].public}
+              </p>
+            </div>
+          )}
         </div>
       </div>
 
@@ -146,12 +195,9 @@ export default function LieuxClient({ structures }: { structures: Structure[] })
             {TYPES.map(t => <option key={t} value={t}>{t}</option>)}
           </select>
 
-          <input
-            type="text"
-            placeholder="Rechercher une ville, un nom..."
+          <CityAutocomplete
             value={search}
-            onChange={e => { setSearch(e.target.value); setPage(1); }}
-            className="flex-1 min-w-[200px] px-3 py-2.5 bg-white border border-gray-200 rounded-lg text-sm text-gray-700 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-teal-200"
+            onChange={(val) => { setSearch(val); setPage(1); }}
           />
 
           {(region || type || search) && (
@@ -256,7 +302,7 @@ export default function LieuxClient({ structures }: { structures: Structure[] })
                   <span className="inline-block px-2.5 py-0.5 rounded-full text-[11px] font-bold flex-shrink-0 mt-0.5" style={{ backgroundColor: colors.bg, color: colors.text, border: `1px solid ${colors.border}` }}>
                     {t}
                   </span>
-                  <span className="text-xs text-gray-500 leading-relaxed">{TYPE_DESCRIPTIONS[t]}</span>
+                  <span className="text-xs text-gray-500 leading-relaxed">{TYPE_DESCRIPTIONS[t].short}</span>
                 </div>
               );
             })}
@@ -270,6 +316,79 @@ export default function LieuxClient({ structures }: { structures: Structure[] })
           Une erreur ? Un lieu manquant ? <Link href="/contact" className="underline" style={{ color: '#027e7e' }}>Contactez-nous</Link>.
         </p>
       </div>
+    </div>
+  );
+}
+
+// ─── Composant autocomplétion ville ───
+function CityAutocomplete({ value, onChange }: { value: string; onChange: (v: string) => void }) {
+  const [input, setInput] = useState(value);
+  const [suggestions, setSuggestions] = useState<{ city: string; postcode: string; context: string }[]>([]);
+  const [open, setOpen] = useState(false);
+  const ref = useRef<HTMLDivElement>(null);
+  const timerRef = useRef<ReturnType<typeof setTimeout>>();
+
+  useEffect(() => { setInput(value); }, [value]);
+
+  useEffect(() => {
+    const handleClickOutside = (e: MouseEvent) => {
+      if (ref.current && !ref.current.contains(e.target as Node)) setOpen(false);
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
+
+  const fetchCities = useCallback((q: string) => {
+    if (timerRef.current) clearTimeout(timerRef.current);
+    if (q.length < 2) { setSuggestions([]); setOpen(false); return; }
+    timerRef.current = setTimeout(async () => {
+      try {
+        const res = await fetch(`/api/cities?q=${encodeURIComponent(q)}`);
+        const data = await res.json();
+        setSuggestions(data);
+        setOpen(data.length > 0);
+      } catch { setSuggestions([]); }
+    }, 200);
+  }, []);
+
+  const handleInput = (val: string) => {
+    setInput(val);
+    onChange(val);
+    fetchCities(val);
+  };
+
+  const handleSelect = (city: string, postcode: string) => {
+    const val = `${city}`;
+    setInput(val);
+    onChange(val);
+    setOpen(false);
+  };
+
+  return (
+    <div ref={ref} className="relative flex-1 min-w-[200px]">
+      <input
+        type="text"
+        placeholder="Rechercher une ville, un code postal..."
+        value={input}
+        onChange={e => handleInput(e.target.value)}
+        onFocus={() => suggestions.length > 0 && setOpen(true)}
+        className="w-full px-3 py-2.5 bg-white border border-gray-200 rounded-lg text-sm text-gray-700 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-teal-200"
+      />
+      {open && suggestions.length > 0 && (
+        <div className="absolute top-full left-0 right-0 mt-1 bg-white border border-gray-200 rounded-lg shadow-lg z-50 overflow-hidden">
+          {suggestions.map((s, i) => (
+            <button
+              key={i}
+              onClick={() => handleSelect(s.city, s.postcode)}
+              className="w-full text-left px-4 py-2.5 text-sm hover:bg-gray-50 transition-colors border-b border-gray-50 last:border-0 cursor-pointer"
+            >
+              <span className="font-semibold text-gray-800">{s.city}</span>
+              <span className="text-gray-400 ml-2">{s.postcode}</span>
+              {s.context && <span className="text-gray-400 text-xs ml-1">({s.context})</span>}
+            </button>
+          ))}
+        </div>
+      )}
     </div>
   );
 }
