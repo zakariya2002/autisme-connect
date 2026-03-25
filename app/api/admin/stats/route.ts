@@ -40,7 +40,7 @@ export async function GET() {
       supabase
         .from('educator_profiles')
         .select('*', { count: 'exact', head: true })
-        .in('verification_status', ['documents_submitted', 'documents_verified', 'interview_scheduled']),
+        .or('verification_status.is.null,verification_status.in.(pending_documents,documents_submitted,documents_verified,interview_scheduled)'),
       supabase
         .from('blog_posts')
         .select('*', { count: 'exact', head: true })

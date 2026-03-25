@@ -87,6 +87,7 @@ export async function POST(request: Request) {
           cgu_accepted_at: profileData.cgu_accepted_at || null,
           data_consent_at: profileData.data_consent_at || null,
           cgu_version: profileData.cgu_version || null,
+          verification_status: 'pending_documents',
         });
 
       if (profileError) {
