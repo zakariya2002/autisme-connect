@@ -2,7 +2,17 @@
 
 import { useState, useMemo, useCallback, useEffect, useRef } from 'react';
 import Link from 'next/link';
+import dynamic from 'next/dynamic';
 import PublicNavbar from '@/components/PublicNavbar';
+
+const StructuresMap = dynamic(() => import('./StructuresMap'), {
+  ssr: false,
+  loading: () => (
+    <div className="w-full rounded-xl bg-gray-100 flex items-center justify-center" style={{ height: 420 }}>
+      <p className="text-gray-400 text-sm">Chargement de la carte...</p>
+    </div>
+  ),
+});
 
 interface Structure {
   id: string;
@@ -108,17 +118,32 @@ export default function LieuxClient({ structures }: { structures: Structure[] })
 
       {/* Hero */}
       <div style={{ paddingTop: 80 }}>
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 pt-10 pb-6">
-          <div className="flex items-center gap-3 mb-4">
-            <div className="w-10 h-1 rounded-full" style={{ backgroundColor: '#027e7e' }} />
-            <span className="text-xs font-semibold uppercase tracking-wide" style={{ color: '#027e7e' }}>Ressources</span>
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 pt-8 sm:pt-10 pb-6">
+          {/* Banner */}
+          <div className="rounded-2xl overflow-hidden mb-8" style={{ backgroundColor: '#027e7e' }}>
+            <div className="px-6 sm:px-10 py-8 sm:py-10 flex flex-col sm:flex-row items-start sm:items-center gap-6">
+              <div className="flex-1">
+                <div className="flex items-center gap-2 mb-3">
+                  <svg className="w-5 h-5 text-white/70" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                  </svg>
+                  <span className="text-xs font-semibold uppercase tracking-wider text-white/70">Annuaire national</span>
+                </div>
+                <h1 className="text-2xl sm:text-3xl lg:text-4xl font-extrabold text-white leading-tight mb-3">
+                  Lieux de prise en charge adapt&eacute;s TND
+                </h1>
+                <p className="text-sm sm:text-base text-white/80 leading-relaxed max-w-xl">
+                  Trouvez les structures sp&eacute;cialis&eacute;es dans l&rsquo;accompagnement des troubles du neurod&eacute;veloppement pr&egrave;s de chez vous. <strong className="text-white">{structures.length.toLocaleString('fr-FR')}</strong> lieux r&eacute;f&eacute;renc&eacute;s en France.
+                </p>
+              </div>
+              <div className="hidden sm:flex flex-col items-center gap-1 bg-white/15 rounded-xl px-6 py-4 backdrop-blur-sm flex-shrink-0">
+                <span className="text-3xl font-extrabold text-white">{structures.length.toLocaleString('fr-FR')}</span>
+                <span className="text-xs text-white/70 font-medium">structures</span>
+                <span className="text-xs text-white/70 font-medium">r&eacute;f&eacute;renc&eacute;es</span>
+              </div>
+            </div>
           </div>
-          <h1 className="text-3xl sm:text-4xl font-extrabold mb-4" style={{ color: '#027e7e' }}>
-            Lieux de prise en charge adapt&eacute;s TND
-          </h1>
-          <p className="text-base text-gray-500 max-w-2xl leading-relaxed">
-            Trouvez les structures sp&eacute;cialis&eacute;es dans l&rsquo;accompagnement des troubles du neurod&eacute;veloppement (autisme, TDAH, DYS) pr&egrave;s de chez vous.
-          </p>
 
           {/* Badges type */}
           <div className="flex flex-wrap gap-2 mt-6">
@@ -206,6 +231,11 @@ export default function LieuxClient({ structures }: { structures: Structure[] })
             </button>
           )}
         </div>
+      </div>
+
+      {/* Carte */}
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 pt-6">
+        <StructuresMap structures={filtered} />
       </div>
 
       {/* Résultats */}
