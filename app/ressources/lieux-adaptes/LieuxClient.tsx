@@ -97,11 +97,19 @@ const REGIONS = [
 const TYPES = ['CMP', 'CAMSP', 'SESSAD', 'CMPP', 'CRA', 'Handiconsult', 'PCO', 'Handident'];
 const PAGE_SIZE = 30;
 
-export default function LieuxClient({ structures }: { structures: Structure[] }) {
+interface LieuxClientProps {
+  structures: Structure[];
+  /** If set, the page is a region sub-page */
+  regionName?: string;
+  regionSlug?: string;
+}
+
+export default function LieuxClient({ structures, regionName, regionSlug }: LieuxClientProps) {
   const [region, setRegion] = useState('');
   const [type, setType] = useState('');
   const [search, setSearch] = useState('');
   const [page, setPage] = useState(1);
+  const isRegionPage = !!regionName;
 
   const filtered = useMemo(() => {
     let result = structures;
@@ -137,6 +145,24 @@ export default function LieuxClient({ structures }: { structures: Structure[] })
       {/* Hero */}
       <div style={{ paddingTop: 80 }}>
         <div className="max-w-6xl mx-auto px-4 sm:px-6 pt-8 sm:pt-10 pb-6">
+          {/* Breadcrumb for region pages */}
+          {isRegionPage && (
+            <nav aria-label="Fil d&apos;Ariane" className="text-sm text-gray-400 mb-4">
+              <Link href="/" className="hover:underline" style={{ color: '#027e7e' }}>
+                Accueil
+              </Link>
+              <span className="mx-2">/</span>
+              <Link
+                href="/ressources/lieux-adaptes"
+                className="hover:underline"
+                style={{ color: '#027e7e' }}
+              >
+                Lieux adapt&eacute;s TND
+              </Link>
+              <span className="mx-2">/</span>
+              <span className="text-gray-600 font-medium">{regionName}</span>
+            </nav>
+          )}
           {/* Banner */}
           <div className="rounded-2xl overflow-hidden mb-8" style={{ backgroundColor: '#027e7e' }}>
             <div className="px-6 sm:px-10 py-8 sm:py-10 flex flex-col sm:flex-row items-start sm:items-center gap-6">
@@ -149,10 +175,16 @@ export default function LieuxClient({ structures }: { structures: Structure[] })
                   <span className="text-xs font-semibold uppercase tracking-wider text-white/70">Annuaire national</span>
                 </div>
                 <h1 className="text-2xl sm:text-3xl lg:text-4xl font-extrabold text-white leading-tight mb-3">
-                  Lieux de prise en charge adapt&eacute;s TND
+                  {isRegionPage
+                    ? <>Structures TND en {regionName}</>
+                    : <>Lieux de prise en charge adapt&eacute;s TND</>
+                  }
                 </h1>
                 <p className="text-sm sm:text-base text-white/80 leading-relaxed max-w-xl">
-                  Trouvez les structures sp&eacute;cialis&eacute;es dans l&rsquo;accompagnement des troubles du neurod&eacute;veloppement pr&egrave;s de chez vous. <strong className="text-white">{structures.length.toLocaleString('fr-FR')}</strong> lieux r&eacute;f&eacute;renc&eacute;s en France.
+                  {isRegionPage
+                    ? <>Trouvez les structures sp&eacute;cialis&eacute;es dans l&rsquo;accompagnement des troubles du neurod&eacute;veloppement en <strong className="text-white">{regionName}</strong>. <strong className="text-white">{structures.length.toLocaleString('fr-FR')}</strong> lieux r&eacute;f&eacute;renc&eacute;s.</>
+                    : <>Trouvez les structures sp&eacute;cialis&eacute;es dans l&rsquo;accompagnement des troubles du neurod&eacute;veloppement pr&egrave;s de chez vous. <strong className="text-white">{structures.length.toLocaleString('fr-FR')}</strong> lieux r&eacute;f&eacute;renc&eacute;s en France.</>
+                  }
                 </p>
               </div>
               <div className="hidden sm:flex flex-col items-center gap-1 bg-white/15 rounded-xl px-6 py-4 backdrop-blur-sm flex-shrink-0">
@@ -220,14 +252,16 @@ export default function LieuxClient({ structures }: { structures: Structure[] })
       {/* Filtres sticky */}
       <div className="sticky top-14 z-30 border-t border-b border-gray-200" style={{ backgroundColor: '#fdf9f4' }}>
         <div className="max-w-6xl mx-auto px-4 sm:px-6 py-3 flex flex-wrap gap-3 items-center">
-          <select
-            value={region}
-            onChange={e => { setRegion(e.target.value); setPage(1); }}
-            className="px-3 py-2.5 bg-white border border-gray-200 rounded-lg text-sm text-gray-700 min-w-[200px] focus:outline-none focus:ring-2 focus:ring-teal-200"
-          >
-            <option value="">Toutes les r&eacute;gions</option>
-            {REGIONS.map(r => <option key={r} value={r}>{r}</option>)}
-          </select>
+          {!isRegionPage && (
+            <select
+              value={region}
+              onChange={e => { setRegion(e.target.value); setPage(1); }}
+              className="px-3 py-2.5 bg-white border border-gray-200 rounded-lg text-sm text-gray-700 min-w-[200px] focus:outline-none focus:ring-2 focus:ring-teal-200"
+            >
+              <option value="">Toutes les r&eacute;gions</option>
+              {REGIONS.map(r => <option key={r} value={r}>{r}</option>)}
+            </select>
+          )}
 
           <select
             value={type}
@@ -254,6 +288,30 @@ export default function LieuxClient({ structures }: { structures: Structure[] })
       {/* Carte */}
       <div className="max-w-6xl mx-auto px-4 sm:px-6 pt-6">
         <StructuresMap structures={filtered} />
+      </div>
+
+      {/* CTA Conversion Block */}
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 pt-6">
+        <div className="bg-white rounded-xl border border-gray-200 p-6 sm:p-8 flex flex-col sm:flex-row items-center gap-4 sm:gap-8">
+          <div className="flex-1 text-center sm:text-left">
+            <h2 className="text-lg sm:text-xl font-bold text-gray-800 mb-1">
+              Ces structures ont des d&eacute;lais d&rsquo;attente&nbsp;?
+            </h2>
+            <p className="text-sm text-gray-500 leading-relaxed">
+              Trouvez un professionnel disponible maintenant sur NeuroCare
+            </p>
+          </div>
+          <Link
+            href="/search"
+            className="inline-flex items-center gap-2 px-6 py-3 text-white text-sm font-semibold rounded-lg no-underline hover:opacity-90 transition-opacity flex-shrink-0"
+            style={{ backgroundColor: '#027e7e' }}
+          >
+            Rechercher un professionnel
+            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
+            </svg>
+          </Link>
+        </div>
       </div>
 
       {/* Résultats */}

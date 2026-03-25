@@ -135,6 +135,41 @@ export default function sitemap(): MetadataRoute.Sitemap {
       priority: 0.7,
     })),
 
+    // Annuaire TND — page principale
+    {
+      url: `${baseUrl}/ressources/lieux-adaptes`,
+      lastModified: currentDate,
+      changeFrequency: 'monthly',
+      priority: 0.9,
+    },
+
+    // Annuaire TND — pages par région
+    ...[
+      'auvergne-rhone-alpes',
+      'bourgogne-franche-comte',
+      'bretagne',
+      'centre-val-de-loire',
+      'corse',
+      'grand-est',
+      'guadeloupe',
+      'guyane',
+      'hauts-de-france',
+      'ile-de-france',
+      'la-reunion',
+      'martinique',
+      'mayotte',
+      'normandie',
+      'nouvelle-aquitaine',
+      'occitanie',
+      'pays-de-la-loire',
+      'provence-alpes-cote-dazur',
+    ].map((slug) => ({
+      url: `${baseUrl}/ressources/lieux-adaptes/${slug}`,
+      lastModified: currentDate,
+      changeFrequency: 'monthly' as const,
+      priority: 0.8,
+    })),
+
     // Communauté
     {
       url: `${baseUrl}/community`,
