@@ -4,6 +4,8 @@ import { Resend } from 'resend';
 import { assertAdmin } from '@/lib/assert-admin';
 import { logAdminAction } from '@/lib/admin-audit';
 
+export const dynamic = 'force-dynamic';
+
 export async function POST(request: NextRequest) {
   const { user, error: authError } = await assertAdmin();
   if (authError) return authError;

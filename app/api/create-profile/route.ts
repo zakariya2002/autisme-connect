@@ -2,6 +2,8 @@ import { createClient } from '@supabase/supabase-js';
 import { NextResponse } from 'next/server';
 import { assertAdmin } from '@/lib/assert-admin';
 
+export const dynamic = 'force-dynamic';
+
 // Client Supabase avec la clé SERVICE ROLE qui bypass RLS
 const supabaseAdmin = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,

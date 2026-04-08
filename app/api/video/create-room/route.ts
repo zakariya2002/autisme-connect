@@ -1,6 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { assertAuth } from '@/lib/assert-admin';
 
+export const dynamic = 'force-dynamic';
+
 export async function POST(request: NextRequest) {
   try {
     // Seuls les utilisateurs authentifies peuvent creer des salles video

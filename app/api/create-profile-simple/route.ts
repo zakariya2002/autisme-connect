@@ -3,6 +3,8 @@ import { NextResponse } from 'next/server';
 import { sendEducatorWelcomeEmail, sendFamilyWelcomeEmail } from '@/lib/email';
 import { assertAuth } from '@/lib/assert-admin';
 
+export const dynamic = 'force-dynamic';
+
 // Alternative approach: Using service_role key to bypass RLS
 const supabaseAdmin = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,

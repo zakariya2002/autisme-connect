@@ -2,6 +2,8 @@ import { NextResponse } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
 import { assertAdmin } from '@/lib/assert-admin';
 
+export const dynamic = 'force-dynamic';
+
 // Créer un client Supabase avec la clé service (accès admin)
 const supabaseAdmin = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,

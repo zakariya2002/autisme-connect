@@ -4,6 +4,8 @@ import Stripe from 'stripe';
 import { Resend } from 'resend';
 import { assertAuth } from '@/lib/assert-admin';
 
+export const dynamic = 'force-dynamic';
+
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY || 'sk_test_placeholder');
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
 const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY!;

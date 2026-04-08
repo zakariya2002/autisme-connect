@@ -3,6 +3,8 @@ import { createClient } from '@supabase/supabase-js';
 import { generateEducatorInvoicePDF, generateFamilyReceiptPDF } from '@/lib/invoice-generator';
 import { assertAuth } from '@/lib/assert-admin';
 
+export const dynamic = 'force-dynamic';
+
 const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
   process.env.SUPABASE_SERVICE_ROLE_KEY!
