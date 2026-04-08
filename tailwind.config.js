@@ -1,5 +1,6 @@
 /** @type {import('tailwindcss').Config} */
 module.exports = {
+  darkMode: 'class',
   content: [
     './pages/**/*.{js,ts,jsx,tsx,mdx}',
     './components/**/*.{js,ts,jsx,tsx,mdx}',
@@ -19,6 +20,22 @@ module.exports = {
           700: '#6d28d9',
           800: '#5b21b6',
           900: '#4c1d95',
+        },
+        // Admin dark theme tokens — "violet très foncé"
+        admin: {
+          // Light mode surfaces
+          'bg-light': '#ffffff',
+          'surface-light': '#f9fafb',
+          'border-light': '#e5e7eb',
+          'text-light': '#111827',
+          'muted-light': '#6b7280',
+          // Dark mode surfaces (deep dark purple)
+          'bg-dark': '#0f0a1a',
+          'surface-dark': '#1a0f2e',
+          'surface-dark-2': '#241640',
+          'border-dark': '#2d1b4e',
+          'text-dark': '#f9fafb',
+          'muted-dark': '#9ca3af',
         },
       },
       keyframes: {
