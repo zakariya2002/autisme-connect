@@ -184,10 +184,10 @@ export default function DiplomePage() {
           setMessage({ type: 'info', text: `Document analysé. Vérification manuelle recommandée.` });
         }
       } else {
-        setMessage({ type: 'error', text: 'Erreur lors de l\'analyse OCR.' });
+        setMessage({ type: 'info', text: 'Vous pouvez remplir les champs ci-dessous manuellement, puis envoyer votre diplôme.' });
       }
     } catch (error) {
-      setMessage({ type: 'error', text: 'Erreur lors de l\'analyse.' });
+      setMessage({ type: 'info', text: 'Vous pouvez remplir les champs ci-dessous manuellement, puis envoyer votre diplôme.' });
     } finally {
       setAnalyzing(false);
     }
