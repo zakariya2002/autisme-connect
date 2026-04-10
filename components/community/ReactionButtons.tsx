@@ -11,6 +11,7 @@ interface ReactionButtonsProps {
   userReactions?: ReactionType[];
   size?: 'sm' | 'md';
   className?: string;
+  onAuthRequired?: () => void;
 }
 
 export default function ReactionButtons({
@@ -19,7 +20,8 @@ export default function ReactionButtons({
   reactionsCount,
   userReactions = [],
   size = 'md',
-  className = ''
+  className = '',
+  onAuthRequired,
 }: ReactionButtonsProps) {
   const [isPending, startTransition] = useTransition();
   const [localReactions, setLocalReactions] = useState<ReactionType[]>(userReactions);
@@ -31,6 +33,10 @@ export default function ReactionButtons({
   };
 
   const handleReaction = (reactionType: ReactionType) => {
+    if (onAuthRequired) {
+      onAuthRequired();
+      return;
+    }
     const hasReaction = localReactions.includes(reactionType);
 
     // Optimistic update

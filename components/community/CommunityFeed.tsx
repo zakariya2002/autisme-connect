@@ -5,12 +5,14 @@ import { CommunityPost, PostCategory, PostsQueryParams } from '@/types/community
 import { getPosts } from '@/lib/community/actions';
 import PostCard from './PostCard';
 import CategoryFilter from './CategoryFilter';
+import AuthPromptModal from './AuthPromptModal';
 import Link from 'next/link';
 
 interface CommunityFeedProps {
   initialPosts?: CommunityPost[];
   initialTotal?: number;
   showCreateButton?: boolean;
+  isAuthenticated?: boolean;
   className?: string;
 }
 
@@ -18,6 +20,7 @@ export default function CommunityFeed({
   initialPosts = [],
   initialTotal = 0,
   showCreateButton = true,
+  isAuthenticated = false,
   className = ''
 }: CommunityFeedProps) {
   const [posts, setPosts] = useState<CommunityPost[]>(initialPosts);
@@ -27,6 +30,7 @@ export default function CommunityFeed({
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(Math.ceil(initialTotal / 10));
   const [isLoading, setIsLoading] = useState(false);
+  const [showAuthModal, setShowAuthModal] = useState(false);
 
   const fetchPosts = useCallback(async (params: PostsQueryParams) => {
     setIsLoading(true);
@@ -78,7 +82,7 @@ export default function CommunityFeed({
             </svg>
           </div>
         </form>
-        {showCreateButton && (
+        {showCreateButton ? (
           <Link
             href="/community/new"
             className="inline-flex items-center justify-center gap-2 px-4 sm:px-6 py-2.5 sm:py-3 text-white font-semibold rounded-xl hover:opacity-90 transition-all shadow-md hover:shadow-lg text-sm sm:text-base"
@@ -90,6 +94,18 @@ export default function CommunityFeed({
             <span className="hidden xs:inline">Créer un post</span>
             <span className="xs:hidden">Publier</span>
           </Link>
+        ) : (
+          <button
+            onClick={() => setShowAuthModal(true)}
+            className="inline-flex items-center justify-center gap-2 px-4 sm:px-6 py-2.5 sm:py-3 text-white font-semibold rounded-xl hover:opacity-90 transition-all shadow-md hover:shadow-lg text-sm sm:text-base"
+            style={{ backgroundColor: '#027e7e' }}
+          >
+            <svg className="w-4 h-4 sm:w-5 sm:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
+            </svg>
+            <span className="hidden xs:inline">Créer un post</span>
+            <span className="xs:hidden">Publier</span>
+          </button>
         )}
       </div>
 
@@ -178,7 +194,11 @@ export default function CommunityFeed({
       ) : (
         <div className="space-y-4">
           {posts.map((post) => (
-            <PostCard key={post.id} post={post} />
+            <PostCard
+              key={post.id}
+              post={post}
+              onAuthRequired={!isAuthenticated ? () => setShowAuthModal(true) : undefined}
+            />
           ))}
         </div>
       )}
@@ -235,6 +255,7 @@ export default function CommunityFeed({
           </button>
         </div>
       )}
+      <AuthPromptModal open={showAuthModal} onClose={() => setShowAuthModal(false)} />
     </div>
   );
 }

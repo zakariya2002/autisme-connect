@@ -132,6 +132,7 @@ export default function CommunityPage() {
           initialPosts={posts}
           initialTotal={totalPosts}
           showCreateButton={!!userRole}
+          isAuthenticated={!!userId}
         />
       </main>
 

@@ -10,9 +10,10 @@ import { fr } from 'date-fns/locale';
 interface PostCardProps {
   post: CommunityPost;
   className?: string;
+  onAuthRequired?: () => void;
 }
 
-export default function PostCard({ post, className = '' }: PostCardProps) {
+export default function PostCard({ post, className = '', onAuthRequired }: PostCardProps) {
   const categoryInfo = CATEGORY_INFO[post.category];
   const timeAgo = formatDistanceToNow(new Date(post.created_at), {
     addSuffix: true,
@@ -72,6 +73,7 @@ export default function PostCard({ post, className = '' }: PostCardProps) {
             reactionsCount={post.reactions_count}
             userReactions={post.user_reactions}
             size="sm"
+            onAuthRequired={onAuthRequired}
           />
 
           <div className="flex items-center gap-2 sm:gap-4 text-[10px] sm:text-xs text-gray-500">

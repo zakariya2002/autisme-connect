@@ -11,6 +11,7 @@ import EducatorNavbar from '@/components/EducatorNavbar';
 import AuthorBadge from '@/components/community/AuthorBadge';
 import ReactionButtons from '@/components/community/ReactionButtons';
 import CommentSection from '@/components/community/CommentSection';
+import AuthPromptModal from '@/components/community/AuthPromptModal';
 import { formatDistanceToNow, format } from 'date-fns';
 import { fr } from 'date-fns/locale';
 import { useToast } from '@/components/Toast';
@@ -32,6 +33,7 @@ export default function PostDetailPage() {
   const [reportReason, setReportReason] = useState('');
   const [isReporting, setIsReporting] = useState(false);
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
+  const [showAuthModal, setShowAuthModal] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   useEffect(() => {
@@ -322,6 +324,7 @@ export default function PostDetailPage() {
                 reactionsCount={post.reactions_count}
                 userReactions={post.user_reactions}
                 size="md"
+                onAuthRequired={!userId ? () => setShowAuthModal(true) : undefined}
               />
 
               <div className="flex items-center gap-2">
@@ -411,6 +414,8 @@ export default function PostDetailPage() {
           </div>
         </div>
       )}
+
+      <AuthPromptModal open={showAuthModal} onClose={() => setShowAuthModal(false)} />
     </div>
   );
 }

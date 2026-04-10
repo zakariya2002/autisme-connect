@@ -4,6 +4,7 @@ import { useState, useTransition } from 'react';
 import { CommunityComment } from '@/types/community';
 import { addComment } from '@/lib/community/actions';
 import CommentCard from './CommentCard';
+import Link from 'next/link';
 
 interface CommentSectionProps {
   postId: string;
@@ -111,13 +112,23 @@ export default function CommentSection({
         </form>
       ) : (
         <div className="bg-gray-50 rounded-xl p-6 text-center mb-6">
-          <p className="text-gray-600 mb-3">Connectez-vous pour participer à la discussion</p>
-          <a
-            href="/auth/login"
-            className="inline-flex items-center gap-2 px-5 py-2.5 bg-teal-600 text-white font-medium rounded-lg hover:bg-teal-700 transition-colors"
-          >
-            Se connecter
-          </a>
+          <p className="text-gray-600 mb-3">Connectez-vous ou inscrivez-vous pour participer à la discussion</p>
+          <div className="flex gap-3 justify-center">
+            <Link
+              href="/auth/login"
+              className="px-5 py-2.5 border-2 font-semibold rounded-lg text-sm transition-colors hover:bg-gray-50"
+              style={{ borderColor: '#027e7e', color: '#027e7e' }}
+            >
+              Connexion
+            </Link>
+            <Link
+              href="/auth/register"
+              className="px-5 py-2.5 text-white font-semibold rounded-lg text-sm transition-colors hover:opacity-90"
+              style={{ backgroundColor: '#027e7e' }}
+            >
+              S&apos;inscrire
+            </Link>
+          </div>
         </div>
       )}
 
