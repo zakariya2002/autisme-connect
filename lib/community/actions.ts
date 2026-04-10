@@ -17,8 +17,8 @@ import {
 } from '@/types/community';
 
 // Create authenticated Supabase client for server actions
-function createSupabaseServerClient() {
-  const cookieStore = cookies();
+async function createSupabaseServerClient() {
+  const cookieStore = await cookies();
 
   return createServerClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -65,7 +65,7 @@ function generateAnonymousName(): string {
 }
 
 // Helper to get user's role
-async function getUserRole(supabase: ReturnType<typeof createSupabaseServerClient>, userId: string): Promise<AuthorRole> {
+async function getUserRole(supabase: Awaited<ReturnType<typeof createSupabaseServerClient>>, userId: string): Promise<AuthorRole> {
   // Check if user is an educator
   const { data: educator } = await supabase
     .from('educator_profiles')
@@ -94,7 +94,7 @@ interface FamilyProfileData {
 }
 
 async function getAuthorProfile(
-  supabase: ReturnType<typeof createSupabaseServerClient>,
+  supabase: Awaited<ReturnType<typeof createSupabaseServerClient>>,
   authorId: string,
   authorRole: AuthorRole
 ): Promise<AuthorProfile | null> {
@@ -143,7 +143,7 @@ async function getAuthorProfile(
 // ============================================
 
 export async function getPosts(params: PostsQueryParams = {}): Promise<PostsResponse> {
-  const supabase = createSupabaseServerClient();
+  const supabase = await createSupabaseServerClient();
 
   const { category, search, page = 1, limit = 10, sortBy = 'recent' } = params;
   const offset = (page - 1) * limit;
@@ -227,7 +227,7 @@ export async function getPosts(params: PostsQueryParams = {}): Promise<PostsResp
 }
 
 export async function getPostById(postId: string): Promise<CommunityPost | null> {
-  const supabase = createSupabaseServerClient();
+  const supabase = await createSupabaseServerClient();
 
   const { data: post, error } = await supabase
     .from('community_posts')
@@ -273,7 +273,7 @@ export async function getPostById(postId: string): Promise<CommunityPost | null>
 }
 
 export async function createPost(data: CreatePostData): Promise<{ success: boolean; postId?: string; error?: string }> {
-  const supabase = createSupabaseServerClient();
+  const supabase = await createSupabaseServerClient();
 
   const { data: { session } } = await supabase.auth.getSession();
   if (!session?.user) {
@@ -306,7 +306,7 @@ export async function createPost(data: CreatePostData): Promise<{ success: boole
 }
 
 export async function deletePost(postId: string): Promise<{ success: boolean; error?: string }> {
-  const supabase = createSupabaseServerClient();
+  const supabase = await createSupabaseServerClient();
 
   const { data: { session } } = await supabase.auth.getSession();
   if (!session?.user) {
@@ -332,7 +332,7 @@ export async function deletePost(postId: string): Promise<{ success: boolean; er
 // ============================================
 
 export async function getComments(postId: string): Promise<CommunityComment[]> {
-  const supabase = createSupabaseServerClient();
+  const supabase = await createSupabaseServerClient();
 
   const { data: comments, error } = await supabase
     .from('community_comments')
@@ -403,7 +403,7 @@ export async function getComments(postId: string): Promise<CommunityComment[]> {
 }
 
 export async function addComment(data: CreateCommentData): Promise<{ success: boolean; commentId?: string; error?: string }> {
-  const supabase = createSupabaseServerClient();
+  const supabase = await createSupabaseServerClient();
 
   const { data: { session } } = await supabase.auth.getSession();
   if (!session?.user) {
@@ -436,7 +436,7 @@ export async function addComment(data: CreateCommentData): Promise<{ success: bo
 }
 
 export async function deleteComment(commentId: string): Promise<{ success: boolean; error?: string }> {
-  const supabase = createSupabaseServerClient();
+  const supabase = await createSupabaseServerClient();
 
   const { data: { session } } = await supabase.auth.getSession();
   if (!session?.user) {
@@ -466,7 +466,7 @@ export async function toggleReaction(
   targetId: string,
   reactionType: ReactionType
 ): Promise<{ success: boolean; added: boolean; error?: string }> {
-  const supabase = createSupabaseServerClient();
+  const supabase = await createSupabaseServerClient();
 
   const { data: { session } } = await supabase.auth.getSession();
   if (!session?.user) {
@@ -525,7 +525,7 @@ export async function reportContent(
   targetId: string,
   reason: string
 ): Promise<{ success: boolean; error?: string }> {
-  const supabase = createSupabaseServerClient();
+  const supabase = await createSupabaseServerClient();
 
   const { data: { session } } = await supabase.auth.getSession();
   if (!session?.user) {
@@ -556,7 +556,7 @@ export async function reportContent(
 // ============================================
 
 export async function getRecentPosts(limit: number = 4): Promise<CommunityPost[]> {
-  const supabase = createSupabaseServerClient();
+  const supabase = await createSupabaseServerClient();
 
   const { data: posts, error } = await supabase
     .from('community_posts')

@@ -15,7 +15,7 @@ export async function assertAdmin(): Promise<{
   user: { id: string; email?: string } | null;
   error: NextResponse | null;
 }> {
-  const cookieStore = cookies();
+  const cookieStore = await cookies();
 
   const supabase = createServerClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -63,7 +63,7 @@ export async function assertAuth(): Promise<{
   user: { id: string; email?: string; role: string } | null;
   error: NextResponse | null;
 }> {
-  const cookieStore = cookies();
+  const cookieStore = await cookies();
 
   const supabase = createServerClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
