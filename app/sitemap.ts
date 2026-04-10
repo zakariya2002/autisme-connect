@@ -1,8 +1,32 @@
 import { MetadataRoute } from 'next'
+import { createClient } from '@supabase/supabase-js'
 
-export default function sitemap(): MetadataRoute.Sitemap {
+export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const baseUrl = 'https://neuro-care.fr'
   const currentDate = new Date()
+
+  // Fetch all public educator profile IDs for dynamic sitemap entries
+  let educatorEntries: MetadataRoute.Sitemap = []
+  try {
+    const supabase = createClient(
+      process.env.NEXT_PUBLIC_SUPABASE_URL!,
+      process.env.SUPABASE_SERVICE_ROLE_KEY!
+    )
+    const { data: educators } = await supabase
+      .from('public_educator_profiles')
+      .select('id')
+
+    if (educators && educators.length > 0) {
+      educatorEntries = educators.map((e) => ({
+        url: `${baseUrl}/educator/${e.id}`,
+        lastModified: currentDate,
+        changeFrequency: 'weekly' as const,
+        priority: 0.8,
+      }))
+    }
+  } catch {
+    // Silently ignore — sitemap still works without educator entries
+  }
 
   return [
     // Page d'accueil — mot-clé principal : "éducateur autisme"
@@ -218,5 +242,8 @@ export default function sitemap(): MetadataRoute.Sitemap {
       changeFrequency: 'yearly' as const,
       priority: 0.2,
     })),
+
+    // Profils éducateurs — pages dynamiques
+    ...educatorEntries,
   ]
 }
