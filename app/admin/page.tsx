@@ -6,7 +6,6 @@ import { supabase } from '@/lib/supabase';
 import { StatCard, Card } from '@/components/admin/ui';
 
 interface Stats {
-  pendingCertifications: number;
   pendingAvatars: number;
   pendingVerifications: number;
   pendingBlogPosts: number;
@@ -18,7 +17,6 @@ export default function AdminDashboard() {
   const router = useRouter();
   const [loading, setLoading] = useState(true);
   const [stats, setStats] = useState<Stats>({
-    pendingCertifications: 0,
     pendingAvatars: 0,
     pendingVerifications: 0,
     pendingBlogPosts: 0,
@@ -46,7 +44,6 @@ export default function AdminDashboard() {
       if (!res.ok) throw new Error('Erreur chargement stats');
       const data = await res.json();
       setStats({
-        pendingCertifications: data.pendingCertifications || 0,
         pendingAvatars: data.pendingAvatars || 0,
         pendingVerifications: data.pendingVerifications || 0,
         pendingBlogPosts: data.pendingBlogPosts || 0,
@@ -70,7 +67,6 @@ export default function AdminDashboard() {
   }
 
   const totalPending =
-    stats.pendingCertifications +
     stats.pendingAvatars +
     stats.pendingVerifications +
     stats.pendingBlogPosts;
@@ -92,7 +88,7 @@ export default function AdminDashboard() {
         <h2 className="text-xs font-semibold uppercase tracking-wider text-gray-500 dark:text-admin-muted-dark mb-3">
           À modérer ({totalPending})
         </h2>
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+        <div className="grid grid-cols-2 lg:grid-cols-3 gap-4">
           <StatCard
             label="Vérifications"
             value={stats.pendingVerifications}
@@ -101,17 +97,6 @@ export default function AdminDashboard() {
             icon={
               <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
-              </svg>
-            }
-          />
-          <StatCard
-            label="Certifications"
-            value={stats.pendingCertifications}
-            href="/admin/certifications"
-            hint="à approuver"
-            icon={
-              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z" />
               </svg>
             }
           />
