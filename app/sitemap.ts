@@ -151,6 +151,8 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       'nutrition',
       'preparer-consultation',
       'psychomotricien',
+      'quel-professionnel-choisir-tnd',
+      'signes-autisme-enfant',
       'temoignage-famille',
     ].map((slug) => ({
       url: `${baseUrl}/blog/${slug}`,

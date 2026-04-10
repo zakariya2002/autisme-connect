@@ -81,6 +81,30 @@ const editorialArticles = [
     created_at: '2024-12-25T10:00:00Z',
     author: { first_name: 'Équipe', last_name: 'NeuroCare' },
   },
+  {
+    id: 'editorial-7',
+    slug: 'signes-autisme-enfant',
+    title: 'Quels sont les signes de l\'autisme chez l\'enfant ? Guide pour les parents',
+    excerpt: 'Repérez les premiers signes de l\'autisme chez votre enfant : signaux à 6 mois, 12 mois, 2 ans et 3 ans. Quand consulter et quelles démarches entreprendre.',
+    category: 'daily_life',
+    image_url: '/images/articles/signes-autisme.jpg',
+    read_time_minutes: 8,
+    published_at: '2026-04-08T10:00:00Z',
+    created_at: '2026-04-08T10:00:00Z',
+    author: { first_name: 'Équipe', last_name: 'NeuroCare' },
+  },
+  {
+    id: 'editorial-8',
+    slug: 'quel-professionnel-choisir-tnd',
+    title: 'Quel professionnel pour votre enfant autiste ou TDAH ? Le guide complet',
+    excerpt: 'Éducateur spécialisé, psychologue, orthophoniste, psychomotricien, ergothérapeute, neuropsychologue : quel professionnel choisir pour accompagner un enfant TND ?',
+    category: 'professionals',
+    image_url: '/images/articles/choisir-professionnel.jpg',
+    read_time_minutes: 9,
+    published_at: '2026-04-08T10:00:00Z',
+    created_at: '2026-04-08T10:00:00Z',
+    author: { first_name: 'Équipe', last_name: 'NeuroCare' },
+  },
 ];
 
 export default function BlogPage() {
