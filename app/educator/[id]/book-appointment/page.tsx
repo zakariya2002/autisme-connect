@@ -28,6 +28,7 @@ interface DailyAvailability {
   start_time: string;
   end_time: string;
   is_available: boolean;
+  work_location_id: string | null;
 }
 
 interface Appointment {
@@ -181,13 +182,11 @@ export default function BookAppointmentPage({ params }: { params: { id: string }
           .from('educator_work_locations')
           .select('id, name, address, location_type')
           .eq('educator_id', params.id)
-          .eq('is_active', true)
-          .eq('location_type', 'office'),
+          .eq('is_active', true),
       ]);
 
-      if (locResult.data && locResult.data.length > 0) {
+      if (locResult.data) {
         setOfficeLocations(locResult.data);
-        setSelectedOfficeId(locResult.data.find((l: WorkLocation) => l.address)?.id || locResult.data[0].id);
       }
 
       if (availResult.data) {
@@ -349,6 +348,7 @@ export default function BookAppointmentPage({ params }: { params: { id: string }
 
     setSelectedDate(dateStr);
     setSelectedSlots([]);
+    setLocationType('online');
   };
 
   const toggleSlotSelection = (slotStart: string, availableSlots: TimeSlot[]) => {
@@ -447,8 +447,8 @@ export default function BookAppointmentPage({ params }: { params: { id: string }
           address: locationType === 'home'
             ? address
             : locationType === 'office'
-              ? (officeLocations.length > 0
-                  ? (officeLocations.find(l => l.id === selectedOfficeId)?.address || officeLocations[0].address)
+              ? (selectedOfficeId
+                  ? (officeLocations.find(l => l.id === selectedOfficeId)?.address || null)
                   : educator?.cabinet_address)
               : null,
           familyNotes,
@@ -799,13 +799,26 @@ export default function BookAppointmentPage({ params }: { params: { id: string }
             </div>
 
             {/* Type de rendez-vous et reste du formulaire */}
-            {selectedSlots.length > 0 && (
+            {selectedSlots.length > 0 && (() => {
+              // Compute office locations linked to selected slots
+              const selectedAvails = availabilities.filter(
+                a => a.availability_date === selectedDate && selectedSlots.includes(a.start_time)
+              );
+              const linkedLocationIds = [...new Set(
+                selectedAvails.map(a => a.work_location_id).filter(Boolean) as string[]
+              )];
+              const linkedOffices = officeLocations.filter(
+                l => l.location_type === 'office' && linkedLocationIds.includes(l.id)
+              );
+              const showOfficeOption = linkedOffices.length > 0;
+
+              return (
               <div className="bg-white rounded-xl shadow-sm p-4 sm:p-6 space-y-6 border border-gray-100">
                 <div>
                   <label className="block text-sm font-semibold text-gray-900 mb-3">
                     {children.length > 0 ? '3.' : '2.'} Type de rendez-vous <span className="text-red-600" aria-label="requis">*</span>
                   </label>
-                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                  <div className={`grid grid-cols-1 ${showOfficeOption ? 'sm:grid-cols-3' : 'sm:grid-cols-2'} gap-3`}>
                     <button
                       type="button"
                       onClick={() => setLocationType('online')}
@@ -836,10 +849,15 @@ export default function BookAppointmentPage({ params }: { params: { id: string }
                       <p className="font-semibold text-gray-900">À domicile</p>
                       <p className="text-xs text-gray-600 mt-1">Chez vous</p>
                     </button>
-                    {(officeLocations.length > 0 || educator?.cabinet_address) && (
+                    {showOfficeOption && (
                       <button
                         type="button"
-                        onClick={() => setLocationType('office')}
+                        onClick={() => {
+                          setLocationType('office');
+                          if (!selectedOfficeId || !linkedOffices.find(l => l.id === selectedOfficeId)) {
+                            setSelectedOfficeId(linkedOffices[0].id);
+                          }
+                        }}
                         className={`p-4 rounded-lg border-2 transition ${
                           locationType === 'office'
                             ? 'border-gray-200'
@@ -856,17 +874,16 @@ export default function BookAppointmentPage({ params }: { params: { id: string }
                   </div>
                 </div>
 
-                {locationType === 'office' && (officeLocations.length > 0 || educator?.cabinet_address) && (
+                {locationType === 'office' && showOfficeOption && (
                   <div className="bg-gray-50 rounded-lg p-3 border border-gray-200">
                     <p className="text-sm font-medium text-gray-700 mb-1">Adresse du cabinet</p>
-                    {officeLocations.length > 1 ? (
+                    {linkedOffices.length > 1 ? (
                       <select
                         value={selectedOfficeId || ''}
                         onChange={(e) => setSelectedOfficeId(e.target.value)}
                         className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:border-transparent"
-                        style={{ focusRingColor: '#027e7e' } as any}
                       >
-                        {officeLocations.map((loc) => (
+                        {linkedOffices.map((loc) => (
                           <option key={loc.id} value={loc.id}>
                             {loc.name}{loc.address ? ` — ${loc.address}` : ''}
                           </option>
@@ -874,9 +891,7 @@ export default function BookAppointmentPage({ params }: { params: { id: string }
                       </select>
                     ) : (
                       <p className="text-sm text-gray-900">
-                        {officeLocations.length === 1
-                          ? `${officeLocations[0].name}${officeLocations[0].address ? ` — ${officeLocations[0].address}` : ''}`
-                          : educator?.cabinet_address}
+                        {linkedOffices[0].name}{linkedOffices[0].address ? ` — ${linkedOffices[0].address}` : ''}
                       </p>
                     )}
                   </div>
@@ -977,7 +992,8 @@ export default function BookAppointmentPage({ params }: { params: { id: string }
                   </button>
                 </div>
               </div>
-            )}
+              );
+            })()}
           </form>
         )}
       </div>
