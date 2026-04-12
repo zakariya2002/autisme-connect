@@ -190,9 +190,23 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Get email
-    const { data: userData } = await supabase.auth.admin.getUserById(educator.user_id);
-    const educatorEmail = userData?.user?.email;
+    // Get email (validate UUID first)
+    const UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+    if (!UUID_RE.test(educator.user_id)) {
+      return NextResponse.json(
+        { success: false, message: 'ID utilisateur invalide pour cet éducateur' },
+        { status: 400 }
+      );
+    }
+
+    let educatorEmail: string | undefined;
+    try {
+      const { data: userData } = await supabase.auth.admin.getUserById(educator.user_id);
+      educatorEmail = userData?.user?.email;
+    } catch {
+      // Auth user may have been deleted
+    }
+
     if (!educatorEmail) {
       return NextResponse.json(
         { success: false, message: 'Email introuvable pour cet éducateur' },

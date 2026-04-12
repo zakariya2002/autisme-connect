@@ -52,6 +52,7 @@ export default function AdminRelances() {
   const [bulkSending, setBulkSending] = useState(false);
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const [previewTemplate, setPreviewTemplate] = useState<'j1' | 'j3' | 'j7' | null>(null);
 
   const checkAccess = useCallback(async () => {
     const { data: { session } } = await supabase.auth.getSession();
@@ -265,14 +266,16 @@ export default function AdminRelances() {
         </Button>
       </div>
 
-      {/* Template legend */}
+      {/* Template legend — clickable to preview */}
       <Card padding="sm">
         <div className="flex flex-wrap items-center gap-4 px-2">
           <span className="text-xs font-medium text-gray-500 dark:text-admin-muted-dark uppercase tracking-wide">
             Templates :
           </span>
           {Object.entries(templateLabels).map(([key, { label, variant }]) => (
-            <Badge key={key} variant={variant}>{label}</Badge>
+            <button key={key} onClick={() => setPreviewTemplate(key as 'j1' | 'j3' | 'j7')}>
+              <Badge variant={variant}>{label}</Badge>
+            </button>
           ))}
         </div>
       </Card>
@@ -385,6 +388,75 @@ export default function AdminRelances() {
           </table>
         </div>
       </Card>
+      {/* Template preview modal */}
+      {previewTemplate && (
+        <TemplatePreviewModal
+          template={previewTemplate}
+          onClose={() => setPreviewTemplate(null)}
+        />
+      )}
+    </div>
+  );
+}
+
+// ─── Template Preview Modal ───────────────────────────────────────────────
+
+function TemplatePreviewModal({ template, onClose }: { template: 'j1' | 'j3' | 'j7'; onClose: () => void }) {
+  const [html, setHtml] = useState<string | null>(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    fetch(`/api/admin/relances/preview?template=${template}`)
+      .then(res => res.json())
+      .then(data => { setHtml(data.html || null); setLoading(false); })
+      .catch(() => setLoading(false));
+  }, [template]);
+
+  const titles: Record<string, string> = {
+    j1: 'J+1 — Bienvenue',
+    j3: 'J+3 — Rappel',
+    j7: 'J+7 — Dernier rappel',
+  };
+
+  return (
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm">
+      <div className="bg-white dark:bg-admin-surface-dark border border-gray-200 dark:border-admin-border-dark rounded-xl shadow-sm max-w-2xl w-full max-h-[90vh] flex flex-col">
+        {/* Header */}
+        <div className="flex items-center justify-between px-5 py-3 border-b border-gray-200 dark:border-admin-border-dark flex-shrink-0">
+          <h3 className="font-semibold text-gray-900 dark:text-admin-text-dark">
+            {titles[template]}
+          </h3>
+          <button
+            onClick={onClose}
+            className="p-1.5 rounded-lg hover:bg-gray-100 dark:hover:bg-admin-surface-dark-2 text-gray-500"
+          >
+            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+            </svg>
+          </button>
+        </div>
+        {/* Body */}
+        <div className="overflow-y-auto flex-1 min-h-0 p-1 bg-gray-100 dark:bg-admin-surface-dark-2">
+          {loading ? (
+            <div className="flex items-center justify-center py-20">
+              <div className="animate-spin rounded-full h-8 w-8 border-2 border-primary-200 border-t-primary-600" />
+            </div>
+          ) : html ? (
+            <iframe
+              srcDoc={html}
+              className="w-full h-[600px] bg-white rounded"
+              title="Apercu template"
+              sandbox=""
+            />
+          ) : (
+            <p className="text-center py-10 text-gray-500">Impossible de charger le template</p>
+          )}
+        </div>
+        {/* Footer */}
+        <div className="flex items-center justify-end px-5 py-3 border-t border-gray-200 dark:border-admin-border-dark flex-shrink-0">
+          <Button variant="secondary" onClick={onClose}>Fermer</Button>
+        </div>
+      </div>
     </div>
   );
 }
