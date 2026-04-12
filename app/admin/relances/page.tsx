@@ -67,13 +67,13 @@ export default function AdminRelances() {
   const loadData = async () => {
     try {
       const res = await fetch('/api/admin/relances');
-      if (!res.ok) throw new Error('Erreur chargement');
       const data = await res.json();
+      if (!res.ok) throw new Error(data.error || 'Erreur chargement');
       setEducators(data.educators);
       setStats(data.stats);
     } catch (error) {
       console.error('Erreur:', error);
-      setErrorMessage('Erreur lors du chargement des données');
+      setErrorMessage(error instanceof Error ? error.message : 'Erreur lors du chargement des données');
     }
   };
 

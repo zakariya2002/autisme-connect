@@ -136,8 +136,12 @@ export async function GET() {
       },
     });
   } catch (error: unknown) {
-    const message = error instanceof Error ? error.message : 'Erreur inconnue';
-    console.error('Erreur API relances GET:', message);
+    const message = error instanceof Error
+      ? error.message
+      : typeof error === 'object' && error !== null && 'message' in error
+        ? String((error as any).message)
+        : JSON.stringify(error);
+    console.error('Erreur API relances GET:', message, error);
     return NextResponse.json({ error: message }, { status: 500 });
   }
 }
