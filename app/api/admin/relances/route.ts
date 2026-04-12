@@ -82,11 +82,17 @@ export async function GET() {
           profile.user_id
         );
 
-        // Count uploaded documents
-        const { count } = await supabase
-          .from('verification_documents')
-          .select('*', { count: 'exact', head: true })
-          .eq('educator_id', profile.id);
+        // Count uploaded documents (graceful if table doesn't exist)
+        let count = 0;
+        try {
+          const { count: docCount, error: docError } = await supabase
+            .from('verification_documents')
+            .select('*', { count: 'exact', head: true })
+            .eq('educator_id', profile.id);
+          if (!docError) count = docCount || 0;
+        } catch {
+          // Table may not exist
+        }
 
         const daysSinceSignup = Math.floor(
           (Date.now() - new Date(profile.created_at).getTime()) / (1000 * 60 * 60 * 24)
@@ -107,7 +113,7 @@ export async function GET() {
           email: userData?.user?.email || 'N/A',
           created_at: profile.created_at,
           verification_status: profile.verification_status,
-          documents_count: count || 0,
+          documents_count: count,
           days_since_signup: daysSinceSignup,
           last_relance_at: relanceInfo?.last_sent_at || null,
           last_relance_template: relanceInfo?.last_template || null,

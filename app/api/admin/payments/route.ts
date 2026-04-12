@@ -21,40 +21,42 @@ export async function GET(request: NextRequest) {
     const daysAgo = new Date();
     daysAgo.setDate(daysAgo.getDate() - parseInt(period));
 
-    // 1. Rendez-vous avec paiements
-    let appointmentsQuery = supabase
-      .from('appointments')
-      .select(`
-        id,
-        appointment_date,
-        start_time,
-        price,
-        status,
-        payment_status,
-        payment_intent_id,
-        platform_commission,
-        educator_revenue,
-        created_at,
-        educator_id,
-        family_id
-      `)
-      .gte('created_at', daysAgo.toISOString())
-      .order('created_at', { ascending: false })
-      .limit(100);
+    // 1. Rendez-vous avec paiements (graceful if table doesn't exist)
+    let appointments: any[] = [];
+    try {
+      let appointmentsQuery = supabase
+        .from('appointments')
+        .select(`
+          id,
+          appointment_date,
+          start_time,
+          price,
+          status,
+          payment_status,
+          payment_intent_id,
+          platform_commission,
+          educator_revenue,
+          created_at,
+          educator_id,
+          family_id
+        `)
+        .gte('created_at', daysAgo.toISOString())
+        .order('created_at', { ascending: false })
+        .limit(100);
 
-    if (status !== 'all') {
-      appointmentsQuery = appointmentsQuery.eq('payment_status', status);
-    }
+      if (status !== 'all') {
+        appointmentsQuery = appointmentsQuery.eq('payment_status', status);
+      }
 
-    const { data: appointments, error: appointmentsError } = await appointmentsQuery;
-
-    if (appointmentsError) {
-      return NextResponse.json({ error: appointmentsError.message }, { status: 500 });
+      const { data, error: appointmentsError } = await appointmentsQuery;
+      if (!appointmentsError && data) appointments = data;
+    } catch {
+      // Table may not exist yet
     }
 
     // 2. Récupérer les profils éducateurs et familles pour les noms
-    const educatorIds = [...new Set(appointments?.map(a => a.educator_id) || [])];
-    const familyIds = [...new Set(appointments?.map(a => a.family_id) || [])];
+    const educatorIds = [...new Set(appointments.map(a => a.educator_id))];
+    const familyIds = [...new Set(appointments.map(a => a.family_id))];
 
     const [educatorsResult, familiesResult] = await Promise.all([
       educatorIds.length > 0
@@ -73,32 +75,38 @@ export async function GET(request: NextRequest) {
     );
 
     // 3. Calcul des statistiques
-    const completedAppointments = appointments?.filter(a =>
+    const completedAppointments = appointments.filter(a =>
       a.payment_status === 'captured' || a.payment_status === 'authorized' || a.status === 'completed'
-    ) || [];
+    );
 
     const totalRevenue = completedAppointments.reduce((sum, a) => sum + (a.price || 0), 0);
     const totalCommission = completedAppointments.reduce((sum, a) => sum + (a.platform_commission || 0), 0);
     const totalEducatorRevenue = completedAppointments.reduce((sum, a) => sum + (a.educator_revenue || 0), 0);
 
-    const failedPayments = appointments?.filter(a => a.payment_status === 'failed').length || 0;
-    const refundedPayments = appointments?.filter(a => a.payment_status === 'refunded').length || 0;
-    const pendingPayments = appointments?.filter(a => a.payment_status === 'authorized').length || 0;
+    const failedPayments = appointments.filter(a => a.payment_status === 'failed').length;
+    const refundedPayments = appointments.filter(a => a.payment_status === 'refunded').length;
+    const pendingPayments = appointments.filter(a => a.payment_status === 'authorized').length;
 
-    // 4. Transactions d'abonnements
-    const { data: subscriptionTransactions } = await supabase
-      .from('payment_transactions')
-      .select('id, amount, status, description, created_at, educator_id')
-      .gte('created_at', daysAgo.toISOString())
-      .order('created_at', { ascending: false })
-      .limit(50);
+    // 4. Transactions d'abonnements (graceful if table doesn't exist)
+    let subscriptionTransactions: any[] = [];
+    try {
+      const { data, error: txError } = await supabase
+        .from('payment_transactions')
+        .select('id, amount, status, description, created_at, educator_id')
+        .gte('created_at', daysAgo.toISOString())
+        .order('created_at', { ascending: false })
+        .limit(50);
+      if (!txError && data) subscriptionTransactions = data;
+    } catch {
+      // Table may not exist yet
+    }
 
-    const subscriptionRevenue = (subscriptionTransactions || [])
+    const subscriptionRevenue = subscriptionTransactions
       .filter(t => t.status === 'succeeded')
       .reduce((sum, t) => sum + (t.amount || 0), 0);
 
     // 5. Enrichir les rendez-vous avec les noms
-    const enrichedAppointments = (appointments || []).map(a => ({
+    const enrichedAppointments = appointments.map(a => ({
       ...a,
       educator_name: educators[a.educator_id] || 'Inconnu',
       family_name: families[a.family_id] || 'Inconnu',
@@ -110,14 +118,14 @@ export async function GET(request: NextRequest) {
         totalCommission,
         totalEducatorRevenue,
         subscriptionRevenue,
-        totalAppointments: appointments?.length || 0,
+        totalAppointments: appointments.length,
         completedAppointments: completedAppointments.length,
         failedPayments,
         refundedPayments,
         pendingPayments,
       },
       appointments: enrichedAppointments,
-      subscriptionTransactions: subscriptionTransactions || [],
+      subscriptionTransactions,
     });
 
   } catch (error: any) {
