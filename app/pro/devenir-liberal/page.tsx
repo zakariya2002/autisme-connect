@@ -42,10 +42,10 @@ export default function DevenirLiberalPage() {
           '@context': 'https://schema.org',
           '@type': 'FAQPage',
           mainEntity: [
-            { '@type': 'Question', name: 'Combien gagne un éducateur spécialisé libéral TND ?', acceptedAnswer: { '@type': 'Answer', text: 'Un éducateur TND libéral en micro-entreprise gagne en moyenne 2 700 € net/mois à 15h/semaine, 3 600 € à 20h/semaine et 5 400 € à 30h/semaine (tarif moyen 55 €/h, 44 semaines/an, charges 25,6%).' }},
+            { '@type': 'Question', name: 'Combien gagne un éducateur spécialisé libéral ?', acceptedAnswer: { '@type': 'Answer', text: 'Un éducateur libéral en micro-entreprise gagne en moyenne 2 700 € net/mois à 15h/semaine, 3 600 € à 20h/semaine et 5 400 € à 30h/semaine (tarif moyen 55 €/h, 44 semaines/an, charges 25,6%).' }},
             { '@type': 'Question', name: 'Quel statut juridique pour éducateur libéral ?', acceptedAnswer: { '@type': 'Answer', text: 'La micro-entreprise (auto-entrepreneur) est recommandée pour débuter : 25,6% de charges sur le CA en 2026, inscription gratuite, comptabilité simplifiée. Plafond : 77 700 €/an.' }},
             { '@type': 'Question', name: 'Faut-il un agrément MDPH pour exercer en libéral ?', acceptedAnswer: { '@type': 'Answer', text: 'Non, aucun agrément MDPH n\'est nécessaire. Le diplôme d\'État d\'éducateur spécialisé (DEES) suffit. Être référencé auprès des MDPH locales est cependant un excellent levier commercial.' }},
-            { '@type': 'Question', name: 'Comment trouver ses premiers clients en libéral ?', acceptedAnswer: { '@type': 'Answer', text: 'Créez votre profil sur NeuroCare pour être visible auprès des familles TND de votre ville. Les éducateurs NeuroCare reçoivent leurs premières demandes en moyenne sous 7 jours. Complétez avec votre réseau MDPH/CMP.' }},
+            { '@type': 'Question', name: 'Comment trouver ses premiers clients en libéral ?', acceptedAnswer: { '@type': 'Answer', text: 'Créez votre profil sur NeuroCare pour être visible auprès des familles de votre ville. Les éducateurs NeuroCare reçoivent leurs premières demandes en moyenne sous 7 jours. Complétez avec votre réseau MDPH/CMP.' }},
             { '@type': 'Question', name: 'Quelles sont les charges URSSAF éducateur libéral 2026 ?', acceptedAnswer: { '@type': 'Answer', text: 'En micro-entreprise BNC : 25,6% du chiffre d\'affaires en 2026 (tout inclus : maladie, retraite, CSG-CRDS). Avec l\'ACRE la 1ère année : environ 12,8%. Déclarations trimestrielles sur autoentrepreneur.urssaf.fr.' }},
             { '@type': 'Question', name: 'Combien coûte l\'assurance RC Pro éducateur ?', acceptedAnswer: { '@type': 'Answer', text: 'La RC Pro (Responsabilité Civile Professionnelle) coûte entre 150 et 350 € par an. Elle est indispensable pour exercer auprès d\'un public vulnérable.' }},
             { '@type': 'Question', name: 'Peut-on cumuler salarié et libéral éducateur ?', acceptedAnswer: { '@type': 'Answer', text: 'Oui, le cumul est possible et recommandé pour la transition. Vérifiez l\'absence de clause d\'exclusivité dans votre contrat. Commencez par 5-10h/semaine en libéral, puis passez à 100% quand votre agenda est rempli.' }},
@@ -76,7 +76,7 @@ export default function DevenirLiberalPage() {
                 <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-5xl xl:text-6xl font-extrabold text-white leading-[1.1] mb-5">
                   Devenir éducateur{' '}
                   <span className="relative inline-block">
-                    <span className="relative z-10" style={{ color: '#f0879f' }}>libéral TND</span>
+                    <span className="relative z-10" style={{ color: '#f0879f' }}>libéral</span>
                     <span className="absolute bottom-1 left-0 w-full h-3 bg-pink-500/20 rounded-full" aria-hidden="true" />
                   </span>
                 </h1>
@@ -102,19 +102,19 @@ export default function DevenirLiberalPage() {
 
                 <div className="flex flex-col sm:flex-row gap-3">
                   <a
-                    href="#checklist"
+                    href="#simulateur"
                     className="inline-flex items-center justify-center gap-2 px-7 py-3.5 rounded-xl font-bold text-lg transition-all shadow-xl hover:shadow-2xl hover:scale-[1.02] active:scale-[0.98]"
                     style={{ backgroundColor: '#f0879f', color: '#fff' }}
                   >
-                    Suis-je prêt ? Le diagnostic
+                    Simuler mes revenus
                     <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 14l-7 7m0 0l-7-7m7 7V3" /></svg>
                   </a>
-                  <a
-                    href="#simulateur"
+                  <Link
+                    href="/auth/register-educator"
                     className="inline-flex items-center justify-center gap-2 px-7 py-3.5 rounded-xl font-bold text-lg border-2 border-white/30 text-white transition-all hover:bg-white/10"
                   >
-                    Simuler mes revenus
-                  </a>
+                    Créer mon profil
+                  </Link>
                 </div>
               </div>
 
@@ -143,8 +143,9 @@ export default function DevenirLiberalPage() {
         </section>
 
         {/* ════════════════════════════════════════════ */}
-        {/* CHECKLIST DIAGNOSTIC                        */}
+        {/* CHECKLIST DIAGNOSTIC (masquée)              */}
         {/* ════════════════════════════════════════════ */}
+        {/*
         <section id="checklist" className="py-16 sm:py-20 lg:py-24 bg-white scroll-mt-20">
           <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="text-center mb-10">
@@ -159,7 +160,7 @@ export default function DevenirLiberalPage() {
 
             <div className="space-y-3">
               {[
-                'J\'ai au moins 3 ans d\'expérience en accompagnement TND',
+                'J\'ai au moins 3 ans d\'expérience en accompagnement éducatif',
                 'Je maîtrise au moins une méthode reconnue (ABA, TEACCH, PECS, Denver...)',
                 'J\'ai déjà un réseau de familles ou de professionnels qui pourraient me recommander',
                 'Je suis capable de gérer mon emploi du temps de manière autonome',
@@ -191,7 +192,6 @@ export default function DevenirLiberalPage() {
               ))}
             </div>
 
-            {/* Score */}
             <div className={`mt-8 p-6 rounded-2xl text-center transition-all ${
               score >= 7 ? 'bg-green-50 border-2 border-green-200' :
               score >= 4 ? 'bg-yellow-50 border-2 border-yellow-200' :
@@ -220,126 +220,7 @@ export default function DevenirLiberalPage() {
             </div>
           </div>
         </section>
-
-        {/* ════════════════════════════════════════════ */}
-        {/* 7 ÉTAPES TIMELINE                           */}
-        {/* ════════════════════════════════════════════ */}
-        <section className="py-16 sm:py-20 lg:py-24" style={{ backgroundColor: '#faf8fc' }}>
-          <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="text-center mb-12 sm:mb-16">
-              <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-900 mb-4">
-                Libéral en{' '}
-                <span style={{ color: '#41005c' }}>7 étapes</span>
-                {' '}— 90 jours
-              </h2>
-              <p className="text-base sm:text-lg text-gray-500 max-w-2xl mx-auto">
-                Le plan d'action concret pour passer de salarié à libéral, sans risque et sans paperasse insurmontable.
-              </p>
-            </div>
-
-            <div className="space-y-0">
-              {[
-                {
-                  num: '1',
-                  title: 'Choisir votre statut juridique',
-                  duration: 'Semaine 1',
-                  desc: 'Micro-entreprise pour démarrer simplement (25,6% de charges sur le CA), ou EI au réel si vous prévoyez de dépasser 77 700 €/an. La micro-entreprise est le choix recommandé pour 90% des éducateurs qui se lancent.',
-                  tip: 'Inscription gratuite en ligne sur guichet-entreprises.fr ou formalites.entreprises.gouv.fr. Résultat en 48h.',
-                  gradient: 'linear-gradient(135deg, #41005c, #6b21a8)',
-                },
-                {
-                  num: '2',
-                  title: 'Souscrire une RC Pro',
-                  duration: 'Semaine 1-2',
-                  desc: 'Obligatoire pour exercer auprès d\'un public vulnérable. Coût : 150 à 350 €/an selon les garanties. Couvre les dommages causés lors de vos interventions.',
-                  tip: 'Comparez sur Sidecare ou Hoggo. Privilégiez une RC Pro incluant la protection juridique.',
-                  gradient: 'linear-gradient(135deg, #f0879f, #ec4899)',
-                },
-                {
-                  num: '3',
-                  title: 'Comprendre vos charges URSSAF',
-                  duration: 'Semaine 2',
-                  desc: 'En micro-BNC : 25,6% du CA en 2026 (tout inclus : maladie, retraite, CSG-CRDS). Avec l\'ACRE la 1ère année : seulement ~12,8%. Déclarations trimestrielles ou mensuelles sur autoentrepreneur.urssaf.fr.',
-                  tip: 'Avec l\'ACRE, sur un CA de 50 000 €/an, vous économisez ~6 400 € la première année.',
-                  gradient: 'linear-gradient(135deg, #41005c, #6b21a8)',
-                },
-                {
-                  num: '4',
-                  title: 'Préparer votre matériel & lieu d\'exercice',
-                  duration: 'Semaine 3-4',
-                  desc: 'Budget minimum : 500 à 2 000 €. Exercice à domicile (famille), en cabinet partagé (300-600 €/mois), ou chez vous. Matériel : jeux éducatifs, supports PECS/ABA, tablette, classeurs de suivi.',
-                  tip: 'Commencez à domicile (chez les familles) pour réduire les frais fixes à zéro.',
-                  gradient: 'linear-gradient(135deg, #f0879f, #ec4899)',
-                },
-                {
-                  num: '5',
-                  title: 'Trouver vos premiers clients',
-                  duration: 'Semaine 4-8',
-                  desc: 'Créez votre profil sur NeuroCare pour être visible immédiatement auprès des familles TND de votre ville. Complétez avec votre réseau existant et les MDPH/CMP/CAMSP locaux.',
-                  tip: 'Les éducateurs NeuroCare reçoivent leurs premiers RDV en moyenne sous 7 jours.',
-                  gradient: 'linear-gradient(135deg, #41005c, #6b21a8)',
-                  cta: true,
-                },
-                {
-                  num: '6',
-                  title: 'Facturer et encaisser',
-                  duration: 'Semaine 6-8',
-                  desc: 'NeuroCare génère vos factures automatiquement (compatible URSSAF et CESU). Le paiement est sécurisé à la réservation : 88% reversés directement sur votre compte après chaque séance.',
-                  tip: 'Zéro impayé, zéro relance. Le paiement est capturé avant la séance.',
-                  gradient: 'linear-gradient(135deg, #f0879f, #ec4899)',
-                },
-                {
-                  num: '7',
-                  title: 'Développer et scaler',
-                  duration: 'Mois 3-6',
-                  desc: 'Passez de 15h à 25h/semaine progressivement. Augmentez vos tarifs avec l\'expérience. Diversifiez : bilans (120-200 €), groupes (30 €/enfant x 4-6), formations parentales, supervision.',
-                  tip: 'À 25h/semaine à 55 €/h, vous atteignez 5 000 € net/mois.',
-                  gradient: 'linear-gradient(135deg, #41005c, #6b21a8)',
-                },
-              ].map((step, i) => (
-                <div key={step.num} className="relative flex gap-5 sm:gap-8">
-                  {/* Timeline line */}
-                  <div className="flex flex-col items-center">
-                    <div
-                      className="w-12 h-12 sm:w-14 sm:h-14 rounded-2xl flex items-center justify-center text-xl sm:text-2xl font-extrabold text-white shadow-lg flex-shrink-0 z-10"
-                      style={{ background: step.gradient }}
-                    >
-                      {step.num}
-                    </div>
-                    {i < 6 && <div className="w-0.5 flex-1 min-h-[40px]" style={{ backgroundColor: '#e9d5ff' }} />}
-                  </div>
-
-                  {/* Content */}
-                  <div className="flex-1 pb-8 sm:pb-10">
-                    <div className="bg-white rounded-2xl p-5 sm:p-6 border border-gray-100 shadow-sm hover:shadow-md transition-all">
-                      <div className="flex flex-wrap items-center gap-2 mb-2">
-                        <h3 className="text-lg sm:text-xl font-bold text-gray-900">{step.title}</h3>
-                        <span className="px-2.5 py-0.5 text-xs font-semibold rounded-full" style={{ backgroundColor: '#f3e8ff', color: '#41005c' }}>
-                          {step.duration}
-                        </span>
-                      </div>
-                      <p className="text-sm text-gray-600 leading-relaxed mb-3">{step.desc}</p>
-                      <div className="flex items-start gap-2 bg-amber-50 rounded-lg p-3 border border-amber-100">
-                        <svg className="w-4 h-4 text-amber-500 mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fillRule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clipRule="evenodd" /></svg>
-                        <p className="text-xs text-amber-800 font-medium">{step.tip}</p>
-                      </div>
-                      {step.cta && (
-                        <Link
-                          href="/auth/register-educator"
-                          className="inline-flex items-center gap-2 mt-4 px-5 py-2.5 rounded-lg font-bold text-white text-sm transition-all hover:scale-[1.02]"
-                          style={{ backgroundColor: '#41005c' }}
-                        >
-                          Créer mon profil NeuroCare
-                          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" /></svg>
-                        </Link>
-                      )}
-                    </div>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-        </section>
+        */}
 
         {/* ════════════════════════════════════════════ */}
         {/* TABLEAU COMPARATIF STATUTS                  */}
@@ -410,7 +291,7 @@ export default function DevenirLiberalPage() {
             <div className="text-center mb-10 sm:mb-14">
               <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-900 mb-4">
                 Combien gagne un éducateur{' '}
-                <span style={{ color: '#41005c' }}>libéral TND ?</span>
+                <span style={{ color: '#41005c' }}>libéral ?</span>
               </h2>
               <p className="text-base sm:text-lg text-gray-500">
                 Chiffres réalistes 2026, basés sur un tarif moyen de 55 €/h en micro-entreprise (25,6% de charges).
@@ -450,7 +331,7 @@ export default function DevenirLiberalPage() {
                   <div className="w-10 h-10 rounded-full flex items-center justify-center" style={{ backgroundColor: '#f3e8ff' }}>
                     <svg className="w-5 h-5" style={{ color: '#41005c' }} fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" /></svg>
                   </div>
-                  <h3 className="text-lg font-bold" style={{ color: '#41005c' }}>Libéral TND</h3>
+                  <h3 className="text-lg font-bold" style={{ color: '#41005c' }}>Libéral</h3>
                 </div>
                 <div className="space-y-3">
                   {[
@@ -476,6 +357,98 @@ export default function DevenirLiberalPage() {
               <p className="text-sm text-green-800">
                 <strong>Calcul :</strong> 55 €/h x 20h/semaine x 44 semaines = 48 400 € CA/an. Après charges micro (25,6%) = 36 010 € net/an soit <strong>3 000 € net/mois</strong>. Avec l'ACRE la 1ère année (~12,8%) : <strong>3 600 € net/mois</strong>.
               </p>
+            </div>
+          </div>
+        </section>
+
+        {/* ════════════════════════════════════════════ */}
+        {/* 5 ÉTAPES TIMELINE                           */}
+        {/* ════════════════════════════════════════════ */}
+        <section className="py-16 sm:py-20 lg:py-24 bg-white">
+          <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="text-center mb-12 sm:mb-16">
+              <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-900 mb-4">
+                Libéral en{' '}
+                <span style={{ color: '#41005c' }}>5 étapes</span>
+              </h2>
+              <p className="text-base sm:text-lg text-gray-500 max-w-2xl mx-auto">
+                Un plan d'action simple pour passer de salarié à libéral.
+              </p>
+            </div>
+
+            <div className="space-y-0">
+              {[
+                {
+                  num: '1',
+                  title: 'Choisir votre statut',
+                  duration: 'Semaine 1',
+                  desc: 'Micro-entreprise pour démarrer simplement (25,6% de charges, inscription gratuite en ligne). Déclarations URSSAF trimestrielles sur autoentrepreneur.urssaf.fr.',
+                  gradient: 'linear-gradient(135deg, #41005c, #6b21a8)',
+                },
+                {
+                  num: '2',
+                  title: 'Souscrire une RC Pro',
+                  duration: 'Semaine 1-2',
+                  desc: 'Obligatoire pour exercer auprès d\'un public vulnérable. Coût : 150 à 350 €/an selon les garanties.',
+                  gradient: 'linear-gradient(135deg, #f0879f, #ec4899)',
+                },
+                {
+                  num: '3',
+                  title: 'Préparer matériel et lieu',
+                  duration: 'Semaine 3-4',
+                  desc: 'Budget : 500 à 2 000 €. Exercice au domicile des familles, en cabinet partagé ou chez vous. Matériel de base : supports pédagogiques, tablette, classeurs de suivi.',
+                  gradient: 'linear-gradient(135deg, #41005c, #6b21a8)',
+                },
+                {
+                  num: '4',
+                  title: 'Trouver vos premiers clients via NeuroCare',
+                  duration: 'Semaine 4-8',
+                  desc: 'Créez votre profil pour être visible immédiatement auprès des familles de votre ville. Complétez avec votre réseau (MDPH, CMP, CAMSP, pédiatres).',
+                  gradient: 'linear-gradient(135deg, #f0879f, #ec4899)',
+                },
+                {
+                  num: '5',
+                  title: 'Facturer, encaisser et développer',
+                  duration: 'Mois 2-6',
+                  desc: 'Facturation automatique et paiement sécurisé via NeuroCare (88% reversés après chaque séance). Montez progressivement en charge et diversifiez (bilans, groupes, supervision).',
+                  gradient: 'linear-gradient(135deg, #41005c, #6b21a8)',
+                },
+              ].map((step, i) => (
+                <div key={step.num} className="relative flex gap-5 sm:gap-8">
+                  <div className="flex flex-col items-center">
+                    <div
+                      className="w-12 h-12 sm:w-14 sm:h-14 rounded-2xl flex items-center justify-center text-xl sm:text-2xl font-extrabold text-white shadow-lg flex-shrink-0 z-10"
+                      style={{ background: step.gradient }}
+                    >
+                      {step.num}
+                    </div>
+                    {i < 4 && <div className="w-0.5 flex-1 min-h-[40px]" style={{ backgroundColor: '#e9d5ff' }} />}
+                  </div>
+
+                  <div className="flex-1 pb-8 sm:pb-10">
+                    <div className="bg-white rounded-2xl p-5 sm:p-6 border border-gray-100 shadow-sm hover:shadow-md transition-all">
+                      <div className="flex flex-wrap items-center gap-2 mb-2">
+                        <h3 className="text-lg sm:text-xl font-bold text-gray-900">{step.title}</h3>
+                        <span className="px-2.5 py-0.5 text-xs font-semibold rounded-full" style={{ backgroundColor: '#f3e8ff', color: '#41005c' }}>
+                          {step.duration}
+                        </span>
+                      </div>
+                      <p className="text-sm text-gray-600 leading-relaxed">{step.desc}</p>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            <div className="text-center mt-4">
+              <Link
+                href="/auth/register-educator"
+                className="inline-flex items-center gap-2 px-8 py-3.5 rounded-xl font-bold text-white text-lg transition-all shadow-lg hover:shadow-xl hover:scale-[1.02] active:scale-[0.98]"
+                style={{ backgroundColor: '#41005c' }}
+              >
+                Créer mon profil NeuroCare
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" /></svg>
+              </Link>
             </div>
           </div>
         </section>
@@ -634,7 +607,7 @@ export default function DevenirLiberalPage() {
                 },
                 {
                   name: 'Claire M.',
-                  role: 'Éducatrice TND — Bordeaux',
+                  role: 'Éducatrice — Bordeaux',
                   before: '1 750 € salarié',
                   after: '3 800 € libéral',
                   months: '3 mois',
@@ -682,10 +655,10 @@ export default function DevenirLiberalPage() {
             <div className="text-center mb-10 sm:mb-14">
               <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-900 mb-4">
                 Guide pratique{' '}
-                <span style={{ color: '#41005c' }}>TND libéral</span>
+                <span style={{ color: '#41005c' }}>éducateur libéral</span>
               </h2>
               <p className="text-base sm:text-lg text-gray-500">
-                Tout ce qu'il faut savoir pour exercer en libéral dans le champ du neurodéveloppement.
+                Tout ce qu'il faut savoir pour exercer en libéral en tant qu'éducateur spécialisé.
               </p>
             </div>
 
@@ -697,11 +670,11 @@ export default function DevenirLiberalPage() {
                 },
                 {
                   title: 'Quel code APE/NAF et code URSSAF utiliser ?',
-                  content: 'Le code APE le plus courant est 88.99B (Action sociale sans hébergement n.c.a.) ou 86.90F (Activités de santé humaine non classées ailleurs). Lors de votre inscription sur le guichet des formalités, décrivez votre activité comme "Éducation spécialisée et accompagnement de personnes en situation de handicap — troubles neurodéveloppementaux". L\'URSSAF vous classera en profession libérale non réglementée (BNC), affiliée au régime SSI.',
+                  content: 'Le code APE le plus courant est 88.99B (Action sociale sans hébergement n.c.a.) ou 86.90F (Activités de santé humaine non classées ailleurs). Lors de votre inscription sur le guichet des formalités, décrivez votre activité comme "Éducation spécialisée et accompagnement de personnes en situation de handicap". L\'URSSAF vous classera en profession libérale non réglementée (BNC), affiliée au régime SSI.',
                 },
                 {
                   title: 'Quels tarifs pratiquer en 2026 ?',
-                  content: 'Les tarifs moyens constatés en 2026 pour un éducateur TND libéral : séance individuelle (1h, domicile ou cabinet) : 48 à 65 €. En Île-de-France et grandes métropoles : 55 à 75 €. Bilans éducatifs (2-3h) : 120 à 200 €. Séances de groupe (4-6 enfants) : 25 à 35 € par enfant. Supervision/formation parentale : 60 à 80 €/h. Le CESU (Chèque Emploi Service Universel) n\'est pas applicable en libéral — il concerne le statut salarié du particulier employeur.',
+                  content: 'Les tarifs moyens constatés en 2026 pour un éducateur libéral : séance individuelle (1h, domicile ou cabinet) : 48 à 65 €. En Île-de-France et grandes métropoles : 55 à 75 €. Bilans éducatifs (2-3h) : 120 à 200 €. Séances de groupe (4-6 enfants) : 25 à 35 € par enfant. Supervision/formation parentale : 60 à 80 €/h. Le CESU (Chèque Emploi Service Universel) n\'est pas applicable en libéral — il concerne le statut salarié du particulier employeur.',
                 },
                 {
                   title: 'Comment bénéficier de l\'ACRE en 2026 ?',
@@ -746,11 +719,11 @@ export default function DevenirLiberalPage() {
             <div className="space-y-3">
               {[
                 { q: 'Combien de temps pour avoir mon 1er client ?', a: 'Avec NeuroCare, les éducateurs reçoivent en moyenne leurs premières demandes sous 7 jours. Le profil est visible immédiatement après validation. En parallèle, activez votre réseau (anciens collègues, MDPH, CMP, pédiatres, orthophonistes) pour accélérer.' },
-                { q: 'Dois-je avoir un local pour commencer ?', a: 'Non. 70% des éducateurs TND libéraux exercent au domicile des familles, ce qui élimine le coût d\'un local. Quand votre activité sera stable, vous pourrez envisager un cabinet partagé (300-600 €/mois) ou une sous-location ponctuelle.' },
+                { q: 'Dois-je avoir un local pour commencer ?', a: 'Non. 70% des éducateurs libéraux exercent au domicile des familles, ce qui élimine le coût d\'un local. Quand votre activité sera stable, vous pourrez envisager un cabinet partagé (300-600 €/mois) ou une sous-location ponctuelle.' },
                 { q: 'Quelles assurances sont obligatoires ?', a: 'La RC Pro (Responsabilité Civile Professionnelle) est indispensable : 150-350 €/an. Elle couvre les dommages causés lors de vos interventions. Optionnellement : mutuelle TNS (~100-150 €/mois), prévoyance (~30-80 €/mois).' },
                 { q: 'Comment sont calculées les charges URSSAF ?', a: 'En micro-entreprise BNC : 25,6% de votre chiffre d\'affaires en 2026 (tout compris : maladie, retraite, CSG-CRDS). Vous déclarez et payez trimestriellement sur autoentrepreneur.urssaf.fr. Avec l\'ACRE : ~12,8% la 1ère année.' },
-                { q: 'Faut-il un diplôme spécifique TND ?', a: 'Le DEES (Diplôme d\'État d\'Éducateur Spécialisé) est la base. Les formations complémentaires TND (ABA, TEACCH, PECS, Denver, Montessori adapté) ne sont pas obligatoires légalement mais fortement recommandées pour votre crédibilité et vos tarifs.' },
-                { q: 'Comment NeuroCare m\'aide concrètement ?', a: 'Profil professionnel visible par les familles TND de votre ville, réservation et paiement sécurisé en ligne (88% reversés), facturation automatique (compatible URSSAF/CESU), agenda en ligne, messagerie famille-pro, dossier PPA intégré. Le tout 100% gratuit à l\'inscription.' },
+                { q: 'Faut-il un diplôme spécifique ?', a: 'Le DEES (Diplôme d\'État d\'Éducateur Spécialisé) est la base. Les formations complémentaires (ABA, TEACCH, PECS, Denver, Montessori adapté) ne sont pas obligatoires légalement mais fortement recommandées pour votre crédibilité et vos tarifs.' },
+                { q: 'Comment NeuroCare m\'aide concrètement ?', a: 'Profil professionnel visible par les familles de votre ville, réservation et paiement sécurisé en ligne (88% reversés), facturation automatique (compatible URSSAF/CESU), agenda en ligne, messagerie famille-pro, dossier PPA intégré. Le tout 100% gratuit à l\'inscription.' },
                 { q: 'Puis-je revenir au salariat si ça ne marche pas ?', a: 'Oui. Vous pouvez suspendre ou fermer votre micro-entreprise à tout moment, gratuitement, en ligne. Si vous avez opté pour le maintien ARE, vos droits restants sont récupérables. Le risque financier est quasi nul si vous démarrez en parallèle d\'un poste.' },
                 { q: 'Quel chiffre d\'affaires maximum en micro-entreprise ?', a: '77 700 € HT/an en 2026 pour les activités BNC. Au-delà, vous basculez automatiquement en EI au réel l\'année suivante. En pratique, à 55 €/h et 25h/semaine (44 semaines), vous atteignez 60 500 € — vous restez largement dans les clous.' },
               ].map((faq, i) => (
