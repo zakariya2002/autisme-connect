@@ -25,7 +25,7 @@ export default async function ProBlogPage() {
       {/* Hero */}
       <section
         className="pt-20 xl:pt-22 pb-8 sm:pb-12 px-4"
-        style={{ backgroundColor: '#41005c' }}
+        style={{ backgroundColor: '#5a1383' }}
       >
         <div className="max-w-4xl mx-auto text-center text-white">
           <span
@@ -147,7 +147,7 @@ export default async function ProBlogPage() {
                         <div className="mt-2.5 pt-2.5 border-t border-gray-100 flex items-center gap-2">
                           <div
                             className="w-6 h-6 rounded-full flex items-center justify-center text-xs font-medium text-white"
-                            style={{ backgroundColor: '#41005c' }}
+                            style={{ backgroundColor: '#5a1383' }}
                           >
                             {article.author.first_name[0]}
                           </div>
@@ -187,7 +187,7 @@ export default async function ProBlogPage() {
       {/* CTA inscription */}
       <section
         className="py-8 sm:py-12 px-4"
-        style={{ backgroundColor: '#41005c' }}
+        style={{ backgroundColor: '#5a1383' }}
       >
         <div className="max-w-2xl mx-auto text-center text-white">
           <h2 className="text-lg sm:text-2xl font-bold mb-2 sm:mb-3">
