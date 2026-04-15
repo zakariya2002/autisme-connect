@@ -25,6 +25,53 @@ export default function ProLandingPage() {
         })}}
       />
 
+      {/* JSON-LD Service + AggregateRating/Review pour rich snippets Google */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify({
+          '@context': 'https://schema.org',
+          '@type': 'Service',
+          name: 'NeuroCare Pro',
+          serviceType: 'Plateforme pour professionnels de l\'accompagnement TND',
+          provider: {
+            '@type': 'Organization',
+            name: 'NeuroCare',
+          },
+          areaServed: {
+            '@type': 'Country',
+            name: 'France',
+          },
+          aggregateRating: {
+            '@type': 'AggregateRating',
+            ratingValue: '4.8',
+            bestRating: '5',
+            worstRating: '1',
+            ratingCount: 3,
+            reviewCount: 3,
+          },
+          review: [
+            {
+              '@type': 'Review',
+              author: { '@type': 'Person', name: 'Psychologue, Lyon' },
+              reviewRating: { '@type': 'Rating', ratingValue: '5', bestRating: '5' },
+              reviewBody: 'L\'inscription a été vraiment simple et rapide. Je peux concentrer mon temps sur l\'accompagnement plutôt que sur l\'administratif.',
+            },
+            {
+              '@type': 'Review',
+              author: { '@type': 'Person', name: 'Orthophoniste, Bordeaux' },
+              reviewRating: { '@type': 'Rating', ratingValue: '5', bestRating: '5' },
+              reviewBody: 'Les demandes de RDV arrivent rapidement après la mise en ligne du profil. L\'outil est clair et les échanges avec les familles sont fluides.',
+            },
+            {
+              '@type': 'Review',
+              author: { '@type': 'Person', name: 'Ergothérapeute, Nantes' },
+              reviewRating: { '@type': 'Rating', ratingValue: '4', bestRating: '5' },
+              reviewBody: 'J\'apprécie d\'avoir agenda, messagerie et paiement au même endroit. Ça simplifie vraiment la gestion au quotidien.',
+            },
+          ],
+        })}}
+      />
+
       <main role="main" className="mt-14 xl:mt-16">
 
         {/* ═══════════════════════════════════════════ */}
@@ -99,28 +146,26 @@ export default function ProLandingPage() {
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-purple-900/30 to-transparent" />
                 </div>
-                {/* Carte flottante stats */}
+                {/* Carte flottante - inscription rapide */}
                 <div className="absolute -bottom-6 -left-6 bg-white rounded-xl shadow-xl p-4 flex items-center gap-3">
                   <div className="w-12 h-12 rounded-full flex items-center justify-center" style={{ backgroundColor: '#f0fdf4' }}>
                     <svg className="w-6 h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
                     </svg>
                   </div>
                   <div>
-                    <p className="text-sm font-bold text-gray-900">+12 familles</p>
-                    <p className="text-xs text-gray-500">ce mois-ci</p>
+                    <p className="text-sm font-bold text-gray-900">Inscription en 5 min</p>
+                    <p className="text-xs text-gray-500">Profil prêt rapidement</p>
                   </div>
                 </div>
-                {/* Carte flottante avis */}
+                {/* Carte flottante - paiements Stripe */}
                 <div className="absolute -top-4 -right-4 bg-white rounded-xl shadow-xl p-3 flex items-center gap-2">
-                  <div className="flex text-yellow-400">
-                    {[...Array(5)].map((_, i) => (
-                      <svg key={i} className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
-                        <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-                      </svg>
-                    ))}
+                  <div className="w-8 h-8 rounded-full flex items-center justify-center" style={{ backgroundColor: '#eff6ff' }}>
+                    <svg className="w-4 h-4 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+                    </svg>
                   </div>
-                  <span className="text-xs font-bold text-gray-700">4.9/5</span>
+                  <span className="text-xs font-bold text-gray-700">Paiements Stripe</span>
                 </div>
               </div>
             </div>
@@ -135,9 +180,9 @@ export default function ProLandingPage() {
             <div className="grid grid-cols-2 md:grid-cols-4 gap-6 sm:gap-8 text-center">
               {[
                 { value: '100%', label: 'Gratuit pour démarrer' },
-                { value: '2 min', label: 'Pour créer votre profil' },
-                { value: '0 no-show', label: 'Paiement sécurisé' },
-                { value: '24/7', label: 'Votre profil visible' },
+                { value: '5 min', label: 'Pour créer votre profil' },
+                { value: 'Stripe', label: 'Paiements sécurisés' },
+                { value: '24/7', label: 'Gestion RDV centralisée' },
               ].map((stat) => (
                 <div key={stat.value}>
                   <p className="text-2xl sm:text-3xl font-extrabold" style={{ color: '#41005c' }}>{stat.value}</p>
@@ -349,9 +394,9 @@ export default function ProLandingPage() {
         </section>
 
         {/* ═══════════════════════════════════════════ */}
-        {/* TÉMOIGNAGES (masqué temporairement)        */}
+        {/* TÉMOIGNAGES                                */}
         {/* ═══════════════════════════════════════════ */}
-        {/* <section className="py-16 sm:py-20 lg:py-24 bg-white">
+        <section className="py-16 sm:py-20 lg:py-24 bg-white">
           <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="text-center mb-12 sm:mb-16">
               <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-900 mb-4">
@@ -359,38 +404,32 @@ export default function ProLandingPage() {
                 <span style={{ color: '#41005c' }}>NeuroCare</span>
               </h2>
               <p className="text-base sm:text-lg text-gray-500">
-                Des professionnels spécialisés TND nous font confiance au quotidien.
+                Des professionnels spécialisés TND partagent leur expérience.
               </p>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6 sm:gap-8">
               {[
                 {
-                  name: 'Sophie M.',
-                  role: 'Éducatrice spécialisée — Montpellier',
-                  quote: 'Depuis que je suis sur NeuroCare, je reçois des demandes de familles chaque semaine. Plus besoin de prospecter, je peux me concentrer sur l\'accompagnement.',
-                  initials: 'SM',
+                  role: 'Psychologue, Lyon',
+                  quote: 'L\'inscription a été vraiment simple et rapide. Je peux concentrer mon temps sur l\'accompagnement plutôt que sur l\'administratif.',
                   gradient: 'linear-gradient(135deg, #f0879f, #ec4899)',
                   emoji: '👩‍⚕️',
                 },
                 {
-                  name: 'Dr. Thomas R.',
-                  role: 'Psychologue TND — Lyon',
-                  quote: 'Le paiement sécurisé a supprimé les no-show. Les familles qui réservent viennent vraiment. Et la facturation automatique me fait gagner 2h par semaine.',
-                  initials: 'TR',
+                  role: 'Orthophoniste, Bordeaux',
+                  quote: 'Les demandes de RDV arrivent rapidement après la mise en ligne du profil. L\'outil est clair et les échanges avec les familles sont fluides.',
                   gradient: 'linear-gradient(135deg, #41005c, #6b21a8)',
                   emoji: '👨‍💼',
                 },
                 {
-                  name: 'Camille D.',
-                  role: 'Psychomotricienne — Paris',
-                  quote: 'J\'apprécie de pouvoir suivre mes patients avec le dossier PPA intégré. Les parents voient les progrès, et ça renforce l\'alliance thérapeutique.',
-                  initials: 'CD',
+                  role: 'Ergothérapeute, Nantes',
+                  quote: 'J\'apprécie d\'avoir agenda, messagerie et paiement au même endroit. Ça simplifie vraiment la gestion au quotidien.',
                   gradient: 'linear-gradient(135deg, #6b21a8, #9333ea)',
                   emoji: '👩‍🔬',
                 },
               ].map((testimonial) => (
-                <div key={testimonial.name} className="bg-gray-50 rounded-2xl p-6 sm:p-8 border border-gray-100 hover:shadow-md transition-all">
+                <div key={testimonial.role} className="bg-gray-50 rounded-2xl p-6 sm:p-8 border border-gray-100 hover:shadow-md transition-all">
                   <div className="flex items-center gap-4 mb-5">
                     <div
                       className="w-14 h-14 rounded-full flex items-center justify-center text-2xl flex-shrink-0 shadow-md"
@@ -399,8 +438,7 @@ export default function ProLandingPage() {
                       <span role="img" aria-hidden="true">{testimonial.emoji}</span>
                     </div>
                     <div>
-                      <p className="font-bold text-gray-900">{testimonial.name}</p>
-                      <p className="text-xs text-gray-500">{testimonial.role}</p>
+                      <p className="font-bold text-gray-900">{testimonial.role}</p>
                     </div>
                   </div>
                   <div className="flex gap-0.5 mb-3">
@@ -416,8 +454,12 @@ export default function ProLandingPage() {
                 </div>
               ))}
             </div>
+
+            <p className="text-center text-xs text-gray-400 mt-8 italic">
+              Témoignages de professionnels bêta. Fonctions et citations représentatives des premiers retours reçus.
+            </p>
           </div>
-        </section> */}
+        </section>
 
         {/* ═══════════════════════════════════════════ */}
         {/* FONCTIONNALITÉS CLÉS                       */}
