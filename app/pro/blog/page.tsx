@@ -25,10 +25,7 @@ export default async function ProBlogPage() {
       {/* Hero */}
       <section
         className="pt-20 xl:pt-22 pb-8 sm:pb-12 px-4"
-        style={{
-          background:
-            'linear-gradient(135deg, #41005c 0%, #6b21a8 60%, #7c3aed 100%)',
-        }}
+        style={{ backgroundColor: '#41005c' }}
       >
         <div className="max-w-4xl mx-auto text-center text-white">
           <span
@@ -190,10 +187,7 @@ export default async function ProBlogPage() {
       {/* CTA inscription */}
       <section
         className="py-8 sm:py-12 px-4"
-        style={{
-          background:
-            'linear-gradient(135deg, #41005c 0%, #6b21a8 100%)',
-        }}
+        style={{ backgroundColor: '#41005c' }}
       >
         <div className="max-w-2xl mx-auto text-center text-white">
           <h2 className="text-lg sm:text-2xl font-bold mb-2 sm:mb-3">
