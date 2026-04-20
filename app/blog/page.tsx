@@ -16,6 +16,7 @@ const editorialArticles = [
     excerpt:
       "Une première consultation avec un professionnel peut être source de stress, tant pour l'enfant que pour les parents. Voici nos conseils pour bien la préparer.",
     category: 'daily_life',
+    tags: ['consultation', 'parents', 'préparation'],
     image_url: '/images/articles/consultation.jpg',
     read_time_minutes: 7,
     published_at: '2024-12-25T10:00:00Z',
@@ -29,6 +30,7 @@ const editorialArticles = [
     excerpt:
       'Les crises sensorielles sont fréquentes chez les enfants TND. Comprendre leurs mécanismes permet de mieux les accompagner.',
     category: 'daily_life',
+    tags: ['sensoriel', 'autisme', 'quotidien'],
     image_url: '/images/articles/crises-sensorielles.jpg',
     read_time_minutes: 8,
     published_at: '2024-12-25T10:00:00Z',
@@ -42,6 +44,7 @@ const editorialArticles = [
     excerpt:
       'La MDPH est un passage incontournable pour obtenir la reconnaissance du handicap. Ce guide vous accompagne pour constituer un dossier complet.',
     category: 'rights',
+    tags: ['MDPH', 'démarches', 'AEEH', 'handicap'],
     image_url: '/images/articles/mdph.jpg',
     read_time_minutes: 10,
     published_at: '2024-12-25T10:00:00Z',
@@ -55,6 +58,7 @@ const editorialArticles = [
     excerpt:
       "Le psychomotricien est souvent un professionnel clé dans l'accompagnement des enfants TND. Découvrons ensemble ce métier passionnant.",
     category: 'professionals',
+    tags: ['psychomotricien', 'métier', 'accompagnement'],
     image_url: '/images/articles/psychomotricien.jpg',
     read_time_minutes: 6,
     published_at: '2024-12-25T10:00:00Z',
@@ -68,6 +72,7 @@ const editorialArticles = [
     excerpt:
       "Accompagner un enfant avec un TND est un marathon. Prendre soin de vous n'est pas un luxe, c'est une nécessité.",
     category: 'testimonials',
+    tags: ['aidants', 'bien-être', 'parents'],
     image_url: '/images/articles/bien-etre-aidants.jpg',
     read_time_minutes: 8,
     published_at: '2024-12-25T10:00:00Z',
@@ -81,6 +86,7 @@ const editorialArticles = [
     excerpt:
       'Émilie et Thomas sont les parents de Théo, 7 ans, diagnostiqué TSA et TDAH. Ils nous racontent leur parcours.',
     category: 'testimonials',
+    tags: ['témoignage', 'TSA', 'TDAH', 'famille'],
     image_url: '/images/articles/temoignage-famille.jpg',
     read_time_minutes: 6,
     published_at: '2024-12-25T10:00:00Z',
@@ -94,6 +100,7 @@ const editorialArticles = [
     excerpt:
       "Repérez les premiers signes de l'autisme chez votre enfant : signaux à 6 mois, 12 mois, 2 ans et 3 ans. Quand consulter et quelles démarches entreprendre.",
     category: 'daily_life',
+    tags: ['autisme', 'signes', 'dépistage', 'TSA'],
     image_url:
       'https://images.pexels.com/photos/8386188/pexels-photo-8386188.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940',
     read_time_minutes: 8,
@@ -108,6 +115,7 @@ const editorialArticles = [
     excerpt:
       'Éducateur spécialisé, psychologue, orthophoniste, psychomotricien, ergothérapeute, neuropsychologue : quel professionnel choisir pour accompagner un enfant TND ?',
     category: 'professionals',
+    tags: ['TND', 'guide', 'professionnel', 'autisme'],
     image_url:
       'https://images.pexels.com/photos/8653975/pexels-photo-8653975.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940',
     read_time_minutes: 9,
@@ -191,6 +199,11 @@ export default async function BlogPage() {
                 <li>
                   <Link href="/blog" className="hover:text-white transition-colors">
                     Blog
+                  </Link>
+                </li>
+                <li>
+                  <Link href="/glossaire" className="hover:text-white transition-colors">
+                    Glossaire TND
                   </Link>
                 </li>
                 <li>
