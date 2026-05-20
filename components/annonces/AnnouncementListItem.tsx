@@ -123,15 +123,15 @@ export default function AnnouncementListItem({ announcement }: Props) {
   return (
     <div className="bg-white rounded-xl md:rounded-2xl shadow-md hover:shadow-lg transition-all duration-300 border border-gray-100 overflow-hidden group hover:-translate-y-1">
       <div className="p-4 sm:p-5">
-        {/* Titre + ville + date */}
-        <div className="mb-3">
+        {/* Titre + ville + date (centrés) */}
+        <div className="mb-3 text-center">
           <h3
             className="text-base sm:text-lg font-bold text-gray-900 group-hover:text-teal-700 transition-colors line-clamp-2"
             style={{ fontFamily: 'Verdana, sans-serif' }}
           >
             {a.title}
           </h3>
-          <div className="flex items-center flex-wrap gap-x-2 gap-y-1 mt-1 text-xs sm:text-sm text-gray-500">
+          <div className="flex items-center justify-center flex-wrap gap-x-2 gap-y-1 mt-1 text-xs sm:text-sm text-gray-500">
             {a.city && (
               <span className="inline-flex items-center gap-1">
                 <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
@@ -149,9 +149,9 @@ export default function AnnouncementListItem({ announcement }: Props) {
           </div>
         </div>
 
-        {/* Tags accompagnement + TND */}
+        {/* Tags accompagnement + TND (centrés) */}
         {visibleTags.length > 0 && (
-          <div className="flex flex-wrap gap-1.5 mb-4">
+          <div className="flex flex-wrap justify-center gap-1.5 mb-4">
             {visibleTags.map((tag, i) => (
               <span
                 key={`${tag.kind}-${i}`}
