@@ -181,22 +181,20 @@ export default function AnnouncementListItem({ announcement }: Props) {
           </div>
         )}
 
-        {/* Bloc info structuré (style Take-Caire) */}
+        {/* Bloc info structuré (centré, style Take-Caire) */}
         {infoRows.length > 0 && (
           <div className="border-t border-gray-100 pt-3 mb-4 space-y-1.5">
             {infoRows.map((row) => (
-              <div key={row.label} className="flex items-center justify-between gap-3 text-sm">
-                <span className="inline-flex items-center gap-2 text-gray-500 font-medium">
-                  {row.icon}
-                  {row.label}
-                </span>
-                <span className="text-gray-800 font-semibold text-right truncate">{row.value}</span>
+              <div key={row.label} className="flex items-center justify-center gap-2 text-sm">
+                {row.icon}
+                <span className="text-gray-500 font-medium">{row.label} :</span>
+                <span className="text-gray-800 font-semibold">{row.value}</span>
               </div>
             ))}
           </div>
         )}
 
-        <div className="flex items-center justify-end">
+        <div className="flex items-center justify-center">
           <Link
             href={`/annonces/${a.id}`}
             className="inline-flex items-center gap-1.5 px-4 py-2 text-sm font-semibold text-white rounded-xl hover:opacity-90 transition-all shadow-md hover:shadow-lg"
