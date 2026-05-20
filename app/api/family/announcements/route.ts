@@ -121,11 +121,12 @@ export async function GET() {
 
   const { data, error } = await supabase
     .from('family_announcements')
-    .select('*, responses:announcement_responses(count)')
+    .select('*')
     .eq('family_id', family.id)
     .order('created_at', { ascending: false });
 
   if (error) {
+    console.error('[GET /api/family/announcements]', error);
     return NextResponse.json({ error: error.message }, { status: 500 });
   }
 

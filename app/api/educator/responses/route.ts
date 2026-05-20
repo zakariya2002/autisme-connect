@@ -30,9 +30,8 @@ export async function GET(request: NextRequest) {
       announcement:family_announcements (
         id, title, city, location_label, status,
         accompaniment_types, desired_professions, tnd_context, place_types,
-        min_hours_per_week, max_hours_per_week,
-        hourly_budget_min, hourly_budget_max,
-        start_date, start_flexibility,
+        hours_per_week,
+        start_date, start_date_flexibility,
         published_at, expires_at
       )
     `)
@@ -45,6 +44,7 @@ export async function GET(request: NextRequest) {
 
   const { data, error } = await query;
   if (error) {
+    console.error('[GET /api/educator/responses]', error);
     return NextResponse.json({ error: error.message }, { status: 500 });
   }
 

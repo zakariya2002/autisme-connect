@@ -171,7 +171,7 @@ export default function FamilyDashboard() {
     {
       href: '/dashboard/family/announcements',
       label: 'Mes annonces',
-      icon: '/images/icons/5.svg',
+      icon: '/images/icons/announcement.svg',
       tourId: 'action-announcements',
     },
     {
