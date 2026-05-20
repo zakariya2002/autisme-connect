@@ -89,7 +89,7 @@ export default function AnnouncementDetailPage() {
       const res = await fetch('/api/educator/responses');
       if (res.ok) {
         const data = await res.json();
-        const already = (data.responses || []).some(
+        const already = (data.items || data.responses || []).some(
           (r: any) => r.announcement_id === id && r.status !== 'withdrawn',
         );
         if (already) {

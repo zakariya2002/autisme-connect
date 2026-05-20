@@ -84,7 +84,7 @@ export default function AnnouncementsPage() {
         return;
       }
       const data = await res.json();
-      let list: AnnouncementWithDistance[] = data.announcements || [];
+      let list: AnnouncementWithDistance[] = data.items || data.announcements || [];
 
       // Calcul distances si possible
       if (filters.location && filters.radius) {
