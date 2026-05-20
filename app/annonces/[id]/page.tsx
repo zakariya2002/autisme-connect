@@ -157,13 +157,11 @@ export default function AnnouncementDetailPage() {
   }
 
   const a = announcement;
-  const personLabel = a.person_is_adult
-    ? a.person_age
+  const personLabel = typeof a.person_age === 'number'
+    ? a.person_age >= 18
       ? `Pour un adulte de ${a.person_age} ans`
-      : 'Pour un adulte'
-    : a.person_age
-    ? `Pour un enfant de ${a.person_age} ans`
-    : 'Pour un enfant';
+      : `Pour un enfant de ${a.person_age} ans`
+    : 'Personne accompagnée';
 
   const localizationLabel = a.city
     ? a.radius_km
@@ -172,21 +170,15 @@ export default function AnnouncementDetailPage() {
     : '—';
 
   const hoursLabel =
-    a.hours_per_week_min && a.hours_per_week_max
-      ? a.hours_per_week_min === a.hours_per_week_max
-        ? `${a.hours_per_week_min} h/semaine`
-        : `${a.hours_per_week_min}–${a.hours_per_week_max} h/semaine`
-      : a.hours_per_week_max
-      ? `Jusqu'à ${a.hours_per_week_max} h/semaine`
-      : a.hours_per_week_min
-      ? `À partir de ${a.hours_per_week_min} h/semaine`
+    typeof a.hours_per_week === 'number' && a.hours_per_week > 0
+      ? `${a.hours_per_week} h / semaine`
       : 'À définir';
 
   const startLabel = a.start_date
-    ? `${formatDateFr(a.start_date)}${a.start_flexibility ? ` · ${a.start_flexibility}` : ''}`
-    : a.start_flexibility || 'À définir';
+    ? `${formatDateFr(a.start_date)}${a.start_date_flexibility ? ` · ${a.start_date_flexibility}` : ''}`
+    : a.start_date_flexibility || 'À définir';
 
-  const familyName = `${a.family_first_name || 'Famille'}${a.family_last_initial ? ` ${a.family_last_initial}.` : ''}`;
+  const familyName = `${a.family?.first_name || 'Famille'}${a.family?.last_name_initial ? ` ${a.family.last_name_initial}` : ''}`;
 
   return (
     <div className="min-h-screen" style={{ backgroundColor: '#fdf9f4' }}>
@@ -239,7 +231,7 @@ export default function AnnouncementDetailPage() {
                 </span>
               ) : (
                 <span className="inline-flex items-center px-2.5 py-1 rounded-md text-xs font-bold border bg-gray-100 text-gray-600 border-gray-200">
-                  {a.status === 'closed' ? 'Fermée' : a.status === 'archived' ? 'Archivée' : 'Brouillon'}
+                  {a.status === 'filled' ? 'Pourvue' : a.status === 'archived' ? 'Archivée' : a.status === 'expired' ? 'Expirée' : 'Brouillon'}
                 </span>
               )}
             </div>
@@ -389,7 +381,7 @@ export default function AnnouncementDetailPage() {
                 style={{ backgroundColor: '#027e7e' }}
                 aria-hidden="true"
               >
-                {(a.family_first_name?.charAt(0) || 'F').toUpperCase()}
+                {(a.family?.first_name?.charAt(0) || 'F').toUpperCase()}
               </div>
               <div className="text-sm">
                 <p className="font-semibold text-gray-900">{familyName}</p>

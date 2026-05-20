@@ -2,27 +2,31 @@
 // Note: la source de vérité côté DB est définie dans la migration Phase 1.
 // Si les types/index.ts officiels arrivent plus tard, on pourra les importer ici.
 
+// Aligné sur le schéma SQL (20260520_family_announcements.sql) + types/index.ts
 export type AccompanimentType =
-  | 'guidance_parentale'
-  | 'soutien_scolaire'
-  | 'aide_devoirs'
-  | 'activites_loisirs'
-  | 'autonomie_quotidien'
-  | 'communication'
-  | 'gestion_emotions'
-  | 'socialisation'
-  | 'remediation_cognitive'
+  | 'educatif'
+  | 'scolaire'
   | 'sport_adapte'
-  | 'transport_accompagnement'
-  | 'autre';
+  | 'guidance_parentale'
+  | 'comportemental'
+  | 'liberal';
 
-export type TndContext = 'TSA' | 'TDAH' | 'DYS' | 'HPI' | 'TDI' | 'Autre';
+export type TndContext = 'TSA' | 'TDAH' | 'DYS' | 'HPI' | 'TDI' | 'AUTRE';
 
 export type PlaceType = 'domicile' | 'cabinet' | 'ecole' | 'institut' | 'club_sport' | 'autre';
 
 export type GenderPreference = 'any' | 'male' | 'female';
 
-export type AnnouncementStatus = 'draft' | 'published' | 'closed' | 'archived';
+export type StartFlexibility = 'immediate' | 'flexible' | 'fixed';
+
+export type AnnouncementStatus =
+  | 'draft'
+  | 'pending'
+  | 'published'
+  | 'rejected'
+  | 'expired'
+  | 'filled'
+  | 'archived';
 
 export type ResponseStatus =
   | 'pending'
@@ -43,24 +47,22 @@ export interface FamilyAnnouncement {
   place_types: PlaceType[];
   gender_preference: GenderPreference;
   person_age: number | null;
-  person_is_adult: boolean | null;
   city: string | null;
-  location: string | null;
+  location_label: string | null;
+  postal_code: string | null;
   latitude: number | null;
   longitude: number | null;
   radius_km: number | null;
-  hours_per_week_min: number | null;
-  hours_per_week_max: number | null;
-  schedule_preferences: string | null;
+  hours_per_week: number | null;
+  schedule_preferences: any | null;
   start_date: string | null;
-  start_flexibility: string | null;
+  start_date_flexibility: StartFlexibility | null;
   status: AnnouncementStatus;
   response_count: number;
   published_at: string | null;
   created_at: string;
   updated_at: string;
-  family_first_name?: string;
-  family_last_initial?: string;
+  family?: { first_name?: string; last_name_initial?: string } | null;
 }
 
 export interface AnnouncementResponse {
@@ -76,18 +78,12 @@ export interface AnnouncementResponse {
 }
 
 export const ACCOMPANIMENT_TYPE_LABELS: Record<AccompanimentType, string> = {
-  guidance_parentale: 'Guidance parentale',
-  soutien_scolaire: 'Soutien scolaire',
-  aide_devoirs: 'Aide aux devoirs',
-  activites_loisirs: 'Activités & loisirs',
-  autonomie_quotidien: 'Autonomie au quotidien',
-  communication: 'Communication',
-  gestion_emotions: 'Gestion des émotions',
-  socialisation: 'Socialisation',
-  remediation_cognitive: 'Remédiation cognitive',
+  educatif: 'Éducatif',
+  scolaire: 'Scolaire',
   sport_adapte: 'Sport adapté',
-  transport_accompagnement: 'Transport / accompagnement',
-  autre: 'Autre',
+  guidance_parentale: 'Guidance parentale',
+  comportemental: 'Comportemental',
+  liberal: 'Libéral',
 };
 
 export const TND_CONTEXT_LABELS: Record<TndContext, string> = {
@@ -96,7 +92,19 @@ export const TND_CONTEXT_LABELS: Record<TndContext, string> = {
   DYS: 'DYS',
   HPI: 'HPI',
   TDI: 'TDI',
-  Autre: 'Autre',
+  AUTRE: 'Autre',
+};
+
+export const GENDER_LABELS_PERSON: Record<GenderPreference, string> = {
+  any: 'Indifférent',
+  male: 'Garçon',
+  female: 'Fille',
+};
+
+export const START_FLEX_LABELS: Record<StartFlexibility, string> = {
+  immediate: 'Dès que possible',
+  flexible: 'Flexible',
+  fixed: 'Date fixe',
 };
 
 export const PLACE_TYPE_LABELS: Record<PlaceType, string> = {
