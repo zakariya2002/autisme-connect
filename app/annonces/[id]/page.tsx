@@ -189,7 +189,7 @@ export default function AnnouncementDetailPage() {
     <div className="min-h-screen" style={{ backgroundColor: '#fdf9f4' }}>
       <PublicNavbar />
 
-      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 pt-6 pb-12">
+      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 pt-24 sm:pt-28 pb-12">
         <Link
           href="/annonces"
           className="inline-flex items-center gap-2 mb-5 px-4 py-2 rounded-full text-sm font-semibold bg-white border-2 shadow-sm hover:shadow-md transition-all"
