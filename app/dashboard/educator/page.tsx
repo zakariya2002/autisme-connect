@@ -199,6 +199,11 @@ export default function EducatorDashboard() {
       icon: '/images/icons/handshake-badge.svg',
     },
     {
+      href: '/dashboard/educator/announcements',
+      label: 'Annonces familles',
+      icon: '/images/icons/category-questions.svg',
+    },
+    {
       href: '/dashboard/educator/integrations',
       label: 'Intégrations',
       icon: '/images/icons/integrations.svg',

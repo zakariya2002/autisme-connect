@@ -1,0 +1,538 @@
+'use client';
+
+import { useEffect, useState, useCallback } from 'react';
+import { useParams, useRouter } from 'next/navigation';
+import Link from 'next/link';
+import PublicNavbar from '@/components/PublicNavbar';
+import RespondModal from '@/components/annonces/RespondModal';
+import {
+  FamilyAnnouncement,
+  ACCOMPANIMENT_TYPE_LABELS,
+  TND_CONTEXT_LABELS,
+  PLACE_TYPE_LABELS,
+  GENDER_PREFERENCE_LABELS,
+  AccompanimentType,
+  TndContext,
+  PlaceType,
+  GenderPreference,
+  formatRelativeDate,
+  formatDateFr,
+} from '@/components/annonces/types';
+import { supabase } from '@/lib/supabase';
+import { getProfessionByValue } from '@/lib/professions-config';
+
+type AccessState =
+  | { kind: 'loading' }
+  | { kind: 'anonymous' }
+  | { kind: 'not-educator' }
+  | { kind: 'unverified' }
+  | { kind: 'already-responded' }
+  | { kind: 'allowed' };
+
+export default function AnnouncementDetailPage() {
+  const params = useParams<{ id: string }>();
+  const id = params?.id;
+  const router = useRouter();
+  const [announcement, setAnnouncement] = useState<FamilyAnnouncement | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [notFound, setNotFound] = useState(false);
+  const [access, setAccess] = useState<AccessState>({ kind: 'loading' });
+  const [modalOpen, setModalOpen] = useState(false);
+
+  const fetchAnnouncement = useCallback(async () => {
+    if (!id) return;
+    setLoading(true);
+    try {
+      const res = await fetch(`/api/announcements/${id}`);
+      if (res.status === 404) {
+        setNotFound(true);
+        return;
+      }
+      if (!res.ok) {
+        setAnnouncement(null);
+        return;
+      }
+      const data = await res.json();
+      setAnnouncement(data.announcement || null);
+    } catch (err) {
+      console.error('Erreur fetch annonce:', err);
+      setAnnouncement(null);
+    } finally {
+      setLoading(false);
+    }
+  }, [id]);
+
+  const checkAccess = useCallback(async () => {
+    if (!id) return;
+    const { data: { session } } = await supabase.auth.getSession();
+    if (!session?.user) {
+      setAccess({ kind: 'anonymous' });
+      return;
+    }
+    const role = session.user.user_metadata?.role;
+    if (role !== 'educator') {
+      setAccess({ kind: 'not-educator' });
+      return;
+    }
+    // Vérifier le profil éducateur
+    const { data: profile } = await supabase
+      .from('educator_profiles')
+      .select('id, verification_badge')
+      .eq('user_id', session.user.id)
+      .single();
+    if (!profile?.verification_badge) {
+      setAccess({ kind: 'unverified' });
+      return;
+    }
+    // Vérifier si déjà répondu
+    try {
+      const res = await fetch('/api/educator/responses');
+      if (res.ok) {
+        const data = await res.json();
+        const already = (data.responses || []).some(
+          (r: any) => r.announcement_id === id && r.status !== 'withdrawn',
+        );
+        if (already) {
+          setAccess({ kind: 'already-responded' });
+          return;
+        }
+      }
+    } catch {
+      // best effort
+    }
+    setAccess({ kind: 'allowed' });
+  }, [id]);
+
+  useEffect(() => {
+    fetchAnnouncement();
+    checkAccess();
+  }, [fetchAnnouncement, checkAccess]);
+
+  const handleSuccess = () => {
+    setModalOpen(false);
+    fetchAnnouncement();
+    checkAccess();
+  };
+
+  if (notFound) {
+    return (
+      <div className="min-h-screen" style={{ backgroundColor: '#fdf9f4' }}>
+        <PublicNavbar />
+        <div className="max-w-3xl mx-auto px-4 py-20 text-center">
+          <h1 className="text-2xl font-bold text-gray-900 mb-3">Annonce introuvable</h1>
+          <p className="text-gray-600 mb-6">
+            Cette annonce n'existe plus ou n'est plus disponible.
+          </p>
+          <Link
+            href="/annonces"
+            className="inline-flex items-center gap-2 px-5 py-2.5 text-white font-semibold rounded-xl shadow-md hover:opacity-90 transition-all"
+            style={{ backgroundColor: '#027e7e' }}
+          >
+            Voir toutes les annonces
+          </Link>
+        </div>
+      </div>
+    );
+  }
+
+  if (loading || !announcement) {
+    return (
+      <div className="min-h-screen" style={{ backgroundColor: '#fdf9f4' }}>
+        <PublicNavbar />
+        <div className="max-w-3xl mx-auto px-4 py-20 text-center">
+          <div
+            className="animate-spin rounded-full h-12 w-12 border-4 mx-auto"
+            style={{
+              borderTopColor: '#027e7e',
+              borderRightColor: 'rgba(2, 126, 126, 0.2)',
+              borderBottomColor: 'rgba(2, 126, 126, 0.2)',
+              borderLeftColor: 'rgba(2, 126, 126, 0.2)',
+            }}
+            aria-hidden="true"
+          />
+          <p className="text-gray-500 mt-4">Chargement…</p>
+        </div>
+      </div>
+    );
+  }
+
+  const a = announcement;
+  const personLabel = a.person_is_adult
+    ? a.person_age
+      ? `Pour un adulte de ${a.person_age} ans`
+      : 'Pour un adulte'
+    : a.person_age
+    ? `Pour un enfant de ${a.person_age} ans`
+    : 'Pour un enfant';
+
+  const localizationLabel = a.city
+    ? a.radius_km
+      ? `Dans un rayon de ${a.radius_km} km autour de ${a.city}`
+      : a.city
+    : '—';
+
+  const hoursLabel =
+    a.hours_per_week_min && a.hours_per_week_max
+      ? a.hours_per_week_min === a.hours_per_week_max
+        ? `${a.hours_per_week_min} h/semaine`
+        : `${a.hours_per_week_min}–${a.hours_per_week_max} h/semaine`
+      : a.hours_per_week_max
+      ? `Jusqu'à ${a.hours_per_week_max} h/semaine`
+      : a.hours_per_week_min
+      ? `À partir de ${a.hours_per_week_min} h/semaine`
+      : 'À définir';
+
+  const startLabel = a.start_date
+    ? `${formatDateFr(a.start_date)}${a.start_flexibility ? ` · ${a.start_flexibility}` : ''}`
+    : a.start_flexibility || 'À définir';
+
+  const familyName = `${a.family_first_name || 'Famille'}${a.family_last_initial ? ` ${a.family_last_initial}.` : ''}`;
+
+  return (
+    <div className="min-h-screen" style={{ backgroundColor: '#fdf9f4' }}>
+      <PublicNavbar />
+
+      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 pt-6 pb-12">
+        <Link
+          href="/annonces"
+          className="inline-flex items-center gap-1.5 text-sm font-medium text-gray-600 hover:text-teal-700 mb-4"
+        >
+          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+          </svg>
+          Toutes les annonces
+        </Link>
+
+        {/* Carte principale */}
+        <div className="bg-white rounded-xl md:rounded-2xl shadow-xl border border-gray-100 overflow-hidden">
+          <div className="h-1" style={{ backgroundColor: '#027e7e' }} />
+          <div className="p-5 sm:p-7">
+            <div className="flex items-start justify-between gap-3 flex-wrap mb-3">
+              <div className="min-w-0">
+                <h1
+                  className="text-2xl sm:text-3xl font-bold text-gray-900"
+                  style={{ fontFamily: 'Verdana, sans-serif' }}
+                >
+                  {a.title}
+                </h1>
+                <div className="flex items-center flex-wrap gap-x-2 gap-y-1 mt-2 text-sm text-gray-500">
+                  <span className="inline-flex items-center gap-1">
+                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                    </svg>
+                    Publiée {formatRelativeDate(a.published_at || a.created_at)}
+                  </span>
+                  <span aria-hidden="true">·</span>
+                  <span>
+                    {a.response_count || 0} réponse{(a.response_count || 0) > 1 ? 's' : ''}
+                  </span>
+                </div>
+              </div>
+              {a.status === 'published' ? (
+                <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md text-xs font-bold border" style={{
+                  backgroundColor: 'rgba(34, 197, 94, 0.1)',
+                  color: '#15803d',
+                  borderColor: 'rgba(34, 197, 94, 0.3)',
+                }}>
+                  <span className="w-2 h-2 rounded-full" style={{ backgroundColor: '#15803d' }} aria-hidden="true"></span>
+                  Publiée
+                </span>
+              ) : (
+                <span className="inline-flex items-center px-2.5 py-1 rounded-md text-xs font-bold border bg-gray-100 text-gray-600 border-gray-200">
+                  {a.status === 'closed' ? 'Fermée' : a.status === 'archived' ? 'Archivée' : 'Brouillon'}
+                </span>
+              )}
+            </div>
+
+            {/* Description */}
+            <div className="prose prose-sm max-w-none mb-6">
+              <p className="text-gray-800 whitespace-pre-line leading-relaxed">{a.description}</p>
+            </div>
+
+            {/* Tags accompagnement */}
+            {a.accompaniment_types?.length > 0 && (
+              <div className="mb-4">
+                <h3 className="text-xs font-bold text-gray-500 uppercase tracking-wide mb-2">
+                  Type d'accompagnement
+                </h3>
+                <div className="flex flex-wrap gap-1.5">
+                  {a.accompaniment_types.map((t) => (
+                    <span
+                      key={t}
+                      className="inline-flex items-center px-2.5 py-1 rounded-md text-xs font-medium border"
+                      style={{
+                        backgroundColor: 'rgba(2, 126, 126, 0.08)',
+                        color: '#027e7e',
+                        borderColor: 'rgba(2, 126, 126, 0.2)',
+                      }}
+                    >
+                      {ACCOMPANIMENT_TYPE_LABELS[t as AccompanimentType] || t}
+                    </span>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {/* Tags professions souhaitées */}
+            {a.desired_professions?.length > 0 && (
+              <div className="mb-4">
+                <h3 className="text-xs font-bold text-gray-500 uppercase tracking-wide mb-2">
+                  Profession recherchée
+                </h3>
+                <div className="flex flex-wrap gap-1.5">
+                  {a.desired_professions.map((p) => (
+                    <span
+                      key={p}
+                      className="inline-flex items-center px-2.5 py-1 rounded-md text-xs font-medium border bg-purple-50 text-purple-700 border-purple-200"
+                    >
+                      {getProfessionByValue(p)?.label || p}
+                    </span>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {/* Tags TND */}
+            {a.tnd_context?.length > 0 && (
+              <div className="mb-4">
+                <h3 className="text-xs font-bold text-gray-500 uppercase tracking-wide mb-2">
+                  Contexte TND
+                </h3>
+                <div className="flex flex-wrap gap-1.5">
+                  {a.tnd_context.map((t) => (
+                    <span
+                      key={t}
+                      className="inline-flex items-center px-2.5 py-1 rounded-md text-xs font-medium border"
+                      style={{
+                        backgroundColor: 'rgba(240, 135, 159, 0.1)',
+                        color: '#b9456d',
+                        borderColor: 'rgba(240, 135, 159, 0.25)',
+                      }}
+                    >
+                      {TND_CONTEXT_LABELS[t as TndContext] || t}
+                    </span>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {/* Tags lieux */}
+            {a.place_types?.length > 0 && (
+              <div className="mb-6">
+                <h3 className="text-xs font-bold text-gray-500 uppercase tracking-wide mb-2">
+                  Lieu d'intervention
+                </h3>
+                <div className="flex flex-wrap gap-1.5">
+                  {a.place_types.map((p) => (
+                    <span
+                      key={p}
+                      className="inline-flex items-center px-2.5 py-1 rounded-md text-xs font-medium border bg-amber-50 text-amber-800 border-amber-200"
+                    >
+                      {PLACE_TYPE_LABELS[p as PlaceType] || p}
+                    </span>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {/* Infos clés */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-6">
+              <InfoBlock
+                icon={
+                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                  </svg>
+                }
+                label="Personne accompagnée"
+                value={personLabel}
+                extra={
+                  a.gender_preference && a.gender_preference !== 'any'
+                    ? `Préférence : professionnel ${GENDER_PREFERENCE_LABELS[a.gender_preference as GenderPreference].toLowerCase()}`
+                    : null
+                }
+              />
+              <InfoBlock
+                icon={
+                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                  </svg>
+                }
+                label="Localisation"
+                value={localizationLabel}
+              />
+              <InfoBlock
+                icon={
+                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                  </svg>
+                }
+                label="Horaires"
+                value={hoursLabel}
+                extra={a.schedule_preferences}
+              />
+              <InfoBlock
+                icon={
+                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                  </svg>
+                }
+                label="Début souhaité"
+                value={startLabel}
+              />
+            </div>
+
+            {/* Famille (anonymisée) */}
+            <div className="rounded-xl border border-gray-200 bg-gray-50 px-4 py-3 mb-6 flex items-center gap-3">
+              <div
+                className="w-10 h-10 rounded-full flex items-center justify-center font-bold text-white"
+                style={{ backgroundColor: '#027e7e' }}
+                aria-hidden="true"
+              >
+                {(a.family_first_name?.charAt(0) || 'F').toUpperCase()}
+              </div>
+              <div className="text-sm">
+                <p className="font-semibold text-gray-900">{familyName}</p>
+                <p className="text-xs text-gray-500">
+                  Coordonnées partagées uniquement après acceptation de votre réponse
+                </p>
+              </div>
+            </div>
+
+            {/* CTA Répondre */}
+            <CTASection
+              access={access}
+              announcementId={a.id}
+              onOpenModal={() => setModalOpen(true)}
+            />
+          </div>
+        </div>
+      </div>
+
+      <RespondModal
+        announcementId={a.id}
+        open={modalOpen}
+        onClose={() => setModalOpen(false)}
+        onSuccess={handleSuccess}
+      />
+    </div>
+  );
+}
+
+function InfoBlock({
+  icon,
+  label,
+  value,
+  extra,
+}: {
+  icon: React.ReactNode;
+  label: string;
+  value: string;
+  extra?: string | null;
+}) {
+  return (
+    <div className="rounded-xl border border-gray-100 bg-white px-3 py-3 shadow-sm">
+      <div className="flex items-center gap-2 text-xs font-bold text-gray-500 uppercase tracking-wide mb-1">
+        <span style={{ color: '#027e7e' }}>{icon}</span>
+        {label}
+      </div>
+      <p className="text-sm font-semibold text-gray-900">{value}</p>
+      {extra && <p className="text-xs text-gray-500 mt-1 whitespace-pre-line">{extra}</p>}
+    </div>
+  );
+}
+
+function CTASection({
+  access,
+  announcementId,
+  onOpenModal,
+}: {
+  access: AccessState;
+  announcementId: string;
+  onOpenModal: () => void;
+}) {
+  if (access.kind === 'loading') {
+    return (
+      <div className="rounded-xl border border-gray-200 bg-white px-4 py-4 flex items-center justify-center">
+        <div className="animate-spin h-5 w-5 border-2 border-gray-300 border-t-teal-600 rounded-full" aria-hidden="true" />
+      </div>
+    );
+  }
+
+  if (access.kind === 'anonymous') {
+    return (
+      <div className="rounded-xl border-2 border-teal-200 bg-teal-50 px-4 py-4">
+        <p className="text-sm text-gray-700 mb-3">
+          Connectez-vous pour répondre à cette annonce avec votre compte professionnel.
+        </p>
+        <Link
+          href={`/auth/login?redirect=${encodeURIComponent(`/annonces/${announcementId}`)}`}
+          className="inline-flex items-center justify-center gap-2 px-5 py-2.5 text-white font-semibold rounded-xl shadow-md hover:opacity-90 transition-all"
+          style={{ backgroundColor: '#027e7e' }}
+        >
+          Me connecter
+          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+          </svg>
+        </Link>
+      </div>
+    );
+  }
+
+  if (access.kind === 'not-educator') {
+    return (
+      <div className="rounded-xl border-2 border-amber-200 bg-amber-50 px-4 py-4">
+        <p className="text-sm text-gray-800">
+          <strong>Connectez-vous avec un compte professionnel</strong> pour répondre à cette annonce.
+          Les annonces familles sont réservées aux professionnels vérifiés.
+        </p>
+      </div>
+    );
+  }
+
+  if (access.kind === 'unverified') {
+    return (
+      <div className="rounded-xl border-2 border-amber-200 bg-amber-50 px-4 py-4">
+        <p className="text-sm text-gray-800">
+          <strong>Validation de votre profil en cours</strong> — vous pourrez répondre dès qu'il sera vérifié.
+        </p>
+        <Link
+          href="/dashboard/educator/diploma"
+          className="inline-flex items-center gap-1.5 mt-2 text-sm font-semibold text-amber-700 hover:text-amber-800"
+        >
+          Voir l'état de vérification →
+        </Link>
+      </div>
+    );
+  }
+
+  if (access.kind === 'already-responded') {
+    return (
+      <div className="rounded-xl border-2 border-teal-200 bg-teal-50 px-4 py-4">
+        <p className="text-sm text-gray-800 mb-2">
+          <strong>Vous avez déjà répondu à cette annonce.</strong>
+        </p>
+        <Link
+          href="/dashboard/educator/announcements"
+          className="inline-flex items-center gap-1.5 text-sm font-semibold text-teal-700 hover:text-teal-800"
+        >
+          Voir mes candidatures →
+        </Link>
+      </div>
+    );
+  }
+
+  return (
+    <button
+      type="button"
+      onClick={onOpenModal}
+      className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 py-3 text-white font-bold rounded-xl shadow-lg hover:shadow-xl hover:opacity-90 transition-all"
+      style={{ backgroundColor: '#027e7e' }}
+    >
+      <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z" />
+      </svg>
+      Répondre à cette annonce
+    </button>
+  );
+}
