@@ -137,11 +137,11 @@ export default function AnnouncementDetailPage() {
 
   if (loading || !announcement) {
     return (
-      <div className="min-h-screen" style={{ backgroundColor: '#fdf9f4' }}>
+      <div className="min-h-screen flex flex-col" style={{ backgroundColor: '#fdf9f4' }}>
         <PublicNavbar />
-        <div className="max-w-3xl mx-auto px-4 py-20 text-center">
+        <div className="flex-1 flex flex-col items-center justify-center px-4">
           <div
-            className="animate-spin rounded-full h-12 w-12 border-4 mx-auto"
+            className="animate-spin rounded-full h-12 w-12 border-4"
             style={{
               borderTopColor: '#027e7e',
               borderRightColor: 'rgba(2, 126, 126, 0.2)',

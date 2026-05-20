@@ -54,5 +54,5 @@ export async function GET(
   const { family_id, child_id, ...safe } = announcement;
   const anonymized = anonymizeAnnouncement(safe, family);
 
-  return NextResponse.json(anonymized);
+  return NextResponse.json({ announcement: anonymized });
 }
