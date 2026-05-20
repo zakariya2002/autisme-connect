@@ -149,8 +149,10 @@ export const updateAnnouncementSchema = z.object({
   start_date: isoDate.nullable().optional(),
   start_date_flexibility: startFlex.optional(),
 
-  // Seules transitions admises côté famille (le serveur enforce le reset à 'pending' si du contenu change)
-  status: z.enum(['draft', 'archived', 'filled']).optional(),
+  // Transitions admises côté famille : draft (sauvegarde), archived (désactivation),
+  // filled (marquer pourvue), pending (soumettre une annonce en brouillon).
+  // Le serveur enforce le reset à 'pending' si du contenu change ailleurs.
+  status: z.enum(['draft', 'pending', 'archived', 'filled']).optional(),
 });
 
 export type UpdateAnnouncementInput = z.infer<typeof updateAnnouncementSchema>;

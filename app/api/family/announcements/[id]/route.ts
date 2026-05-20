@@ -147,6 +147,11 @@ export async function PATCH(
   if (input.status === 'draft' && ['pending', 'rejected', 'archived'].includes(current.status)) {
     update.status = 'draft';
   }
+  // Transition explicite draft → pending (soumission d'un brouillon)
+  if (input.status === 'pending' && current.status === 'draft') {
+    update.status = 'pending';
+    update.rejection_reason = null;
+  }
 
   const { data, error } = await supabase
     .from('family_announcements')

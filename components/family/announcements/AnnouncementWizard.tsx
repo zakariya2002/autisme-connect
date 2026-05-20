@@ -68,6 +68,11 @@ export default function AnnouncementWizard({
   const [submitting, setSubmitting] = useState(false);
   const [serverError, setServerError] = useState<string>('');
 
+  // Autosave brouillon (mode create uniquement)
+  const [draftId, setDraftId] = useState<string | null>(announcementId ?? null);
+  const [lastSavedAt, setLastSavedAt] = useState<Date | null>(null);
+  const [autosaving, setAutosaving] = useState(false);
+
   useEffect(() => {
     let active = true;
     (async () => {
@@ -95,6 +100,50 @@ export default function AnnouncementWizard({
   const patch = (p: Partial<AnnouncementFormData>) => {
     setData((prev) => ({ ...prev, ...p }));
   };
+
+  // Autosave : déclenché ~8s après la dernière modification, en mode create.
+  // Sauvegarde en draft tant que le titre + la description ont assez de contenu.
+  useEffect(() => {
+    if (mode !== 'create') return;
+    if (submitting) return;
+    if (data.title.trim().length < 8) return;
+    if (data.description.trim().length < 30) return;
+
+    const timer = setTimeout(async () => {
+      setAutosaving(true);
+      try {
+        const payload = buildPayload(data, true);
+        if (draftId) {
+          const res = await fetch(`/api/family/announcements/${draftId}`, {
+            method: 'PATCH',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload),
+          });
+          if (res.ok) setLastSavedAt(new Date());
+        } else {
+          const res = await fetch('/api/family/announcements', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload),
+          });
+          if (res.ok) {
+            const json = await res.json();
+            if (json?.announcement?.id) {
+              setDraftId(json.announcement.id);
+              setLastSavedAt(new Date());
+            }
+          }
+        }
+      } catch {
+        // silent : ne dérange pas le user pour un échec d'autosave
+      } finally {
+        setAutosaving(false);
+      }
+    }, 8000);
+
+    return () => clearTimeout(timer);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [data, mode, submitting]);
 
   const goNext = () => {
     const stepErrors = validateStep(step, data);
@@ -127,11 +176,14 @@ export default function AnnouncementWizard({
     setServerError('');
     try {
       const payload = buildPayload(data, asDraft);
+      // Si on publie (pas de draft) et qu'on a déjà un draftId (créé via autosave) → PATCH avec status=pending
+      if (!asDraft && draftId) payload.status = 'pending';
 
-      const url = mode === 'edit' && announcementId
-        ? `/api/family/announcements/${announcementId}`
+      const targetId = mode === 'edit' ? announcementId : draftId;
+      const url = targetId
+        ? `/api/family/announcements/${targetId}`
         : '/api/family/announcements';
-      const method = mode === 'edit' ? 'PATCH' : 'POST';
+      const method = targetId ? 'PATCH' : 'POST';
 
       const res = await fetch(url, {
         method,
@@ -188,11 +240,22 @@ export default function AnnouncementWizard({
     <div>
       {/* Progression */}
       <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-4 sm:p-6 mb-4">
-        <div className="flex items-center justify-between mb-3">
+        <div className="flex items-center justify-between mb-3 gap-2 flex-wrap">
           <p className="text-xs font-semibold uppercase tracking-wide text-gray-500">
             Étape {step} / 4 — {STEPS[step - 1].label}
           </p>
-          <p className="text-xs text-gray-400">{Math.round((step / 4) * 100)}%</p>
+          <div className="flex items-center gap-3">
+            {mode === 'create' && (autosaving || lastSavedAt) && (
+              <p className="text-xs text-gray-400" aria-live="polite">
+                {autosaving
+                  ? '💾 Sauvegarde du brouillon…'
+                  : lastSavedAt
+                    ? `✓ Brouillon sauvegardé à ${lastSavedAt.toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' })}`
+                    : ''}
+              </p>
+            )}
+            <p className="text-xs text-gray-400">{Math.round((step / 4) * 100)}%</p>
+          </div>
         </div>
         <div className="w-full h-2 bg-gray-100 rounded-full overflow-hidden">
           <div
