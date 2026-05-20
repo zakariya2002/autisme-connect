@@ -6,7 +6,7 @@ import { geocodeLabel } from '@/lib/announcements/queries';
 
 export const dynamic = 'force-dynamic';
 
-// POST /api/family/announcements — création d'une annonce
+// POST — création (status par défaut = pending ; status=draft autorisé)
 export async function POST(request: NextRequest) {
   const supabase = createRouteHandlerClient({ cookies });
   const { data: { session } } = await supabase.auth.getSession();
@@ -42,10 +42,10 @@ export async function POST(request: NextRequest) {
   const input = parsed.data;
 
   // Géocodage si lat/lng absents
-  let latitude = input.latitude;
-  let longitude = input.longitude;
+  let latitude = input.latitude ?? null;
+  let longitude = input.longitude ?? null;
   let city = input.city;
-  let postcode = input.postcode;
+  let postal_code = input.postal_code ?? null;
 
   if ((latitude == null || longitude == null) && input.location_label) {
     const geo = await geocodeLabel(input.location_label);
@@ -53,11 +53,10 @@ export async function POST(request: NextRequest) {
       latitude = latitude ?? geo.latitude;
       longitude = longitude ?? geo.longitude;
       if (!city && geo.city) city = geo.city;
-      if (!postcode && geo.postcode) postcode = geo.postcode;
+      if (!postal_code && geo.postal_code) postal_code = geo.postal_code;
     }
   }
 
-  // status forcé : la famille ne peut publier directement
   const status = input.status === 'draft' ? 'draft' : 'pending';
 
   const insertPayload = {
@@ -69,21 +68,18 @@ export async function POST(request: NextRequest) {
     desired_professions: input.desired_professions,
     tnd_context: input.tnd_context,
     place_types: input.place_types,
+    person_age: input.person_age ?? null,
+    gender_preference: input.gender_preference ?? 'any',
     location_label: input.location_label,
     city,
-    postcode: postcode ?? null,
-    latitude: latitude ?? null,
-    longitude: longitude ?? null,
-    min_hours_per_week: input.min_hours_per_week ?? null,
-    max_hours_per_week: input.max_hours_per_week ?? null,
-    hourly_budget_min: input.hourly_budget_min ?? null,
-    hourly_budget_max: input.hourly_budget_max ?? null,
+    postal_code,
+    latitude,
+    longitude,
+    radius_km: input.radius_km ?? 10,
+    hours_per_week: input.hours_per_week ?? null,
+    schedule_preferences: input.schedule_preferences ?? null,
     start_date: input.start_date ?? null,
-    start_flexibility: input.start_flexibility ?? null,
-    gender_preference: input.gender_preference ?? null,
-    certifications_required: input.certifications_required ?? [],
-    languages_required: input.languages_required ?? [],
-    expires_at: input.expires_at ?? null,
+    start_date_flexibility: input.start_date_flexibility ?? 'flexible',
     status,
   };
 
@@ -94,14 +90,14 @@ export async function POST(request: NextRequest) {
     .single();
 
   if (error) {
-    console.error('Erreur création annonce:', error);
+    console.error('[POST /api/family/announcements]', error);
     return NextResponse.json({ error: error.message }, { status: 500 });
   }
 
-  return NextResponse.json(data, { status: 201 });
+  return NextResponse.json({ announcement: data }, { status: 201 });
 }
 
-// GET /api/family/announcements — liste de mes annonces (tous statuts)
+// GET — liste de mes annonces (tous statuts)
 export async function GET() {
   const supabase = createRouteHandlerClient({ cookies });
   const { data: { session } } = await supabase.auth.getSession();

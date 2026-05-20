@@ -1,66 +1,56 @@
 import { z } from 'zod';
 
-// ENUMS ------------------------------------------------------
+// Énumérations alignées sur le schéma SQL (20260520_family_announcements.sql)
+// et sur les types TS dans @/types.
 
 export const ACCOMPANIMENT_TYPES = [
-  'domicile',
-  'cabinet',
-  'ecole',
-  'creche',
-  'exterieur',
-  'distanciel',
+  'educatif',
+  'scolaire',
+  'sport_adapte',
+  'guidance_parentale',
+  'comportemental',
+  'liberal',
 ] as const;
 
 export const DESIRED_PROFESSIONS = [
   'educateur_specialise',
-  'aes',
-  'ame',
   'psychomotricien',
+  'psychologue',
   'ergotherapeute',
   'orthophoniste',
-  'psychologue',
-  'aba_therapist',
+  'aes_aesh',
+  'sportif_adapte',
   'autre',
 ] as const;
 
-export const TND_CONTEXTS = [
-  'tsa',
-  'tdah',
-  'dys',
-  'dyspraxie',
-  'haut_potentiel',
-  'di',
-  'autre',
-] as const;
+export const TND_CONTEXTS = ['TSA', 'TDAH', 'DYS', 'HPI', 'TDI', 'AUTRE'] as const;
 
 export const PLACE_TYPES = [
-  'domicile_famille',
-  'cabinet_pro',
+  'domicile',
+  'cabinet',
   'ecole',
-  'creche',
-  'exterieur',
-  'distanciel',
+  'institut',
+  'club_sport',
+  'autre',
 ] as const;
 
-export const START_FLEXIBILITY = [
-  'immediate',
-  'sous_15j',
-  'sous_1mois',
-  'flexible',
-] as const;
+// Contrainte CHECK en DB : ('immediate', 'flexible', 'fixed')
+export const START_FLEXIBILITY = ['immediate', 'flexible', 'fixed'] as const;
 
+// Contrainte CHECK en DB
 export const ANNOUNCEMENT_STATUS = [
   'draft',
   'pending',
   'published',
   'rejected',
-  'filled',
   'expired',
+  'filled',
   'archived',
 ] as const;
 
+// Contrainte CHECK en DB
 export const RESPONSE_STATUS = [
-  'sent',
+  'pending',
   'read',
   'shortlisted',
   'accepted',
@@ -68,9 +58,8 @@ export const RESPONSE_STATUS = [
   'withdrawn',
 ] as const;
 
-export const GENDER_PREFERENCES = ['male', 'female', 'any'] as const;
-
-// Helpers ----------------------------------------------------
+// Contrainte CHECK en DB : ('any', 'male', 'female')
+export const GENDER_PREFERENCES = ['any', 'male', 'female'] as const;
 
 const accompanimentType = z.enum(ACCOMPANIMENT_TYPES);
 const desiredProfession = z.enum(DESIRED_PROFESSIONS);
@@ -83,93 +72,90 @@ const isoDate = z
   .string()
   .regex(/^\d{4}-\d{2}-\d{2}$/, 'Format date attendu YYYY-MM-DD');
 
-// CREATE -----------------------------------------------------
+const schedulePreferencesSchema = z
+  .object({
+    days: z
+      .array(z.enum(['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday']))
+      .optional(),
+    time_ranges: z
+      .array(z.object({ start: z.string(), end: z.string() }))
+      .optional(),
+    tags: z.array(z.string()).optional(),
+  })
+  .nullable()
+  .optional();
 
+// CREATE : payload accepté par POST /api/family/announcements
+// Les contraintes en DB : title len >= 8, description len >= 30.
 export const createAnnouncementSchema = z.object({
-  child_id: z.string().uuid().optional(),
-  title: z.string().min(5).max(120),
-  description: z.string().min(50).max(5000),
+  child_id: z.string().uuid().nullable().optional(),
+
+  title: z.string().trim().min(8).max(120),
+  description: z.string().trim().min(30).max(5000),
 
   accompaniment_types: z.array(accompanimentType).min(1),
   desired_professions: z.array(desiredProfession).min(1),
   tnd_context: z.array(tndContext).min(1),
   place_types: z.array(placeType).min(1),
 
+  person_age: z.number().int().min(0).max(120).nullable().optional(),
+  gender_preference: genderPref.optional().default('any'),
+
   location_label: z.string().min(2).max(200),
-  city: z.string().min(2).max(100),
-  postcode: z.string().regex(/^\d{5}$/).optional(),
-  latitude: z.number().min(-90).max(90).optional(),
-  longitude: z.number().min(-180).max(180).optional(),
+  city: z.string().min(1).max(100),
+  postal_code: z.string().regex(/^\d{4,5}$/).nullable().optional(),
+  latitude: z.number().min(-90).max(90).nullable().optional(),
+  longitude: z.number().min(-180).max(180).nullable().optional(),
+  radius_km: z.number().int().min(1).max(100).optional().default(10),
 
-  min_hours_per_week: z.number().positive().max(80).optional(),
-  max_hours_per_week: z.number().positive().max(80).optional(),
-  hourly_budget_min: z.number().nonnegative().max(500).optional(),
-  hourly_budget_max: z.number().nonnegative().max(500).optional(),
+  hours_per_week: z.number().positive().max(168).nullable().optional(),
+  schedule_preferences: schedulePreferencesSchema,
 
-  start_date: isoDate.optional(),
-  start_flexibility: startFlex.optional(),
+  start_date: isoDate.nullable().optional(),
+  start_date_flexibility: startFlex.optional().default('flexible'),
 
-  gender_preference: genderPref.optional(),
-  certifications_required: z.array(z.string()).max(20).optional().default([]),
-  languages_required: z.array(z.string()).max(20).optional().default([]),
-
-  // draft|pending uniquement à la création
+  // Le client peut indiquer 'draft' pour sauvegarder un brouillon ; sinon le
+  // serveur force 'pending' (pré-modération).
   status: z.enum(['draft', 'pending']).optional(),
-
-  expires_at: z.string().datetime().optional(),
-}).refine(
-  (d) => d.max_hours_per_week == null || d.min_hours_per_week == null
-    || d.max_hours_per_week >= d.min_hours_per_week,
-  { message: 'max_hours_per_week doit être >= min_hours_per_week', path: ['max_hours_per_week'] }
-).refine(
-  (d) => d.hourly_budget_max == null || d.hourly_budget_min == null
-    || d.hourly_budget_max >= d.hourly_budget_min,
-  { message: 'hourly_budget_max doit être >= hourly_budget_min', path: ['hourly_budget_max'] }
-);
+});
 
 export type CreateAnnouncementInput = z.infer<typeof createAnnouncementSchema>;
 
-// UPDATE -----------------------------------------------------
-
-// Champs autorisés en modification par la famille
+// UPDATE famille : tous les champs de contenu, plus archivage et brouillon
 export const updateAnnouncementSchema = z.object({
-  title: z.string().min(5).max(120).optional(),
-  description: z.string().min(50).max(5000).optional(),
+  child_id: z.string().uuid().nullable().optional(),
+
+  title: z.string().trim().min(8).max(120).optional(),
+  description: z.string().trim().min(30).max(5000).optional(),
 
   accompaniment_types: z.array(accompanimentType).min(1).optional(),
   desired_professions: z.array(desiredProfession).min(1).optional(),
   tnd_context: z.array(tndContext).min(1).optional(),
   place_types: z.array(placeType).min(1).optional(),
 
-  location_label: z.string().min(2).max(200).optional(),
-  city: z.string().min(2).max(100).optional(),
-  postcode: z.string().regex(/^\d{5}$/).optional(),
-  latitude: z.number().min(-90).max(90).optional(),
-  longitude: z.number().min(-180).max(180).optional(),
+  person_age: z.number().int().min(0).max(120).nullable().optional(),
+  gender_preference: genderPref.optional(),
 
-  min_hours_per_week: z.number().positive().max(80).nullable().optional(),
-  max_hours_per_week: z.number().positive().max(80).nullable().optional(),
-  hourly_budget_min: z.number().nonnegative().max(500).nullable().optional(),
-  hourly_budget_max: z.number().nonnegative().max(500).nullable().optional(),
+  location_label: z.string().min(2).max(200).optional(),
+  city: z.string().min(1).max(100).optional(),
+  postal_code: z.string().regex(/^\d{4,5}$/).nullable().optional(),
+  latitude: z.number().min(-90).max(90).nullable().optional(),
+  longitude: z.number().min(-180).max(180).nullable().optional(),
+  radius_km: z.number().int().min(1).max(100).optional(),
+
+  hours_per_week: z.number().positive().max(168).nullable().optional(),
+  schedule_preferences: schedulePreferencesSchema,
 
   start_date: isoDate.nullable().optional(),
-  start_flexibility: startFlex.nullable().optional(),
+  start_date_flexibility: startFlex.optional(),
 
-  gender_preference: genderPref.nullable().optional(),
-  certifications_required: z.array(z.string()).max(20).optional(),
-  languages_required: z.array(z.string()).max(20).optional(),
-
-  // Seules transitions de statut autorisées en update famille : archived (désactivation),
-  // ou pas de changement (le serveur reset à 'pending' en cas de modif de contenu)
-  status: z.enum(['archived', 'draft']).optional(),
-
-  expires_at: z.string().datetime().nullable().optional(),
+  // Seules transitions admises côté famille (le serveur enforce le reset à 'pending' si du contenu change)
+  status: z.enum(['draft', 'archived', 'filled']).optional(),
 });
 
 export type UpdateAnnouncementInput = z.infer<typeof updateAnnouncementSchema>;
 
-// FILTERS ----------------------------------------------------
-
+// Filtres pour GET /api/announcements (listing public)
 const csvArray = <T extends z.ZodTypeAny>(item: T) =>
   z.preprocess((v) => {
     if (v == null || v === '') return undefined;
@@ -219,25 +205,23 @@ export const announcementFiltersSchema = z.object({
 
 export type AnnouncementFiltersInput = z.infer<typeof announcementFiltersSchema>;
 
-// RESPOND ----------------------------------------------------
-
+// Candidature pro : POST /api/announcements/[id]/respond
 export const respondAnnouncementSchema = z.object({
-  message: z.string().min(20).max(3000),
-  proposed_hourly_rate: z.number().positive().max(500).optional(),
+  message: z.string().trim().min(20).max(3000),
+  proposed_hourly_rate: z.number().positive().max(500).nullable().optional(),
 });
 
 export type RespondAnnouncementInput = z.infer<typeof respondAnnouncementSchema>;
 
-// UPDATE RESPONSE --------------------------------------------
-
-// La transition est validée côté serveur selon le rôle (famille vs pro)
+// PATCH /api/announcements/[id]/responses/[responseId] : transition de statut
+// Le serveur valide la transition selon le rôle (famille vs pro).
 export const updateResponseSchema = z.object({
   status: z.enum(['read', 'shortlisted', 'accepted', 'declined', 'withdrawn']),
 });
 
 export type UpdateResponseInput = z.infer<typeof updateResponseSchema>;
 
-// Champs "contenu" — toute modification force re-modération
+// Champs de contenu — toute modification force la re-modération (status -> 'pending')
 export const CONTENT_FIELDS = [
   'title',
   'description',
@@ -245,18 +229,17 @@ export const CONTENT_FIELDS = [
   'desired_professions',
   'tnd_context',
   'place_types',
+  'person_age',
+  'gender_preference',
   'location_label',
   'city',
-  'postcode',
+  'postal_code',
   'latitude',
   'longitude',
-  'min_hours_per_week',
-  'max_hours_per_week',
-  'hourly_budget_min',
-  'hourly_budget_max',
+  'radius_km',
+  'hours_per_week',
+  'schedule_preferences',
   'start_date',
-  'start_flexibility',
-  'gender_preference',
-  'certifications_required',
-  'languages_required',
+  'start_date_flexibility',
+  'child_id',
 ] as const;

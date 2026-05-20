@@ -126,8 +126,7 @@ export default function AnnouncementWizard({
     setSubmitting(true);
     setServerError('');
     try {
-      const payload: any = { ...data };
-      if (asDraft) payload.status = 'draft';
+      const payload = buildPayload(data, asDraft);
 
       const url = mode === 'edit' && announcementId
         ? `/api/family/announcements/${announcementId}`
@@ -153,6 +152,37 @@ export default function AnnouncementWizard({
       setSubmitting(false);
     }
   };
+
+  // Construit le payload conforme à l'API (lib/announcements/schemas.ts) :
+  // - les empty strings deviennent null / absentes
+  // - schedule_preferences (tags) devient un objet { tags: [...] }
+  function buildPayload(d: AnnouncementFormData, asDraft: boolean) {
+    const out: Record<string, any> = {
+      title: d.title.trim(),
+      description: d.description.trim(),
+      accompaniment_types: d.accompaniment_types,
+      desired_professions: d.desired_professions,
+      tnd_context: d.tnd_context,
+      place_types: d.place_types,
+      gender_preference: d.gender_preference,
+      location_label: d.location_label,
+      city: d.city,
+      radius_km: d.radius_km,
+      start_date_flexibility: d.start_date_flexibility,
+    };
+    if (d.child_id) out.child_id = d.child_id;
+    if (d.person_age != null) out.person_age = d.person_age;
+    if (d.postal_code) out.postal_code = d.postal_code;
+    if (d.latitude != null) out.latitude = d.latitude;
+    if (d.longitude != null) out.longitude = d.longitude;
+    if (d.hours_per_week != null) out.hours_per_week = d.hours_per_week;
+    if (d.start_date) out.start_date = d.start_date;
+    if (d.schedule_preferences && d.schedule_preferences.length > 0) {
+      out.schedule_preferences = { tags: d.schedule_preferences };
+    }
+    if (asDraft) out.status = 'draft';
+    return out;
+  }
 
   return (
     <div>

@@ -11,19 +11,21 @@ interface ResponsesListProps {
 }
 
 const STATUS_LABELS: Record<AnnouncementResponse['status'], string> = {
-  new: 'Nouvelle',
+  pending: 'Nouvelle',
   read: 'Lue',
   shortlisted: 'Présélectionnée',
   accepted: 'Acceptée',
   declined: 'Déclinée',
+  withdrawn: 'Retirée',
 };
 
 const STATUS_STYLES: Record<AnnouncementResponse['status'], React.CSSProperties> = {
-  new: { backgroundColor: 'rgba(245, 158, 11, 0.1)', color: '#b45309', borderColor: 'rgba(245, 158, 11, 0.3)' },
+  pending: { backgroundColor: 'rgba(245, 158, 11, 0.1)', color: '#b45309', borderColor: 'rgba(245, 158, 11, 0.3)' },
   read: { backgroundColor: 'rgba(107, 114, 128, 0.1)', color: '#374151', borderColor: 'rgba(107, 114, 128, 0.3)' },
   shortlisted: { backgroundColor: 'rgba(240, 135, 159, 0.1)', color: '#be3a5d', borderColor: 'rgba(240, 135, 159, 0.3)' },
   accepted: { backgroundColor: 'rgba(34, 197, 94, 0.1)', color: '#15803d', borderColor: 'rgba(34, 197, 94, 0.3)' },
   declined: { backgroundColor: 'rgba(220, 38, 38, 0.1)', color: '#b91c1c', borderColor: 'rgba(220, 38, 38, 0.3)' },
+  withdrawn: { backgroundColor: 'rgba(107, 114, 128, 0.1)', color: '#6b7280', borderColor: 'rgba(107, 114, 128, 0.3)' },
 };
 
 function formatDate(iso: string): string {
@@ -130,9 +132,9 @@ export default function ResponsesList({ announcementId, responses, onChange }: R
                 <p className="text-sm text-gray-700 mt-2 whitespace-pre-wrap">{r.message}</p>
 
                 <div className="flex flex-wrap items-center gap-3 mt-2 text-xs text-gray-500">
-                  {r.proposed_rate !== null && r.proposed_rate !== undefined && (
+                  {r.proposed_hourly_rate != null && (
                     <span className="font-semibold" style={{ color: '#027e7e' }}>
-                      Tarif proposé : {r.proposed_rate} €
+                      Tarif proposé : {r.proposed_hourly_rate} €
                     </span>
                   )}
                   <span>{formatDate(r.created_at)}</span>
@@ -140,7 +142,7 @@ export default function ResponsesList({ announcementId, responses, onChange }: R
 
                 {r.status !== 'accepted' && r.status !== 'declined' && (
                   <div className="flex flex-wrap gap-2 mt-3 pt-3 border-t border-gray-100">
-                    {r.status === 'new' && (
+                    {r.status === 'pending' && (
                       <button
                         type="button"
                         onClick={() => updateStatus(r, 'read')}

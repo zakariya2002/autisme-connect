@@ -56,16 +56,21 @@ export interface AnnouncementResponse {
   announcement_id: string;
   educator_id: string;
   message: string;
-  proposed_rate?: number | null;
-  status: 'new' | 'read' | 'shortlisted' | 'accepted' | 'declined';
+  proposed_hourly_rate?: number | null;
+  status: 'pending' | 'read' | 'shortlisted' | 'accepted' | 'declined' | 'withdrawn';
   created_at: string;
   educator?: {
     id: string;
     first_name: string;
     last_name: string;
     avatar_url?: string | null;
+    profile_image_url?: string | null;
     profession_type?: string | null;
     location?: string | null;
+    hourly_rate?: number | null;
+    rating?: number | null;
+    total_reviews?: number | null;
+    verification_badge?: boolean | null;
   };
 }
 
@@ -87,23 +92,23 @@ export const ACCOMPANIMENT_OPTIONS = [
 ];
 
 export const PROFESSION_OPTIONS = [
-  { value: 'educator', label: 'Éducateur spécialisé' },
-  { value: 'psychomotricist', label: 'Psychomotricien' },
-  { value: 'psychologist', label: 'Psychologue' },
-  { value: 'occupational_therapist', label: 'Ergothérapeute' },
-  { value: 'speech_therapist', label: 'Orthophoniste' },
+  { value: 'educateur_specialise', label: 'Éducateur spécialisé' },
+  { value: 'psychomotricien', label: 'Psychomotricien' },
+  { value: 'psychologue', label: 'Psychologue' },
+  { value: 'ergotherapeute', label: 'Ergothérapeute' },
+  { value: 'orthophoniste', label: 'Orthophoniste' },
   { value: 'aes_aesh', label: 'AES/AESH' },
-  { value: 'apa_teacher', label: 'Sportif adapté' },
-  { value: 'other', label: 'Autre' },
+  { value: 'sportif_adapte', label: 'Sportif adapté' },
+  { value: 'autre', label: 'Autre' },
 ];
 
 export const TND_OPTIONS = [
-  { value: 'tsa', label: 'TSA' },
-  { value: 'tdah', label: 'TDAH' },
-  { value: 'dys', label: 'DYS' },
-  { value: 'hpi', label: 'HPI' },
-  { value: 'tdi', label: 'TDI' },
-  { value: 'autre', label: 'Autre' },
+  { value: 'TSA', label: 'TSA' },
+  { value: 'TDAH', label: 'TDAH' },
+  { value: 'DYS', label: 'DYS' },
+  { value: 'HPI', label: 'HPI' },
+  { value: 'TDI', label: 'TDI' },
+  { value: 'AUTRE', label: 'Autre' },
 ];
 
 export const PLACE_OPTIONS = [

@@ -1,15 +1,12 @@
 import type { SupabaseClient } from '@supabase/supabase-js';
 import type { AnnouncementFiltersInput } from './schemas';
 
-// ----------------------------------------------------------------
-// Géocodage via data.gouv.fr
-// ----------------------------------------------------------------
-
+// Géocodage via l'API Adresse data.gouv.fr
 export async function geocodeLabel(label: string): Promise<{
   latitude: number;
   longitude: number;
   city: string;
-  postcode: string | null;
+  postal_code: string | null;
   label: string;
 } | null> {
   try {
@@ -24,17 +21,13 @@ export async function geocodeLabel(label: string): Promise<{
       latitude: lat,
       longitude: lng,
       city: feat.properties.city || feat.properties.name || '',
-      postcode: feat.properties.postcode || null,
+      postal_code: feat.properties.postcode || null,
       label: feat.properties.label || label,
     };
   } catch {
     return null;
   }
 }
-
-// ----------------------------------------------------------------
-// Haversine — distance en km entre 2 points (calcul JS)
-// ----------------------------------------------------------------
 
 const EARTH_RADIUS_KM = 6371;
 
@@ -54,10 +47,7 @@ export function haversineKm(
   return EARTH_RADIUS_KM * c;
 }
 
-// ----------------------------------------------------------------
-// Listing public — applique les filtres + tri + pagination
-// ----------------------------------------------------------------
-
+// Listing public — applique filtres / tri / pagination sur le vrai schéma DB
 export async function fetchPublicAnnouncements(
   supabase: SupabaseClient,
   filters: AnnouncementFiltersInput
@@ -85,11 +75,12 @@ export async function fetchPublicAnnouncements(
     query = query.overlaps('place_types', filters.place_types);
   }
 
+  // La table a une seule colonne hours_per_week — on borne par min et max si fournis
   if (filters.min_hours_per_week != null) {
-    query = query.gte('min_hours_per_week', filters.min_hours_per_week);
+    query = query.gte('hours_per_week', filters.min_hours_per_week);
   }
   if (filters.max_hours_per_week != null) {
-    query = query.lte('max_hours_per_week', filters.max_hours_per_week);
+    query = query.lte('hours_per_week', filters.max_hours_per_week);
   }
   if (filters.gender_preference) {
     query = query.eq('gender_preference', filters.gender_preference);
@@ -101,13 +92,10 @@ export async function fetchPublicAnnouncements(
   const hasGeo =
     filters.lat != null && filters.lng != null && filters.radius_km != null;
 
-  // Si géofiltre actif : on récupère une page plus large pour filtrer en JS
-  // (acceptable au volume actuel, à remplacer par PostGIS si volumétrie explose)
   const limit = filters.limit ?? 20;
   const offset = filters.offset ?? 0;
 
   if (hasGeo) {
-    // Heuristique : bornes approximatives sur lat/lng pour pré-filtrer
     const km = filters.radius_km!;
     const latDelta = km / 111;
     const lngDelta = km / (111 * Math.cos((filters.lat! * Math.PI) / 180));
@@ -120,14 +108,11 @@ export async function fetchPublicAnnouncements(
       .not('longitude', 'is', null);
   }
 
-  // Tri DB
   query = query.order('published_at', { ascending: false, nullsFirst: false });
 
-  // Sans geo, on applique limit/offset directement en DB
   if (!hasGeo) {
     query = query.range(offset, offset + limit - 1);
   } else {
-    // On laisse plus large pour le tri JS post-filtre
     query = query.range(0, Math.min(offset + limit + 200, 500));
   }
 
@@ -158,10 +143,6 @@ export async function fetchPublicAnnouncements(
   return { items: data, total: count ?? data.length };
 }
 
-// ----------------------------------------------------------------
-// Anonymisation d'une annonce pour le détail public
-// ----------------------------------------------------------------
-
 export function anonymizeAnnouncement(
   announcement: any,
   family: { first_name?: string | null; last_name?: string | null } | null
@@ -175,6 +156,5 @@ export function anonymizeAnnouncement(
           last_name_initial: initialLast ? `${initialLast}.` : '',
         }
       : null,
-    // On retire les coordonnées précises potentiellement présentes
   };
 }

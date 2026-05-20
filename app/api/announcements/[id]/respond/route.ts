@@ -5,7 +5,7 @@ import { respondAnnouncementSchema } from '@/lib/announcements/schemas';
 
 export const dynamic = 'force-dynamic';
 
-const ACTIVE_STATUSES = ['sent', 'read', 'shortlisted', 'accepted'];
+const ACTIVE_STATUSES = ['pending', 'read', 'shortlisted', 'accepted'];
 
 export async function POST(
   request: NextRequest,
@@ -91,7 +91,7 @@ export async function POST(
       educator_id: educator.id,
       message: parsed.data.message,
       proposed_hourly_rate: parsed.data.proposed_hourly_rate ?? null,
-      status: 'sent',
+      status: 'pending',
     })
     .select()
     .single();

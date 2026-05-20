@@ -106,10 +106,12 @@ export async function PATCH(
 
   const now = new Date().toISOString();
   const update: Record<string, any> = { status: targetStatus };
+  // Le schéma DB n'a que read_at, responded_at, withdrawn_at.
+  // shortlisted/accepted/declined utilisent responded_at (timestamp générique de décision famille).
   if (targetStatus === 'read') update.read_at = now;
-  if (targetStatus === 'shortlisted') update.shortlisted_at = now;
-  if (targetStatus === 'accepted') update.accepted_at = now;
-  if (targetStatus === 'declined') update.declined_at = now;
+  if (targetStatus === 'shortlisted' || targetStatus === 'accepted' || targetStatus === 'declined') {
+    update.responded_at = now;
+  }
   if (targetStatus === 'withdrawn') update.withdrawn_at = now;
 
   // Cas accepted : on bascule l'annonce en 'filled' et on lie filled_by_response_id
@@ -140,10 +142,10 @@ export async function PATCH(
     // Optionnel : passer les autres réponses actives en 'declined'
     await service
       .from('announcement_responses')
-      .update({ status: 'declined', declined_at: now })
+      .update({ status: 'declined', responded_at: now })
       .eq('announcement_id', params.id)
       .neq('id', params.responseId)
-      .in('status', ['sent', 'read', 'shortlisted']);
+      .in('status', ['pending', 'read', 'shortlisted']);
 
     const { data: refreshed } = await service
       .from('announcement_responses')

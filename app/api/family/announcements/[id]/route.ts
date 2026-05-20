@@ -119,7 +119,7 @@ export async function PATCH(
       update.latitude = geo.latitude;
       update.longitude = geo.longitude;
       if (!input.city && geo.city) update.city = geo.city;
-      if (!input.postcode && geo.postcode) update.postcode = geo.postcode;
+      if (!input.postal_code && geo.postal_code) update.postal_code = geo.postal_code;
     }
   }
 
@@ -134,14 +134,16 @@ export async function PATCH(
   // Règle : si contenu change ET annonce pas en draft → repasse en pending
   if (contentChanged && current.status !== 'draft') {
     update.status = 'pending';
-    update.rejected_reason = null;
+    update.rejection_reason = null;
   }
 
-  // Si statut demandé explicitement = 'archived' (désactivation) → on respecte
+  // Statuts autorisés en transition explicite (draft, archived, filled)
   if (input.status === 'archived') {
     update.status = 'archived';
   }
-  // Si statut demandé = 'draft' depuis pending/rejected, on autorise
+  if (input.status === 'filled') {
+    update.status = 'filled';
+  }
   if (input.status === 'draft' && ['pending', 'rejected', 'archived'].includes(current.status)) {
     update.status = 'draft';
   }
@@ -154,10 +156,11 @@ export async function PATCH(
     .single();
 
   if (error) {
+    console.error('[PATCH /api/family/announcements/:id]', error);
     return NextResponse.json({ error: error.message }, { status: 500 });
   }
 
-  return NextResponse.json(data);
+  return NextResponse.json({ announcement: data });
 }
 
 // DELETE — suppression (refuse si published/filled)
