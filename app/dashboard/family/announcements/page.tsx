@@ -59,9 +59,12 @@ export default function FamilyAnnouncementsPage() {
 
       try {
         const res = await fetch('/api/family/announcements');
-        if (!res.ok) throw new Error('Impossible de charger les annonces.');
+        if (!res.ok) {
+          const body = await res.json().catch(() => ({}));
+          throw new Error(body.error || `Impossible de charger les annonces (HTTP ${res.status}).`);
+        }
         const body = await res.json();
-        if (active) setAnnouncements(body.announcements || []);
+        if (active) setAnnouncements(body.items || body.announcements || []);
       } catch (e: any) {
         if (active) setError(e.message || 'Erreur de chargement.');
       } finally {

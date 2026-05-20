@@ -55,12 +55,13 @@ export default function MyAnnouncementsResponsesPage() {
 
       const res = await fetch('/api/educator/responses');
       if (!res.ok) {
-        setError('Impossible de charger vos candidatures.');
+        const body = await res.json().catch(() => ({}));
+        setError(body.error || `Impossible de charger vos candidatures (HTTP ${res.status}).`);
         setResponses([]);
         return;
       }
       const data = await res.json();
-      const list: AnnouncementResponse[] = data.responses || [];
+      const list: AnnouncementResponse[] = data.items || data.responses || [];
 
       // Fallback : si annonce non jointe, fetch individuel
       const missing = list.filter((r) => !r.announcement).map((r) => r.announcement_id);
